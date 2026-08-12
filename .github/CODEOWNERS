@@ -1,0 +1,15 @@
+# Sensitive and executable surfaces stay owner-reviewed. General documentation,
+# typo fixes and issue templates use the repository's normal review path so a
+# single CODEOWNER does not block low-risk contributions.
+/.github/CODEOWNERS @Estrella-071
+/.github/workflows/ @Estrella-071
+/site/** @Estrella-071
+/scripts/** @Estrella-071
+/data/** @Estrella-071
+/schema/** @Estrella-071
+/package.json @Estrella-071
+/package-lock.json @Estrella-071
+/SECURITY.md @Estrella-071
+/NOTICE.md @Estrella-071
+/GOVERNANCE.md @Estrella-071
+/DEPLOYMENT.md @Estrella-071

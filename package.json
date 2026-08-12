@@ -1,0 +1,60 @@
+{
+  "name": "rd2-lab",
+  "version": "0.1.0",
+  "description": "Random Dice 2 Lab: versioned data, compendium, and planning tools.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Estrella-071/rd2-lab.git"
+  },
+  "homepage": "https://rd2-lab.pages.dev/",
+  "bugs": {
+    "url": "https://github.com/Estrella-071/rd2-lab/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=24",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "validate:data": "node scripts/validate_data.mjs",
+    "check:provenance": "node scripts/check_provenance.mjs",
+    "audit:assets": "node scripts/check_assets.mjs",
+    "check:assets": "node scripts/check_assets.mjs --check",
+    "check:staging": "node scripts/verify_staging_integrity.mjs",
+    "d1:migrate:local": "npx --yes wrangler@4.125.0 d1 migrations apply rd2-lab-shares --local",
+    "d1:migrate:remote": "npx --yes wrangler@4.125.0 d1 migrations apply rd2-lab-shares --remote",
+    "audit:deps": "npm audit --omit=optional --audit-level=high",
+    "build:pages": "node scripts/build_pages.mjs",
+    "pages:dev": "npm run build:pages && npx --yes wrangler@4.125.0 pages dev .pages",
+    "pages:deploy": "npx --yes wrangler@4.125.0 pages deploy .pages --project-name rd2-lab",
+    "generate:changelog": "node scripts/generate_changelog.mjs",
+    "generate:canonical": "node scripts/generate_canonical_from_raw.mjs --write",
+    "generate:locales": "node scripts/generate_locales.mjs",
+    "bake:tree-icons": "node scripts/bake_tree_icon_shadows.mjs",
+    "check:docs": "node scripts/check_docs.mjs",
+    "check:raw": "node scripts/check_raw_canonical.mjs",
+    "check:translations": "node scripts/check_translations.mjs",
+    "check:css": "node scripts/check_css_quality.mjs",
+    "measure:performance": "node scripts/measure_pages_performance.mjs --report-only",
+    "check:performance": "node scripts/measure_pages_performance.mjs",
+    "check:performance:high-refresh": "node scripts/measure_pages_performance.mjs --high-refresh",
+    "check:performance:stress": "node scripts/measure_pages_performance.mjs --stress",
+    "check:policy": "node scripts/check_public_policy.mjs",
+    "check:functions": "npx --yes wrangler@4.125.0 pages functions build functions --outdir .wrangler/functions-build",
+    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:unit:coverage": "c8 --clean --all=false --include=\"src/domain/**\" --include=\"src/app/**\" --include=\"src/infra/**\" --include=\"functions/**\" --reporter=lcov --reporter=text node --test tests/unit/*.test.mjs",
+    "test:ci-scope": "node scripts/ci_scope_test.mjs",
+    "verify": "node scripts/verify_local.mjs",
+    "validate": "npm run test:unit && npm run validate:data && npm run check:raw && npm run check:provenance && npm run check:assets && npm run test:ci-scope && npm run check:docs && npm run check:translations && npm run check:css && npm run check:policy && npm run check:functions",
+    "setup:browser": "node scripts/setup_browser.mjs chromium",
+    "test:browser": "node tests/run_all_tests.mjs --suite=smoke",
+    "test:e2e": "node tests/run_all_tests.mjs",
+    "test:e2e:smoke": "node tests/run_all_tests.mjs --suite=smoke"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "c8": "12.0.0",
+    "playwright": "1.62.1"
+  }
+}

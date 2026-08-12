@@ -1,0 +1,697 @@
+{
+  "schemaVersion": 1,
+  "symbols": {
+    "sprite-1": {
+      "path": "site/icons/Dice_fire2.png",
+      "fit": "meet"
+    },
+    "sprite-10": {
+      "path": "site/icons/Runenode_Fire_1.png",
+      "fit": "meet"
+    },
+    "sprite-100": {
+      "path": "site/icons/Runenode_Combo_1.png",
+      "fit": "meet"
+    },
+    "sprite-101": {
+      "path": "site/icons/Runenode_Combo_2.png",
+      "fit": "meet"
+    },
+    "sprite-102": {
+      "path": "site/icons/Runenode_Adjust_0.png",
+      "fit": "meet"
+    },
+    "sprite-103": {
+      "path": "site/icons/Runenode_Adjust_1.png",
+      "fit": "meet"
+    },
+    "sprite-104": {
+      "path": "site/icons/Runenode_Adjust_2.png",
+      "fit": "meet"
+    },
+    "sprite-105": {
+      "path": "site/icons/Runenode_Potion_0.png",
+      "fit": "meet"
+    },
+    "sprite-106": {
+      "path": "site/icons/Runenode_Potion_1.png",
+      "fit": "meet"
+    },
+    "sprite-107": {
+      "path": "site/icons/Runenode_Potion_2.png",
+      "fit": "meet"
+    },
+    "sprite-109": {
+      "path": "assets/tree-icon-sources/TreePerkTsunamiProfile.png",
+      "fit": "meet"
+    },
+    "sprite-11": {
+      "path": "site/icons/Runenode_Fire_2.png",
+      "fit": "meet"
+    },
+    "sprite-111": {
+      "path": "site/icons/Dice_BUBBLE2.png",
+      "fit": "meet"
+    },
+    "sprite-112": {
+      "path": "site/icons/Dice_Lock2.png",
+      "fit": "meet"
+    },
+    "sprite-113": {
+      "path": "site/icons/Dice_Punch2.png",
+      "fit": "meet"
+    },
+    "sprite-114": {
+      "path": "site/icons/Dice_BrokenGrowth2.png",
+      "fit": "meet"
+    },
+    "sprite-115": {
+      "path": "site/icons/Dice_Executioner2.png",
+      "fit": "meet"
+    },
+    "sprite-116": {
+      "path": "site/icons/Dice_Blessing2.png",
+      "fit": "meet"
+    },
+    "sprite-117": {
+      "path": "site/icons/Dice_Alignment2.png",
+      "fit": "meet"
+    },
+    "sprite-118": {
+      "path": "site/icons/Dice_BINGO2.png",
+      "fit": "meet"
+    },
+    "sprite-119": {
+      "path": "site/icons/Runenode_Bubble_0.png",
+      "fit": "meet"
+    },
+    "sprite-12": {
+      "path": "site/icons/Runenode_Thorn_0.png",
+      "fit": "meet"
+    },
+    "sprite-120": {
+      "path": "site/icons/Runenode_Bubble_1.png",
+      "fit": "meet"
+    },
+    "sprite-121": {
+      "path": "site/icons/Runenode_Bubble_2.png",
+      "fit": "meet"
+    },
+    "sprite-122": {
+      "path": "site/icons/Runenode_Lock_0.png",
+      "fit": "meet"
+    },
+    "sprite-123": {
+      "path": "site/icons/Runenode_Lock_1.png",
+      "fit": "meet"
+    },
+    "sprite-124": {
+      "path": "site/icons/Runenode_Lock_2.png",
+      "fit": "meet"
+    },
+    "sprite-125": {
+      "path": "site/icons/Runenode_Judgement_0.png",
+      "fit": "meet"
+    },
+    "sprite-126": {
+      "path": "site/icons/Runenode_Judgement_1.png",
+      "fit": "meet"
+    },
+    "sprite-127": {
+      "path": "site/icons/Runenode_Judgement_2.png",
+      "fit": "meet"
+    },
+    "sprite-128": {
+      "path": "site/icons/Runenode_Grow_0.png",
+      "fit": "meet"
+    },
+    "sprite-129": {
+      "path": "site/icons/Runenode_Grow_1.png",
+      "fit": "meet"
+    },
+    "sprite-13": {
+      "path": "site/icons/Runenode_Thorn_1.png",
+      "fit": "meet"
+    },
+    "sprite-130": {
+      "path": "site/icons/Runenode_Grow_2.png",
+      "fit": "meet"
+    },
+    "sprite-131": {
+      "path": "site/icons/Runenode_Execution_0.png",
+      "fit": "meet"
+    },
+    "sprite-132": {
+      "path": "site/icons/Runenode_Execution_1.png",
+      "fit": "meet"
+    },
+    "sprite-133": {
+      "path": "site/icons/Runenode_Execution_2.png",
+      "fit": "meet"
+    },
+    "sprite-134": {
+      "path": "site/icons/Runenode_Blessing_0.png",
+      "fit": "meet"
+    },
+    "sprite-135": {
+      "path": "site/icons/Runenode_Blessing_1.png",
+      "fit": "meet"
+    },
+    "sprite-136": {
+      "path": "site/icons/Runenode_Blessing_2.png",
+      "fit": "meet"
+    },
+    "sprite-137": {
+      "path": "site/icons/Runenode_Align_0.png",
+      "fit": "meet"
+    },
+    "sprite-138": {
+      "path": "site/icons/Runenode_Align_1.png",
+      "fit": "meet"
+    },
+    "sprite-139": {
+      "path": "site/icons/Runenode_Align_2.png",
+      "fit": "meet"
+    },
+    "sprite-14": {
+      "path": "site/icons/Runenode_Thorn_2.png",
+      "fit": "meet"
+    },
+    "sprite-140": {
+      "path": "site/icons/Runenode_Bingo_0.png",
+      "fit": "meet"
+    },
+    "sprite-141": {
+      "path": "site/icons/Runenode_Bingo_1.png",
+      "fit": "meet"
+    },
+    "sprite-142": {
+      "path": "site/icons/Runenode_Bingo_2.png",
+      "fit": "meet"
+    },
+    "sprite-144": {
+      "path": "assets/tree-icon-sources/TreePerkCannonProfile.png",
+      "fit": "meet"
+    },
+    "sprite-146": {
+      "path": "site/icons/Dice_Solitude_2.png",
+      "fit": "meet"
+    },
+    "sprite-147": {
+      "path": "site/icons/Dice_TRANSFER2.png",
+      "fit": "meet"
+    },
+    "sprite-148": {
+      "path": "site/icons/Dice_Tyrant2.png",
+      "fit": "meet"
+    },
+    "sprite-149": {
+      "path": "site/icons/Dice_Doom2.png",
+      "fit": "meet"
+    },
+    "sprite-15": {
+      "path": "site/icons/Runenode_Flower_0.png",
+      "fit": "meet"
+    },
+    "sprite-150": {
+      "path": "site/icons/Dice_Mutation2.png",
+      "fit": "meet"
+    },
+    "sprite-151": {
+      "path": "site/icons/Dice_Slow2.png",
+      "fit": "meet"
+    },
+    "sprite-152": {
+      "path": "site/icons/Dice_Predator2.png",
+      "fit": "meet"
+    },
+    "sprite-153": {
+      "path": "site/icons/Dice_SPEEDGUN2.png",
+      "fit": "meet"
+    },
+    "sprite-154": {
+      "path": "site/icons/Dice_Crack2.png",
+      "fit": "meet"
+    },
+    "sprite-156": {
+      "path": "assets/tree-icon-sources/TreePerkLavaProfile.png",
+      "fit": "meet"
+    },
+    "sprite-158": {
+      "path": "site/icons/Runenode_Solitude_0.png",
+      "fit": "meet"
+    },
+    "sprite-159": {
+      "path": "site/icons/Runenode_Solitude_1.png",
+      "fit": "meet"
+    },
+    "sprite-16": {
+      "path": "site/icons/Runenode_Flower_1.png",
+      "fit": "meet"
+    },
+    "sprite-160": {
+      "path": "site/icons/Runenode_Solitude_2.png",
+      "fit": "meet"
+    },
+    "sprite-161": {
+      "path": "site/icons/Runenode_Fear_0.png",
+      "fit": "meet"
+    },
+    "sprite-162": {
+      "path": "site/icons/Runenode_Fear_1.png",
+      "fit": "meet"
+    },
+    "sprite-163": {
+      "path": "site/icons/Runenode_Fear_2.png",
+      "fit": "meet"
+    },
+    "sprite-164": {
+      "path": "site/icons/Runenode_Tyrant_0.png",
+      "fit": "meet"
+    },
+    "sprite-165": {
+      "path": "site/icons/Runenode_Tyrant_1.png",
+      "fit": "meet"
+    },
+    "sprite-166": {
+      "path": "site/icons/Runenode_Tyrant_2.png",
+      "fit": "meet"
+    },
+    "sprite-167": {
+      "path": "site/icons/Runenode_Doom_0.png",
+      "fit": "meet"
+    },
+    "sprite-168": {
+      "path": "site/icons/Runenode_Doom_1.png",
+      "fit": "meet"
+    },
+    "sprite-169": {
+      "path": "site/icons/Runenode_Doom_2.png",
+      "fit": "meet"
+    },
+    "sprite-17": {
+      "path": "site/icons/Runenode_Flower_2.png",
+      "fit": "meet"
+    },
+    "sprite-170": {
+      "path": "site/icons/Runenode_Mutation_0.png",
+      "fit": "meet"
+    },
+    "sprite-171": {
+      "path": "site/icons/Runenode_Mutation_1.png",
+      "fit": "meet"
+    },
+    "sprite-172": {
+      "path": "site/icons/Runenode_Mutation_2.png",
+      "fit": "meet"
+    },
+    "sprite-173": {
+      "path": "site/icons/Runenode_Box_0.png",
+      "fit": "meet"
+    },
+    "sprite-174": {
+      "path": "site/icons/Runenode_Box_1.png",
+      "fit": "meet"
+    },
+    "sprite-175": {
+      "path": "site/icons/Runenode_Box_2.png",
+      "fit": "meet"
+    },
+    "sprite-176": {
+      "path": "site/icons/Runenode_Predator_0.png",
+      "fit": "meet"
+    },
+    "sprite-177": {
+      "path": "site/icons/Runenode_Predator_1.png",
+      "fit": "meet"
+    },
+    "sprite-178": {
+      "path": "site/icons/Runenode_Predator_2.png",
+      "fit": "meet"
+    },
+    "sprite-179": {
+      "path": "site/icons/Runenode_Death_0.png",
+      "fit": "meet"
+    },
+    "sprite-18": {
+      "path": "site/icons/Runenode_Rock_0.png",
+      "fit": "meet"
+    },
+    "sprite-180": {
+      "path": "site/icons/Runenode_Death_1.png",
+      "fit": "meet"
+    },
+    "sprite-181": {
+      "path": "site/icons/Runenode_Death_2.png",
+      "fit": "meet"
+    },
+    "sprite-182": {
+      "path": "site/icons/Runenode_Decay_0.png",
+      "fit": "meet"
+    },
+    "sprite-183": {
+      "path": "site/icons/Runenode_Decay_1.png",
+      "fit": "meet"
+    },
+    "sprite-184": {
+      "path": "site/icons/Runenode_Decay_2.png",
+      "fit": "meet"
+    },
+    "sprite-185": {
+      "path": "assets/tree-icon-sources/TreeCurrencyGold.png",
+      "fit": "meet"
+    },
+    "sprite-186": {
+      "path": "assets/tree-icon-sources/TreeCurrencyCore.png",
+      "fit": "meet"
+    },
+    "sprite-187": {
+      "path": "assets/tree-icon-sources/TreePassiveLargeFrame.png",
+      "fit": "meet"
+    },
+    "sprite-188": {
+      "path": "assets/tree-icon-sources/TreePassiveSmallFrame.png",
+      "fit": "meet"
+    },
+    "sprite-19": {
+      "path": "site/icons/Runenode_Rock_1.png",
+      "fit": "meet"
+    },
+    "sprite-2": {
+      "path": "site/icons/Dice_Thorn2.png",
+      "fit": "meet"
+    },
+    "sprite-20": {
+      "path": "site/icons/Runenode_Rock_2.png",
+      "fit": "meet"
+    },
+    "sprite-21": {
+      "path": "site/icons/Runenode_Wind_0.png",
+      "fit": "meet"
+    },
+    "sprite-22": {
+      "path": "site/icons/Runenode_Wind_1.png",
+      "fit": "meet"
+    },
+    "sprite-23": {
+      "path": "site/icons/Runenode_Wind_2.png",
+      "fit": "meet"
+    },
+    "sprite-24": {
+      "path": "site/icons/Runenode_Light_0.png",
+      "fit": "meet"
+    },
+    "sprite-25": {
+      "path": "site/icons/Runenode_Light_1.png",
+      "fit": "meet"
+    },
+    "sprite-26": {
+      "path": "site/icons/Runenode_Light_2.png",
+      "fit": "meet"
+    },
+    "sprite-27": {
+      "path": "site/icons/Runenode_Ice_0.png",
+      "fit": "meet"
+    },
+    "sprite-28": {
+      "path": "site/icons/Runenode_Ice_1.png",
+      "fit": "meet"
+    },
+    "sprite-29": {
+      "path": "site/icons/Runenode_Ice_2.png",
+      "fit": "meet"
+    },
+    "sprite-3": {
+      "path": "site/icons/Dice_Flower2.png",
+      "fit": "meet"
+    },
+    "sprite-30": {
+      "path": "site/icons/Runenode_Poison_1.png",
+      "fit": "meet"
+    },
+    "sprite-31": {
+      "path": "site/icons/Runenode_Poison_0.png",
+      "fit": "meet"
+    },
+    "sprite-32": {
+      "path": "site/icons/Runenode_Poison_2.png",
+      "fit": "meet"
+    },
+    "sprite-39": {
+      "path": "assets/tree-icon-sources/TreePerkTrashProfile.png",
+      "fit": "meet"
+    },
+    "sprite-4": {
+      "path": "site/icons/Dice_Pillar2.png",
+      "fit": "meet"
+    },
+    "sprite-41": {
+      "path": "site/icons/Dice_iron_2.png",
+      "fit": "meet"
+    },
+    "sprite-42": {
+      "path": "site/icons/Dice_Switch2.png",
+      "fit": "meet"
+    },
+    "sprite-43": {
+      "path": "site/icons/Dice_Gear2.png",
+      "fit": "meet"
+    },
+    "sprite-44": {
+      "path": "site/icons/Dice_Element2.png",
+      "fit": "meet"
+    },
+    "sprite-45": {
+      "path": "site/icons/Dice_Neon2.png",
+      "fit": "meet"
+    },
+    "sprite-46": {
+      "path": "site/icons/Dice_SawBlade2.png",
+      "fit": "meet"
+    },
+    "sprite-47": {
+      "path": "site/icons/Dice_Mine2.png",
+      "fit": "meet"
+    },
+    "sprite-48": {
+      "path": "site/icons/Dice_Sniper2.png",
+      "fit": "meet"
+    },
+    "sprite-49": {
+      "path": "site/icons/Dice_Ray2.png",
+      "fit": "meet"
+    },
+    "sprite-5": {
+      "path": "site/icons/Dice_Wind2.png",
+      "fit": "meet"
+    },
+    "sprite-50": {
+      "path": "site/icons/Runenode_Iron_0.png",
+      "fit": "meet"
+    },
+    "sprite-51": {
+      "path": "site/icons/Runenode_Iron_1.png",
+      "fit": "meet"
+    },
+    "sprite-52": {
+      "path": "site/icons/Runenode_Iron_2.png",
+      "fit": "meet"
+    },
+    "sprite-53": {
+      "path": "site/icons/Runenode_Switch_0.png",
+      "fit": "meet"
+    },
+    "sprite-54": {
+      "path": "site/icons/Runenode_Switch_1.png",
+      "fit": "meet"
+    },
+    "sprite-55": {
+      "path": "site/icons/Runenode_Switch_2.png",
+      "fit": "meet"
+    },
+    "sprite-56": {
+      "path": "site/icons/Runenode_Gear_0.png",
+      "fit": "meet"
+    },
+    "sprite-57": {
+      "path": "site/icons/Runenode_Gear_1.png",
+      "fit": "meet"
+    },
+    "sprite-58": {
+      "path": "site/icons/Runenode_Gear_2.png",
+      "fit": "meet"
+    },
+    "sprite-59": {
+      "path": "site/icons/Runenode_Atom_0.png",
+      "fit": "meet"
+    },
+    "sprite-6": {
+      "path": "site/icons/Dice_Light2.png",
+      "fit": "meet"
+    },
+    "sprite-60": {
+      "path": "site/icons/Runenode_Atom_1.png",
+      "fit": "meet"
+    },
+    "sprite-61": {
+      "path": "site/icons/Runenode_Atom_2.png",
+      "fit": "meet"
+    },
+    "sprite-62": {
+      "path": "site/icons/Runenode_Neon_0.png",
+      "fit": "meet"
+    },
+    "sprite-63": {
+      "path": "site/icons/Runenode_Neon_1.png",
+      "fit": "meet"
+    },
+    "sprite-64": {
+      "path": "site/icons/Runenode_Neon_2.png",
+      "fit": "meet"
+    },
+    "sprite-65": {
+      "path": "site/icons/Runenode_Saw_0.png",
+      "fit": "meet"
+    },
+    "sprite-66": {
+      "path": "site/icons/Runenode_Saw_1.png",
+      "fit": "meet"
+    },
+    "sprite-67": {
+      "path": "site/icons/Runenode_Saw_2.png",
+      "fit": "meet"
+    },
+    "sprite-68": {
+      "path": "site/icons/Runenode_Mine_0.png",
+      "fit": "meet"
+    },
+    "sprite-69": {
+      "path": "site/icons/Runenode_Mine_1.png",
+      "fit": "meet"
+    },
+    "sprite-7": {
+      "path": "site/icons/Dice_ICE2.png",
+      "fit": "meet"
+    },
+    "sprite-70": {
+      "path": "site/icons/Runenode_Mine_2.png",
+      "fit": "meet"
+    },
+    "sprite-71": {
+      "path": "site/icons/Runenode_Sniper_0.png",
+      "fit": "meet"
+    },
+    "sprite-72": {
+      "path": "site/icons/Runenode_Sniper_1.png",
+      "fit": "meet"
+    },
+    "sprite-73": {
+      "path": "site/icons/Runenode_Sniper_2.png",
+      "fit": "meet"
+    },
+    "sprite-74": {
+      "path": "site/icons/Runenode_Ray_0.png",
+      "fit": "meet"
+    },
+    "sprite-75": {
+      "path": "site/icons/Runenode_Ray_1.png",
+      "fit": "meet"
+    },
+    "sprite-76": {
+      "path": "site/icons/Runenode_Ray_2.png",
+      "fit": "meet"
+    },
+    "sprite-78": {
+      "path": "assets/tree-icon-sources/TreePerkChangeProfile.png",
+      "fit": "meet"
+    },
+    "sprite-8": {
+      "path": "site/icons/Dice_Poison2.png",
+      "fit": "meet"
+    },
+    "sprite-80": {
+      "path": "site/icons/Dice_Electric2.png",
+      "fit": "meet"
+    },
+    "sprite-81": {
+      "path": "site/icons/Dice_Resonance2.png",
+      "fit": "meet"
+    },
+    "sprite-82": {
+      "path": "site/icons/Dice_shuriken2.png",
+      "fit": "meet"
+    },
+    "sprite-83": {
+      "path": "site/icons/Dice_summon2.png",
+      "fit": "meet"
+    },
+    "sprite-84": {
+      "path": "site/icons/Dice_Combo2.png",
+      "fit": "meet"
+    },
+    "sprite-85": {
+      "path": "site/icons/Dice_Adjust2.png",
+      "fit": "meet"
+    },
+    "sprite-86": {
+      "path": "site/icons/Dice_Potion2.png",
+      "fit": "meet"
+    },
+    "sprite-87": {
+      "path": "site/icons/Runenode_Electricity_0.png",
+      "fit": "meet"
+    },
+    "sprite-88": {
+      "path": "site/icons/Runenode_Electricity_1.png",
+      "fit": "meet"
+    },
+    "sprite-89": {
+      "path": "site/icons/Runenode_Electricity_2.png",
+      "fit": "meet"
+    },
+    "sprite-9": {
+      "path": "site/icons/Runenode_Fire_0.png",
+      "fit": "meet"
+    },
+    "sprite-90": {
+      "path": "site/icons/Runenode_Resonance_0.png",
+      "fit": "meet"
+    },
+    "sprite-91": {
+      "path": "site/icons/Runenode_Resonance_1.png",
+      "fit": "meet"
+    },
+    "sprite-92": {
+      "path": "site/icons/Runenode_Resonance_2.png",
+      "fit": "meet"
+    },
+    "sprite-93": {
+      "path": "site/icons/Runenode_Bullet_0.png",
+      "fit": "meet"
+    },
+    "sprite-94": {
+      "path": "site/icons/Runenode_Bullet_1.png",
+      "fit": "meet"
+    },
+    "sprite-95": {
+      "path": "site/icons/Runenode_Bullet_2.png",
+      "fit": "meet"
+    },
+    "sprite-96": {
+      "path": "site/icons/Runenode_Summon_0.png",
+      "fit": "meet"
+    },
+    "sprite-97": {
+      "path": "site/icons/Runenode_Summon_1.png",
+      "fit": "meet"
+    },
+    "sprite-98": {
+      "path": "site/icons/Runenode_Summon_2.png",
+      "fit": "meet"
+    },
+    "sprite-99": {
+      "path": "site/icons/Runenode_Combo_0.png",
+      "fit": "meet"
+    }
+  }
+}

@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="zh-tw">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#2f2942">
+    <meta name="description" content="查閱 Random Dice 2 的版本化骰子樹、骰子與事件圖鑑，並在模擬配點中規劃可分享的建構。" data-i18n-attr="content:brand.intro">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Random Dice 2 Lab">
+    <meta property="og:title" content="Random Dice 2 Lab｜骰子樹、圖鑑與配點工具">
+    <meta property="og:description" content="查閱 Random Dice 2 的版本化骰子樹、骰子與事件圖鑑，並在模擬配點中規劃可分享的建構。">
+    <meta property="og:url" content="https://rd2-lab.pages.dev/zh-tw/">
+    <meta property="og:image" content="https://rd2-lab.pages.dev/og-preview.png">
+    <meta property="og:image:alt" content="Random Dice 2 Lab 骰子樹預覽">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Random Dice 2 Lab｜骰子樹、圖鑑與配點工具">
+    <meta name="twitter:description" content="查閱 Random Dice 2 的版本化骰子樹、骰子與事件圖鑑，並在模擬配點中規劃可分享的建構。">
+    <meta name="twitter:image" content="https://rd2-lab.pages.dev/og-preview.png">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self';">
+    <base href="/">
+    <link id="seo-canonical" rel="canonical" href="https://rd2-lab.pages.dev/zh-tw/">
+    <link rel="alternate" hreflang="zh-Hant" href="https://rd2-lab.pages.dev/zh-tw/">
+    <link rel="alternate" hreflang="en" href="https://rd2-lab.pages.dev/en/">
+    <link rel="alternate" hreflang="ja" href="https://rd2-lab.pages.dev/ja/">
+    <link rel="alternate" hreflang="ko" href="https://rd2-lab.pages.dev/ko/">
+    <link rel="alternate" hreflang="x-default" href="https://rd2-lab.pages.dev/zh-tw/">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    <title data-i18n="brand.seoTitle">Random Dice 2 Lab｜骰子樹、圖鑑與配點工具</title>
+    <script id="seo-structured-data" type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Random Dice 2 Lab","url":"https://rd2-lab.pages.dev/zh-tw/","inLanguage":"zh-TW","description":"查閱 Random Dice 2 的版本化骰子樹、骰子與事件圖鑑，並在模擬配點中規劃可分享的建構。"}</script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800;900&family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-features.css">
+    <link rel="stylesheet" href="styles-overlays.css">
+  </head>
+  <body class="show-node-names">
+    <!-- Loading -->
+    <output id="loading-screen" class="loading-screen" aria-label="Random Dice 2 Lab loading" data-i18n-attr="aria-label:loader.loading">
+      <div class="loader-backdrop"></div>
+      <div class="loader-content">
+        <div class="loader-dice-stage">
+          <div class="loader-ambient-glow"></div>
+          <div class="loader-energy-rings">
+            <div class="energy-ring ring-1"></div>
+            <div class="energy-ring ring-2"></div>
+          </div>
+          <div class="loader-dice-3d">
+            <div class="dice-face face-front"></div>
+            <div class="dice-face face-back"></div>
+            <div class="dice-face face-right"></div>
+            <div class="dice-face face-left"></div>
+            <div class="dice-face face-top"></div>
+            <div class="dice-face face-bottom"></div>
+            <div class="dice-quantum-core"></div>
+          </div>
+        </div>
+        <div class="loader-info">
+          <div class="loader-brand-title" data-i18n="brand.title">RANDOM DICE 2 LAB</div>
+          <div class="loader-brand-sub" data-i18n="brand.subtitle">DATA EXPLORER</div>
+          <div class="loader-progress-track">
+            <div id="loader-progress-fill" class="loader-progress-fill"></div>
+          </div>
+          <div id="loader-status-label" class="loader-status-label" aria-live="polite" data-i18n="loader.loading">正在載入骰子樹資料…</div>
+          <button id="loader-retry-btn" class="loader-retry-btn" type="button" hidden data-i18n="loader.retry">重新載入</button>
+        </div>
+      </div>
+    </output>
+
+    <main class="app-shell" aria-labelledby="page-title">
+      <header class="topbar">
+        <h1 id="page-title" class="sr-only" data-i18n="brand.title">Random Dice 2 Lab</h1>
+        <p class="sr-only" data-i18n="brand.intro">查閱 Random Dice 2 的版本化骰子樹、骰子與事件圖鑑，並在模擬配點中規劃可分享的建構。</p>
+        <div class="search-block" role="search">
+          <div id="search-widget" class="search-widget" aria-label="搜尋骰子樹節點" aria-expanded="false" aria-controls="search-results" data-i18n-attr="aria-label:search.label">
+            <label class="sr-only" for="search-input" data-i18n="search.label">搜尋骰子樹節點</label>
+            <div class="search-field">
+              <svg class="search-icon-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input id="search-input" type="search" autocomplete="off" spellcheck="false" placeholder="搜尋骰子、符文、特性、技能關鍵字…" data-i18n-placeholder="search.placeholder" aria-label="搜尋骰子樹節點" data-i18n-attr="aria-label:search.label">
+              <button id="search-clear" class="icon-button search-clear" type="button" aria-label="清除搜尋內容" data-i18n-attr="aria-label:search.clear" hidden>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <kbd class="search-kbd" aria-hidden="true">/</kbd>
+            </div>
+            <div id="search-results" class="search-results" aria-label="搜尋結果" data-i18n-attr="aria-label:search.results" aria-live="polite" aria-hidden="true" inert hidden></div>
+            <p id="search-status" class="search-status sr-only" aria-live="polite" data-i18n="search.count" data-i18n-values='{"count":239}'>239 個節點</p>
+          </div>
+          <!-- Filter -->
+          <div id="filter-widget" class="filter-widget" aria-label="條件篩選" data-i18n-attr="aria-label:filter.title">
+            <button id="filter-toggle-btn" class="filter-toggle-btn" type="button" aria-expanded="false" aria-controls="filter-card" aria-label="展開篩選面板" title="篩選陣營與節點類型" data-i18n-attr="aria-label:filter.label;title:filter.title">
+              <svg class="filter-icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              <span class="filter-btn-label" data-i18n="filter.label">篩選</span>
+              <span id="filter-active-count-badge" class="filter-active-count-badge" hidden>0</span>
+            </button>
+            <dialog id="filter-card" class="filter-card" open aria-modal="false" aria-labelledby="filter-heading" aria-hidden="true">
+              <div class="filter-card-inner">
+                <header class="filter-card-header">
+                  <div class="filter-card-title-wrap">
+                    <span class="filter-card-badge" data-i18n="filter.badge">篩選</span>
+                    <h2 id="filter-heading" class="filter-card-title" data-i18n="filter.title">條件篩選</h2>
+                  </div>
+                  <div class="filter-card-header-actions">
+                    <button id="filter-clear-btn" type="button" class="filter-clear-btn" title="清除所有篩選" data-i18n-attr="title:filter.clearAll" hidden>
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                      <span data-i18n="filter.clear">清除</span>
+                    </button>
+                    <button id="filter-close-btn" class="filter-close-btn" type="button" aria-label="關閉篩選面板" data-i18n-attr="aria-label:filter.close">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                </header>
+                <div class="filter-card-body">
+                  <div class="filter-section">
+                    <span class="filter-section-label" data-i18n="filter.faction">陣營</span>
+                    <fieldset class="filter-group filter-branches" aria-label="篩選陣營" data-i18n-attr="aria-label:filter.faction">
+                      <button type="button" class="filter-chip branch-chip" data-branch="1" style="--chip-color: #8ae665;" data-i18n="faction.1">自然</button>
+                      <button type="button" class="filter-chip branch-chip" data-branch="2" style="--chip-color: #f9da67;" data-i18n="faction.2">工學</button>
+                      <button type="button" class="filter-chip branch-chip" data-branch="3" style="--chip-color: #4591f0;" data-i18n="faction.3">魔法</button>
+                      <button type="button" class="filter-chip branch-chip" data-branch="4" style="--chip-color: #9c97bc;" data-i18n="faction.4">秩序</button>
+                      <button type="button" class="filter-chip branch-chip" data-branch="5" style="--chip-color: #aa3cea;" data-i18n="faction.5">渾沌</button>
+                    </fieldset>
+                  </div>
+                  <div class="filter-section">
+                    <span class="filter-section-label" data-i18n="filter.type">類型</span>
+                    <fieldset class="filter-group filter-types" aria-label="篩選節點類型" data-i18n-attr="aria-label:filter.type">
+                      <button type="button" class="filter-chip type-chip" data-type="DICE" data-i18n="node.type.dice">骰子</button>
+                      <button type="button" class="filter-chip type-chip" data-type="DICE_RUNE" data-i18n="node.type.dice_rune">符文</button>
+                      <button type="button" class="filter-chip type-chip" data-type="PLAYER_PASSIVE" data-i18n="node.type.passive">被動</button>
+                      <button type="button" class="filter-chip type-chip" data-type="PERK" data-i18n="node.type.perk">支援</button>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </dialog>
+          </div>
+        </div>
+      </header>
+
+      <aside id="minimap-panel" class="minimap-panel" aria-label="骰子樹全景小地圖" data-i18n-attr="aria-label:map.minimap">
+        <div class="panel-heading">
+          <span id="zoom-readout" class="zoom-readout">100%</span>
+        </div>
+        <button id="minimap" class="minimap" type="button" aria-label="點擊小地圖定位視野" data-i18n-attr="aria-label:map.minimapLocate">
+          <canvas id="minimap-canvas" class="minimap-canvas" width="400" height="340" aria-label="骰子樹全圖縮圖" data-i18n-attr="aria-label:map.minimapAlt"></canvas>
+          <span id="minimap-window" class="minimap-window" aria-hidden="true"></span>
+        </button>
+      </aside>
+
+      <div id="viewport" class="map-viewport" role="application" aria-label="可互動骰子樹" data-i18n-attr="aria-label:map.label">
+        <div id="scene" class="map-scene" aria-label="骰子樹節點" data-i18n-attr="aria-label:map.nodes"></div>
+        <div id="empty-state" class="empty-state" hidden>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span data-i18n="search.empty">找不到符合條件的節點</span>
+        </div>
+      </div>
+
+      <div class="hud-toggle-group" aria-label="地圖輔助檢視功能" data-i18n-attr="aria-label:hud.group">
+        <button id="toggle-prereq-btn" class="hud-feature-btn is-active" type="button" aria-pressed="true" title="開啟後選取節點將標示其所有前置節點路徑" data-i18n-attr="title:hud.prereqTitle">
+          <span class="hud-checkbox-box">
+            <svg class="hud-check-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+              <path d="M4 12L9 17L19.5 5.5" fill="none" stroke="#22c55e" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="hud-feature-label" data-i18n="hud.prereq">查看前置節點</span>
+        </button>
+
+        <button id="toggle-node-names-btn" class="hud-feature-btn is-active" type="button" aria-pressed="true" title="在節點上方顯示節點名稱（不含符文）" data-i18n-attr="title:hud.namesTitle">
+          <span class="hud-checkbox-box">
+            <svg class="hud-check-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+              <path d="M4 12L9 17L19.5 5.5" fill="none" stroke="#22c55e" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="hud-feature-label" data-i18n="hud.names">查看名稱</span>
+        </button>
+
+        <button id="toggle-currency-btn" class="hud-feature-btn" type="button" aria-pressed="false" title="在所有節點上方顯示解鎖消耗" data-i18n-attr="title:hud.currencyTitle">
+          <span class="hud-checkbox-box">
+            <svg class="hud-check-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+              <path d="M4 12L9 17L19.5 5.5" fill="none" stroke="#22c55e" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="hud-feature-label" data-i18n="hud.currency">查看貨幣</span>
+        </button>
+
+        <button id="detailed-stats-btn" class="hud-feature-btn" type="button" aria-haspopup="dialog" aria-expanded="false" title="查看詳細能力加總" data-i18n-attr="title:hud.statsTitle">
+          <img class="hud-stat-icon" src="icons/LobbyIcon_Stat.png" width="28" height="28" alt="" aria-hidden="true">
+          <span class="hud-feature-label" data-i18n="hud.stats">詳細能力</span>
+        </button>
+
+        <div id="simulation-exit-widget" class="simulation-exit-widget">
+          <button id="simulation-toggle-btn" class="hud-feature-btn" type="button" aria-pressed="false" aria-haspopup="dialog" aria-expanded="false" aria-controls="simulation-exit-card" title="開啟模擬配點模式" data-i18n-attr="title:hud.simulationTitle">
+            <span class="hud-checkbox-box">
+              <svg class="hud-check-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+                <path d="M4 12L9 17L19.5 5.5" fill="none" stroke="#22c55e" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+            <span class="hud-feature-label" data-i18n="hud.simulation">模擬配點</span>
+          </button>
+          <dialog id="simulation-exit-card" class="simulation-exit-card" open aria-modal="false" aria-labelledby="simulation-exit-title" aria-hidden="true">
+            <div class="simulation-exit-card-inner">
+              <header class="simulation-exit-card-header">
+                <div class="simulation-exit-card-title-wrap">
+                  <span class="simulation-exit-card-badge" data-i18n="simulation.exitBadge">模擬</span>
+                  <h2 id="simulation-exit-title" class="simulation-exit-card-title" data-i18n="simulation.exitTitle">結束模擬</h2>
+                </div>
+                <button id="simulation-exit-close-btn" class="simulation-exit-close-btn" type="button" aria-label="關閉結束模擬面板" data-i18n-attr="aria-label:simulation.exitClose">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </header>
+              <p class="simulation-exit-description" data-i18n="simulation.exitDescription">選擇如何處理目前的模擬配點。</p>
+              <div class="simulation-exit-actions">
+                <button id="simulation-reset-exit-btn" class="simulation-exit-action-btn is-reset" type="button" data-i18n="simulation.resetAndExit">重置並離開</button>
+                <button id="simulation-pause-btn" class="simulation-exit-action-btn is-pause" type="button" data-i18n="simulation.pause">暫離</button>
+              </div>
+            </div>
+          </dialog>
+        </div>
+      </div>
+
+      <!-- Simulation -->
+      <div id="simulation-top-capsule-group" class="simulation-top-capsule-group" hidden>
+        <div class="simulation-currency-capsules">
+          <div class="simulation-currency-capsule is-core" title="本次模擬消耗核心" data-i18n-attr="title:simulation.coreSpent">
+            <svg class="simulation-currency-icon" aria-hidden="true"><use href="#sprite-186" xlink:href="#sprite-186"></use></svg>
+            <span id="simulation-core-total" class="simulation-capsule-value">0</span>
+          </div>
+          <div class="simulation-currency-capsule is-gold" title="本次模擬消耗金幣" data-i18n-attr="title:simulation.goldSpent">
+            <svg class="simulation-currency-icon" aria-hidden="true"><use href="#sprite-185" xlink:href="#sprite-185"></use></svg>
+            <span id="simulation-gold-total" class="simulation-capsule-value">0</span>
+          </div>
+        </div>
+        <div id="simulation-share-widget" class="simulation-share-widget" aria-label="分享模擬配點" data-i18n-attr="aria-label:simulation.shareTitle">
+          <button id="simulation-share-trigger-btn" class="simulation-share-trigger-btn" type="button" aria-expanded="false" aria-controls="simulation-share-card" aria-label="展開分享面板" title="分享模擬配點" data-i18n-attr="aria-label:simulation.shareOpen;title:simulation.shareTitle">
+            <svg class="simulation-share-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            <span class="simulation-share-btn-text" data-i18n="simulation.share">分享</span>
+          </button>
+          <dialog id="simulation-share-card" class="simulation-share-card" open aria-modal="false" aria-labelledby="simulation-share-title" aria-hidden="true">
+            <div class="simulation-share-card-inner">
+              <!-- Share -->
+              <div id="simulation-share-main-pane" class="simulation-share-pane simulation-share-main-pane">
+                <header class="simulation-share-card-header">
+                  <div class="simulation-share-card-title-wrap">
+                    <span class="simulation-share-card-badge" data-i18n="simulation.badge">分享</span>
+                    <h2 id="simulation-share-title" class="simulation-share-card-title" data-i18n="simulation.shareTitle">分享配置</h2>
+                  </div>
+                  <button id="simulation-share-close-btn" class="simulation-share-close-btn" type="button" aria-label="關閉分享面板" data-i18n-attr="aria-label:simulation.shareClose">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </header>
+                <div class="simulation-share-card-body">
+                  <!-- Link -->
+                  <div class="simulation-share-url-row">
+                    <div class="simulation-url-input-wrap">
+                      <input id="simulation-share-url" class="simulation-share-url-single" type="text" readonly aria-label="分享網址" data-i18n-attr="aria-label:simulation.shareTitle" />
+                    </div>
+                    <button id="simulation-copy-share-btn" class="simulation-share-copy-btn" type="button" data-i18n="simulation.copy">複製</button>
+                  </div>
+
+                  <!-- Preview -->
+                  <div class="simulation-image-preview-wrap">
+                    <div id="simulation-image-loading" class="simulation-image-loading" data-i18n="simulation.imageLoading">正在生成圖片…</div>
+                    <img id="simulation-share-image-preview" class="simulation-share-image-preview" alt="模擬配點圖片預覽" data-i18n-attr="alt:simulation.imageAlt" />
+                  </div>
+
+                  <!-- Download -->
+                  <button id="simulation-image-share-btn" class="simulation-download-image-btn" type="button" data-i18n="simulation.download">下載圖片</button>
+
+                  <!-- Divider -->
+                  <hr class="simulation-clean-divider" />
+
+                  <!-- Teams -->
+                  <div class="simulation-team-section">
+                    <div class="simulation-team-section-header">
+                      <span class="simulation-team-section-title" data-i18n="simulation.teamOptional">隊伍設定 (可選)</span>
+                      <span class="simulation-team-section-hint" data-i18n="simulation.teamHint">點擊任意格子編輯</span>
+                    </div>
+
+                    <!-- Team 1 -->
+                    <div id="simulation-team-row-1" class="simulation-team-row-clean">
+                      <div class="simulation-team-row-label-wrap">
+                        <span class="simulation-team-num" data-i18n="simulation.team" data-i18n-values='{"team":1}'>隊伍 1</span>
+                      </div>
+                      <div id="simulation-team-slots-1" class="simulation-team-slots-grid">
+                        <!-- Team slots -->
+                      </div>
+                    </div>
+
+                    <!-- Team 2 -->
+                    <div id="simulation-team-row-2" class="simulation-team-row-clean" hidden>
+                      <div class="simulation-team-row-label-wrap">
+                        <span class="simulation-team-num" data-i18n="simulation.team" data-i18n-values='{"team":2}'>隊伍 2</span>
+                      </div>
+                      <div id="simulation-team-slots-2" class="simulation-team-slots-grid">
+                        <!-- Team slots -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dice picker -->
+              <div id="simulation-picker-pane" class="simulation-share-pane simulation-picker-pane" hidden>
+                <header class="simulation-share-card-header simulation-picker-header">
+                  <div class="simulation-picker-nav-left">
+                    <button id="simulation-picker-back-btn" class="simulation-picker-back-btn" type="button" aria-label="返回分享配置" title="返回" data-i18n-attr="aria-label:simulation.pickerBack;title:common.close">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                      </svg>
+                    </button>
+                    <div class="simulation-share-card-title-wrap">
+                      <span id="simulation-picker-badge" class="simulation-share-card-badge">TEAM 1</span>
+                      <h2 id="simulation-picker-title" class="simulation-share-card-title" data-i18n="simulation.pickerTitle">選擇隊伍骰子</h2>
+                    </div>
+                  </div>
+                  <span id="simulation-picker-count" class="simulation-picker-count" data-i18n="simulation.pickerCount" data-i18n-values='{"count":0}'>已選擇 0/5</span>
+                </header>
+                <div class="simulation-picker-body">
+                  <div id="simulation-picker-grid" class="simulation-picker-grid compendium-compact-grid">
+                    <!-- Available dice -->
+                  </div>
+                </div>
+                <footer class="simulation-picker-actions">
+                  <button id="simulation-picker-cancel" class="simulation-picker-btn is-cancel" type="button" data-i18n="common.cancel">取消</button>
+                  <button id="simulation-picker-save" class="simulation-picker-btn is-save" type="button" disabled data-i18n="simulation.saveTeam">儲存隊伍</button>
+                </footer>
+              </div>
+            </div>
+          </dialog>
+        </div>
+      </div>
+
+      <aside id="disclaimer-widget" class="disclaimer-widget" aria-label="聲明與版權" data-i18n-attr="aria-label:widget.disclaimer.label">
+        <button id="disclaimer-toggle-btn" class="disclaimer-toggle-btn" type="button" aria-expanded="false" aria-controls="disclaimer-card" aria-label="查看專案聲明" title="聲明與版權" data-i18n-attr="aria-label:widget.disclaimer.open;title:widget.disclaimer.label">
+          <span class="disclaimer-question-icon" aria-hidden="true">?</span>
+        </button>
+        <dialog id="disclaimer-card" class="disclaimer-card" open aria-modal="false" aria-labelledby="disclaimer-heading" aria-hidden="true">
+          <div class="disclaimer-card-inner">
+            <header class="disclaimer-header">
+              <div class="disclaimer-title-wrap">
+                <span class="disclaimer-badge" data-i18n="widget.disclaimer.badge">玩家製作</span>
+                <h2 id="disclaimer-heading" class="disclaimer-title" data-i18n="widget.disclaimer.title">玩家製作專案</h2>
+              </div>
+              <button id="disclaimer-close-btn" class="disclaimer-close-btn" type="button" aria-label="關閉聲明" data-i18n-attr="aria-label:widget.disclaimer.close">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </header>
+            <div class="disclaimer-body">
+              <ul class="disclaimer-list">
+                <li>
+                  <span class="disclaimer-bullet" aria-hidden="true">✦</span>
+                  <div class="disclaimer-item-text" data-i18n-html="disclaimer.item.community">
+                    <strong>玩家製作</strong>：這是玩家維護的攻略資料庫與配點模擬器，與《Random Dice 2》及 <strong>111 Percent Inc.</strong> 沒有隸屬、授權或背書關係。
+                  </div>
+                </li>
+                <li>
+                  <span class="disclaimer-bullet" aria-hidden="true">✦</span>
+                  <div class="disclaimer-item-text" data-i18n-html="disclaimer.item.rights">
+                    <strong>著作權</strong>：遊戲中的美術、圖示、音效、文字、數值與商標，均歸 <strong>111 Percent Inc.</strong> 及各原權利人所有。
+                  </div>
+                </li>
+                <li>
+                  <span class="disclaimer-bullet" aria-hidden="true">✦</span>
+                  <div class="disclaimer-item-text" data-i18n-html="disclaimer.item.nonprofit">
+                    <strong>使用方式</strong>：本站不放廣告，也沒有付費功能；內容僅供玩家查閱、試算與交流。
+                  </div>
+                </li>
+              </ul>
+              <div class="disclaimer-contact-box">
+                <p class="disclaimer-takedown-notice">
+                  <em data-i18n-html="disclaimer.takedown">若您是 111 Percent Inc. 的代表，希望移除任何資產，請聯絡 <a href="mailto:itsestrella71@gmail.com" class="disclaimer-inline-link">itsestrella71@gmail.com</a>，我們會立即處理。</em>
+                </p>
+                <div class="disclaimer-contact-row">
+                  <span class="disclaimer-contact-label" data-i18n="disclaimer.contact">下架申請／資料回報：</span>
+                  <a href="mailto:itsestrella71@gmail.com" class="disclaimer-email-link" title="聯絡維護者" data-i18n-attr="title:disclaimer.emailTitle">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                      <path d="M22 7L12 13L2 7"></path>
+                    </svg>
+                    <span>itsestrella71@gmail.com</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </dialog>
+      </aside>
+
+      <aside id="changelog-widget" class="changelog-widget" aria-label="遊戲資料版本與更新日誌" data-i18n-attr="aria-label:widget.changelog.label">
+        <button id="changelog-open-btn" class="changelog-toggle-btn" type="button" aria-expanded="false" aria-controls="changelog-card" aria-label="查看遊戲資料更新日誌" title="查看遊戲資料更新日誌" data-i18n-attr="aria-label:widget.changelog.open;title:widget.changelog.open">
+          <span id="data-version-badge" class="data-version-badge" data-version="unknown">v—</span>
+        </button>
+        <dialog id="changelog-card" class="changelog-card" open aria-modal="false" aria-labelledby="changelog-heading" aria-hidden="true">
+          <div class="changelog-card-inner">
+            <header class="disclaimer-header">
+              <div class="disclaimer-title-wrap">
+                <h2 id="changelog-heading" class="disclaimer-title" data-i18n="widget.changelog.title">更新日誌</h2>
+              </div>
+              <button id="changelog-close-btn" class="disclaimer-close-btn changelog-close-btn" type="button" aria-label="關閉更新日誌" data-i18n-attr="aria-label:widget.changelog.close">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </header>
+            <div class="changelog-body">
+              <div class="changelog-entries-container" id="changelog-entries-container"></div>
+            </div>
+          </div>
+        </dialog>
+      </aside>
+
+      <aside id="locale-widget" class="locale-widget" aria-label="選擇顯示語言" data-i18n-attr="aria-label:widget.language.label">
+        <button id="locale-toggle-btn" class="locale-toggle-btn" type="button" aria-expanded="false" aria-controls="locale-card" aria-label="選擇顯示語言" title="選擇顯示語言" data-i18n-attr="aria-label:widget.language.open;title:widget.language.open">
+          <svg class="locale-globe-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M3 12h18M12 3c2.3 2.5 3.3 5.5 3.3 9s-1 6.5-3.3 9c-2.3-2.5-3.3-5.5-3.3-9S9.7 5.5 12 3z"></path>
+          </svg>
+        </button>
+        <dialog id="locale-card" class="locale-card" open aria-modal="false" aria-labelledby="locale-heading" aria-hidden="true">
+          <div class="locale-card-inner">
+            <header class="disclaimer-header">
+              <div class="disclaimer-title-wrap">
+                <span class="disclaimer-badge" data-i18n="widget.language.badge">語言</span>
+                <h2 id="locale-heading" class="disclaimer-title" data-i18n="widget.language.title">顯示語言</h2>
+              </div>
+              <button id="locale-close-btn" class="disclaimer-close-btn locale-close-btn" type="button" aria-label="關閉語言選擇" data-i18n-attr="aria-label:widget.language.close;title:common.close" title="關閉">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </header>
+            <fieldset class="locale-body" aria-label="顯示語言" data-i18n-attr="aria-label:widget.language.title">
+              <button type="button" class="locale-option" data-locale="zh-tw" aria-pressed="false">中文</button>
+              <button type="button" class="locale-option" data-locale="en" aria-pressed="false">English</button>
+              <button type="button" class="locale-option" data-locale="ja" aria-pressed="false">日本語</button>
+              <button type="button" class="locale-option" data-locale="ko" aria-pressed="false">한국어</button>
+            </fieldset>
+          </div>
+        </dialog>
+      </aside>
+
+      <footer class="statusbar">
+        <span id="interaction-status" class="interaction-status" data-i18n="status.interaction">拖曳移動視野・點擊節點查看詳情</span>
+        <span class="status-shortcuts"><kbd>+</kbd><kbd>−</kbd> <span data-i18n="status.shortcuts">縮放　重設　搜尋　關閉</span></span>
+      </footer>
+
+      <dialog id="tooltip" class="node-tooltip" open aria-modal="false" aria-labelledby="tooltip-title" aria-live="polite" hidden>
+        <div class="tooltip-main-panel">
+          <div class="tooltip-header">
+            <div class="tooltip-heading">
+              <h2 id="tooltip-title" class="tooltip-title" data-i18n="tooltip.nodeFallback">未命名節點</h2>
+              <div class="tooltip-badges">
+                <span id="tooltip-branch-badge" class="badge branch-badge" data-i18n="faction.1">自然</span>
+                <span id="tooltip-type-badge" class="badge type-badge" data-i18n="node.type.dice">骰子</span>
+                <span id="tooltip-rank-badge" class="badge rank-badge">1/1</span>
+              </div>
+            </div>
+            <div id="tooltip-dice-visual" class="tooltip-dice-visual" aria-hidden="true">
+              <img id="tooltip-dice-img" class="tooltip-dice-img" src="" alt="" />
+            </div>
+          </div>
+          <div id="tooltip-body" class="tooltip-body"></div>
+        </div>
+        <div id="tooltip-cost-panel" class="tooltip-cost-panel" hidden></div>
+      </dialog>
+
+      <!-- Tag details -->
+      <div id="tag-popover" class="tag-popover" role="tooltip" aria-hidden="true" hidden>
+        <div class="tag-popover-header">
+          <span id="tag-popover-badge" class="tag-popover-badge" data-i18n="tooltip.tagLabel">#標籤</span>
+        </div>
+        <p id="tag-popover-desc" class="tag-popover-desc"></p>
+      </div>
+
+      <!-- Combined stat bonus details -->
+      <div id="stat-bonus-popover" class="tag-popover stat-bonus-popover" role="tooltip" aria-labelledby="stat-bonus-popover-badge" aria-hidden="true" hidden>
+        <div class="tag-popover-header">
+          <span id="stat-bonus-popover-badge" class="tag-popover-badge stat-bonus-popover-badge"></span>
+        </div>
+        <div id="stat-bonus-popover-details" class="stat-bonus-popover-details"></div>
+      </div>
+
+      <!-- Compendium -->
+      <div id="compendium-shockwave-ring" class="compendium-shockwave-ring" aria-hidden="true"></div>
+
+      <dialog id="compendium-overlay" class="compendium-overlay" open aria-modal="true" aria-label="全骰子圖鑑" data-i18n-attr="aria-label:compendium.label" aria-hidden="true" inert hidden>
+        <header class="compendium-header">
+          <div class="compendium-header-inner">
+            <div class="compendium-nav-left">
+              <button id="compendium-back-btn" class="compendium-back-btn" type="button" aria-label="返回 Random Dice 2 Lab" data-i18n-attr="aria-label:compendium.back">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                  <span data-i18n="compendium.back">返回骰子樹</span>
+              </button>
+              <div class="compendium-title-group">
+                <div class="compendium-title-container">
+                  <div id="compendium-category-widget" class="compendium-category-widget" aria-label="圖鑑分類" data-i18n-attr="aria-label:compendium.category">
+                    <div id="compendium-category-surface" class="compendium-category-surface">
+                      <button id="compendium-category-toggle-btn" class="compendium-category-toggle-btn" type="button" aria-expanded="false" aria-controls="compendium-category-menu" aria-label="選擇圖鑑分類" data-i18n-attr="aria-label:compendium.categoryChoose">
+                        <span id="compendium-category-current-label" class="category-current-text" data-i18n="compendium.dice">骰子</span>
+                        <svg class="category-chevron-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </button>
+                    <div id="compendium-category-menu" class="compendium-category-menu" aria-label="圖鑑分類選項" data-i18n-attr="aria-label:compendium.categoryOptions" aria-hidden="true" inert>
+                        <button type="button" class="category-option-item is-selected" data-value="dice" aria-pressed="true" tabindex="-1" data-i18n="compendium.dice">骰子</button>
+                        <button type="button" class="category-option-item" data-value="monster" aria-pressed="false" tabindex="-1" data-i18n="compendium.monster">怪物</button>
+                        <button type="button" class="category-option-item" data-value="event" aria-pressed="false" tabindex="-1" data-i18n="compendium.event">事件</button>
+                      </div>
+                    </div>
+                  </div>
+                  <h2 class="compendium-title-suffix" data-i18n="compendium.titleSuffix">圖鑑</h2>
+                </div>
+                <span id="compendium-count-badge" class="compendium-count-badge" data-i18n="compendium.countDice" data-i18n-values='{"count":41}'>41 顆骰子</span>
+              </div>
+            </div>
+
+            <!-- Faction tabs -->
+            <div id="compendium-tabs" class="compendium-tabs" role="tablist" aria-label="圖鑑派系分類" data-i18n-attr="aria-label:compendium.category">
+              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-branch="all" data-i18n="compendium.all">全部</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-branch="1" style="--tab-color: #8ae665;" data-i18n="faction.1">自然</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-branch="2" style="--tab-color: #f9da67;" data-i18n="faction.2">工學</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-branch="3" style="--tab-color: #4591f0;" data-i18n="faction.3">魔法</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-branch="4" style="--tab-color: #9c97bc;" data-i18n="faction.4">秩序</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-branch="5" style="--tab-color: #aa3cea;" data-i18n="faction.5">渾沌</button>
+            </div>
+
+            <!-- Event tabs -->
+            <div id="compendium-event-tabs" class="compendium-tabs compendium-event-tabs" role="tablist" aria-label="事件模式篩選" data-i18n-attr="aria-label:compendium.event" hidden>
+              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-event-mode="all" data-i18n="compendium.modeAll">全部模式</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="coop" style="--tab-color: #4ecdc4;" data-i18n="compendium.coop">合作模式</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="versus" style="--tab-color: #ff5277;" data-i18n="compendium.versus">競技場</button>
+            </div>
+
+            <!-- Monster tabs -->
+            <div id="compendium-monster-tabs" class="compendium-tabs compendium-monster-tabs" role="tablist" aria-label="怪物難度篩選" data-i18n-attr="aria-label:compendium.monster" hidden>
+              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-monster-difficulty="normal" style="--tab-color: #ffffff;" data-i18n="compendium.normal">一般</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-monster-difficulty="hard" style="--tab-color: #F59E0B;" data-i18n="compendium.hard">困難</button>
+            </div>
+
+            <!-- Search and sort -->
+            <div class="compendium-controls">
+              <!-- View mode -->
+              <div class="compendium-view-toggle" role="radiogroup" aria-label="圖鑑顯示模式" data-i18n-attr="aria-label:compendium.viewMode">
+                <button type="button" class="view-toggle-btn is-active" data-mode="cards" title="詳情卡片模式" aria-label="詳情卡片模式" aria-pressed="true" data-i18n-attr="title:compendium.viewCards;aria-label:compendium.viewCards">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                  </svg>
+                  <span data-i18n="compendium.cards">卡片</span>
+                </button>
+                <button type="button" class="view-toggle-btn" data-mode="grid" title="編隊網格模式" aria-label="編隊網格模式" aria-pressed="false" data-i18n-attr="title:compendium.viewGrid;aria-label:compendium.viewGrid">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                  </svg>
+                  <span data-i18n="compendium.grid">網格</span>
+                </button>
+              </div>
+
+              <div class="compendium-search-wrap">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input id="compendium-search-input" type="search" placeholder="搜尋圖鑑內容…" aria-label="搜尋圖鑑內容" data-i18n-placeholder="compendium.searchPlaceholder" data-i18n-attr="aria-label:compendium.searchLabel">
+              </div>
+              <!-- Sort -->
+              <div id="compendium-sort-widget" class="compendium-sort-widget" aria-label="排序方式" data-i18n-attr="aria-label:compendium.sort">
+                <div id="compendium-sort-surface" class="compendium-sort-surface">
+                  <button id="compendium-sort-toggle-btn" class="compendium-sort-toggle-btn" type="button" aria-expanded="false" aria-controls="compendium-sort-menu" aria-label="選擇排序方式" data-i18n-attr="aria-label:compendium.sortChoose">
+                    <span id="compendium-sort-current-label" class="sort-current-label" data-i18n="compendium.sortDefault">預設排序</span>
+                    <svg class="sort-chevron-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  <div id="compendium-sort-menu" class="compendium-sort-menu" aria-label="排序選項" data-i18n-attr="aria-label:compendium.sortOptions" aria-hidden="true" inert>
+                    <button type="button" class="sort-option-item is-selected" data-value="default" aria-pressed="true" tabindex="-1" data-i18n="compendium.sortDefault">預設排序</button>
+                    <button type="button" class="sort-option-item" data-value="damage-desc" aria-pressed="false" tabindex="-1" data-i18n="compendium.sortDamage">攻擊力 (高到低)</button>
+                    <button type="button" class="sort-option-item" data-value="speed-asc" aria-pressed="false" tabindex="-1" data-i18n="compendium.sortSpeed">攻擊速度 (快到慢)</button>
+                    <button type="button" class="sort-option-item" data-value="name-asc" aria-pressed="false" tabindex="-1" data-i18n="compendium.sortName">名稱排序</button>
+                  </div>
+                </div>
+              </div>
+              <select id="compendium-sort-select" class="compendium-sort-select sr-only" aria-label="排序方式 (相容模式)" data-i18n-attr="aria-label:compendium.sort" tabindex="-1" aria-hidden="true">
+                    <option value="default" data-i18n="compendium.sortDefault">預設排序</option>
+                    <option value="damage-desc" data-i18n="compendium.sortDamage">攻擊力 (高到低)</option>
+                    <option value="speed-asc" data-i18n="compendium.sortSpeed">攻擊速度 (快到慢)</option>
+                    <option value="name-asc" data-i18n="compendium.sortName">名稱排序</option>
+              </select>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="compendium-content">
+          <div id="compendium-sections-wrap" class="compendium-sections-wrap"></div>
+          <div id="compendium-empty" class="compendium-empty" hidden>
+            <span data-i18n="compendium.empty">找不到符合條件的骰子</span>
+          </div>
+        </div>
+
+        <!-- Dice details -->
+        <dialog id="compendium-dice-modal" class="compendium-dice-modal" open aria-modal="true" aria-label="圖鑑詳細資訊" data-i18n-attr="aria-label:compendium.close" aria-hidden="true" inert hidden>
+          <div class="compendium-modal-backdrop"></div>
+          <div class="compendium-modal-content">
+            <button id="compendium-modal-close" class="compendium-modal-close-btn" type="button" aria-label="關閉骰子詳情" title="關閉" data-i18n-attr="aria-label:compendium.close;title:common.close">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <div id="compendium-modal-card-slot" class="compendium-modal-card-slot"></div>
+          </div>
+        </dialog>
+
+        <!-- Coming soon -->
+        <dialog id="coming-soon-modal" class="coming-soon-modal-backdrop" open aria-modal="true" aria-labelledby="coming-soon-title" aria-hidden="true" inert hidden>
+          <div class="coming-soon-modal-surface">
+            <button id="coming-soon-close-btn" class="coming-soon-close-btn" type="button" aria-label="關閉提示" title="關閉" data-i18n-attr="aria-label:common.close;title:common.close">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <h3 id="coming-soon-title" class="coming-soon-title" data-i18n="common.comingSoon">Coming Soon...</h3>
+          </div>
+        </dialog>
+      </dialog>
+
+      <dialog id="changelog-modal" class="changelog-modal" open aria-modal="true" aria-labelledby="changelog-heading" hidden></dialog>
+      
+      <!-- Stats -->
+      <dialog id="detailed-stats-modal" class="detailed-stats-modal-backdrop" open aria-modal="true" aria-labelledby="detailed-stats-heading" aria-hidden="true" inert hidden>
+        <div id="detailed-stats-card" class="detailed-stats-card">
+          <header class="detailed-stats-header">
+            <h2 id="detailed-stats-heading" class="detailed-stats-title" data-i18n="hud.stats">詳細能力</h2>
+            <button id="detailed-stats-close-btn" class="detailed-stats-close-btn" type="button" aria-label="關閉詳細能力" title="關閉" data-i18n-attr="aria-label:common.close;title:common.close">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </header>
+          <div id="detailed-stats-content-slot" class="detailed-stats-body"></div>
+        </div>
+      </dialog>
+    </main>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

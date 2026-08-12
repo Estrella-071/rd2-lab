@@ -1,0 +1,13 @@
+{
+  "name": "rd2-lab",
+  "pages_build_output_dir": ".pages",
+  "compatibility_date": "2026-08-25",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rd2-lab-shares",
+      "database_id": "64954abd-6289-41fb-af8f-8e1b3aa6cac2",
+      "migrations_dir": "./migrations"
+    }
+  ]
+}

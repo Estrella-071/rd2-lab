@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "snapshot": {
+    "snapshot_id": "random-dice-2-1.0.3",
+    "metadata_ref": "data/game_data_metadata.json",
+    "verified_at": "2026-08-23"
+  },
+  "monsters": {
+    "monster_1": {
+      "poster": "icons/monster_static_monster_1.png"
+    },
+    "monster_2": {
+      "poster": "icons/monster_static_monster_2.png"
+    },
+    "monster_3": {
+      "poster": "icons/monster_static_monster_3.png"
+    },
+    "monster_14": {
+      "poster": "icons/monster_static_monster_14.png"
+    },
+    "monster_15": {
+      "poster": "icons/monster_static_monster_15.png"
+    },
+    "boss_4": {
+      "poster": "icons/monster_static_boss_4.png"
+    },
+    "boss_5": {
+      "poster": "icons/monster_static_boss_5.png"
+    },
+    "boss_6": {
+      "poster": "icons/monster_static_boss_6.png"
+    },
+    "boss_7": {
+      "poster": "icons/monster_static_boss_7.png"
+    },
+    "boss_8": {
+      "poster": "icons/monster_static_boss_8.png"
+    },
+    "boss_9": {
+      "poster": "icons/monster_static_boss_9.png"
+    },
+    "boss_10": {
+      "poster": "icons/monster_static_boss_10.png"
+    },
+    "boss_11": {
+      "poster": "icons/monster_static_boss_11.png"
+    },
+    "boss_12": {
+      "poster": "icons/monster_static_boss_12.png"
+    },
+    "boss_13": {
+      "poster": "icons/monster_static_boss_13.png"
+    }
+  }
+}

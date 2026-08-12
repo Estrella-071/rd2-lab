@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Estrella-071/rd2-lab/schema/official-update-notices.schema.json",
+  "type": "object",
+  "required": ["schema_version", "notices"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "source_type": { "type": "string" },
+    "source_note_zh": { "type": "string" },
+    "notices": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/notice" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "change": {
+      "type": "object",
+      "required": ["category", "summary_zh"],
+      "properties": {
+        "category": { "type": "string", "minLength": 1 },
+        "table": { "type": "string" },
+        "entity": { "type": "string" },
+        "label": { "type": "string" },
+        "ids": { "type": "array", "items": { "type": "string" } },
+        "summary_zh": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "categories": {
+      "type": "object",
+      "required": ["added", "modified", "removed", "schema_changes", "important_values"],
+      "properties": {
+        "added": { "type": "array", "items": { "$ref": "#/$defs/change" } },
+        "modified": { "type": "array", "items": { "$ref": "#/$defs/change" } },
+        "removed": { "type": "array", "items": { "$ref": "#/$defs/change" } },
+        "schema_changes": { "type": "array", "items": { "$ref": "#/$defs/change" } },
+        "important_values": { "type": "array", "items": { "$ref": "#/$defs/change" } }
+      },
+      "additionalProperties": false
+    },
+    "notice": {
+      "type": "object",
+      "required": ["id", "locale", "published_at", "version", "effective_at", "title_zh", "categories"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "locale": { "type": "string", "minLength": 1 },
+        "published_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?Z$" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "version_basis_zh": { "type": "string" },
+        "effective_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$" },
+        "title_zh": { "type": "string", "minLength": 1 },
+        "summary_zh": { "type": "string" },
+        "categories": { "$ref": "#/$defs/categories" },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

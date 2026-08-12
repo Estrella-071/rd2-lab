@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 5,
+  "profile": "pages-local-lab",
+  "runs": 3,
+  "highRefreshRuns": 3,
+  "stressRuns": 1,
+  "viewport": {
+    "width": 1280,
+    "height": 800,
+    "deviceScaleFactor": 1
+  },
+  "mobileViewport": {
+    "width": 390,
+    "height": 844,
+    "deviceScaleFactor": 2
+  },
+  "artifact": {
+    "maxFiles": 710,
+    "maxTotalBytes": 28500000,
+    "maxStylesheetBytes": 177933,
+    "maxFileBytes": {
+      "data/dice_tree.svg": 380000,
+      "styles.css": 100000,
+      "styles-features.css": 75000,
+      "styles-overlays.css": 25000,
+      "src/ui/compendium_view.js": 20000
+    }
+  },
+  "browser": {
+    "maxFirstContentfulPaintMs": 800,
+    "maxLoadEventMs": 1800,
+    "maxTreeReadyMs": 1100,
+    "maxInteractiveReadyMs": 2200,
+    "maxSvgResponseEndMs": 1100,
+    "maxInitialTransferBytes": 14000000,
+    "maxLongTaskMs": 500,
+    "maxTotalBlockingTimeMs": 450,
+    "maxGestureFrameP95Ms": 55,
+    "maxHighZoomPanFrameP95Ms": 34,
+    "maxFilteredLowZoomPanFrameP95Ms": 34,
+    "maxFilteredLowZoomWheelFrameP95Ms": 34,
+    "maxFilterInteractionFrameP95Ms": 34,
+    "maxMobilePanFrameP95Ms": 55,
+    "maxMobilePinchFrameP95Ms": 34,
+    "maxRuntimeErrors": 0
+  },
+  "hostedCiBrowser": {
+    "maxTotalBlockingTimeMs": 550,
+    "maxFilteredLowZoomWheelFrameP95Ms": 55,
+    "maxFilterInteractionFrameP95Ms": 55,
+    "maxMobilePinchFrameP95Ms": 55
+  },
+  "highRefreshBrowser": {
+    "maxHighZoomPanFrameP95Ms": 8.34,
+    "minHighZoomPanAverageFps": 120,
+    "minHighZoomPanRefreshHz": 120,
+    "maxFilteredLowZoomPanFrameP95Ms": 8.34,
+    "minFilteredLowZoomPanAverageFps": 120,
+    "minFilteredLowZoomPanRefreshHz": 120,
+    "maxFilteredLowZoomWheelFrameP95Ms": 8.34,
+    "minFilteredLowZoomWheelAverageFps": 120,
+    "minFilteredLowZoomWheelRefreshHz": 120,
+    "maxFilterInteractionFrameP95Ms": 8.34,
+    "minFilterInteractionAverageFps": 120,
+    "minFilterInteractionRefreshHz": 120
+  },
+  "stressBrowser": {
+    "cpuThrottlingRate": 4
+  }
+}
