@@ -1488,7 +1488,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
    ========================================================================== */
 .node-tooltip {
   position: fixed;
-  z-index: 30;
+  z-index: 70;
   top: 0;
   left: 0;
   width: min(440px, calc(100vw - 32px));
@@ -2858,6 +2858,172 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   .dice-stat-icon-box img {
     width: 20px;
     height: 20px;
+  }
+
+  /* Keep the tree tooltip compact without changing its content structure. */
+  #tooltip.node-tooltip {
+    width: min(336px, calc(100vw - 32px));
+    max-width: min(336px, calc(100vw - 32px));
+    max-height: min(460px, calc(100vh - 120px));
+  }
+
+  #tooltip .tooltip-main-panel,
+  #tooltip .tooltip-cost-panel {
+    border-width: 2px;
+    border-radius: 14px;
+  }
+
+  #tooltip .tooltip-header {
+    padding: 9px 11px 7px;
+    gap: 10px;
+  }
+
+  #tooltip .tooltip-title {
+    font-size: 17px;
+    margin-bottom: 3px;
+  }
+
+  #tooltip .tooltip-badges {
+    gap: 6px;
+  }
+
+  #tooltip .tooltip-badges .badge {
+    height: 17px;
+    padding: 1px 5px;
+    font-size: 11px;
+  }
+
+  #tooltip .tooltip-dice-visual {
+    width: 60px;
+    height: 34px;
+    flex-basis: 60px;
+  }
+
+  #tooltip .tooltip-dice-img {
+    width: 80px;
+    height: 80px;
+    right: -3px;
+    top: -11px;
+  }
+
+  #tooltip .tooltip-body {
+    padding: 9px 11px 11px;
+    gap: 9px;
+    max-height: calc(min(440px, calc(100vh - 120px)) - 50px);
+  }
+
+  #tooltip .detail-section {
+    gap: 5px;
+  }
+
+  #tooltip .section-label {
+    font-size: 11px;
+  }
+
+  #tooltip .detail-copy {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  #tooltip .tooltip-hashtag-row {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  #tooltip .tooltip-hashtag-chip {
+    padding: 3px 8px;
+    font-size: 11.5px;
+  }
+
+  #tooltip .tooltip-divider {
+    margin: 9px 0 8px;
+  }
+
+  #tooltip .dice-stat-grid {
+    gap: 7px;
+  }
+
+  #tooltip .dice-stat-item {
+    gap: 6px;
+  }
+
+  #tooltip .dice-stat-icon-box {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+
+  #tooltip .dice-stat-icon-box img {
+    width: 18px;
+    height: 18px;
+  }
+
+  #tooltip .dice-stat-label {
+    font-size: 11px;
+  }
+
+  #tooltip .dice-stat-val {
+    gap: 2px;
+    font-size: 18px;
+  }
+
+  #tooltip .stat-compact-list {
+    gap: 5px 10px;
+    font-size: 14px;
+  }
+
+  #tooltip .stat-compact-item {
+    gap: 5px;
+  }
+
+  #tooltip .stat-compact-item .stat-label {
+    font-size: 12px;
+  }
+
+  #tooltip .tooltip-meta-box {
+    gap: 7px;
+    margin-top: 3px;
+    padding-top: 8px;
+    font-size: 14px;
+  }
+
+  #tooltip .meta-line {
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  #tooltip .meta-cost {
+    font-size: 15px;
+  }
+
+  #tooltip .currency-icon-svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #tooltip .rank-slider-wrap {
+    gap: 7px;
+    padding: 8px 11px;
+  }
+
+  #tooltip .slider-header {
+    font-size: 12px;
+  }
+
+  #tooltip .slider-title {
+    font-size: 11.5px;
+  }
+
+  #tooltip .slider-rank-display {
+    font-size: 12px;
+  }
+
+  #tooltip .slider-track-container {
+    height: 25px;
+  }
+
+  #tooltip .slider-cost-row {
+    font-size: 11.5px;
   }
 }
 

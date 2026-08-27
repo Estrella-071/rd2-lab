@@ -244,16 +244,34 @@ export async function runMobileViewportSuite(options = {}) {
     const mobileTooltip = await page.$eval('#tooltip', el => {
       const rect = el.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
+      const style = window.getComputedStyle(el);
+      const topbarStyle = window.getComputedStyle(document.querySelector('.topbar'));
+      const statGrid = el.querySelector('.dice-stat-grid');
+      const readFontSize = (selector) => {
+        const element = el.querySelector(selector);
+        return element ? Number.parseFloat(window.getComputedStyle(element).fontSize) : 0;
+      };
       return {
         position: window.getComputedStyle(el).position,
         width: rect.width,
-        deltaX: Math.abs(centerX - window.innerWidth / 2)
+        deltaX: Math.abs(centerX - window.innerWidth / 2),
+        zIndex: Number.parseInt(style.zIndex, 10),
+        topbarZIndex: Number.parseInt(topbarStyle.zIndex, 10),
+        titleFontSize: readFontSize('.tooltip-title'),
+        detailFontSize: readFontSize('.detail-copy'),
+        statValueFontSize: readFontSize('.dice-stat-val'),
+        statGridColumns: (statGrid ? window.getComputedStyle(statGrid).gridTemplateColumns : '').trim().split(/\s+/).filter(Boolean).length
       };
     });
     assertEqual(mobileTooltip.position, 'fixed', 'Mobile tooltip should use fixed positioning');
-    assert(mobileTooltip.width <= 350, `Mobile tooltip width should be <= 350px, got ${mobileTooltip.width}px`);
+    assert(mobileTooltip.width <= 338, `Mobile tooltip should be slightly reduced to <= 338px, got ${mobileTooltip.width}px`);
     assert(mobileTooltip.deltaX <= 20, `Mobile tooltip should be horizontally centered within 20px, got deltaX ${mobileTooltip.deltaX}px`);
-    passedAssertions += 3;
+    assert(mobileTooltip.zIndex > mobileTooltip.topbarZIndex, 'Mobile tooltip must layer above the topbar filter widget');
+    assert(mobileTooltip.titleFontSize <= 17.5, `Mobile tooltip title should be reduced, got ${mobileTooltip.titleFontSize}px`);
+    assert(mobileTooltip.detailFontSize <= 14.5, `Mobile tooltip copy should be reduced, got ${mobileTooltip.detailFontSize}px`);
+    assert(mobileTooltip.statValueFontSize <= 18.5, `Mobile tooltip stat values should be reduced, got ${mobileTooltip.statValueFontSize}px`);
+    assertEqual(mobileTooltip.statGridColumns, 2, 'Mobile tooltip must retain its two-column stat layout');
+    passedAssertions += 8;
 
     // ==========================================
     // Tier 3/4: Tooltip 智慧避讓 (Smart Avoidance) 與關閉動畫維護
