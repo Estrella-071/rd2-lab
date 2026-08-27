@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Random Dice 2 Lab — Monster Spine Demo</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { width: min(92vw, 420px); padding: 24px; text-align: center; }
+    h1 { margin: 0 0 16px; font-size: 20px; }
+    label { display: grid; gap: 6px; text-align: left; font-size: 13px; }
+    select { padding: 9px 10px; font: inherit; }
+    #stage { width: 260px; height: 260px; margin: 20px auto 12px; overflow: visible; }
+    canvas { display: block; width: 100%; height: 100%; background: transparent; }
+    #status { min-height: 1.4em; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Random Dice 2 Lab — Monster Spine Demo</h1>
+    <label>怪物
+      <select id="monster-select" disabled></select>
+    </label>
+    <div id="stage"><canvas id="monster-canvas" aria-label="怪物動畫"></canvas></div>
+    <div id="status">載入中</div>
+  </main>
+
+  <script src="vendor/spine-webgl.min.js"></script>
+  <script>
+    const embeddedPack = window.__MONSTER_ASSET_PACK__;
+    const select = document.querySelector('#monster-select');
+    const canvas = document.querySelector('#monster-canvas');
+    const stage = document.querySelector('#stage');
+    const status = document.querySelector('#status');
+    const assetRoot = '../';
+    const manifest = embeddedPack.manifest;
+    let current = null;
+
+    const assetUrl = (relativePath) => `${assetRoot}${relativePath}`;
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(stage.clientWidth * dpr));
+      canvas.height = Math.max(1, Math.round(stage.clientHeight * dpr));
+    }
+
+    function fitSkeleton(skeleton, api, fitPadding) {
+      skeleton.scaleX = 1;
+      skeleton.scaleY = 1;
+      skeleton.x = 0;
+      skeleton.y = 0;
+      skeleton.updateWorldTransform(spine.Physics.update);
+      const offset = new spine.Vector2();
+      const size = new spine.Vector2();
+      skeleton.getBounds(offset, size);
+      const width = api.renderer.camera.viewportWidth || canvas.width;
+      const height = api.renderer.camera.viewportHeight || canvas.height;
+      const scale = size.x > 0 && size.y > 0
+        ? Math.min(width / (size.x * fitPadding), height / (size.y * fitPadding))
+        : 1;
+      skeleton.scaleX = scale;
+      skeleton.scaleY = scale;
+      skeleton.x = -(offset.x + size.x / 2) * scale;
+      skeleton.y = -(offset.y + size.y / 2) * scale;
+    }
+
+    function disposeCurrent() {
+      if (!current) return;
+      current.resizeObserver?.disconnect();
+      current.spineCanvas.assetManager.dispose();
+      current.spineCanvas.renderer.dispose();
+      current.spineCanvas.dispose();
+      current = null;
+    }
+
+    function loadMonster(monsterId) {
+      const definition = manifest.monsters[monsterId];
+      disposeCurrent();
+      status.textContent = '載入中';
+      resizeCanvas();
+
+      const source = definition.spine;
+      const fitPadding = monsterId.startsWith('boss_') ? 1.2 : 1.35;
+      const skeletonPath = assetUrl(source.skeleton);
+      const atlasPath = assetUrl(source.atlas);
+      const texturePath = assetUrl(source.texture);
+      const embeddedSkeleton = embeddedPack.files[source.skeleton];
+      const embeddedAtlas = embeddedPack.files[source.atlas];
+      const embeddedTexture = embeddedPack.files[source.texture];
+      let skeleton = null;
+      let animationState = null;
+      let resizeObserver = null;
+      const player = { spineCanvas: null, resizeObserver: null };
+      current = player;
+
+      player.spineCanvas = new spine.SpineCanvas(canvas, {
+        webglConfig: { alpha: true, premultipliedAlpha: false, antialias: true },
+        app: {
+          loadAssets(api) {
+            api.assetManager.setRawDataURI(skeletonPath, embeddedSkeleton);
+            api.assetManager.setRawDataURI(atlasPath, embeddedAtlas);
+            api.assetManager.setRawDataURI(texturePath, embeddedTexture);
+            api.assetManager.loadBinary(skeletonPath);
+            api.assetManager.loadText(atlasPath);
+            api.assetManager.loadTexture(texturePath, (loadedPath, texture) => {
+              if (loadedPath !== texturePath) api.assetManager.assets[texturePath] = texture;
+            });
+          },
+          initialize(api) {
+            const atlasText = api.assetManager.get(atlasPath);
+            const atlas = new spine.TextureAtlas(atlasText);
+            atlas.setTextures(api.assetManager, atlasPath.slice(0, atlasPath.lastIndexOf('/') + 1));
+            const binary = new spine.SkeletonBinary(new spine.AtlasAttachmentLoader(atlas));
+            const data = binary.readSkeletonData(api.assetManager.get(skeletonPath));
+            skeleton = new spine.Skeleton(data);
+            animationState = new spine.AnimationState(new spine.AnimationStateData(data));
+            const animationName = data.findAnimation(source.animation)
+              ? source.animation
+              : (data.animations[0]?.name || null);
+            const iconChangeAnimationName = data.findAnimation('iconchange') ? 'iconchange' : null;
+            const entryAnimationName = data.findAnimation('appeared') ? 'appeared' : null;
+            const playAnimations = () => {
+              if (iconChangeAnimationName && entryAnimationName && animationName) {
+                // The boss timelines use iconchange for the pre-entry
+                // die pattern. It must finish before appeared reveals the star
+                // and assembles the full boss body.
+                animationState.setAnimation(0, iconChangeAnimationName, false);
+                animationState.addAnimation(0, entryAnimationName, false, 0);
+                animationState.addAnimation(0, animationName, true, 0);
+              } else if (entryAnimationName && animationName && entryAnimationName !== animationName) {
+                animationState.setAnimation(0, entryAnimationName, false);
+                animationState.addAnimation(0, animationName, true, 0);
+              } else if (animationName) {
+                animationState.setAnimation(0, animationName, true);
+              }
+            };
+            playAnimations();
+            if (animationName || entryAnimationName || iconChangeAnimationName) {
+              animationState.timeScale = 1;
+            }
+            if (entryAnimationName || iconChangeAnimationName) {
+              if (entryAnimationName) {
+                animationState.setAnimation(0, entryAnimationName, false);
+                animationState.apply(skeleton);
+                skeleton.updateWorldTransform(spine.Physics.update);
+                playAnimations();
+              }
+              animationState.apply(skeleton);
+              skeleton.updateWorldTransform(spine.Physics.update);
+            }
+            api.renderer.resize(spine.ResizeMode.Fit);
+            fitSkeleton(skeleton, api, fitPadding);
+            status.textContent = '已載入';
+            resizeCanvas();
+            api.renderer.resize(spine.ResizeMode.Fit);
+            fitSkeleton(skeleton, api, fitPadding);
+            if (typeof ResizeObserver === 'function') {
+              resizeObserver = new ResizeObserver(() => {
+                resizeCanvas();
+                api.renderer.resize(spine.ResizeMode.Fit);
+                fitSkeleton(skeleton, api, fitPadding);
+              });
+              resizeObserver.observe(stage);
+              player.resizeObserver = resizeObserver;
+            }
+          },
+          update(api, delta) {
+            if (!animationState || !skeleton) return;
+            animationState.update(delta);
+            animationState.apply(skeleton);
+            skeleton.updateWorldTransform(spine.Physics.update);
+          },
+          render(api) {
+            if (!skeleton) return;
+            api.clear(0, 0, 0, 0);
+            api.renderer.begin();
+            api.renderer.drawSkeleton(skeleton, false);
+            api.renderer.end();
+          }
+        }
+      });
+    }
+
+    Object.keys(manifest.monsters).forEach((id) => {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = id;
+      select.appendChild(option);
+    });
+    select.disabled = false;
+    select.addEventListener('change', () => loadMonster(select.value));
+    select.value = Object.keys(manifest.monsters)[0];
+    loadMonster(select.value);
+  </script>
+</body>
+</html>

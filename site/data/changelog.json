@@ -1,0 +1,687 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/generate_changelog.mjs",
+  "official_notices_source": "data/official_update_notices.json",
+  "canonical_version": "1.0.3",
+  "entries": [
+    {
+      "version": "1.0.0",
+      "from_version": null,
+      "date": null,
+      "categories": {
+        "added": [],
+        "modified": [],
+        "removed": [],
+        "schema_changes": [],
+        "important_values": []
+      },
+      "notes": [
+        "此版本是版本差異基準；日期未由來源確認。"
+      ]
+    },
+    {
+      "version": "1.0.2",
+      "from_version": "1.0.0",
+      "date": "2026-08-20T05:00:00+08:00",
+      "topology": {
+        "nodes": "239 -> 239",
+        "edges": "248 -> 248",
+        "changed_nodes": 5,
+        "changed_edges": 0
+      },
+      "categories": {
+        "added": [
+          {
+            "category": "localization",
+            "ids": [
+              "noti_popupstore_open_desc",
+              "noti_popupstore_open_title",
+              "popup_user_ban"
+            ],
+            "summary_zh": "新增 3 個 localization key",
+            "entity_type": "localization",
+            "entity": "localization",
+            "id": "noti_popupstore_open_desc, noti_popupstore_open_title, popup_user_ban",
+            "detail": "新增 3 個 localization key"
+          }
+        ],
+        "modified": [
+          {
+            "category": "nodes",
+            "table": "DiceTreeNodeTable",
+            "ids": [
+              "4307",
+              "4407",
+              "5304",
+              "5403",
+              "5404"
+            ],
+            "summary_zh": "5 個穩定 node ID 的 RankUpGoldArr／RankUpStoneArr 更新；1.0.3 沿用這些最終成本",
+            "important_values": [
+              {
+                "id": "4307",
+                "gold": 50000,
+                "core": 10
+              },
+              {
+                "id": "4407",
+                "gold": 100000,
+                "core": 20
+              },
+              {
+                "id": "5304",
+                "gold": 50000,
+                "core": 10
+              },
+              {
+                "id": "5403",
+                "gold": 100000,
+                "core": 20
+              },
+              {
+                "id": "5404",
+                "gold": 100000,
+                "core": 20
+              }
+            ],
+            "entity_type": "nodes",
+            "entity": "DiceTreeNodeTable",
+            "id": "4307, 4407, 5304, 5403, 5404",
+            "detail": "5 個穩定 node ID 的 RankUpGoldArr／RankUpStoneArr 更新；1.0.3 沿用這些最終成本",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK"
+            ],
+            "official_summaries_zh": [
+              "節點價格：2,000 金幣 → 50,000 金幣 + 10 個骰子核心",
+              "節點價格：2,000 金幣 → 100,000 金幣 + 20 個骰子核心",
+              "節點價格：100,000 金幣 + 10 個骰子核心 → 100,000 金幣 + 20 個骰子核心",
+              "節點價格：50,000 金幣 → 50,000 金幣 + 10 個骰子核心",
+              "節點價格：2,000 金幣 → 50,000 金幣 + 20 個骰子核心"
+            ]
+          },
+          {
+            "category": "tables",
+            "table": "ConstantsTable",
+            "ids": [
+              "Id=1"
+            ],
+            "summary_zh": "ShopOpenHour 19→11、ShopBusinessHours 3→12",
+            "entity_type": "tables",
+            "entity": "ConstantsTable",
+            "id": "Id=1",
+            "detail": "ShopOpenHour 19→11、ShopBusinessHours 3→12"
+          },
+          {
+            "category": "tables",
+            "table": "PopupPackageTable",
+            "ids": [
+              "TRG_LOOKS_GOOD",
+              "TRG_NINJA_TOUCH_2"
+            ],
+            "summary_zh": "兩個商店觸發條件改為 GOLD_AMOUNT 並調整 int／SHOP_OPEN 動作",
+            "entity_type": "tables",
+            "entity": "PopupPackageTable",
+            "id": "TRG_LOOKS_GOOD, TRG_NINJA_TOUCH_2",
+            "detail": "兩個商店觸發條件改為 GOLD_AMOUNT 並調整 int／SHOP_OPEN 動作"
+          },
+          {
+            "category": "localization",
+            "table": "localization_text",
+            "summary_zh": "219 個既有 key 的語言欄位修改",
+            "entity_type": "localization",
+            "entity": "localization_text",
+            "id": "",
+            "detail": "219 個既有 key 的語言欄位修改"
+          },
+          {
+            "category": "service",
+            "entity": "server_stability",
+            "summary_zh": "伺服器穩定化與錯誤修正",
+            "source_notice_id": "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
+            "evidence": "official_notice",
+            "entity_type": "service",
+            "id": "",
+            "detail": "伺服器穩定化與錯誤修正",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK"
+            ]
+          }
+        ],
+        "removed": [],
+        "schema_changes": [],
+        "important_values": [
+          {
+            "category": "nodes",
+            "summary_zh": "樹的 node ID、前置條件與拓撲沒有新增／移除；成本欄位是 1.0.2 的內容補丁",
+            "entity_type": "nodes",
+            "entity": "nodes",
+            "id": "",
+            "detail": "樹的 node ID、前置條件與拓撲沒有新增／移除；成本欄位是 1.0.2 的內容補丁"
+          },
+          {
+            "category": "nodes",
+            "table": "DiceTreeNodeTable",
+            "ids": [
+              "4307",
+              "4407",
+              "5403",
+              "5304",
+              "5404"
+            ],
+            "summary_zh": "對象節點更新後重置；先前消耗的貨幣全額返還，並補發變更後差額的金幣與骰子核心。",
+            "source_notice_id": "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
+            "evidence": "official_notice",
+            "entity_type": "nodes",
+            "entity": "DiceTreeNodeTable",
+            "id": "4307, 4407, 5403, 5304, 5404",
+            "detail": "對象節點更新後重置；先前消耗的貨幣全額返還，並補發變更後差額的金幣與骰子核心。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK"
+            ]
+          },
+          {
+            "category": "rewards",
+            "entity": "global_compensation",
+            "summary_zh": "全體更新補償：1 個骰子樹種子。",
+            "source_notice_id": "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
+            "evidence": "official_notice",
+            "entity_type": "rewards",
+            "id": "",
+            "detail": "全體更新補償：1 個骰子樹種子。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK"
+            ]
+          }
+        ]
+      },
+      "notes": [
+        "此條目整理 1.0.0 至 1.0.2 的公開版本資料變化。",
+        "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。",
+        "官方公告：伺服器穩定化、錯誤修正，以及五個骰子樹節點價格修正。",
+        "官方公告來源：WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK（發布 2026-08-19T13:40:06.000Z）",
+        "公告標題未明示版本；依使用者提供的 1.0.2／1.0.3 時序與 8/20、8/22 rollout 日期歸入 1.0.2，保留此映射註記。",
+        "公告指出更新期間可能限制登入或強制結束遊戲。",
+        "公告同時提到未來將收集意見並準備移除勢力戰、頂樓等戰術效果與其他便利性改善；這不代表本公告已完成所有後續變更。"
+      ],
+      "official_notices": [
+        {
+          "id": "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
+          "locale": "zh-tw",
+          "published_at": "2026-08-19T13:40:06.000Z",
+          "effective_at": "2026-08-20T05:00:00+08:00",
+          "title_zh": "8/20 錯誤修正與更新公告"
+        }
+      ]
+    },
+    {
+      "version": "1.0.3",
+      "from_version": "1.0.2",
+      "date": "2026-08-22T07:00:00+08:00",
+      "topology": {
+        "nodes": "239 -> 239",
+        "edges": "248 -> 248",
+        "changed_nodes": 0,
+        "changed_edges": 0
+      },
+      "categories": {
+        "added": [
+          {
+            "category": "localization",
+            "table": "localization_text",
+            "summary_zh": "新增 37 個 localization key",
+            "entity_type": "localization",
+            "entity": "localization_text",
+            "id": "",
+            "detail": "新增 37 個 localization key"
+          },
+          {
+            "category": "features",
+            "entity": "reporting",
+            "summary_zh": "新增檢舉功能；達到一定檢舉量後依營運政策處理停權。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "features",
+            "id": "",
+            "detail": "新增檢舉功能；達到一定檢舉量後依營運政策處理停權。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "features",
+            "entity": "frame_rate_setting",
+            "summary_zh": "遊戲內設定新增遊戲幀率調整功能。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "features",
+            "id": "",
+            "detail": "遊戲內設定新增遊戲幀率調整功能。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          }
+        ],
+        "modified": [
+          {
+            "category": "bosses",
+            "table": "DefenderTable",
+            "ids": [
+              "Ray",
+              "Solitude"
+            ],
+            "summary_zh": "Ray Attack_LvAdd 100→300；Solitude Attack 120→200",
+            "entity_type": "bosses",
+            "entity": "DefenderTable",
+            "id": "Ray, Solitude",
+            "detail": "Ray Attack_LvAdd 100→300；Solitude Attack 120→200"
+          },
+          {
+            "category": "dice",
+            "table": "DiceSkinTable",
+            "ids": [
+              "BINGO_DRAGON",
+              "COMBO_CLASSIC",
+              "ELEMENT_SUSHI",
+              "FIRE_METEOR",
+              "IRON_IRONMAN",
+              "LOCK_TALISMAN",
+              "PILLAR_HARUBANG",
+              "POISON_JELLY",
+              "SAWBLADE_BALLET",
+              "SHURIKEN_BANANA",
+              "TRAP_PASTA"
+            ],
+            "summary_zh": "11 個 skin 的 Buyable 值新增／更新",
+            "entity_type": "dice",
+            "entity": "DiceSkinTable",
+            "id": "BINGO_DRAGON, COMBO_CLASSIC, ELEMENT_SUSHI, FIRE_METEOR, IRON_IRONMAN, LOCK_TALISMAN, PILLAR_HARUBANG, POISON_JELLY, SAWBLADE_BALLET, SHURIKEN_BANANA, TRAP_PASTA",
+            "detail": "11 個 skin 的 Buyable 值新增／更新"
+          },
+          {
+            "category": "bosses",
+            "table": "MinionTable",
+            "ids": [
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14"
+            ],
+            "summary_zh": "新增 BossHpPerVersus；5、10、11、12 的 TrophyLevel 4→1；BossHpPerVersus 為 100 或 300",
+            "entity_type": "bosses",
+            "entity": "MinionTable",
+            "id": "4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14",
+            "detail": "新增 BossHpPerVersus；5、10、11、12 的 TrophyLevel 4→1；BossHpPerVersus 為 100 或 300"
+          },
+          {
+            "category": "bosses",
+            "table": "ProjectileAbilityTable",
+            "ids": [
+              "Ray"
+            ],
+            "summary_zh": "Ray Value_UpAdd 150→225",
+            "entity_type": "bosses",
+            "entity": "ProjectileAbilityTable",
+            "id": "Ray",
+            "detail": "Ray Value_UpAdd 150→225"
+          },
+          {
+            "category": "dice",
+            "table": "RuneTable",
+            "ids": [
+              "28",
+              "35",
+              "37",
+              "67",
+              "68",
+              "69"
+            ],
+            "summary_zh": "6 個 rune 的 Value1／Value2／rank add 數值更新",
+            "entity_type": "dice",
+            "entity": "RuneTable",
+            "id": "28, 35, 37, 67, 68, 69",
+            "detail": "6 個 rune 的 Value1／Value2／rank add 數值更新"
+          },
+          {
+            "category": "events",
+            "table": "TacticsEffectTable",
+            "summary_zh": "21 筆 VersusTime 由 60 調整為 30、40、50 或 55",
+            "entity_type": "events",
+            "entity": "TacticsEffectTable",
+            "id": "",
+            "detail": "21 筆 VersusTime 由 60 調整為 30、40、50 或 55"
+          },
+          {
+            "category": "events",
+            "table": "CoopWaveTable",
+            "ids": [
+              "21",
+              "26",
+              "31",
+              "36",
+              "46",
+              "56",
+              "66",
+              "71",
+              "76"
+            ],
+            "summary_zh": "9 筆 CoopTacticsIndex 的事件排序／集合更新",
+            "entity_type": "events",
+            "entity": "CoopWaveTable",
+            "id": "21, 26, 31, 36, 46, 56, 66, 71, 76",
+            "detail": "9 筆 CoopTacticsIndex 的事件排序／集合更新"
+          },
+          {
+            "category": "events",
+            "table": "VersusWaveTable",
+            "ids": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "summary_zh": "11 個競技場波次的 Duration、HPIncrease、速度與間隔更新",
+            "entity_type": "events",
+            "entity": "VersusWaveTable",
+            "id": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11",
+            "detail": "11 個競技場波次的 Duration、HPIncrease、速度與間隔更新"
+          },
+          {
+            "category": "events",
+            "table": "TutorialTable",
+            "summary_zh": "28 筆教學流程欄位更新",
+            "entity_type": "events",
+            "entity": "TutorialTable",
+            "id": "",
+            "detail": "28 筆教學流程欄位更新"
+          },
+          {
+            "category": "localization",
+            "table": "localization_text",
+            "summary_zh": "16 個既有 key 的語言欄位修改",
+            "entity_type": "localization",
+            "entity": "localization_text",
+            "id": "",
+            "detail": "16 個既有 key 的語言欄位修改"
+          },
+          {
+            "category": "tickets",
+            "entity": "ticket_policy",
+            "summary_zh": "觀看廣告可獲票券次數 3 次 → 10 次；每日登入固定發放合作戰票券 5 張、競技場票券 1 張。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "tickets",
+            "id": "",
+            "detail": "觀看廣告可獲票券次數 3 次 → 10 次；每日登入固定發放合作戰票券 5 張、競技場票券 1 張。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "events",
+            "entity": "coop_round_system",
+            "summary_zh": "合作戰調整首領登場與通關條件：一般怪物仍在場時也可於一定時間後進入首領戰；擊殺最後一個怪物即通關。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "events",
+            "id": "",
+            "detail": "合作戰調整首領登場與通關條件：一般怪物仍在場時也可於一定時間後進入首領戰；擊殺最後一個怪物即通關。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "events",
+            "entity": "boss_enrage",
+            "summary_zh": "首領登場 40 秒後狂暴化；合作戰只套用首領，競技場套用所有怪物。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "events",
+            "id": "",
+            "detail": "首領登場 40 秒後狂暴化；合作戰只套用首領，競技場套用所有怪物。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "bosses",
+            "entity": "knight",
+            "summary_zh": "騎士技能由影響所有 15 個目標調整為隨機 3 個目標。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "bosses",
+            "id": "",
+            "detail": "騎士技能由影響所有 15 個目標調整為隨機 3 個目標。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "versus",
+            "entity": "sp_reward",
+            "summary_zh": "競技場 SP 發放量 100 → 250；並提高每回合敵人生命值增幅與首領生命值。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "versus",
+            "id": "",
+            "detail": "競技場 SP 發放量 100 → 250；並提高每回合敵人生命值增幅與首領生命值。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "dice",
+            "entity": "seal",
+            "summary_zh": "調整永久封印的套用範圍。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "dice",
+            "id": "",
+            "detail": "調整永久封印的套用範圍。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "dice",
+            "entity": "combo",
+            "summary_zh": "專用能力 1：連擊傷害 10 → 20、各等級提升 2 → 6；能力 2：疊加 0–2 → 0–3；能力 3：20% → 30%。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "dice",
+            "id": "",
+            "detail": "專用能力 1：連擊傷害 10 → 20、各等級提升 2 → 6；能力 2：疊加 0–2 → 0–3；能力 3：20% → 30%。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "dice",
+            "entity": "light",
+            "summary_zh": "子彈攻擊力骰點提升 100 → 300；強化數值 150% → 225%。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "dice",
+            "id": "",
+            "detail": "子彈攻擊力骰點提升 100 → 300；強化數值 150% → 225%。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "dice",
+            "entity": "magic_bullet",
+            "summary_zh": "強化魔彈登場機率 10% → 30%。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "dice",
+            "id": "",
+            "detail": "強化魔彈登場機率 10% → 30%。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "dice",
+            "entity": "gear",
+            "summary_zh": "基本骰子攻擊力增加對象基本 5 → 40；各等級提升 11 → 20。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "dice",
+            "id": "",
+            "detail": "基本骰子攻擊力增加對象基本 5 → 40；各等級提升 11 → 20。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "dice",
+            "entity": "solitude",
+            "summary_zh": "基本傷害 120 → 200。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "dice",
+            "id": "",
+            "detail": "基本傷害 120 → 200。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          }
+        ],
+        "removed": [
+          {
+            "category": "events",
+            "table": "TutorialTable",
+            "ids": [
+              "51",
+              "52"
+            ],
+            "summary_zh": "移除 2 筆 tutorial row；不是公開事件圖鑑事件，因此不影響 historical_events preservation",
+            "entity_type": "events",
+            "entity": "TutorialTable",
+            "id": "51, 52",
+            "detail": "移除 2 筆 tutorial row；不是公開事件圖鑑事件，因此不影響 historical_events preservation"
+          },
+          {
+            "category": "events",
+            "entity": "tactics_effects",
+            "ids": [
+              "勢力戰",
+              "頂樓",
+              "和平主義者"
+            ],
+            "summary_zh": "合作戰戰術效果調整／移除：勢力戰轉換為 2 種、頂樓改為上方第 1 排、和平主義者鎖定 3 個隨機骰子。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "events",
+            "id": "勢力戰, 頂樓, 和平主義者",
+            "detail": "合作戰戰術效果調整／移除：勢力戰轉換為 2 種、頂樓改為上方第 1 排、和平主義者鎖定 3 個隨機骰子。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          }
+        ],
+        "schema_changes": [
+          {
+            "category": "dice",
+            "table": "DiceSkinTable",
+            "fields": [
+              "Buyable"
+            ],
+            "summary_zh": "新增 Buyable 欄位（原始 table schema change；public JSON schema 保持向後相容）",
+            "entity_type": "dice",
+            "entity": "DiceSkinTable",
+            "id": "",
+            "detail": "新增 Buyable 欄位（原始 table schema change；public JSON schema 保持向後相容）"
+          },
+          {
+            "category": "bosses",
+            "table": "MinionTable",
+            "fields": [
+              "BossHpPerVersus"
+            ],
+            "summary_zh": "新增 BossHpPerVersus 欄位（原始 table schema change；public JSON schema 保持向後相容）",
+            "entity_type": "bosses",
+            "entity": "MinionTable",
+            "id": "",
+            "detail": "新增 BossHpPerVersus 欄位（原始 table schema change；public JSON schema 保持向後相容）"
+          }
+        ],
+        "important_values": [
+          {
+            "category": "topology",
+            "summary_zh": "1.0.2→1.0.3 沒有 node／edge 新增、移除或前置條件變更",
+            "entity_type": "topology",
+            "entity": "topology",
+            "id": "",
+            "detail": "1.0.2→1.0.3 沒有 node／edge 新增、移除或前置條件變更"
+          },
+          {
+            "category": "bosses",
+            "summary_zh": "MinionTable 的 BossHpPerVersus 已進入 1.0.3 canonical compendium",
+            "entity_type": "bosses",
+            "entity": "bosses",
+            "id": "",
+            "detail": "MinionTable 的 BossHpPerVersus 已進入 1.0.3 canonical compendium"
+          },
+          {
+            "category": "rewards",
+            "entity": "update_compensation",
+            "summary_zh": "更新獎勵：10 張合作戰票券、1 張競技場票券；可領取至 2026-08-23 22:59（公告原文）。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "rewards",
+            "id": "",
+            "detail": "更新獎勵：10 張合作戰票券、1 張競技場票券；可領取至 2026-08-23 22:59（公告原文）。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          },
+          {
+            "category": "events",
+            "entity": "removed_tactics",
+            "summary_zh": "公告明確列出合作戰戰術效果的調整；這些是遊戲內效果，不等同於公開事件圖鑑 entity 的移除。",
+            "source_notice_id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+            "evidence": "official_notice",
+            "entity_type": "events",
+            "id": "",
+            "detail": "公告明確列出合作戰戰術效果的調整；這些是遊戲內效果，不等同於公開事件圖鑑 entity 的移除。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+            ]
+          }
+        ]
+      },
+      "notes": [
+        "此條目整理 1.0.2 至 1.0.3 的公開版本資料變化。",
+        "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。",
+        "官方公告：改善合作戰與競技場、增加檢舉與幀率設定、調整骰子平衡並修正多項錯誤。",
+        "官方公告來源：WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo（發布 2026-08-19T13:40:06.000Z）",
+        "公告的套用時間是各平台商店依序發布的起始時間，不代表所有玩家同時完成更新。",
+        "其他錯誤修正包括合成召喚重複產生、競技場撲克時間顯示、SP 怪物雙倍 SP，以及召喚骰子合成加成未套用。"
+      ],
+      "official_notices": [
+        {
+          "id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+          "locale": "zh-tw",
+          "published_at": "2026-08-19T13:40:06.000Z",
+          "effective_at": "2026-08-22T07:00:00+08:00",
+          "title_zh": "V1.0.3 更新公告"
+        }
+      ]
+    }
+  ]
+}

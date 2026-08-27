@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "evidence_boundary_zh": "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。",
+  "pairs": [
+    {
+      "from_version": "1.0.0",
+      "to_version": "1.0.2",
+      "date": null,
+      "topology": {
+        "nodes": "239 -> 239",
+        "edges": "248 -> 248",
+        "changed_nodes": 5,
+        "changed_edges": 0
+      },
+      "added": [
+        {
+          "category": "localization",
+          "ids": ["noti_popupstore_open_desc", "noti_popupstore_open_title", "popup_user_ban"],
+          "summary_zh": "新增 3 個 localization key"
+        }
+      ],
+      "modified": [
+        {
+          "category": "nodes",
+          "table": "DiceTreeNodeTable",
+          "ids": ["4307", "4407", "5304", "5403", "5404"],
+          "summary_zh": "5 個穩定 node ID 的 RankUpGoldArr／RankUpStoneArr 更新；1.0.3 沿用這些最終成本",
+          "important_values": [
+            {"id": "4307", "gold": 50000, "core": 10},
+            {"id": "4407", "gold": 100000, "core": 20},
+            {"id": "5304", "gold": 50000, "core": 10},
+            {"id": "5403", "gold": 100000, "core": 20},
+            {"id": "5404", "gold": 100000, "core": 20}
+          ]
+        },
+        {
+          "category": "tables",
+          "table": "ConstantsTable",
+          "ids": ["Id=1"],
+          "summary_zh": "ShopOpenHour 19→11、ShopBusinessHours 3→12"
+        },
+        {
+          "category": "tables",
+          "table": "PopupPackageTable",
+          "ids": ["TRG_LOOKS_GOOD", "TRG_NINJA_TOUCH_2"],
+          "summary_zh": "兩個商店觸發條件改為 GOLD_AMOUNT 並調整 int／SHOP_OPEN 動作"
+        },
+        {
+          "category": "localization",
+          "table": "localization_text",
+          "summary_zh": "219 個既有 key 的語言欄位修改"
+        }
+      ],
+      "removed": [],
+      "schema_changes": [],
+      "important_values": [
+        {
+          "category": "nodes",
+          "summary_zh": "樹的 node ID、前置條件與拓撲沒有新增／移除；成本欄位是 1.0.2 的內容補丁"
+        }
+      ],
+      "notes_zh": "此條目整理 1.0.0 至 1.0.2 的公開版本資料變化。"
+    },
+    {
+      "from_version": "1.0.2",
+      "to_version": "1.0.3",
+      "date": null,
+      "topology": {
+        "nodes": "239 -> 239",
+        "edges": "248 -> 248",
+        "changed_nodes": 0,
+        "changed_edges": 0
+      },
+      "added": [
+        {
+          "category": "localization",
+          "table": "localization_text",
+          "summary_zh": "新增 37 個 localization key"
+        }
+      ],
+      "modified": [
+        {
+          "category": "bosses",
+          "table": "DefenderTable",
+          "ids": ["Ray", "Solitude"],
+          "summary_zh": "Ray Attack_LvAdd 100→300；Solitude Attack 120→200"
+        },
+        {
+          "category": "dice",
+          "table": "DiceSkinTable",
+          "ids": ["BINGO_DRAGON", "COMBO_CLASSIC", "ELEMENT_SUSHI", "FIRE_METEOR", "IRON_IRONMAN", "LOCK_TALISMAN", "PILLAR_HARUBANG", "POISON_JELLY", "SAWBLADE_BALLET", "SHURIKEN_BANANA", "TRAP_PASTA"],
+          "summary_zh": "11 個 skin 的 Buyable 值新增／更新"
+        },
+        {
+          "category": "bosses",
+          "table": "MinionTable",
+          "ids": ["4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"],
+          "summary_zh": "新增 BossHpPerVersus；5、10、11、12 的 TrophyLevel 4→1；BossHpPerVersus 為 100 或 300"
+        },
+        {
+          "category": "bosses",
+          "table": "ProjectileAbilityTable",
+          "ids": ["Ray"],
+          "summary_zh": "Ray Value_UpAdd 150→225"
+        },
+        {
+          "category": "dice",
+          "table": "RuneTable",
+          "ids": ["28", "35", "37", "67", "68", "69"],
+          "summary_zh": "6 個 rune 的 Value1／Value2／rank add 數值更新"
+        },
+        {
+          "category": "events",
+          "table": "TacticsEffectTable",
+          "summary_zh": "21 筆 VersusTime 由 60 調整為 30、40、50 或 55"
+        },
+        {
+          "category": "events",
+          "table": "CoopWaveTable",
+          "ids": ["21", "26", "31", "36", "46", "56", "66", "71", "76"],
+          "summary_zh": "9 筆 CoopTacticsIndex 的事件排序／集合更新"
+        },
+        {
+          "category": "events",
+          "table": "VersusWaveTable",
+          "ids": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+          "summary_zh": "11 個競技場波次的 Duration、HPIncrease、速度與間隔更新"
+        },
+        {
+          "category": "events",
+          "table": "TutorialTable",
+          "summary_zh": "28 筆教學流程欄位更新"
+        },
+        {
+          "category": "localization",
+          "table": "localization_text",
+          "summary_zh": "16 個既有 key 的語言欄位修改"
+        }
+      ],
+      "removed": [
+        {
+          "category": "events",
+          "table": "TutorialTable",
+          "ids": ["51", "52"],
+          "summary_zh": "移除 2 筆 tutorial row；不是公開事件圖鑑事件，因此不影響 historical_events preservation"
+        }
+      ],
+      "schema_changes": [
+        {
+          "category": "dice",
+          "table": "DiceSkinTable",
+          "fields": ["Buyable"],
+          "summary_zh": "新增 Buyable 欄位（原始 table schema change；public JSON schema 保持向後相容）"
+        },
+        {
+          "category": "bosses",
+          "table": "MinionTable",
+          "fields": ["BossHpPerVersus"],
+          "summary_zh": "新增 BossHpPerVersus 欄位（原始 table schema change；public JSON schema 保持向後相容）"
+        }
+      ],
+      "important_values": [
+        {
+          "category": "topology",
+          "summary_zh": "1.0.2→1.0.3 沒有 node／edge 新增、移除或前置條件變更"
+        },
+        {
+          "category": "bosses",
+          "summary_zh": "MinionTable 的 BossHpPerVersus 已進入 1.0.3 canonical compendium"
+        }
+      ],
+      "notes_zh": "此條目整理 1.0.2 至 1.0.3 的公開版本資料變化。"
+    }
+  ]
+}

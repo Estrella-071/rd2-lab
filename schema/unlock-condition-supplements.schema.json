@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Estrella-071/rd2-lab/schema/unlock-condition-supplements.schema.json",
+  "title": "Random Dice 2 unlock condition supplements",
+  "type": "object",
+  "required": ["schema_version", "snapshot_id", "purpose", "resource_free_nodes", "entries"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "snapshot_id": { "const": "random-dice-2-1.0.3" },
+    "purpose": { "type": "string", "minLength": 1 },
+    "resource_free_nodes": {
+      "type": "array",
+      "minItems": 8,
+      "items": { "$ref": "#/$defs/resourceFreeNode" }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "$ref": "#/$defs/unlockSupplement" }
+    }
+  },
+  "$defs": {
+    "resourceFreeNode": {
+      "type": "object",
+      "required": ["node_id", "reason", "source_type", "source_note"],
+      "properties": {
+        "node_id": { "type": "string", "pattern": "^[0-9]+$" },
+        "reason": { "type": "string", "enum": ["initial_dice", "special_unlock_dice"] },
+        "source_type": { "const": "owner_confirmed" },
+        "source_note": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "unlockSupplement": {
+      "type": "object",
+      "required": ["node_id", "condition", "key", "label_zh", "value", "raw_value", "source_type", "source_note"],
+      "properties": {
+        "node_id": { "type": "string", "pattern": "^[0-9]+$" },
+        "condition": { "type": "string", "minLength": 1 },
+        "key": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+        "label_zh": { "type": "string", "minLength": 1 },
+        "value": { "type": "string", "pattern": "^[0-9]+$" },
+        "raw_value": { "type": "string" },
+        "source_type": { "type": "string", "enum": ["owner_confirmed", "client_table_confirmed"] },
+        "source_note": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rd2-lab.example/schema/game-data-metadata.schema.json",
+  "title": "Random Dice 2 Lab public metadata",
+  "type": "object",
+  "required": ["schema_version", "canonical", "source", "versions"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "canonical": {
+      "type": "object",
+      "required": ["game_version", "snapshot_id", "public_schema_versions", "tree_path", "events_path", "visuals_path", "changelog_path", "official_notices_path", "provenance_path"],
+      "properties": {
+        "game_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "snapshot_id": { "type": "string", "pattern": "^random-dice-2-\\d+\\.\\d+\\.\\d+$" },
+        "public_schema_versions": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+        "tree_path": { "const": "data/dice_tree.json" },
+        "events_path": { "const": "boss_event_data.json" },
+        "visuals_path": { "const": "monster_visuals.json" },
+        "changelog_path": { "const": "data/changelog.json" },
+        "official_notices_path": { "const": "data/official_update_notices.json" },
+        "provenance_path": { "const": "data/provenance.json" }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["snapshot_id", "official_notice_ids", "tree_node_count", "tree_edge_count", "verified_at", "evidence_boundary_zh"],
+      "properties": {
+        "snapshot_id": { "type": "string" },
+        "official_notice_ids": { "type": "array", "items": { "type": "string" } },
+        "tree_node_count": { "type": "integer", "minimum": 0 },
+        "tree_edge_count": { "type": "integer", "minimum": 0 },
+        "verified_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "evidence_boundary_zh": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "versions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["version", "snapshot_id", "date", "text_asset_count", "table_count", "localization_rows", "node_count", "edge_count", "completeness_zh"],
+        "properties": {
+          "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+          "snapshot_id": { "type": "string" },
+          "date": { "type": ["string", "null"] },
+          "text_asset_count": { "type": "integer", "minimum": 0 },
+          "table_count": { "type": "integer", "minimum": 0 },
+          "localization_rows": { "type": "integer", "minimum": 0 },
+          "node_count": { "type": "integer", "minimum": 0 },
+          "edge_count": { "type": "integer", "minimum": 0 },
+          "completeness_zh": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

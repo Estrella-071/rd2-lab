@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "source_type": "official_webview_notice",
+  "source_note_zh": "公告由使用者提供；未提供可驗證的公開 URL，因此保留 WebView notice ID 與發布時間，不猜測 URL。",
+  "notices": [
+    {
+      "id": "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
+      "locale": "zh-tw",
+      "published_at": "2026-08-19T13:40:06.000Z",
+      "version": "1.0.2",
+      "version_basis_zh": "公告標題未明示版本；依使用者提供的 1.0.2／1.0.3 時序與 8/20、8/22 rollout 日期歸入 1.0.2，保留此映射註記。",
+      "effective_at": "2026-08-20T05:00:00+08:00",
+      "title_zh": "8/20 錯誤修正與更新公告",
+      "summary_zh": "伺服器穩定化、錯誤修正，以及五個骰子樹節點價格修正。",
+      "categories": {
+        "added": [],
+        "modified": [
+          { "category": "nodes", "table": "DiceTreeNodeTable", "ids": ["4307"], "label": "排序疊加強化", "summary_zh": "節點價格：2,000 金幣 → 50,000 金幣 + 10 個骰子核心" },
+          { "category": "nodes", "table": "DiceTreeNodeTable", "ids": ["4407"], "label": "排序菁英特效", "summary_zh": "節點價格：2,000 金幣 → 100,000 金幣 + 20 個骰子核心" },
+          { "category": "nodes", "table": "DiceTreeNodeTable", "ids": ["5403"], "label": "蔑視弱者", "summary_zh": "節點價格：100,000 金幣 + 10 個骰子核心 → 100,000 金幣 + 20 個骰子核心" },
+          { "category": "nodes", "table": "DiceTreeNodeTable", "ids": ["5304"], "label": "收穫", "summary_zh": "節點價格：50,000 金幣 → 50,000 金幣 + 10 個骰子核心" },
+          { "category": "nodes", "table": "DiceTreeNodeTable", "ids": ["5404"], "label": "逃避命運", "summary_zh": "節點價格：2,000 金幣 → 50,000 金幣 + 20 個骰子核心" },
+          { "category": "service", "entity": "server_stability", "summary_zh": "伺服器穩定化與錯誤修正" }
+        ],
+        "removed": [],
+        "schema_changes": [],
+        "important_values": [
+          { "category": "nodes", "table": "DiceTreeNodeTable", "ids": ["4307", "4407", "5403", "5304", "5404"], "summary_zh": "對象節點更新後重置；先前消耗的貨幣全額返還，並補發變更後差額的金幣與骰子核心。" },
+          { "category": "rewards", "entity": "global_compensation", "summary_zh": "全體更新補償：1 個骰子樹種子。" }
+        ]
+      },
+      "notes": [
+        "公告指出更新期間可能限制登入或強制結束遊戲。",
+        "公告同時提到未來將收集意見並準備移除勢力戰、頂樓等戰術效果與其他便利性改善；這不代表本公告已完成所有後續變更。"
+      ]
+    },
+    {
+      "id": "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+      "locale": "zh-tw",
+      "published_at": "2026-08-19T13:40:06.000Z",
+      "version": "1.0.3",
+      "effective_at": "2026-08-22T07:00:00+08:00",
+      "title_zh": "V1.0.3 更新公告",
+      "summary_zh": "改善合作戰與競技場、增加檢舉與幀率設定、調整骰子平衡並修正多項錯誤。",
+      "categories": {
+        "added": [
+          { "category": "features", "entity": "reporting", "summary_zh": "新增檢舉功能；達到一定檢舉量後依營運政策處理停權。" },
+          { "category": "features", "entity": "frame_rate_setting", "summary_zh": "遊戲內設定新增遊戲幀率調整功能。" }
+        ],
+        "modified": [
+          { "category": "tickets", "entity": "ticket_policy", "summary_zh": "觀看廣告可獲票券次數 3 次 → 10 次；每日登入固定發放合作戰票券 5 張、競技場票券 1 張。" },
+          { "category": "events", "entity": "coop_round_system", "summary_zh": "合作戰調整首領登場與通關條件：一般怪物仍在場時也可於一定時間後進入首領戰；擊殺最後一個怪物即通關。" },
+          { "category": "events", "entity": "boss_enrage", "summary_zh": "首領登場 40 秒後狂暴化；合作戰只套用首領，競技場套用所有怪物。" },
+          { "category": "bosses", "entity": "knight", "summary_zh": "騎士技能由影響所有 15 個目標調整為隨機 3 個目標。" },
+          { "category": "versus", "entity": "sp_reward", "summary_zh": "競技場 SP 發放量 100 → 250；並提高每回合敵人生命值增幅與首領生命值。" },
+          { "category": "dice", "entity": "seal", "summary_zh": "調整永久封印的套用範圍。" },
+          { "category": "dice", "entity": "combo", "summary_zh": "專用能力 1：連擊傷害 10 → 20、各等級提升 2 → 6；能力 2：疊加 0–2 → 0–3；能力 3：20% → 30%。" },
+          { "category": "dice", "entity": "light", "summary_zh": "子彈攻擊力骰點提升 100 → 300；強化數值 150% → 225%。" },
+          { "category": "dice", "entity": "magic_bullet", "summary_zh": "強化魔彈登場機率 10% → 30%。" },
+          { "category": "dice", "entity": "gear", "summary_zh": "基本骰子攻擊力增加對象基本 5 → 40；各等級提升 11 → 20。" },
+          { "category": "dice", "entity": "solitude", "summary_zh": "基本傷害 120 → 200。" }
+        ],
+        "removed": [
+          { "category": "events", "entity": "tactics_effects", "ids": ["勢力戰", "頂樓", "和平主義者"], "summary_zh": "合作戰戰術效果調整／移除：勢力戰轉換為 2 種、頂樓改為上方第 1 排、和平主義者鎖定 3 個隨機骰子。" }
+        ],
+        "schema_changes": [],
+        "important_values": [
+          { "category": "rewards", "entity": "update_compensation", "summary_zh": "更新獎勵：10 張合作戰票券、1 張競技場票券；可領取至 2026-08-23 22:59（公告原文）。" },
+          { "category": "events", "entity": "removed_tactics", "summary_zh": "公告明確列出合作戰戰術效果的調整；這些是遊戲內效果，不等同於公開事件圖鑑 entity 的移除。" }
+        ]
+      },
+      "notes": [
+        "公告的套用時間是各平台商店依序發布的起始時間，不代表所有玩家同時完成更新。",
+        "其他錯誤修正包括合成召喚重複產生、競技場撲克時間顯示、SP 怪物雙倍 SP，以及召喚骰子合成加成未套用。"
+      ]
+    }
+  ]
+}

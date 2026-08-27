@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+xlsx_build/node_modules/
+
+# Local validation and Pages staging artifacts
+artifacts/
+.pages/
+.playwright/
+.wrangler/
+test-results/
+
+# Big Binary & Archives
+*.zip
+*.tar
+*.gz
+
+# Local-only source material and generated workspaces
+/local-data/
+/private-data/
+/outputs/
+/xlsx_build/
+
+# Python Cache
+__pycache__/
+*.pyc
+.venv/
+
+# OS & Temp
+.DS_Store
+Thumbs.db
+desktop.ini
+.agents/
+.vscode/
+.idea/

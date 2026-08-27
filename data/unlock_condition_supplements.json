@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "snapshot_id": "random-dice-2-1.0.3",
+  "purpose": "Owner-confirmed special unlock thresholds and resource-free unlock policies where the client tree fields are incomplete or misleading.",
+  "resource_free_nodes": [
+    {
+      "node_id": "1001",
+      "reason": "initial_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the initial Fire Dice cannot be purchased with resources."
+    },
+    {
+      "node_id": "1005",
+      "reason": "initial_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the initial Wind Dice cannot be purchased with resources."
+    },
+    {
+      "node_id": "1007",
+      "reason": "initial_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the initial Ice Dice cannot be purchased with resources."
+    },
+    {
+      "node_id": "2001",
+      "reason": "initial_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the initial Iron Dice cannot be purchased with resources."
+    },
+    {
+      "node_id": "3001",
+      "reason": "initial_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the initial Electric Dice cannot be purchased with resources."
+    },
+    {
+      "node_id": "4008",
+      "reason": "special_unlock_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the Yin-Yang Dice is unlocked by its special condition rather than a resource purchase."
+    },
+    {
+      "node_id": "5006",
+      "reason": "special_unlock_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the Greed Dice is unlocked by its special condition rather than a resource purchase."
+    },
+    {
+      "node_id": "5008",
+      "reason": "special_unlock_dice",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner confirmed that the Void Dice is unlocked by its special condition rather than a resource purchase."
+    }
+  ],
+  "entries": [
+    {
+      "node_id": "4008",
+      "condition": "REWARD_UNLOCKED",
+      "key": "unlock.weeklyMission",
+      "label_zh": "七日任務",
+      "value": "700",
+      "raw_value": "",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner supplied: 陰陽 七日任務 700. The client tree row has no numeric threshold."
+    },
+    {
+      "node_id": "5006",
+      "condition": "COOP_REWARD_UNLOCKED",
+      "key": "unlock.bountyReward",
+      "label_zh": "討伐獎勵",
+      "value": "2100",
+      "raw_value": "",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner supplied: 貪婪 討伐獎勵 2100. The client tree row has no numeric threshold."
+    },
+    {
+      "node_id": "5008",
+      "condition": "ARENA_REWARD_UNLOCKED",
+      "key": "unlock.arenaPass",
+      "label_zh": "競技場通行證",
+      "value": "300",
+      "raw_value": "",
+      "source_type": "owner_confirmed",
+      "source_note": "Owner supplied: 空虛 競技場通行證 300. The client tree row has no numeric threshold."
+    },
+    {
+      "node_id": "5002",
+      "condition": "COOP_KILL_COUNT",
+      "key": "unlock.coopKills",
+      "label_zh": "合作擊殺數",
+      "value": "900",
+      "raw_value": "900",
+      "source_type": "client_table_confirmed",
+      "source_note": "Owner supplied: 恐懼 合作擊殺數 900; the client tree row independently contains 900."
+    }
+  ]
+}

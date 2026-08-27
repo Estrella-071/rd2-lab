@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "canonical": {
+    "game_version": "1.0.3",
+    "snapshot_id": "random-dice-2-1.0.3",
+    "public_schema_versions": {
+      "dice_tree": 1,
+      "boss_event_data": 4,
+      "monster_visuals": 2,
+      "game_data_metadata": 2,
+      "provenance": 2
+    },
+    "tree_path": "data/dice_tree.json",
+    "events_path": "boss_event_data.json",
+    "visuals_path": "monster_visuals.json",
+    "changelog_path": "data/changelog.json",
+    "official_notices_path": "data/official_update_notices.json",
+    "provenance_path": "data/provenance.json"
+  },
+  "source": {
+    "snapshot_id": "random-dice-2-1.0.3",
+    "official_notice_ids": [
+      "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
+      "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+    ],
+    "tree_node_count": 239,
+    "tree_edge_count": 248,
+    "verified_at": "2026-08-23",
+    "evidence_boundary_zh": "頁面資料以版本快照與公開公告為範圍；即時平衡、活動與執行期公式以遊戲內顯示為準。"
+  },
+  "versions": [
+    {
+      "version": "1.0.0",
+      "snapshot_id": "random-dice-2-1.0.0",
+      "date": null,
+      "text_asset_count": 47,
+      "table_count": 47,
+      "localization_rows": 2118,
+      "node_count": 239,
+      "edge_count": 248,
+      "completeness_zh": "公開資料可供版本比較；部分視覺內容未納入本頁。"
+    },
+    {
+      "version": "1.0.2",
+      "snapshot_id": "random-dice-2-1.0.2",
+      "date": "2026-08-20T05:00:00+08:00",
+      "text_asset_count": 126,
+      "table_count": 47,
+      "localization_rows": 2121,
+      "node_count": 239,
+      "edge_count": 248,
+      "completeness_zh": "公開資料涵蓋天賦樹、事件與版本公告所需的欄位。"
+    },
+    {
+      "version": "1.0.3",
+      "snapshot_id": "random-dice-2-1.0.3",
+      "date": "2026-08-22T07:00:00+08:00",
+      "text_asset_count": 126,
+      "table_count": 47,
+      "localization_rows": 2158,
+      "node_count": 239,
+      "edge_count": 248,
+      "completeness_zh": "公開資料涵蓋天賦樹、事件、怪物圖鑑與版本公告所需的欄位。"
+    }
+  ]
+}

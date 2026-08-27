@@ -1,0 +1,6073 @@
+{
+  "meta": {
+    "schema_version": 4,
+    "metadata_ref": "data/game_data_metadata.json",
+    "game_data_version": "1.0.3",
+    "scope_zh": "本頁數值是 Random Dice 2 1.0.3 資料快照；即時平衡、活動、戰術與執行期公式以遊戲內顯示為準。事件圖鑑只公開目前啟用的資料；歷史事件保留於 historical_events 並標記「已移除」。",
+    "event_counts": {
+      "raw": 71,
+      "enabled": 55,
+      "excluded_not_enabled": 16,
+      "historical_removed": 0
+    },
+    "limitations_zh": [
+      "合作模式 Boss 基礎生命值依版本資料；不代表即時平衡。",
+      "波次資料的生命值倍率用於模式比較，不等於個別怪物最終生命值。",
+      "Boss 比例欄位用於相對比較，無法取代遊戲內顯示。",
+      "未啟用事件不列入公開圖鑑，歷史內容單獨標示。",
+      "部分怪物只有數值資料，未列入動畫卡片。"
+    ],
+    "snapshot": {
+      "snapshot_id": "random-dice-2-1.0.3",
+      "metadata_ref": "data/game_data_metadata.json",
+      "verified_at": "2026-08-23"
+    }
+  },
+  "monsters": [
+    {
+      "id": "monster_1",
+      "category": "MONSTER",
+      "subType": "NORMAL",
+      "subType_zh": "普通怪物",
+      "name_zh": "一般怪物",
+      "name_en": "Normal Monster",
+      "desc_zh": "最基本的怪物",
+      "desc_en": "The most common monster",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Big_minion.png",
+      "sp_per": 100,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": null
+    },
+    {
+      "id": "monster_2",
+      "category": "MONSTER",
+      "subType": "SPEED",
+      "subType_zh": "快速怪物",
+      "name_zh": "快速怪物",
+      "name_en": "Speed Monster",
+      "desc_zh": "速度極快的怪物",
+      "desc_en": "A fast-moving monster",
+      "speed": 1.2,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_SpeedUp.png",
+      "sp_per": 100,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": null
+    },
+    {
+      "id": "monster_3",
+      "category": "MONSTER",
+      "subType": "BIG",
+      "subType_zh": "大型怪物",
+      "name_zh": "大型怪物",
+      "name_en": "Big Monster",
+      "desc_zh": "持有大量生命值的大型怪物",
+      "desc_en": "A large monster with high HP",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 300,
+      "icon": "Big_minion.png",
+      "sp_per": 500,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "hp_display_zh": "300%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": null
+    },
+    {
+      "id": "monster_15",
+      "category": "MONSTER",
+      "subType": "BOX",
+      "subType_zh": "SP怪物",
+      "name_zh": "SP怪物",
+      "name_en": "SP Monster",
+      "desc_zh": "裝滿SP的怪異生物 / 擊殺時，可獲得更多SP",
+      "desc_en": "A strange creature brimming with SP / Grants more SP when defeated",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Goods_SP.png",
+      "sp_per": 0,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "sp_reward_rule_zh": "轉移／貪婪效果依實際送出的 SP 計算；怪物資料 的 Box.SPPer=0 不是固定獎勵。",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依效果",
+      "sp_note_zh": "由轉移或貪婪效果決定，不是固定 SP",
+      "boss_hp_per_versus": null
+    },
+    {
+      "id": "monster_14",
+      "category": "BOSS",
+      "subType": "HUNT",
+      "subType_zh": "首領怪物",
+      "name_zh": "SP魔像",
+      "name_en": "SP Golem",
+      "desc_zh": "持有大量SP的怪物，擊殺後可獲得SP",
+      "desc_en": "A monster carrying a large amount of SP. Defeat it to claim the SP",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": null,
+      "icon": "Hunt01.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": null,
+      "hp_rule_zh": "狩獵模式依 狩獵資料 的狩獵次數套用（第 1 階 50%，第 2 階起 100%）；不是固定共通 HP 倍率。",
+      "sp_reward_rule_zh": "狩獵資料 第 1–19 階依序給予 500 至 9,500 SP；第 20–30 階均為 10,000 SP。",
+      "hp_display_zh": "50–100%",
+      "hp_note_zh": "第 1 階 50%，第 2 階起 100%",
+      "sp_display_zh": "依狩獵階級",
+      "sp_note_zh": "狩獵階段逐步提高；高階可能達到 10,000 SP",
+      "hunt_rewards": [
+        {
+          "level": 1,
+          "reward_sp": 500,
+          "hp_percent": 50
+        },
+        {
+          "level": 2,
+          "reward_sp": 1000,
+          "hp_percent": 100
+        },
+        {
+          "level": 3,
+          "reward_sp": 1500,
+          "hp_percent": 100
+        },
+        {
+          "level": 4,
+          "reward_sp": 2000,
+          "hp_percent": 100
+        },
+        {
+          "level": 5,
+          "reward_sp": 2500,
+          "hp_percent": 100
+        },
+        {
+          "level": 6,
+          "reward_sp": 3000,
+          "hp_percent": 100
+        },
+        {
+          "level": 7,
+          "reward_sp": 3500,
+          "hp_percent": 100
+        },
+        {
+          "level": 8,
+          "reward_sp": 4000,
+          "hp_percent": 100
+        },
+        {
+          "level": 9,
+          "reward_sp": 4500,
+          "hp_percent": 100
+        },
+        {
+          "level": 10,
+          "reward_sp": 5000,
+          "hp_percent": 100
+        },
+        {
+          "level": 11,
+          "reward_sp": 5500,
+          "hp_percent": 100
+        },
+        {
+          "level": 12,
+          "reward_sp": 6000,
+          "hp_percent": 100
+        },
+        {
+          "level": 13,
+          "reward_sp": 6500,
+          "hp_percent": 100
+        },
+        {
+          "level": 14,
+          "reward_sp": 7000,
+          "hp_percent": 100
+        },
+        {
+          "level": 15,
+          "reward_sp": 7500,
+          "hp_percent": 100
+        },
+        {
+          "level": 16,
+          "reward_sp": 8000,
+          "hp_percent": 100
+        },
+        {
+          "level": 17,
+          "reward_sp": 8500,
+          "hp_percent": 100
+        },
+        {
+          "level": 18,
+          "reward_sp": 9000,
+          "hp_percent": 100
+        },
+        {
+          "level": 19,
+          "reward_sp": 9500,
+          "hp_percent": 100
+        },
+        {
+          "level": 20,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 21,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 22,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 23,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 24,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 25,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 26,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 27,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 28,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 29,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 30,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        }
+      ],
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_4",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Snake",
+      "name_zh": "蛇王",
+      "name_en": "Snake",
+      "desc_zh": "使用技能時，召喚普通怪物",
+      "desc_en": "On skill use, summons a Normal Monster",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Snake.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "蛇王",
+      "display_name_en": "Snake",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_5",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Royal",
+      "name_zh": "騎士",
+      "name_en": "Knight",
+      "desc_zh": "使用技能時，變更骰盤所有骰子種類",
+      "desc_en": "On skill use, changes the types of all dice on the field",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Royal.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "騎士",
+      "display_name_en": "Knight",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_6",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Bubble",
+      "name_zh": "泡泡",
+      "name_en": "Bubble",
+      "desc_zh": "3骰點以下的骰子傷害減少",
+      "desc_en": "Takes reduced DMG from dice with 3 dots or fewer",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Bubble.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "軟泥怪",
+      "display_name_en": "Sludge",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_7",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Quick",
+      "name_zh": "極速狂影",
+      "name_en": "Speed Pixie",
+      "desc_zh": "快速移動",
+      "desc_en": "Moves at high speed",
+      "speed": 1.5,
+      "sp_gain_base": null,
+      "hp_percent": 50,
+      "icon": "Icon_Quick.png",
+      "sp_per": 1000,
+      "boss_hp_per": 50,
+      "trophy_level": 1,
+      "display_name_zh": "極速狂影",
+      "display_name_en": "Speed Pixie",
+      "hp_display_zh": "50%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 100
+    },
+    {
+      "id": "boss_8",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Recovery",
+      "name_zh": "熵魔",
+      "name_en": "Entropy",
+      "desc_zh": "使用技能時， 停留在原地恢復失去的生命值",
+      "desc_en": "On skill use, stops and instantly recovers lost HP",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Recovery.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "熵魔",
+      "display_name_en": "Entropy",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_9",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Thief",
+      "name_zh": "掠奪者",
+      "name_en": "Snatcher",
+      "desc_zh": "對隨機骰子發射植物， 之後發動技能時，該骰子骰點減少",
+      "desc_en": "Fires a plant at a random dice. On the next skill use, reduces that dice's Dot Count",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Thief.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "掠奪者",
+      "display_name_en": "Snatcher",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_10",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Assassin",
+      "name_zh": "熔岩巨獸",
+      "name_en": "Volcano",
+      "desc_zh": "發射隕石技能，使隨機減少骰點減少",
+      "desc_en": "Launches a meteor that reduces the Dot Count of a random dice",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Meteor.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "熔岩巨獸",
+      "display_name_en": "Volcano",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_11",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Hacking",
+      "name_zh": "時空魔靈",
+      "name_en": "Paradox",
+      "desc_zh": "被時空魔靈技能命中的骰子， 該子彈攻擊可治療敵人",
+      "desc_en": "Bullet attacks from dice hit by Paradox's skill heal monsters instead",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Hacking.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "時空魔靈",
+      "display_name_en": "Paradox",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_12",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Slime",
+      "name_zh": "史萊姆",
+      "name_en": "Slime",
+      "desc_zh": "死亡時，分裂成2個小史萊姆",
+      "desc_en": "Splits into 2 small Slimes upon death",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 100,
+      "icon": "Icon_Slime.png",
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "display_name_zh": "史萊姆",
+      "display_name_en": "Slime",
+      "hp_display_zh": "100%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 300
+    },
+    {
+      "id": "boss_13",
+      "category": "MONSTER",
+      "subType": "BOSS",
+      "subType_zh": "首領怪物",
+      "bossType": "Joker",
+      "name_zh": "小丑",
+      "name_en": "Joker",
+      "desc_zh": "使用技能時， 隨機骰子變更為小丑骰子",
+      "desc_en": "On skill use, changes a random dice into a Joker Dice",
+      "speed": 0.6,
+      "sp_gain_base": null,
+      "hp_percent": 50,
+      "icon": "Icon_Joker.png",
+      "sp_per": 1000,
+      "boss_hp_per": 50,
+      "trophy_level": 1,
+      "display_name_zh": "小丑",
+      "display_name_en": "Joker",
+      "hp_display_zh": "50%",
+      "hp_note_zh": null,
+      "sp_display_zh": "依合作波次",
+      "sp_note_zh": "合作模式 SP 會隨波次變化",
+      "boss_hp_per_versus": 100
+    }
+  ],
+  "monster_types": [
+    {
+      "id": 1,
+      "internal_type": "Normal",
+      "boss_type": "None",
+      "name_zh": "一般怪物",
+      "name_en": "Normal Monster",
+      "base_move_speed": 0.6,
+      "sp_per": 100,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "boss_hp_per_versus": null,
+      "icon": "Big_minion.png",
+      "visual_id": "monster_1",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 2,
+      "internal_type": "Speed",
+      "boss_type": "None",
+      "name_zh": "快速怪物",
+      "name_en": "Speed Monster",
+      "base_move_speed": 1.2,
+      "sp_per": 100,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "boss_hp_per_versus": null,
+      "icon": "Icon_SpeedUp.png",
+      "visual_id": "monster_2",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 3,
+      "internal_type": "Big",
+      "boss_type": "None",
+      "name_zh": "大型怪物",
+      "name_en": "Big Monster",
+      "base_move_speed": 0.6,
+      "sp_per": 500,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "boss_hp_per_versus": null,
+      "icon": "Big_minion.png",
+      "visual_id": "monster_3",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 4,
+      "internal_type": "Boss",
+      "boss_type": "Snake",
+      "name_zh": "蛇王",
+      "name_en": "Snake",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Snake.png",
+      "visual_id": "boss_4",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 5,
+      "internal_type": "Boss",
+      "boss_type": "Royal",
+      "name_zh": "騎士",
+      "name_en": "Knight",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Royal.png",
+      "visual_id": "boss_5",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 6,
+      "internal_type": "Boss",
+      "boss_type": "Bubble",
+      "name_zh": "泡泡",
+      "name_en": "Bubble",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Bubble.png",
+      "visual_id": "boss_6",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 7,
+      "internal_type": "Boss",
+      "boss_type": "Quick",
+      "name_zh": "極速狂影",
+      "name_en": "Speed Pixie",
+      "base_move_speed": 1.5,
+      "sp_per": 1000,
+      "boss_hp_per": 50,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 100,
+      "icon": "Icon_Quick.png",
+      "visual_id": "boss_7",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 8,
+      "internal_type": "Boss",
+      "boss_type": "Recovery",
+      "name_zh": "熵魔",
+      "name_en": "Entropy",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Recovery.png",
+      "visual_id": "boss_8",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 9,
+      "internal_type": "Boss",
+      "boss_type": "Thief",
+      "name_zh": "掠奪者",
+      "name_en": "Snatcher",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Thief.png",
+      "visual_id": "boss_9",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 10,
+      "internal_type": "Boss",
+      "boss_type": "Assassin",
+      "name_zh": "熔岩巨獸",
+      "name_en": "Volcano",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Meteor.png",
+      "visual_id": "boss_10",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 11,
+      "internal_type": "Boss",
+      "boss_type": "Hacking",
+      "name_zh": "時空魔靈",
+      "name_en": "Paradox",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Hacking.png",
+      "visual_id": "boss_11",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 12,
+      "internal_type": "Boss",
+      "boss_type": "Slime",
+      "name_zh": "史萊姆",
+      "name_en": "Slime",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 300,
+      "icon": "Icon_Slime.png",
+      "visual_id": "boss_12",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 13,
+      "internal_type": "Boss",
+      "boss_type": "Joker",
+      "name_zh": "小丑",
+      "name_en": "Joker",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 50,
+      "trophy_level": 1,
+      "boss_hp_per_versus": 100,
+      "icon": "Icon_Joker.png",
+      "visual_id": "boss_13",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 14,
+      "internal_type": "Hunt",
+      "boss_type": "None",
+      "name_zh": "SP魔像",
+      "name_en": "SP Golem",
+      "base_move_speed": 0.6,
+      "sp_per": 1000,
+      "boss_hp_per": 100,
+      "trophy_level": null,
+      "boss_hp_per_versus": 300,
+      "icon": "Hunt01.png",
+      "visual_id": "monster_14",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 15,
+      "internal_type": "Box",
+      "boss_type": null,
+      "name_zh": "SP怪物",
+      "name_en": "SP Monster",
+      "base_move_speed": 0.6,
+      "sp_per": 0,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "boss_hp_per_versus": null,
+      "icon": "Icon_Goods_SP.png",
+      "visual_id": "monster_15",
+      "visible_in_compendium": true,
+      "visual_status": "spine_or_transparent_poster"
+    },
+    {
+      "id": 16,
+      "internal_type": "BoxSp",
+      "boss_type": null,
+      "name_zh": "SP寶箱（內部型別）",
+      "name_en": "SP Box (internal type)",
+      "base_move_speed": 0.6,
+      "sp_per": 0,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "boss_hp_per_versus": null,
+      "icon": "Icon_Goods_SP.png",
+      "visual_id": null,
+      "visible_in_compendium": false,
+      "visual_status": "no_public_animation"
+    },
+    {
+      "id": 17,
+      "internal_type": "Ghost",
+      "boss_type": null,
+      "name_zh": "幽靈（內部型別）",
+      "name_en": "Ghost (internal type)",
+      "base_move_speed": 0.6,
+      "sp_per": 0,
+      "boss_hp_per": null,
+      "trophy_level": 1,
+      "boss_hp_per_versus": null,
+      "icon": "Icon_Boss_Alert.png",
+      "visual_id": null,
+      "visible_in_compendium": false,
+      "visual_status": "no_public_animation"
+    }
+  ],
+  "modes": {
+    "coop": {
+      "wave_count": 80,
+      "normal_sp_note_zh": "NormalSP 是合作波次表的一般怪物 SP 原始欄位；擊殺 SP 隨波次變化，不能把 怪物資料.SPPer（共通類型欄位）當成固定獎勵。",
+      "hp_note_zh": "HPIncrease／HPIncreaseInterval 是原始波次曲線；BossBaseHP 只在 Boss 波直接提供 Boss 基礎 HP。",
+      "waves": [
+        {
+          "wave": 1,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 500,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 19,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            34,
+            35,
+            36,
+            37,
+            39,
+            44,
+            51,
+            53,
+            67,
+            69
+          ],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 2,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 600,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 22,
+            "speed": 3,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 3,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 600,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 24,
+            "speed": 0,
+            "big": 1
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 6
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 4,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 800,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 26,
+            "speed": 3,
+            "big": 1
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 5,
+            "big": 3
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 5,
+          "is_boss_wave": true,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 5,
+          "hp_increase_raw": 0,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 150000,
+          "bosses": [
+            {
+              "type": "Snake",
+              "name_zh": "蛇王",
+              "name_en": "Snake",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 60,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 6,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 5,
+          "hp_increase_raw": 1400,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 19,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            14,
+            31,
+            32,
+            33,
+            50,
+            55,
+            64,
+            38,
+            67,
+            68,
+            51
+          ],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 7,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 7.2,
+          "hp_increase_raw": 1900,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 22,
+            "speed": 3,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 8,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 7.2,
+          "hp_increase_raw": 1600,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 23,
+            "speed": 0,
+            "big": 2
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 6
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 9,
+          "is_boss_wave": false,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 7.2,
+          "hp_increase_raw": 2900,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 25,
+            "speed": 3,
+            "big": 2
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 5,
+            "big": 3
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 10,
+          "is_boss_wave": true,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 7.2,
+          "hp_increase_raw": 0,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 450000,
+          "bosses": [
+            {
+              "type": "Joker",
+              "name_zh": "小丑",
+              "name_en": "Joker",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 60,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 11,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 4.8,
+          "hp_increase_raw": 4000,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 24,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            14,
+            31,
+            32,
+            33,
+            50,
+            55,
+            64,
+            38,
+            67,
+            68,
+            51,
+            48
+          ],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 12,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 4500,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 26,
+            "speed": 4,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 4.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 13,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.8,
+          "hp_increase_raw": 5500,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 28,
+            "speed": 0,
+            "big": 2
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 4
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 14,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 4500,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 34,
+            "speed": 4,
+            "big": 2
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 4.5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 15,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 0,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 1500000,
+          "bosses": [
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 60,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 16,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 4.8,
+          "hp_increase_raw": 5000,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 23,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            14,
+            31,
+            32,
+            33,
+            50,
+            55,
+            64,
+            38,
+            67,
+            68,
+            51,
+            48
+          ],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 17,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 7500,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 26,
+            "speed": 4,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 4.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 18,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.8,
+          "hp_increase_raw": 6500,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 28,
+            "speed": 0,
+            "big": 3
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 0,
+            "big": 4
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 19,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 7000,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 33,
+            "speed": 4,
+            "big": 3
+          },
+          "intervals_sec": {
+            "normal": 0.75,
+            "speed": 5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 10,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 20,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 0,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 3000000,
+          "bosses": [
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 90,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 21,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 9000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 29,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            7,
+            9,
+            10,
+            16,
+            20,
+            30,
+            41,
+            43,
+            45,
+            47,
+            48,
+            49,
+            57,
+            62,
+            71,
+            18
+          ],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 22,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 12000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 35,
+            "speed": 5,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 4,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 23,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.95,
+          "hp_increase_raw": 11000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 31,
+            "speed": 0,
+            "big": 4
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 3.5
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 24,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 13000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 36,
+            "speed": 5,
+            "big": 4
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 4,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 25,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 0,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 5000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 90,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 26,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 15000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 28,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            7,
+            9,
+            10,
+            16,
+            20,
+            30,
+            41,
+            43,
+            45,
+            47,
+            48,
+            49,
+            57,
+            62,
+            71,
+            18
+          ],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 27,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 18000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 35,
+            "speed": 5,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 4,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 28,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.95,
+          "hp_increase_raw": 20000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 31,
+            "speed": 0,
+            "big": 4
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 3.5
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 29,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 22000,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 36,
+            "speed": 5,
+            "big": 4
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 4,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 30,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 0,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 9000000,
+          "bosses": [
+            {
+              "type": "Thief",
+              "name_zh": "掠奪者",
+              "name_en": "Snatcher",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Joker",
+              "name_zh": "小丑",
+              "name_en": "Joker",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 120,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 31,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 28000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 28,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            7,
+            9,
+            10,
+            16,
+            20,
+            30,
+            41,
+            43,
+            45,
+            47,
+            48,
+            49,
+            57,
+            62,
+            71,
+            18
+          ],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 32,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 35000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 34,
+            "speed": 6,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 33,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 32000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 30,
+            "speed": 0,
+            "big": 5
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 3
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 34,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 40000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 34,
+            "speed": 6,
+            "big": 5
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3.5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 20,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 35,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 0,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 15000000,
+          "bosses": [
+            {
+              "type": "Bubble",
+              "name_zh": "泡泡",
+              "name_en": "Bubble",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Snake",
+              "name_zh": "蛇王",
+              "name_en": "Snake",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 120,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 36,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 50000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 27,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            7,
+            9,
+            10,
+            16,
+            20,
+            30,
+            41,
+            43,
+            45,
+            47,
+            48,
+            49,
+            57,
+            62,
+            71,
+            18
+          ],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 37,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 65000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 34,
+            "speed": 6,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 38,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 60000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 30,
+            "speed": 0,
+            "big": 5
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 3
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 39,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 75000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 34,
+            "speed": 6,
+            "big": 5
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3.5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 40,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 0,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 30000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 3
+            },
+            {
+              "type": "Recovery",
+              "name_zh": "熵魔",
+              "name_en": "Entropy",
+              "spawn_time_sec": 5
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 150,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 41,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 83000,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 33,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            11,
+            12,
+            54,
+            41,
+            71,
+            26
+          ],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 42,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 125600,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 38,
+            "speed": 7,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 43,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 116400,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 34,
+            "speed": 0,
+            "big": 6
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2.9
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 44,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 116400,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 42,
+            "speed": 7,
+            "big": 6
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 45,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 45000000,
+          "bosses": [
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 180,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 46,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 124600,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 33,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            7,
+            9,
+            10,
+            16,
+            20,
+            30,
+            41,
+            43,
+            45,
+            47,
+            48,
+            49,
+            57,
+            62,
+            71,
+            18
+          ],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 47,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 201400,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 38,
+            "speed": 7,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 48,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 132000,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 34,
+            "speed": 0,
+            "big": 6
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2.9
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 49,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 249400,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 42,
+            "speed": 7,
+            "big": 6
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 3,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 30,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 50,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 65000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Recovery",
+              "name_zh": "熵魔",
+              "name_en": "Entropy",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 180,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 51,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 143500,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 33,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            25,
+            27,
+            29,
+            28
+          ],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 52,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 232000,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 37,
+            "speed": 8,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 53,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 154200,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 38,
+            "speed": 0,
+            "big": 7
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2.64
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 54,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 285600,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 35,
+            "speed": 8,
+            "big": 7
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 55,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 95000000,
+          "bosses": [
+            {
+              "type": "Assassin",
+              "name_zh": "熔岩巨獸",
+              "name_en": "Volcano",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 210,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 56,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 210500,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 32,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            7,
+            9,
+            10,
+            16,
+            20,
+            30,
+            41,
+            43,
+            45,
+            47,
+            48,
+            49,
+            57,
+            62,
+            71,
+            18
+          ],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 57,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 341200,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 37,
+            "speed": 8,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 58,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 235900,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 38,
+            "speed": 0,
+            "big": 7
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2.42
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 59,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 395000,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 35,
+            "speed": 8,
+            "big": 7
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 40,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 60,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 140000000,
+          "bosses": [
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Assassin",
+              "name_zh": "熔岩巨獸",
+              "name_en": "Volcano",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 240,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 61,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 315000,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 32,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            25,
+            27,
+            29,
+            28
+          ],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 62,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 428000,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 36,
+            "speed": 9,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 63,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 318500,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 32,
+            "speed": 0,
+            "big": 8
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2.23
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 64,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 462000,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 38,
+            "speed": 9,
+            "big": 8
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 65,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 200000000,
+          "bosses": [
+            {
+              "type": "Bubble",
+              "name_zh": "泡泡",
+              "name_en": "Bubble",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 270,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 66,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 495000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 32,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            7,
+            9,
+            10,
+            16,
+            20,
+            30,
+            41,
+            43,
+            45,
+            47,
+            48,
+            49,
+            57,
+            62,
+            71,
+            18
+          ],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 67,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 612000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 36,
+            "speed": 9,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 68,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 456000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 32,
+            "speed": 0,
+            "big": 8
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2.23
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 69,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 675000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 38,
+            "speed": 9,
+            "big": 8
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2.5,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 50,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 70,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 280000000,
+          "bosses": [
+            {
+              "type": "Thief",
+              "name_zh": "掠奪者",
+              "name_en": "Snatcher",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Joker",
+              "name_zh": "小丑",
+              "name_en": "Joker",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 300,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 71,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 745000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 38,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            19,
+            26,
+            25,
+            27,
+            29,
+            28
+          ],
+          "reward_gold": 70,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 72,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 912000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 40,
+            "speed": 10,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 70,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 73,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 685000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 41,
+            "speed": 0,
+            "big": 9
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2.07
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 70,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 74,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 985000,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 41,
+            "speed": 10,
+            "big": 9
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 70,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 75,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 380000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 370,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 76,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 1120000,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 37,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [
+            19,
+            26,
+            25,
+            27,
+            29,
+            28
+          ],
+          "reward_gold": 80,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 77,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 8,
+          "hp_increase_raw": 1415000,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 40,
+            "speed": 10,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2,
+            "big": 0
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 80,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 78,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 1045000,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 40,
+            "speed": 0,
+            "big": 10
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 0,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 80,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 79,
+          "is_boss_wave": false,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 1520000,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 40,
+            "speed": 10,
+            "big": 10
+          },
+          "intervals_sec": {
+            "normal": 0.7,
+            "speed": 2,
+            "big": 2
+          },
+          "boss_base_hp": 0,
+          "bosses": [],
+          "coop_tactics": [],
+          "reward_gold": 80,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 80,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 500000000,
+          "bosses": [
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 480,
+          "reward_six_dice_ticket": null
+        }
+      ],
+      "boss_waves": [
+        {
+          "wave": 5,
+          "is_boss_wave": true,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 5,
+          "hp_increase_raw": 0,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 150000,
+          "bosses": [
+            {
+              "type": "Snake",
+              "name_zh": "蛇王",
+              "name_en": "Snake",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 60,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 10,
+          "is_boss_wave": true,
+          "move_speed_percent": 90,
+          "hp_increase_interval_sec": 7.2,
+          "hp_increase_raw": 0,
+          "normal_sp": 20,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 450000,
+          "bosses": [
+            {
+              "type": "Joker",
+              "name_zh": "小丑",
+              "name_en": "Joker",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 60,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 15,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 0,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 1500000,
+          "bosses": [
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 60,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 20,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 0,
+          "normal_sp": 30,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 3000000,
+          "bosses": [
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 90,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 25,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 0,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 5000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 90,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 30,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.5,
+          "hp_increase_raw": 0,
+          "normal_sp": 40,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 9000000,
+          "bosses": [
+            {
+              "type": "Thief",
+              "name_zh": "掠奪者",
+              "name_en": "Snatcher",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Joker",
+              "name_zh": "小丑",
+              "name_en": "Joker",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 120,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 35,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.7,
+          "hp_increase_raw": 0,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 15000000,
+          "bosses": [
+            {
+              "type": "Bubble",
+              "name_zh": "泡泡",
+              "name_en": "Bubble",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Snake",
+              "name_zh": "蛇王",
+              "name_en": "Snake",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 120,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 40,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 7.98,
+          "hp_increase_raw": 0,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 30000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 3
+            },
+            {
+              "type": "Recovery",
+              "name_zh": "熵魔",
+              "name_en": "Entropy",
+              "spawn_time_sec": 5
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 150,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 45,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 50,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 45000000,
+          "bosses": [
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 180,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 50,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 65000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Recovery",
+              "name_zh": "熵魔",
+              "name_en": "Entropy",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 180,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 55,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 60,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 95000000,
+          "bosses": [
+            {
+              "type": "Assassin",
+              "name_zh": "熔岩巨獸",
+              "name_en": "Volcano",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 210,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 60,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 70,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 140000000,
+          "bosses": [
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Assassin",
+              "name_zh": "熔岩巨獸",
+              "name_en": "Volcano",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 240,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 65,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 200000000,
+          "bosses": [
+            {
+              "type": "Bubble",
+              "name_zh": "泡泡",
+              "name_en": "Bubble",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 270,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 70,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 80,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 280000000,
+          "bosses": [
+            {
+              "type": "Thief",
+              "name_zh": "掠奪者",
+              "name_en": "Snatcher",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Joker",
+              "name_zh": "小丑",
+              "name_en": "Joker",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 300,
+          "reward_six_dice_ticket": null
+        },
+        {
+          "wave": 75,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 380000000,
+          "bosses": [
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Quick",
+              "name_zh": "極速狂影",
+              "name_en": "Speed Pixie",
+              "spawn_time_sec": 2
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 370,
+          "reward_six_dice_ticket": 1
+        },
+        {
+          "wave": 80,
+          "is_boss_wave": true,
+          "move_speed_percent": 100,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 0,
+          "normal_sp": 90,
+          "counts": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "intervals_sec": {
+            "normal": 0,
+            "speed": 0,
+            "big": 0
+          },
+          "boss_base_hp": 500000000,
+          "bosses": [
+            {
+              "type": "Hacking",
+              "name_zh": "時空魔靈",
+              "name_en": "Paradox",
+              "spawn_time_sec": 1
+            },
+            {
+              "type": "Royal",
+              "name_zh": "騎士",
+              "name_en": "Knight",
+              "spawn_time_sec": 2
+            },
+            {
+              "type": "Slime",
+              "name_zh": "史萊姆",
+              "name_en": "Slime",
+              "spawn_time_sec": 3
+            }
+          ],
+          "coop_tactics": [],
+          "reward_gold": 480,
+          "reward_six_dice_ticket": null
+        }
+      ]
+    },
+    "hunt": {
+      "reward_note_zh": "狩獵資料 的狩獵階級獎勵；第 20 階後維持 10,000 SP。",
+      "rewards": [
+        {
+          "level": 1,
+          "reward_sp": 500,
+          "hp_percent": 50
+        },
+        {
+          "level": 2,
+          "reward_sp": 1000,
+          "hp_percent": 100
+        },
+        {
+          "level": 3,
+          "reward_sp": 1500,
+          "hp_percent": 100
+        },
+        {
+          "level": 4,
+          "reward_sp": 2000,
+          "hp_percent": 100
+        },
+        {
+          "level": 5,
+          "reward_sp": 2500,
+          "hp_percent": 100
+        },
+        {
+          "level": 6,
+          "reward_sp": 3000,
+          "hp_percent": 100
+        },
+        {
+          "level": 7,
+          "reward_sp": 3500,
+          "hp_percent": 100
+        },
+        {
+          "level": 8,
+          "reward_sp": 4000,
+          "hp_percent": 100
+        },
+        {
+          "level": 9,
+          "reward_sp": 4500,
+          "hp_percent": 100
+        },
+        {
+          "level": 10,
+          "reward_sp": 5000,
+          "hp_percent": 100
+        },
+        {
+          "level": 11,
+          "reward_sp": 5500,
+          "hp_percent": 100
+        },
+        {
+          "level": 12,
+          "reward_sp": 6000,
+          "hp_percent": 100
+        },
+        {
+          "level": 13,
+          "reward_sp": 6500,
+          "hp_percent": 100
+        },
+        {
+          "level": 14,
+          "reward_sp": 7000,
+          "hp_percent": 100
+        },
+        {
+          "level": 15,
+          "reward_sp": 7500,
+          "hp_percent": 100
+        },
+        {
+          "level": 16,
+          "reward_sp": 8000,
+          "hp_percent": 100
+        },
+        {
+          "level": 17,
+          "reward_sp": 8500,
+          "hp_percent": 100
+        },
+        {
+          "level": 18,
+          "reward_sp": 9000,
+          "hp_percent": 100
+        },
+        {
+          "level": 19,
+          "reward_sp": 9500,
+          "hp_percent": 100
+        },
+        {
+          "level": 20,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 21,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 22,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 23,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 24,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 25,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 26,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 27,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 28,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 29,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        },
+        {
+          "level": 30,
+          "reward_sp": 10000,
+          "hp_percent": 100
+        }
+      ]
+    },
+    "versus": {
+      "trophy_base_hp_note_zh": "TrophyTable 的段位基礎 HP；普通怪物與 Boss 分列。",
+      "wave_note_zh": "VersusWaveTable 的 HPIncrease 同樣是波次原始欄位，需配合遊戲執行期套用。",
+      "trophy_base_hp": [
+        {
+          "id": 1,
+          "trophy": 0,
+          "emblem": "CLASS_1",
+          "emblem_localization_key": "class_iron_1",
+          "minion_base_hp": 800,
+          "boss_base_hp": 10000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 2,
+          "trophy": 100,
+          "emblem": "CLASS_1",
+          "emblem_localization_key": "class_iron_2",
+          "minion_base_hp": 800,
+          "boss_base_hp": 10000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 3,
+          "trophy": 300,
+          "emblem": "CLASS_1",
+          "emblem_localization_key": "class_iron_3",
+          "minion_base_hp": 800,
+          "boss_base_hp": 10000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 4,
+          "trophy": 500,
+          "emblem": "CLASS_1",
+          "emblem_localization_key": "class_iron_4",
+          "minion_base_hp": 800,
+          "boss_base_hp": 10000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 5,
+          "trophy": 1000,
+          "emblem": "CLASS_2",
+          "emblem_localization_key": "class_iron_5",
+          "minion_base_hp": 800,
+          "boss_base_hp": 10000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 6,
+          "trophy": 1500,
+          "emblem": "CLASS_2",
+          "emblem_localization_key": "class_bronze_1",
+          "minion_base_hp": 800,
+          "boss_base_hp": 15000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 7,
+          "trophy": 2000,
+          "emblem": "CLASS_3",
+          "emblem_localization_key": "class_bronze_2",
+          "minion_base_hp": 800,
+          "boss_base_hp": 15000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 8,
+          "trophy": 2500,
+          "emblem": "CLASS_3",
+          "emblem_localization_key": "class_bronze_3",
+          "minion_base_hp": 800,
+          "boss_base_hp": 15000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 9,
+          "trophy": 3000,
+          "emblem": "CLASS_4",
+          "emblem_localization_key": "class_bronze_4",
+          "minion_base_hp": 800,
+          "boss_base_hp": 15000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 10,
+          "trophy": 3500,
+          "emblem": "CLASS_4",
+          "emblem_localization_key": "class_bronze_5",
+          "minion_base_hp": 800,
+          "boss_base_hp": 15000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 11,
+          "trophy": 4000,
+          "emblem": "CLASS_5",
+          "emblem_localization_key": "class_silver_1",
+          "minion_base_hp": 800,
+          "boss_base_hp": 20000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 12,
+          "trophy": 4500,
+          "emblem": "CLASS_5",
+          "emblem_localization_key": "class_silver_2",
+          "minion_base_hp": 800,
+          "boss_base_hp": 20000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 13,
+          "trophy": 5000,
+          "emblem": "CLASS_6",
+          "emblem_localization_key": "class_silver_3",
+          "minion_base_hp": 800,
+          "boss_base_hp": 20000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 14,
+          "trophy": 5500,
+          "emblem": "CLASS_6",
+          "emblem_localization_key": "class_silver_4",
+          "minion_base_hp": 800,
+          "boss_base_hp": 20000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 15,
+          "trophy": 6000,
+          "emblem": "CLASS_7",
+          "emblem_localization_key": "class_silver_5",
+          "minion_base_hp": 800,
+          "boss_base_hp": 20000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 16,
+          "trophy": 6500,
+          "emblem": "CLASS_7",
+          "emblem_localization_key": "class_gold_1",
+          "minion_base_hp": 800,
+          "boss_base_hp": 25000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 17,
+          "trophy": 7000,
+          "emblem": "CLASS_8",
+          "emblem_localization_key": "class_gold_2",
+          "minion_base_hp": 800,
+          "boss_base_hp": 25000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 18,
+          "trophy": 7500,
+          "emblem": "CLASS_8",
+          "emblem_localization_key": "class_gold_3",
+          "minion_base_hp": 800,
+          "boss_base_hp": 25000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 19,
+          "trophy": 8000,
+          "emblem": "CLASS_9",
+          "emblem_localization_key": "class_gold_4",
+          "minion_base_hp": 800,
+          "boss_base_hp": 25000,
+          "win_gold": 110,
+          "lose_gold": 50
+        },
+        {
+          "id": 20,
+          "trophy": 8500,
+          "emblem": "CLASS_9",
+          "emblem_localization_key": "class_gold_5",
+          "minion_base_hp": 800,
+          "boss_base_hp": 25000,
+          "win_gold": 110,
+          "lose_gold": 50
+        }
+      ],
+      "wave_profiles": [
+        {
+          "id": 1,
+          "duration_sec": 70,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 10,
+          "move_speed_percent": 110,
+          "speed_interval_sec": 5,
+          "big_interval_sec": 8
+        },
+        {
+          "id": 2,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 60,
+          "move_speed_percent": 110,
+          "speed_interval_sec": 5,
+          "big_interval_sec": 8
+        },
+        {
+          "id": 3,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 60,
+          "move_speed_percent": 120,
+          "speed_interval_sec": 4,
+          "big_interval_sec": 8
+        },
+        {
+          "id": 4,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 60,
+          "move_speed_percent": 120,
+          "speed_interval_sec": 4,
+          "big_interval_sec": 7
+        },
+        {
+          "id": 5,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 80,
+          "move_speed_percent": 130,
+          "speed_interval_sec": 3,
+          "big_interval_sec": 7
+        },
+        {
+          "id": 6,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 80,
+          "move_speed_percent": 130,
+          "speed_interval_sec": 3,
+          "big_interval_sec": 6
+        },
+        {
+          "id": 7,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 80,
+          "move_speed_percent": 130,
+          "speed_interval_sec": 2,
+          "big_interval_sec": 6
+        },
+        {
+          "id": 8,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 100,
+          "move_speed_percent": 130,
+          "speed_interval_sec": 2,
+          "big_interval_sec": 5
+        },
+        {
+          "id": 9,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 100,
+          "move_speed_percent": 130,
+          "speed_interval_sec": 2,
+          "big_interval_sec": 5
+        },
+        {
+          "id": 10,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 100,
+          "move_speed_percent": 130,
+          "speed_interval_sec": 2,
+          "big_interval_sec": 5
+        },
+        {
+          "id": 11,
+          "duration_sec": 60,
+          "hp_increase_interval_sec": 6,
+          "hp_increase_raw": 100,
+          "move_speed_percent": 130,
+          "speed_interval_sec": 2,
+          "big_interval_sec": 5
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "id": "event_6",
+      "index": 6,
+      "eventKind": "InitialSpawnDice",
+      "name_zh": "召喚精英",
+      "name_en": "Elite Summon",
+      "name_ko": "정예 소환",
+      "phase": "Early",
+      "timing_type": "instant",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "遊戲開始時， 召喚1個3骰點骰子",
+      "desc_en": "At the game start, summon a 3-Dot Dice",
+      "icon": "InitialSpawnDice.png",
+      "display_name_zh": "召喚精英",
+      "display_name_en": "Elite Summon",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "遊戲開始時， 召喚1個3骰點骰子",
+      "mode_desc_versus_zh": "遊戲開始時， 召喚1個3骰點骰子",
+      "mode_desc_coop_en": "At the game start, summon a 3-Dot Dice",
+      "mode_desc_versus_en": "At the game start, summon a 3-Dot Dice"
+    },
+    {
+      "id": "event_7",
+      "index": 7,
+      "eventKind": "SpawnJoker",
+      "name_zh": "小丑登場",
+      "name_en": "Joker",
+      "name_ko": "조커 등장",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 100,
+      "versus_seconds": 60,
+      "desc_zh": "持續100秒 合成時，50%機率出現小丑",
+      "desc_en": "For 100s, merging has a 50% chance to summon a Joker",
+      "icon": "SpawnJoker.png",
+      "display_name_zh": "小丑登場",
+      "display_name_en": "Joker",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "持續100秒 合成時，50%機率出現小丑",
+      "mode_desc_versus_zh": "持續60秒 合成時，50%機率出現小丑",
+      "mode_desc_coop_en": "For 100s, merging has a 50% chance to summon a Joker",
+      "mode_desc_versus_en": "For 60s, merging has a 50% chance to summon a Joker"
+    },
+    {
+      "id": "event_9",
+      "index": 9,
+      "eventKind": "AddtionalSpawn",
+      "name_zh": "合成代價",
+      "name_en": "Master of Merging",
+      "name_ko": "합성의 대가",
+      "phase": "Mid",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "合成時，25%機率 額外召喚1骰點骰子",
+      "desc_en": "On merge, grants a 25% chance to summon an extra 1-dot dice",
+      "icon": "AddtionalSpawn.png",
+      "display_name_zh": "合成代價",
+      "display_name_en": "Master of Merging",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "合成時，25%機率 額外召喚1骰點骰子",
+      "mode_desc_versus_zh": "合成時，25%機率 額外召喚1骰點骰子",
+      "mode_desc_coop_en": "On merge, grants a 25% chance to summon an extra 1-dot dice",
+      "mode_desc_versus_en": "On merge, grants a 25% chance to summon an extra 1-dot dice"
+    },
+    {
+      "id": "event_10",
+      "index": 10,
+      "eventKind": "LuckyMerge",
+      "name_zh": "幸運合成",
+      "name_en": "Lucky Merge",
+      "name_ko": "행운의 합성",
+      "phase": "Mid",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "合成時，10%機率骰點+1",
+      "desc_en": "On merge, 10% chance to add +1 dot",
+      "icon": "LuckyMerge.png",
+      "display_name_zh": "幸運合成",
+      "display_name_en": "Lucky Merge",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "合成時，10%機率骰點+1",
+      "mode_desc_versus_zh": "合成時，10%機率骰點+1",
+      "mode_desc_coop_en": "On merge, 10% chance to add +1 dot",
+      "mode_desc_versus_en": "On merge, 10% chance to add +1 dot"
+    },
+    {
+      "id": "event_11",
+      "index": 11,
+      "eventKind": "BoardLeftAtkUp",
+      "name_zh": "狂戰士",
+      "name_en": "Berserker",
+      "name_ko": "광전사",
+      "phase": "Mid",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "配置於左側第1列時， 傷害大幅增加",
+      "desc_en": "When placed in the left-end, greatly increases DMG",
+      "icon": "BoardLeftAtkUp.png",
+      "display_name_zh": "狂戰士",
+      "display_name_en": "Berserker",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        41
+      ],
+      "mode_desc_coop_zh": "配置於左側第1列時， 傷害大幅增加",
+      "mode_desc_versus_zh": "配置於左側第1列時， 傷害大幅增加",
+      "mode_desc_coop_en": "When placed in the left-end, greatly increases DMG",
+      "mode_desc_versus_en": "When placed in the left-end, greatly increases DMG"
+    },
+    {
+      "id": "event_12",
+      "index": 12,
+      "eventKind": "BoardMidCtrBuff",
+      "name_zh": "王位",
+      "name_en": "The Throne",
+      "name_ko": "왕의 자리",
+      "phase": "Mid",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "配置於中央時， 攻擊速度與傷害大幅增加",
+      "desc_en": "When placed in the center, Greatly increases ATK SPD and DMG",
+      "icon": "BoardMidCtrBuff.png",
+      "display_name_zh": "王位",
+      "display_name_en": "The Throne",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        41
+      ],
+      "mode_desc_coop_zh": "配置於中央時， 攻擊速度與傷害大幅增加",
+      "mode_desc_versus_zh": "配置於中央時， 攻擊速度與傷害大幅增加",
+      "mode_desc_coop_en": "When placed in the center, Greatly increases ATK SPD and DMG",
+      "mode_desc_versus_en": "When placed in the center, Greatly increases ATK SPD and DMG"
+    },
+    {
+      "id": "event_14",
+      "index": 14,
+      "eventKind": "MostDiceLevelUp",
+      "name_zh": "投票表決",
+      "name_en": "Majority Rule",
+      "name_ko": "다수결",
+      "phase": "Early",
+      "timing_type": "countdown",
+      "coop_time": "90s",
+      "versus_time": "50s",
+      "coop_seconds": 90,
+      "versus_seconds": 50,
+      "desc_zh": "將1個持有數量最多的 類型骰子進行骰點+1升級",
+      "desc_en": "Randomly upgrade 1 dice from the type with the most dice by +1 dot",
+      "icon": "MostDiceLevelUp.png",
+      "display_name_zh": "投票表決",
+      "display_name_en": "Majority Rule",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "將1個持有數量最多的 類型骰子進行骰點+1升級",
+      "mode_desc_versus_zh": "將1個持有數量最多的 類型骰子進行骰點+1升級",
+      "mode_desc_coop_en": "Randomly upgrade 1 dice from the type with the most dice by +1 dot",
+      "mode_desc_versus_en": "Randomly upgrade 1 dice from the type with the most dice by +1 dot"
+    },
+    {
+      "id": "event_16",
+      "index": 16,
+      "eventKind": "MergeAssassinate",
+      "name_zh": "忍者秘技",
+      "name_en": "Ninja Secrets",
+      "name_ko": "닌자 비기",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": null,
+      "versus_time": "55s",
+      "coop_seconds": 0,
+      "versus_seconds": 55,
+      "desc_zh": "持續100秒， 50%機率觸發暗殺",
+      "desc_en": "For 100 sec, 50% chance to trigger Assassinate",
+      "icon": "MergeAssassinate.png",
+      "display_name_zh": "忍者秘技",
+      "display_name_en": "Ninja Secrets",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "持續100秒， 50%機率觸發暗殺",
+      "mode_desc_versus_zh": "持續55秒， 50%機率觸發暗殺",
+      "mode_desc_coop_en": "For 100 sec, 50% chance to trigger Assassinate",
+      "mode_desc_versus_en": "For 55 sec, 50% chance to trigger Assassinate"
+    },
+    {
+      "id": "event_17",
+      "index": 17,
+      "eventKind": "RandomEyeDownAfterWave",
+      "name_zh": "骰點監控",
+      "name_en": "Dice Inspection",
+      "name_ko": "눈금 단속",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "60s",
+      "versus_time": "40s",
+      "coop_seconds": 60,
+      "versus_seconds": 40,
+      "desc_zh": "60秒後， 使一個骰點最高的骰子骰點-1",
+      "desc_en": "After 60 sec, reduces the Dot Count of one of the highest-Dot dice by 1",
+      "icon": "RandomEyeDownAfterWave.png",
+      "display_name_zh": "骰點監控",
+      "display_name_en": "Dice Inspection",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "60秒後， 使一個骰點最高的骰子骰點-1",
+      "mode_desc_versus_zh": "40秒後， 使一個骰點最高的骰子骰點-1",
+      "mode_desc_coop_en": "After 60 sec, reduces the Dot Count of one of the highest-Dot dice by 1",
+      "mode_desc_versus_en": "After 40 sec, reduces the Dot Count of one of the highest-Dot dice by 1"
+    },
+    {
+      "id": "event_18",
+      "index": 18,
+      "eventKind": "DiceShuffle",
+      "name_zh": "大變革",
+      "name_en": "Cataclysm",
+      "name_ko": "대격변",
+      "phase": "Mid",
+      "timing_type": "instant",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "立即調整骰盤上骰子位置",
+      "desc_en": "Shuffles the positions of all dice on the field",
+      "icon": "DiceShuffle.png",
+      "display_name_zh": "大變革",
+      "display_name_en": "Cataclysm",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "立即調整骰盤上骰子位置",
+      "mode_desc_versus_zh": "立即調整骰盤上骰子位置",
+      "mode_desc_coop_en": "Shuffles the positions of all dice on the field",
+      "mode_desc_versus_en": "Shuffles the positions of all dice on the field"
+    },
+    {
+      "id": "event_19",
+      "index": 19,
+      "eventKind": "BossKillDiceDestroy",
+      "name_zh": "水鬼",
+      "name_en": "Sabotage",
+      "name_ko": "물귀신",
+      "phase": "Late",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "擊殺首領時， 摧毀3個骰子",
+      "desc_en": "On Boss defeat, destroys 3 dice",
+      "icon": "BossKillDiceDestroy.png",
+      "display_name_zh": "水鬼",
+      "display_name_en": "Sabotage",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        71,
+        76
+      ],
+      "mode_desc_coop_zh": "擊殺首領時， 摧毀3個骰子",
+      "mode_desc_versus_zh": "擊殺首領時， 摧毀3個骰子",
+      "mode_desc_coop_en": "On Boss defeat, destroys 3 dice",
+      "mode_desc_versus_en": "On Boss defeat, destroys 3 dice"
+    },
+    {
+      "id": "event_20",
+      "index": 20,
+      "eventKind": "HighestLowestEyeSwap",
+      "name_zh": "重新分配",
+      "name_en": "Redistribution",
+      "name_ko": "재분배",
+      "phase": "Mid",
+      "timing_type": "instant",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "立即將最高與最低骰點骰子的骰點互換",
+      "desc_en": "Immediately swaps the Dot Counts of the highest and lowest Dot dice",
+      "icon": "HighestLowestEyeSwap.png",
+      "display_name_zh": "重新分配",
+      "display_name_en": "Redistribution",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "立即將最高與最低骰點骰子的骰點互換",
+      "mode_desc_versus_zh": "立即將最高與最低骰點骰子的骰點互換",
+      "mode_desc_coop_en": "Immediately swaps the Dot Counts of the highest and lowest Dot dice",
+      "mode_desc_versus_en": "Immediately swaps the Dot Counts of the highest and lowest Dot dice"
+    },
+    {
+      "id": "event_21",
+      "index": 21,
+      "eventKind": "RandomTypeChange",
+      "name_zh": "勢力戰",
+      "name_en": "Faction War",
+      "name_ko": "세력전",
+      "phase": "Mid",
+      "timing_type": "instant",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "立即將骰盤骰子種類統一為2種",
+      "desc_en": "Immediately changes all dice on the field into 2 dice types",
+      "icon": "RandomTypeChange.png",
+      "display_name_zh": "勢力戰",
+      "display_name_en": "Faction War",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "立即將骰盤骰子種類統一為2種",
+      "mode_desc_versus_zh": "立即將骰盤骰子種類統一為2種",
+      "mode_desc_coop_en": "Immediately changes all dice on the field into 2 dice types",
+      "mode_desc_versus_en": "Immediately changes all dice on the field into 2 dice types"
+    },
+    {
+      "id": "event_22",
+      "index": 22,
+      "eventKind": "TopRowDiceChange",
+      "name_zh": "頂樓",
+      "name_en": "Rooftop",
+      "name_ko": "루프탑",
+      "phase": "Mid",
+      "timing_type": "instant",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "立即將上方第1列變更為相同骰子",
+      "desc_en": "Changes the top row into the same dice type",
+      "icon": "TopRowDiceChange.png",
+      "display_name_zh": "頂樓",
+      "display_name_en": "Rooftop",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "立即將上方第1列變更為相同骰子",
+      "mode_desc_versus_zh": "立即將上方第1列變更為相同骰子",
+      "mode_desc_coop_en": "Changes the top row into the same dice type",
+      "mode_desc_versus_en": "Changes the top row into the same dice type"
+    },
+    {
+      "id": "event_23",
+      "index": 23,
+      "eventKind": "BossWaveDoubleSpawn",
+      "name_zh": "蛇怪",
+      "name_en": "Basilisk",
+      "name_ko": "바실리스크",
+      "phase": "Late",
+      "timing_type": "passive",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "首領怪物登場時，額外登場1個",
+      "desc_en": "When a Boss appears, spawns 1 additional Boss",
+      "icon": "BossWaveDoubleSpawn.png",
+      "display_name_zh": "蛇怪",
+      "display_name_en": "Basilisk",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "首領怪物登場時，額外登場1個",
+      "mode_desc_versus_zh": "首領怪物登場時，額外登場1個",
+      "mode_desc_coop_en": "When a Boss appears, spawns 1 additional Boss",
+      "mode_desc_versus_en": "When a Boss appears, spawns 1 additional Boss"
+    },
+    {
+      "id": "event_24",
+      "index": 24,
+      "eventKind": "RandomDiceNoAttack",
+      "name_zh": "和平主義者",
+      "name_en": "Pacifist",
+      "name_ko": "평화주의자",
+      "phase": "Late",
+      "timing_type": "countdown",
+      "coop_time": null,
+      "versus_time": "30s",
+      "coop_seconds": 0,
+      "versus_seconds": 30,
+      "desc_zh": "每60秒， 骰盤上自身隨機3格無法攻擊",
+      "desc_en": "After 60 sec, dice on 3 random tiles cannot attack",
+      "icon": "RandomDiceNoAttack.png",
+      "display_name_zh": "和平主義者",
+      "display_name_en": "Pacifist",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "每60秒， 骰盤上自身隨機3格無法攻擊",
+      "mode_desc_versus_zh": "每30秒， 骰盤上自身隨機3格無法攻擊",
+      "mode_desc_coop_en": "After 60 sec, dice on 3 random tiles cannot attack",
+      "mode_desc_versus_en": "After 30 sec, dice on 3 random tiles cannot attack"
+    },
+    {
+      "id": "event_25",
+      "index": 25,
+      "eventKind": "WaveDiceDestroySpread",
+      "name_zh": "靈魂傳遞",
+      "name_en": "Soul Transfer",
+      "name_ko": "영혼전달",
+      "phase": "Late",
+      "timing_type": "countdown",
+      "coop_time": "70s",
+      "versus_time": "30s",
+      "coop_seconds": 70,
+      "versus_seconds": 30,
+      "desc_zh": "70秒後， 隨機摧毀1個骰子，將骰點傳遞給其他骰子",
+      "desc_en": "After 70 sec, destroys 1 random dice and transfers its Dot Count to another dice",
+      "icon": "WaveDiceDestroySpread.png",
+      "display_name_zh": "靈魂傳遞",
+      "display_name_en": "Soul Transfer",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        51,
+        61,
+        71,
+        76
+      ],
+      "mode_desc_coop_zh": "70秒後， 隨機摧毀1個骰子，將骰點傳遞給其他骰子",
+      "mode_desc_versus_zh": "30秒後， 隨機摧毀1個骰子，將骰點傳遞給其他骰子",
+      "mode_desc_coop_en": "After 70 sec, destroys 1 random dice and transfers its Dot Count to another dice",
+      "mode_desc_versus_en": "After 30 sec, destroys 1 random dice and transfers its Dot Count to another dice"
+    },
+    {
+      "id": "event_26",
+      "index": 26,
+      "eventKind": "BigMonsterWithBoss",
+      "name_zh": "大亨",
+      "name_en": "Godfather",
+      "name_ko": "대부",
+      "phase": "Late",
+      "timing_type": "single_trigger",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "首領登場時， 7個巨大怪物一同出現",
+      "desc_en": "When a Boss appears, spawns 7 Big Monsters",
+      "icon": "BigMonsterWithBoss.png",
+      "display_name_zh": "大亨",
+      "display_name_en": "Godfather",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        41,
+        71,
+        76
+      ],
+      "mode_desc_coop_zh": "首領登場時， 7個巨大怪物一同出現",
+      "mode_desc_versus_zh": "首領登場時， 7個巨大怪物一同出現",
+      "mode_desc_coop_en": "When a Boss appears, spawns 7 Big Monsters",
+      "mode_desc_versus_en": "When a Boss appears, spawns 7 Big Monsters"
+    },
+    {
+      "id": "event_27",
+      "index": 27,
+      "eventKind": "WaveMinionSpeedDouble",
+      "name_zh": "迅速",
+      "name_en": "Haste",
+      "name_ko": "신속",
+      "phase": "Late",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "怪物移動速度增加2倍",
+      "desc_en": "Monster Move SPD x2",
+      "icon": "WaveMinionSpeedDouble.png",
+      "display_name_zh": "迅速",
+      "display_name_en": "Haste",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        51,
+        61,
+        71,
+        76
+      ],
+      "mode_desc_coop_zh": "怪物移動速度增加2倍",
+      "mode_desc_versus_zh": "怪物移動速度增加2倍",
+      "mode_desc_coop_en": "Monster Move SPD x2",
+      "mode_desc_versus_en": "Monster Move SPD x2"
+    },
+    {
+      "id": "event_28",
+      "index": 28,
+      "eventKind": "BossWaveMergeSpawnHeal",
+      "name_zh": "恢復魔術",
+      "name_en": "Healing Magic",
+      "name_ko": "회복마술",
+      "phase": "Late",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "透過按鈕召喚骰子 或合成時，首領生命值恢復",
+      "desc_en": "Merging or summoning dice with the button restores the Boss HP",
+      "icon": "BossWaveMergeSpawnHeal.png",
+      "display_name_zh": "恢復魔術",
+      "display_name_en": "Healing Magic",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        51,
+        61,
+        71,
+        76
+      ],
+      "mode_desc_coop_zh": "透過按鈕召喚骰子 或合成時，首領生命值恢復",
+      "mode_desc_versus_zh": "透過按鈕召喚骰子 或合成時，首領生命值恢復",
+      "mode_desc_coop_en": "Merging or summoning dice with the button restores the Boss HP",
+      "mode_desc_versus_en": "Merging or summoning dice with the button restores the Boss HP"
+    },
+    {
+      "id": "event_29",
+      "index": 29,
+      "eventKind": "InitialSP10000ThenReset",
+      "name_zh": "虛擬貨幣",
+      "name_en": "Cryptocurrency",
+      "name_ko": "가상화폐",
+      "phase": "Late",
+      "timing_type": "countdown",
+      "coop_time": "100s",
+      "versus_time": "30s",
+      "coop_seconds": 100,
+      "versus_seconds": 30,
+      "desc_zh": "獲得SP+10000， 100秒後，SP重置為0",
+      "desc_en": "Gain 10000 SP, then reset SP to 0 after 100 sec",
+      "icon": "InitialSP10000ThenReset.png",
+      "display_name_zh": "虛擬貨幣",
+      "display_name_en": "Cryptocurrency",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        51,
+        61,
+        71,
+        76
+      ],
+      "mode_desc_coop_zh": "獲得SP+10000， 100秒後，SP重置為0",
+      "mode_desc_versus_zh": "獲得SP+10000， 30秒後，SP重置為0",
+      "mode_desc_coop_en": "Gain 10000 SP, then reset SP to 0 after 100 sec",
+      "mode_desc_versus_en": "Gain 10000 SP, then reset SP to 0 after 30 sec"
+    },
+    {
+      "id": "event_30",
+      "index": 30,
+      "eventKind": "MergeAtkSpeedUp",
+      "name_zh": "加速踏板",
+      "name_en": "Accelerator",
+      "name_ko": "가속페달",
+      "phase": "Mid",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "合成時， 持續3秒攻擊速度+50%",
+      "desc_en": "On merge, ATK SPD +50% for 3 sec",
+      "icon": "MergeAtkSpeedUp.png",
+      "display_name_zh": "加速踏板",
+      "display_name_en": "Accelerator",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "合成時， 持續3秒攻擊速度+50%",
+      "mode_desc_versus_zh": "合成時， 持續3秒攻擊速度+50%",
+      "mode_desc_coop_en": "On merge, ATK SPD +50% for 3 sec",
+      "mode_desc_versus_en": "On merge, ATK SPD +50% for 3 sec"
+    },
+    {
+      "id": "event_31",
+      "index": 31,
+      "eventKind": "WaveEndSPGain",
+      "name_zh": "儲備資金",
+      "name_en": "Reserve Funds",
+      "name_ko": "자금 비축",
+      "phase": "Early",
+      "timing_type": "countdown",
+      "coop_time": "60s",
+      "versus_time": "40s",
+      "coop_seconds": 60,
+      "versus_seconds": 40,
+      "desc_zh": "60秒後， 獲得目前持有的相當SP",
+      "desc_en": "After 60 sec, gain SP equal to current SP",
+      "icon": "WaveEndSPGain.png",
+      "display_name_zh": "儲備資金",
+      "display_name_en": "Reserve Funds",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "60秒後， 獲得目前持有的相當SP",
+      "mode_desc_versus_zh": "40秒後， 獲得目前持有的相當SP",
+      "mode_desc_coop_en": "After 60 sec, gain SP equal to current SP",
+      "mode_desc_versus_en": "After 40 sec, gain SP equal to current SP"
+    },
+    {
+      "id": "event_32",
+      "index": 32,
+      "eventKind": "WaveEndHighestEyeUp",
+      "name_zh": "突破極限",
+      "name_en": "Limit Break",
+      "name_ko": "한계 돌파",
+      "phase": "Early",
+      "timing_type": "countdown",
+      "coop_time": "70s",
+      "versus_time": "50s",
+      "coop_seconds": 70,
+      "versus_seconds": 50,
+      "desc_zh": "70秒後， 骰點最高的骰子骰點+1",
+      "desc_en": "After 70 sec, the highest-Dot dice gains +1 Dot",
+      "icon": "WaveEndHighestEyeUp.png",
+      "display_name_zh": "突破極限",
+      "display_name_en": "Limit Break",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "70秒後， 骰點最高的骰子骰點+1",
+      "mode_desc_versus_zh": "50秒後， 骰點最高的骰子骰點+1",
+      "mode_desc_coop_en": "After 70 sec, the highest-Dot dice gains +1 Dot",
+      "mode_desc_versus_en": "After 50 sec, the highest-Dot dice gains +1 Dot"
+    },
+    {
+      "id": "event_33",
+      "index": 33,
+      "eventKind": "WaveEndFillEmptySlots",
+      "name_zh": "緊急增援",
+      "name_en": "Emergency Reinforcement",
+      "name_ko": "긴급 증원",
+      "phase": "Early",
+      "timing_type": "countdown",
+      "coop_time": "60s",
+      "versus_time": "30s",
+      "coop_seconds": 60,
+      "versus_seconds": 30,
+      "desc_zh": "60秒後， 於空格填滿1骰點骰子",
+      "desc_en": "After 60 sec, fills all empty tiles with 1-dot dice",
+      "icon": "WaveEndFillEmptySlots.png",
+      "display_name_zh": "緊急增援",
+      "display_name_en": "Emergency Reinforcement",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "60秒後， 於空格填滿1骰點骰子",
+      "mode_desc_versus_zh": "30秒後， 於空格填滿1骰點骰子",
+      "mode_desc_coop_en": "After 60 sec, fills all empty tiles with 1-dot dice",
+      "mode_desc_versus_en": "After 30 sec, fills all empty tiles with 1-dot dice"
+    },
+    {
+      "id": "event_34",
+      "index": 34,
+      "eventKind": "WaveEndSameLineEyeUp",
+      "name_zh": "賓果",
+      "name_en": "Bingo",
+      "name_ko": "빙고",
+      "phase": "Early",
+      "timing_type": "countdown",
+      "coop_time": "100s",
+      "versus_time": "55s",
+      "coop_seconds": 100,
+      "versus_seconds": 55,
+      "desc_zh": "100秒後，若用相同骰子填滿 橫排與直排，該骰子骰點+1",
+      "desc_en": "After 100 sec, if a row or column consists of the same dice type, all dice in that line gain +1 Dot",
+      "icon": "WaveEndSameLineEyeUp.png",
+      "display_name_zh": "賓果",
+      "display_name_en": "Bingo",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "100秒後，若用相同骰子填滿 橫排與直排，該骰子骰點+1",
+      "mode_desc_versus_zh": "55秒後，若用相同骰子填滿 橫排與直排，該骰子骰點+1",
+      "mode_desc_coop_en": "After 100 sec, if a row or column consists of the same dice type, all dice in that line gain +1 Dot",
+      "mode_desc_versus_en": "After 55 sec, if a row or column consists of the same dice type, all dice in that line gain +1 Dot"
+    },
+    {
+      "id": "event_35",
+      "index": 35,
+      "eventKind": "FieldDiceCountSPUp",
+      "name_zh": "節流",
+      "name_en": "Austerity",
+      "name_ko": "긴축",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "當骰盤上骰子低於4個以下時， 怪物擊殺SP獲得量+75%",
+      "desc_en": "Monster Kill SP +75% when there are 4 or fewer dice on the field",
+      "icon": "FieldDiceCountSPUp.png",
+      "display_name_zh": "節流",
+      "display_name_en": "Austerity",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "當骰盤上骰子低於4個以下時， 怪物擊殺SP獲得量+75%",
+      "mode_desc_versus_zh": "當骰盤上骰子低於4個以下時， 怪物擊殺SP獲得量+75%",
+      "mode_desc_coop_en": "Monster Kill SP +75% when there are 4 or fewer dice on the field",
+      "mode_desc_versus_en": "Monster Kill SP +75% when there are 4 or fewer dice on the field"
+    },
+    {
+      "id": "event_36",
+      "index": 36,
+      "eventKind": "OneEyeSummonPowerUp",
+      "name_zh": "禁止挑食",
+      "name_en": "Balanced Diet",
+      "name_ko": "편식 금지",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "於骰盤召喚5個不同的1骰點骰子時， 整體強化+1",
+      "desc_en": "When 5 different 1-dot dice are on the field, all dice Power-Up +1",
+      "icon": "OneEyeSummonPowerUp.png",
+      "display_name_zh": "禁止挑食",
+      "display_name_en": "Balanced Diet",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "於骰盤召喚5個不同的1骰點骰子時， 整體強化+1",
+      "mode_desc_versus_zh": "於骰盤召喚5個不同的1骰點骰子時， 整體強化+1",
+      "mode_desc_coop_en": "When 5 different 1-dot dice are on the field, all dice Power-Up +1",
+      "mode_desc_versus_en": "When 5 different 1-dot dice are on the field, all dice Power-Up +1"
+    },
+    {
+      "id": "event_37",
+      "index": 37,
+      "eventKind": "TwoEyeDiceCollectUpgrade",
+      "name_zh": "鐵支",
+      "name_en": "Four of a Kind",
+      "name_ko": "포 카드",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "持有4個相同的2骰點骰子， 該骰子骰點+1",
+      "desc_en": "When 4 identical 2-dot dice are on the field, those dice gain +1 Dot",
+      "icon": "TwoEyeDiceCollectUpgrade.png",
+      "display_name_zh": "鐵支",
+      "display_name_en": "Four of a Kind",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "持有4個相同的2骰點骰子， 該骰子骰點+1",
+      "mode_desc_versus_zh": "持有4個相同的2骰點骰子， 該骰子骰點+1",
+      "mode_desc_coop_en": "When 4 identical 2-dot dice are on the field, those dice gain +1 Dot",
+      "mode_desc_versus_en": "When 4 identical 2-dot dice are on the field, those dice gain +1 Dot"
+    },
+    {
+      "id": "event_38",
+      "index": 38,
+      "eventKind": "LastStand",
+      "name_zh": "復活！",
+      "name_en": "Revive!",
+      "name_ko": "부활!",
+      "phase": "Mid",
+      "timing_type": "single_trigger",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "生命值低於20時， 召喚奇蹟之石 奇蹟之石：所有怪物暴斃，所有骰子變換後骰點+1",
+      "desc_en": "When HP is 20 or lower, summons a Miracle Stone. Miracle Stone: Insta-kills all monsters, transforms all dice, and adds +1 dot to all dice",
+      "icon": "LastStand.png",
+      "display_name_zh": "復活！",
+      "display_name_en": "Revive!",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "生命值低於20時， 召喚奇蹟之石 奇蹟之石：所有怪物暴斃，所有骰子變換後骰點+1",
+      "mode_desc_versus_zh": "生命值低於20時， 召喚奇蹟之石 奇蹟之石：所有怪物暴斃，所有骰子變換後骰點+1",
+      "mode_desc_coop_en": "When HP is 20 or lower, summons a Miracle Stone. Miracle Stone: Insta-kills all monsters, transforms all dice, and adds +1 dot to all dice",
+      "mode_desc_versus_en": "When HP is 20 or lower, summons a Miracle Stone. Miracle Stone: Insta-kills all monsters, transforms all dice, and adds +1 dot to all dice"
+    },
+    {
+      "id": "event_39",
+      "index": 39,
+      "eventKind": "SpawnSPGemstones",
+      "name_zh": "萃取魔力",
+      "name_en": "Mana Extraction",
+      "name_ko": "마력 추출",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "於骰盤隨機格子召喚3個SP礦石 於該礦石範圍內合成時，獲得SP",
+      "desc_en": "Summons 3 SP Ores on random tiles Gain SP when dice are merged within an Ore's range",
+      "icon": "SpawnSPGemstones.png",
+      "display_name_zh": "萃取魔力",
+      "display_name_en": "Mana Extraction",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "於骰盤隨機格子召喚3個SP礦石 於該礦石範圍內合成時，獲得SP",
+      "mode_desc_versus_zh": "於骰盤隨機格子召喚3個SP礦石 於該礦石範圍內合成時，獲得SP",
+      "mode_desc_coop_en": "Summons 3 SP Ores on random tiles Gain SP when dice are merged within an Ore's range",
+      "mode_desc_versus_en": "Summons 3 SP Ores on random tiles Gain SP when dice are merged within an Ore's range"
+    },
+    {
+      "id": "event_40",
+      "index": 40,
+      "eventKind": "SpawnAltar",
+      "name_zh": "等價交換",
+      "name_en": "Equivalent Exchange",
+      "name_ko": "등가 교환",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "於粉碎機合成骰子時， 對方骰子骰點減少",
+      "desc_en": "When merging a dice into the Grinder, reduces the dot count of the opponent's dice",
+      "icon": "SpawnAltar.png",
+      "display_name_zh": "等價交換",
+      "display_name_en": "Equivalent Exchange",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "於粉碎機合成骰子時， 對方骰子骰點減少",
+      "mode_desc_versus_zh": "於粉碎機合成骰子時， 對方骰子骰點減少",
+      "mode_desc_coop_en": "When merging a dice into the Grinder, reduces the dot count of the opponent's dice",
+      "mode_desc_versus_en": "When merging a dice into the Grinder, reduces the dot count of the opponent's dice"
+    },
+    {
+      "id": "event_41",
+      "index": 41,
+      "eventKind": "WaveSummonMineInstall",
+      "name_zh": "地雷派對",
+      "name_en": "Mine Party",
+      "name_ko": "지뢰 파티",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "40s",
+      "versus_time": "40s",
+      "coop_seconds": 40,
+      "versus_seconds": 40,
+      "desc_zh": "持續40秒透過召喚按鈕 召喚時，於骰盤後方安裝地雷",
+      "desc_en": "For 40 sec, summoning via button places a Mine at the back of the field",
+      "icon": "WaveSummonMineInstall.png",
+      "display_name_zh": "地雷派對",
+      "display_name_en": "Mine Party",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        41,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "持續40秒透過召喚按鈕 召喚時，於骰盤後方安裝地雷",
+      "mode_desc_versus_zh": "持續40秒透過召喚按鈕 召喚時，於骰盤後方安裝地雷",
+      "mode_desc_coop_en": "For 40 sec, summoning via button places a Mine at the back of the field",
+      "mode_desc_versus_en": "For 40 sec, summoning via button places a Mine at the back of the field"
+    },
+    {
+      "id": "event_42",
+      "index": 42,
+      "eventKind": "MergeBigMonsterOpp",
+      "name_zh": "巨大陷害",
+      "name_en": "Big Mobs",
+      "name_ko": "빅 맥이기",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": null,
+      "versus_time": "55s",
+      "coop_seconds": 0,
+      "versus_seconds": 55,
+      "desc_zh": "持續55秒，合成時， 50%機率傳送巨大怪物",
+      "desc_en": "For 55 sec, 50% chance to send a Big Monster on merge",
+      "icon": "MergeBigMonsterOpp.png",
+      "display_name_zh": "巨大陷害",
+      "display_name_en": "Big Mobs",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "持續60秒，合成時， 50%機率傳送巨大怪物",
+      "mode_desc_versus_zh": "持續55秒，合成時， 50%機率傳送巨大怪物",
+      "mode_desc_coop_en": "For 60 sec, 50% chance to send a Big Monster on merge",
+      "mode_desc_versus_en": "For 55 sec, 50% chance to send a Big Monster on merge"
+    },
+    {
+      "id": "event_43",
+      "index": 43,
+      "eventKind": "SpawnCostReductionThisRound",
+      "name_zh": "跳樓大拍賣",
+      "name_en": "Crazy Sale",
+      "name_ko": "사장님이 미쳤어요",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "50s",
+      "versus_time": "50s",
+      "coop_seconds": 50,
+      "versus_seconds": 50,
+      "desc_zh": "持續50秒透過召喚按鈕 召喚時，召喚費用減少10",
+      "desc_en": "For 50 sec, each button summon reduces Summon Cost by 10",
+      "icon": "SpawnCostReductionThisRound.png",
+      "display_name_zh": "跳樓大拍賣",
+      "display_name_en": "Crazy Sale",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "持續50秒透過召喚按鈕 召喚時，召喚費用減少10",
+      "mode_desc_versus_zh": "持續50秒透過召喚按鈕 召喚時，召喚費用減少10",
+      "mode_desc_coop_en": "For 50 sec, each button summon reduces Summon Cost by 10",
+      "mode_desc_versus_en": "For 50 sec, each button summon reduces Summon Cost by 10"
+    },
+    {
+      "id": "event_44",
+      "index": 44,
+      "eventKind": "WaveEndNoOneEyeRandomEyeUp2",
+      "name_zh": "兒童不宜",
+      "name_en": "No Kids Allowed",
+      "name_ko": "애들은 가라",
+      "phase": "Early",
+      "timing_type": "countdown",
+      "coop_time": "90s",
+      "versus_time": "30s",
+      "coop_seconds": 90,
+      "versus_seconds": 30,
+      "desc_zh": "90秒後，若骰盤上無1骰點， 使隨機骰子骰點+2",
+      "desc_en": "After 90 sec, if there are no 1-dot dice on the field, a random dice gains +2 Dots",
+      "icon": "WaveEndNoOneEyeRandomEyeUp2.png",
+      "display_name_zh": "兒童不宜",
+      "display_name_en": "No Kids Allowed",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "90秒後，若骰盤上無1骰點， 使隨機骰子骰點+2",
+      "mode_desc_versus_zh": "30秒後，若骰盤上無1骰點， 使隨機骰子骰點+2",
+      "mode_desc_coop_en": "After 90 sec, if there are no 1-dot dice on the field, a random dice gains +2 Dots",
+      "mode_desc_versus_en": "After 30 sec, if there are no 1-dot dice on the field, a random dice gains +2 Dots"
+    },
+    {
+      "id": "event_45",
+      "index": 45,
+      "eventKind": "TimingGaugeSummonTwoEyeDice",
+      "name_zh": "絕妙時機",
+      "name_en": "Perfect Timing",
+      "name_ko": "절묘한 타이밍",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "70s",
+      "versus_time": "40s",
+      "coop_seconds": 70,
+      "versus_seconds": 40,
+      "desc_zh": "持續70秒，若於正確時機召喚， 將出現2骰點骰子",
+      "desc_en": "For 70 sec, summoning at the right timing summons a 2-dot dice",
+      "icon": "TimingGaugeSummonTwoEyeDice.png",
+      "display_name_zh": "絕妙時機",
+      "display_name_en": "Perfect Timing",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "持續70秒，若於正確時機召喚， 將出現2骰點骰子",
+      "mode_desc_versus_zh": "持續40秒，若於正確時機召喚， 將出現2骰點骰子",
+      "mode_desc_coop_en": "For 70 sec, summoning at the right timing summons a 2-dot dice",
+      "mode_desc_versus_en": "For 40 sec, summoning at the right timing summons a 2-dot dice"
+    },
+    {
+      "id": "event_46",
+      "index": 46,
+      "eventKind": "MergeStunAllMinions",
+      "name_zh": "恐怖合成",
+      "name_en": "Terrifying Merge",
+      "name_ko": "공포의 합성",
+      "phase": "Mid",
+      "timing_type": "passive",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "合成時，所有怪物僵硬",
+      "desc_en": "On merge, inflicts Stun on all monsters",
+      "icon": "MergeStunAllMinions.png",
+      "display_name_zh": "恐怖合成",
+      "display_name_en": "Terrifying Merge",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "合成時，所有怪物僵硬",
+      "mode_desc_versus_zh": "合成時，所有怪物僵硬",
+      "mode_desc_coop_en": "On merge, inflicts Stun on all monsters",
+      "mode_desc_versus_en": "On merge, inflicts Stun on all monsters"
+    },
+    {
+      "id": "event_47",
+      "index": 47,
+      "eventKind": "WaveEndReturnConsumedSpawnSP",
+      "name_zh": "回饋",
+      "name_en": "Payback",
+      "name_ko": "페이백",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "60s",
+      "versus_time": "50s",
+      "coop_seconds": 60,
+      "versus_seconds": 50,
+      "desc_zh": "60秒後， 退還使用的所有召喚SP",
+      "desc_en": "After 60 sec, refunds all SP spent on summoning",
+      "icon": "WaveEndReturnConsumedSpawnSP.png",
+      "display_name_zh": "回饋",
+      "display_name_en": "Payback",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "60秒後， 退還使用的所有召喚SP",
+      "mode_desc_versus_zh": "50秒後， 退還使用的所有召喚SP",
+      "mode_desc_coop_en": "After 60 sec, refunds all SP spent on summoning",
+      "mode_desc_versus_en": "After 50 sec, refunds all SP spent on summoning"
+    },
+    {
+      "id": "event_48",
+      "index": 48,
+      "eventKind": "HPConsumeForSP",
+      "name_zh": "捐血",
+      "name_en": "Blood Donation",
+      "name_ko": "헌혈",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "90s",
+      "versus_time": "40s",
+      "coop_seconds": 90,
+      "versus_seconds": 40,
+      "desc_zh": "持續90秒， 消耗20生命值獲得大量SP",
+      "desc_en": "For 90 sec, consumes 20 HP to gain a large amount of SP",
+      "icon": "HPConsumeForSP.png",
+      "display_name_zh": "捐血",
+      "display_name_en": "Blood Donation",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        11,
+        16,
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "持續90秒， 消耗20生命值獲得大量SP",
+      "mode_desc_versus_zh": "持續40秒， 消耗20生命值獲得大量SP",
+      "mode_desc_coop_en": "For 90 sec, consumes 20 HP to gain a large amount of SP",
+      "mode_desc_versus_en": "For 40 sec, consumes 20 HP to gain a large amount of SP"
+    },
+    {
+      "id": "event_49",
+      "index": 49,
+      "eventKind": "WaveEndDestroyLowestHighest",
+      "name_zh": "祭品",
+      "name_en": "Sacrifice",
+      "name_ko": "제물",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "40s",
+      "versus_time": "40s",
+      "coop_seconds": 40,
+      "versus_seconds": 40,
+      "desc_zh": "40秒後，摧毀3個最低骰點骰子， 複製自身骰盤最高骰點的1個骰子",
+      "desc_en": "After 40s, destroys the 3 lowest-dot dice and copies 1 highest-dot dice",
+      "icon": "WaveEndDestroyLowestHighest.png",
+      "display_name_zh": "祭品",
+      "display_name_en": "Sacrifice",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "40秒後，摧毀3個最低骰點骰子， 複製自身骰盤最高骰點的1個骰子",
+      "mode_desc_versus_zh": "40秒後，摧毀3個最低骰點骰子， 複製自身骰盤最高骰點的1個骰子",
+      "mode_desc_coop_en": "After 40s, destroys the 3 lowest-dot dice and copies 1 highest-dot dice",
+      "mode_desc_versus_en": "After 40s, destroys the 3 lowest-dot dice and copies 1 highest-dot dice"
+    },
+    {
+      "id": "event_50",
+      "index": 50,
+      "eventKind": "BoardMoreEmptySlotsSPGain",
+      "name_zh": "極簡主義",
+      "name_en": "Minimalism",
+      "name_ko": "미니멀리즘",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "若骰子比對方少， SP獲得量增加",
+      "desc_en": "When fewer dice are on the field than the opponent, SP Gain increases",
+      "icon": "BoardMoreEmptySlotsSPGain.png",
+      "display_name_zh": "極簡主義",
+      "display_name_en": "Minimalism",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "若骰子比對方少， SP獲得量增加",
+      "mode_desc_versus_zh": "若骰子比對方少， SP獲得量增加",
+      "mode_desc_coop_en": "When fewer dice are on the field than the opponent, SP Gain increases",
+      "mode_desc_versus_en": "When fewer dice are on the field than the opponent, SP Gain increases"
+    },
+    {
+      "id": "event_51",
+      "index": 51,
+      "eventKind": "SpawnCostZeroGainSP",
+      "name_zh": "點擊遊戲",
+      "name_en": "Clicker Game",
+      "name_ko": "클리커 게임",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "當召喚費用不足時， 點擊召喚按鈕可獲得1 SP紅利",
+      "desc_en": "Tapping the summon button when short on SP grants +1 SP",
+      "icon": "SpawnCostZeroGainSP.png",
+      "display_name_zh": "點擊遊戲",
+      "display_name_en": "Clicker Game",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "當召喚費用不足時， 點擊召喚按鈕可獲得1 SP紅利",
+      "mode_desc_versus_zh": "當召喚費用不足時， 點擊召喚按鈕可獲得1 SP紅利",
+      "mode_desc_coop_en": "Tapping the summon button when short on SP grants +1 SP",
+      "mode_desc_versus_en": "Tapping the summon button when short on SP grants +1 SP"
+    },
+    {
+      "id": "event_52",
+      "index": 52,
+      "eventKind": "LastEmptySlotAdjacentLevelUp",
+      "name_zh": "充滿電",
+      "name_en": "Fully Charged",
+      "name_ko": "완충",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "填滿骰盤的最後一個空格時， 位於上下左右的骰子骰點+1",
+      "desc_en": "When the last empty tile is filled, adjacent dice gain +1 Dot",
+      "icon": "LastEmptySlotAdjacentLevelUp.png",
+      "display_name_zh": "充滿電",
+      "display_name_en": "Fully Charged",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "填滿骰盤的最後一個空格時， 位於上下左右的骰子骰點+1",
+      "mode_desc_versus_zh": "填滿骰盤的最後一個空格時， 位於上下左右的骰子骰點+1",
+      "mode_desc_coop_en": "When the last empty tile is filled, adjacent dice gain +1 Dot",
+      "mode_desc_versus_en": "When the last empty tile is filled, adjacent dice gain +1 Dot"
+    },
+    {
+      "id": "event_53",
+      "index": 53,
+      "eventKind": "BombDiceKillAllMinions",
+      "name_zh": "炸彈魔",
+      "name_en": "Bomber",
+      "name_ko": "폭탄마",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "炸彈骰子登場！ 合成時，使除了首領以外的所有怪物暴斃",
+      "desc_en": "Bomb Dice appears! When merged, instantly defeats all monsters except bosses",
+      "icon": "BombDiceKillAllMinions.png",
+      "display_name_zh": "炸彈魔",
+      "display_name_en": "Bomber",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "炸彈骰子登場！ 合成時，使除了首領以外的所有怪物暴斃",
+      "mode_desc_versus_zh": "炸彈骰子登場！ 合成時，使除了首領以外的所有怪物暴斃",
+      "mode_desc_coop_en": "Bomb Dice appears! When merged, instantly defeats all monsters except bosses",
+      "mode_desc_versus_en": "Bomb Dice appears! When merged, instantly defeats all monsters except bosses"
+    },
+    {
+      "id": "event_54",
+      "index": 54,
+      "eventKind": "CornerGuardian",
+      "name_zh": "角落守護者",
+      "name_en": "Corner Guardian",
+      "name_ko": "모서리 수호자",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "於4個角落格子配置相同骰子時， 該骰子的子彈傷害提升",
+      "desc_en": "If the same type of dice are placed on all 4 corner tiles, increases their Bullet DMG",
+      "icon": "CornerGuardian.png",
+      "display_name_zh": "角落守護者",
+      "display_name_en": "Corner Guardian",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        41
+      ],
+      "mode_desc_coop_zh": "於4個角落格子配置相同骰子時， 該骰子的子彈傷害提升",
+      "mode_desc_versus_zh": "於4個角落格子配置相同骰子時， 該骰子的子彈傷害提升",
+      "mode_desc_coop_en": "If the same type of dice are placed on all 4 corner tiles, increases their Bullet DMG",
+      "mode_desc_versus_en": "If the same type of dice are placed on all 4 corner tiles, increases their Bullet DMG"
+    },
+    {
+      "id": "event_55",
+      "index": 55,
+      "eventKind": "DefenderEyeSPGain",
+      "name_zh": "挖掘專家",
+      "name_en": "Master Miner",
+      "name_ko": "채굴 전문가",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "位於挖掘格子的骰子， 每秒按照骰點獲得SP",
+      "desc_en": "Gain SP every second based on the Dot Count of dice on Mining Tiles",
+      "icon": "DefenderEyeSPGain.png",
+      "display_name_zh": "挖掘專家",
+      "display_name_en": "Master Miner",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "位於挖掘格子的骰子， 每秒按照骰點獲得SP",
+      "mode_desc_versus_zh": "位於挖掘格子的骰子， 每秒按照骰點獲得SP",
+      "mode_desc_coop_en": "Gain SP every second based on the Dot Count of dice on Mining Tiles",
+      "mode_desc_versus_en": "Gain SP every second based on the Dot Count of dice on Mining Tiles"
+    },
+    {
+      "id": "event_56",
+      "index": 56,
+      "eventKind": "GameMinionSpeedDoubleHpHalf",
+      "name_zh": "怪物暴走",
+      "name_en": "Monster Frenzy",
+      "name_ko": "몬스터 폭주",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": null,
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "怪物速度2倍、生命值減少50%",
+      "desc_en": "Monster SPD x2 & HP -50%",
+      "icon": "GameMinionSpeedDoubleHpHalf.png",
+      "display_name_zh": "怪物暴走",
+      "display_name_en": "Monster Frenzy",
+      "mode_flags": {
+        "use": true,
+        "coop": false,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [],
+      "mode_desc_coop_zh": "怪物速度2倍、生命值減少50%",
+      "mode_desc_versus_zh": "怪物速度2倍、生命值減少50%",
+      "mode_desc_coop_en": "Monster SPD x2 & HP -50%",
+      "mode_desc_versus_en": "Monster SPD x2 & HP -50%"
+    },
+    {
+      "id": "event_57",
+      "index": 57,
+      "eventKind": "WaveGamble",
+      "name_zh": "SP賭注！",
+      "name_en": "SP Gamble!",
+      "name_ko": "SP 갬블!",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "100s",
+      "versus_time": "50s",
+      "coop_seconds": 100,
+      "versus_seconds": 50,
+      "desc_zh": "持續100秒使用SP投注骰子 5/6骰點2倍、7骰點3倍！ (1/2/3骰點為失敗)",
+      "desc_en": "For 100 sec, bet SP on a dice 2x at 5 or 6 dots, 3x at 7 dots! (Lose at 1, 2, or 3 dots!)",
+      "icon": "WaveGamble.png",
+      "display_name_zh": "SP賭注！",
+      "display_name_en": "SP Gamble!",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "持續100秒使用SP投注骰子 5/6骰點2倍、7骰點3倍！ (1/2/3骰點為失敗)",
+      "mode_desc_versus_zh": "持續50秒使用SP投注骰子 5/6骰點2倍、7骰點3倍！ (1/2/3骰點為失敗)",
+      "mode_desc_coop_en": "For 100 sec, bet SP on a dice 2x at 5 or 6 dots, 3x at 7 dots! (Lose at 1, 2, or 3 dots!)",
+      "mode_desc_versus_en": "For 50 sec, bet SP on a dice 2x at 5 or 6 dots, 3x at 7 dots! (Lose at 1, 2, or 3 dots!)"
+    },
+    {
+      "id": "event_62",
+      "index": 62,
+      "eventKind": "BombDiceSpawnOnMerge",
+      "name_zh": "炸彈狂",
+      "name_en": "Demolitionist",
+      "name_ko": "폭탄광",
+      "phase": "Mid",
+      "timing_type": "countdown",
+      "coop_time": "100s",
+      "versus_time": "40s",
+      "coop_seconds": 100,
+      "versus_seconds": 40,
+      "desc_zh": "持續100秒合成時， 20%機率產生炸彈骰子",
+      "desc_en": "For 100 sec, merging has a 50% chance to spawn a Bomb Dice",
+      "icon": "BombDiceKillAllMinions.png",
+      "display_name_zh": "炸彈狂",
+      "display_name_en": "Demolitionist",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": true,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "持續100秒合成時， 20%機率產生炸彈骰子",
+      "mode_desc_versus_zh": "持續40秒合成時， 20%機率產生炸彈骰子",
+      "mode_desc_coop_en": "For 100 sec, merging has a 50% chance to spawn a Bomb Dice",
+      "mode_desc_versus_en": "For 40 sec, merging has a 50% chance to spawn a Bomb Dice"
+    },
+    {
+      "id": "event_64",
+      "index": 64,
+      "eventKind": "HPBelow50OneTimeHeal",
+      "name_zh": "海嘯警報",
+      "name_en": "Tsunami Alert",
+      "name_ko": "해일 주의보",
+      "phase": "Early",
+      "timing_type": "single_trigger",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "當生命值低於50時， 發動海嘯(僅限1次)",
+      "desc_en": "When HP reaches 50 or lower, triggers Tsunami (Once per game)",
+      "icon": "HPBelow50OneTimeHeal.png",
+      "display_name_zh": "海嘯警報",
+      "display_name_en": "Tsunami Alert",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "當生命值低於50時， 發動海嘯(僅限1次)",
+      "mode_desc_versus_zh": "當生命值低於50時， 發動海嘯(僅限1次)",
+      "mode_desc_coop_en": "When HP reaches 50 or lower, triggers Tsunami (Once per game)",
+      "mode_desc_versus_en": "When HP reaches 50 or lower, triggers Tsunami (Once per game)"
+    },
+    {
+      "id": "event_67",
+      "index": 67,
+      "eventKind": "BoardSummonButtonBuffMove",
+      "name_zh": "輸送帶",
+      "name_en": "Conveyor Belt",
+      "name_ko": "컨베이어 벨트",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "產生大幅提升攻擊速度與傷害的增益格子 每次按下召喚按鈕，增益移動一格",
+      "desc_en": "Creates a buff tile that greatly increases ATK SPD and DMG. Each press of the Summon button moves the buff tile by 1 tile",
+      "icon": "BoardSummonButtonBuffMove.png",
+      "display_name_zh": "輸送帶",
+      "display_name_en": "Conveyor Belt",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "產生大幅提升攻擊速度與傷害的增益格子 每次按下召喚按鈕，增益移動一格",
+      "mode_desc_versus_zh": "產生大幅提升攻擊速度與傷害的增益格子 每次按下召喚按鈕，增益移動一格",
+      "mode_desc_coop_en": "Creates a buff tile that greatly increases ATK SPD and DMG. Each press of the Summon button moves the buff tile by 1 tile",
+      "mode_desc_versus_en": "Creates a buff tile that greatly increases ATK SPD and DMG. Each press of the Summon button moves the buff tile by 1 tile"
+    },
+    {
+      "id": "event_68",
+      "index": 68,
+      "eventKind": "BoardFirstColumnBestHandAtkUp",
+      "name_zh": "撲克時間",
+      "name_en": "Poker Time",
+      "name_ko": "포커 타임",
+      "phase": "Early",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "根據骰盤第一排的骰點組合使傷害增加",
+      "desc_en": "DMG increases based on the Dot combination in the first row",
+      "icon": "BoardFirstColumnBestHandAtkUp.png",
+      "display_name_zh": "撲克時間",
+      "display_name_en": "Poker Time",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        6,
+        11,
+        16
+      ],
+      "mode_desc_coop_zh": "根據骰盤第一排的骰點組合使傷害增加",
+      "mode_desc_versus_zh": "根據骰盤第一排的骰點組合使傷害增加",
+      "mode_desc_coop_en": "DMG increases based on the Dot combination in the first row",
+      "mode_desc_versus_en": "DMG increases based on the Dot combination in the first row"
+    },
+    {
+      "id": "event_69",
+      "index": 69,
+      "eventKind": "AugmentSystem",
+      "name_zh": "選擇由我決定",
+      "name_en": "Make Your Choice",
+      "name_ko": "선택은 나의 몫",
+      "phase": "Early",
+      "timing_type": "instant",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "於3個戰術效果中選擇1個",
+      "desc_en": "Choose 1 of 3 Tactical Effects",
+      "icon": "AugmentSystem.png",
+      "augment_choices": [
+        {
+          "key": "GainSP1000",
+          "name_zh": "豐饒開始",
+          "name_en": "Bountiful Start",
+          "desc_zh": "立即獲得 1,000 SP",
+          "icon": "AugmentSelect_Icon_1.png"
+        },
+        {
+          "key": "StartWithBomb2",
+          "name_zh": "炸彈支援",
+          "name_en": "Bomb Support",
+          "desc_zh": "持有 2 個炸彈骰子開始遊戲",
+          "icon": "AugmentSelect_Icon_2.png"
+        },
+        {
+          "key": "RandomDiceGain",
+          "name_zh": "獲得骰子",
+          "name_en": "Gain Dice",
+          "desc_zh": "選擇時，獲得 1~4 骰點隨機骰子",
+          "icon": "AugmentSelect_Icon_3.png"
+        }
+      ],
+      "display_name_zh": "選擇由我決定",
+      "display_name_en": "Make Your Choice",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        1
+      ],
+      "mode_desc_coop_zh": "於3個戰術效果中選擇1個",
+      "mode_desc_versus_zh": "於3個戰術效果中選擇1個",
+      "mode_desc_coop_en": "Choose 1 of 3 Tactical Effects",
+      "mode_desc_versus_en": "Choose 1 of 3 Tactical Effects"
+    },
+    {
+      "id": "event_71",
+      "index": 71,
+      "eventKind": "WaveStartLowestEyeUp2",
+      "name_zh": "骰子福利",
+      "name_en": "Dice Benefits",
+      "name_ko": "주사위 복지",
+      "phase": "Mid",
+      "timing_type": "passive",
+      "coop_time": "100s",
+      "versus_time": "60s",
+      "coop_seconds": 0,
+      "versus_seconds": 0,
+      "desc_zh": "立即使1個最低骰點的骰子骰點+2",
+      "desc_en": "Immediately grants +2 Dots to the lowest-dot dice",
+      "icon": "WaveStartLowestEyeUp2.png",
+      "display_name_zh": "骰子福利",
+      "display_name_en": "Dice Benefits",
+      "mode_flags": {
+        "use": true,
+        "coop": true,
+        "display_time": false,
+        "loop_time": false,
+        "trophy_level": 1
+      },
+      "coop_wave_refs": [
+        21,
+        26,
+        31,
+        36,
+        41,
+        46,
+        56,
+        66
+      ],
+      "mode_desc_coop_zh": "立即使1個最低骰點的骰子骰點+2",
+      "mode_desc_versus_zh": "立即使1個最低骰點的骰子骰點+2",
+      "mode_desc_coop_en": "Immediately grants +2 Dots to the lowest-dot dice",
+      "mode_desc_versus_en": "Immediately grants +2 Dots to the lowest-dot dice"
+    }
+  ],
+  "historical_events": [],
+  "raw_lineage": {
+    "snapshot_id": "random-dice-2-1.0.3",
+    "generator": "scripts/generate_canonical_from_raw.mjs",
+    "source_manifest_sha256": "81350202ED943D1021A300FAA85B90F39B5708FBEDB31CAE0E3D2A894D4FB449",
+    "unlock_supplement_sha256": "1F10E960A72F6F4F5AAD0FBDF8DF5DF959BD7606905F0AAF8E149464F276687E",
+    "unlock_supplement_count": 4,
+    "official_notice_sha256": "FDC6B69BB62C82EDA472C1E56572F541EFAF64C7CA1D0BFB1A21C6630C9350EC",
+    "official_coop_override_count": 3,
+    "path": "data/raw_snapshot_1.0.3.json"
+  }
+}

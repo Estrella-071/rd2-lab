@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security report
+    url: https://github.com/Estrella-071/rd2-lab/blob/main/SECURITY.md
+    about: Use the private address in SECURITY.md for security reports.
+  - name: Documentation and contribution guide
+    url: https://github.com/Estrella-071/rd2-lab/blob/main/CONTRIBUTING.md
+    about: Read the contribution and verification guide before opening an issue.

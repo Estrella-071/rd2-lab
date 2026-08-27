@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 2,
+  "snapshot": {
+    "snapshot_id": "random-dice-2-1.0.3",
+    "metadata_ref": "data/game_data_metadata.json",
+    "verified_at": "2026-08-23",
+    "spine_version": "4.2.43"
+  },
+  "monsters": {
+    "monster_1": {
+      "poster": "icons/monster_static_monster_1.png",
+      "spine": {
+        "skeleton": "monsters/spine/Mop2.skel",
+        "atlas": "monsters/spine/Mop2.atlas",
+        "texture": "monsters/spine/Mop2.png",
+        "animation": "move"
+      }
+    },
+    "monster_2": {
+      "poster": "icons/monster_static_monster_2.png",
+      "spine": {
+        "skeleton": "monsters/spine/Mop1.skel",
+        "atlas": "monsters/spine/Mop1.atlas",
+        "texture": "monsters/spine/Mop1.png",
+        "animation": "move"
+      }
+    },
+    "monster_3": {
+      "poster": "icons/monster_static_monster_3.png",
+      "spine": {
+        "skeleton": "monsters/spine/Mop3.skel",
+        "atlas": "monsters/spine/Mop3.atlas",
+        "texture": "monsters/spine/Mop3.png",
+        "animation": "move"
+      }
+    },
+    "monster_14": {
+      "poster": "icons/monster_static_monster_14.png",
+      "spine": {
+        "skeleton": "monsters/spine/Hunt01.skel",
+        "atlas": "monsters/spine/Hunt01.atlas",
+        "texture": "monsters/spine/Hunt01.png",
+        "animation": "move"
+      }
+    },
+    "monster_15": {
+      "poster": "icons/monster_static_monster_15.png",
+      "spine": {
+        "skeleton": "monsters/spine/Mop5.skel.skel",
+        "atlas": "monsters/spine/Mop5.skel.atlas",
+        "texture": "monsters/spine/Mop5.skel.png",
+        "animation": "move"
+      }
+    },
+    "boss_4": {
+      "poster": "icons/monster_static_boss_4.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Snake.skel",
+        "atlas": "monsters/spine/Boss_Snake.atlas",
+        "texture": "monsters/spine/Boss_Snake.png",
+        "animation": "idle"
+      }
+    },
+    "boss_5": {
+      "poster": "icons/monster_static_boss_5.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Royal.skel",
+        "atlas": "monsters/spine/Boss_Royal.atlas",
+        "texture": "monsters/spine/Boss_Royal.png",
+        "animation": "idle"
+      }
+    },
+    "boss_6": {
+      "poster": "icons/monster_static_boss_6.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Bubble.skel",
+        "atlas": "monsters/spine/Boss_Bubble.atlas",
+        "texture": "monsters/spine/Boss_Bubble.png",
+        "animation": "idle"
+      }
+    },
+    "boss_7": {
+      "poster": "icons/monster_static_boss_7.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Quick.skel",
+        "atlas": "monsters/spine/Boss_Quick.atlas",
+        "texture": "monsters/spine/Boss_Quick.png",
+        "animation": "idle"
+      }
+    },
+    "boss_8": {
+      "poster": "icons/monster_static_boss_8.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Flower_01.skel",
+        "atlas": "monsters/spine/Boss_Flower_01.atlas",
+        "texture": "monsters/spine/Boss_Flower_01.png",
+        "animation": "idle"
+      }
+    },
+    "boss_9": {
+      "poster": "icons/monster_static_boss_9.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Theif.skel",
+        "atlas": "monsters/spine/Boss_Theif.atlas",
+        "texture": "monsters/spine/Boss_Theif.png",
+        "animation": "idle"
+      }
+    },
+    "boss_10": {
+      "poster": "icons/monster_static_boss_10.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Meteor.skel",
+        "atlas": "monsters/spine/Boss_Meteor.atlas",
+        "texture": "monsters/spine/Boss_Meteor.png",
+        "animation": "idle"
+      }
+    },
+    "boss_11": {
+      "poster": "icons/monster_static_boss_11.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Hacking.skel",
+        "atlas": "monsters/spine/Boss_Hacking.atlas",
+        "texture": "monsters/spine/Boss_Hacking.png",
+        "animation": "idle"
+      }
+    },
+    "boss_12": {
+      "poster": "icons/monster_static_boss_12.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Slime3.skel",
+        "atlas": "monsters/spine/Boss_Slime3.atlas",
+        "texture": "monsters/spine/Boss_Slime3.png",
+        "animation": "idle"
+      },
+      "variants": [
+        "Boss_Slime1",
+        "Boss_Slime2",
+        "Boss_Slime3"
+      ]
+    },
+    "boss_13": {
+      "poster": "icons/monster_static_boss_13.png",
+      "spine": {
+        "skeleton": "monsters/spine/Boss_Joker.skel",
+        "atlas": "monsters/spine/Boss_Joker.atlas",
+        "texture": "monsters/spine/Boss_Joker.png",
+        "animation": "idle"
+      }
+    }
+  }
+}

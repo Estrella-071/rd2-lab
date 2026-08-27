@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Estrella-071/rd2-lab/schema/dice-tree.schema.json",
+  "title": "Random Dice 2 Lab dice tree snapshot",
+  "type": "object",
+  "required": ["summary", "nodes", "raw_lineage"],
+  "properties": {
+    "summary": {
+      "type": "object",
+      "required": ["node_count", "edge_count", "nodes_by_type", "nodes_by_branch"],
+      "properties": {
+        "node_count": { "type": "integer", "minimum": 0 },
+        "edge_count": { "type": "integer", "minimum": 0 },
+        "nodes_by_type": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "nodes_by_branch": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+      },
+      "additionalProperties": true
+    },
+    "raw_lineage": {
+      "type": "object",
+      "required": ["snapshot_id", "generator", "source_manifest_sha256", "unlock_supplement_sha256", "unlock_supplement_count", "official_notice_sha256", "official_coop_override_count", "path"],
+      "properties": {
+        "snapshot_id": { "type": "string", "pattern": "^random-dice-2-\\d+\\.\\d+\\.\\d+$" },
+        "generator": { "type": "string", "minLength": 1 },
+        "source_manifest_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "unlock_supplement_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "unlock_supplement_count": { "type": "integer", "const": 4 },
+        "official_notice_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "official_coop_override_count": { "type": "integer", "const": 3 },
+        "path": { "type": "string", "pattern": "^data/raw_snapshot_[0-9]+\\.[0-9]+\\.[0-9]+\\.json$" }
+      },
+      "additionalProperties": false
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "branch", "branch_zh", "node_type", "name_zh", "incoming", "next_nodes", "icon_file"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "branch": { "type": "integer", "enum": [1, 2, 3, 4, 5] },
+          "branch_zh": { "type": "string", "enum": ["自然", "工學", "魔法", "秩序", "渾沌"] },
+          "node_type": { "type": "string", "enum": ["DICE", "DICE_RUNE", "PLAYER_PASSIVE", "PERK"] },
+          "name_zh": { "type": "string" },
+          "unlock_condition_key": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+          "unlock_condition_label_zh": { "type": "string", "minLength": 1 },
+          "unlock_condition_value": { "type": "string" },
+          "unlock_condition_evidence": { "$ref": "#/$defs/unlockConditionEvidence" },
+          "unlock_cost_policy": { "$ref": "#/$defs/resourceFreeCostPolicy" },
+          "special_stats": { "type": "array", "items": { "type": "object" } },
+          "powerup_data": {
+            "type": "object",
+            "properties": {
+              "special_stats": { "type": "array", "items": { "type": "object" } }
+            },
+            "additionalProperties": true
+          },
+          "dot_data": {
+            "type": "object",
+            "properties": {
+              "special_stats": { "type": "array", "items": { "type": "object" } }
+            },
+            "additionalProperties": true
+          },
+          "incoming": { "type": "array", "items": { "type": "string" } },
+          "next_nodes": { "type": "array", "items": { "type": "string" } },
+          "icon_file": { "type": "string", "pattern": "^icons/[A-Za-z0-9._/-]+$" }
+        },
+        "additionalProperties": true,
+        "allOf": [
+          {
+            "if": { "properties": { "node_type": { "const": "DICE" } } },
+            "then": {
+              "properties": {
+                "special_stats": { "type": "array", "items": { "$ref": "#/$defs/specialStat" } },
+                "powerup_data": { "type": "object", "properties": { "special_stats": { "type": "array", "items": { "$ref": "#/$defs/specialStat" } } } },
+                "dot_data": { "type": "object", "properties": { "special_stats": { "type": "array", "items": { "$ref": "#/$defs/specialStat" } } } }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+      "rawSource": {
+        "type": "object",
+        "required": ["table", "key", "field", "label_key", "base", "powerup", "dot"],
+        "properties": {
+          "table": { "type": "string", "minLength": 1 },
+          "key": { "type": "string", "minLength": 1 },
+          "field": { "type": "string", "minLength": 1 },
+          "label_key": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+          "base": { "type": "string" },
+          "powerup": { "type": "string" },
+          "dot": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "specialStat": {
+        "type": "object",
+        "required": ["stat_id", "label_key", "label", "value", "unit", "icon", "raw_source"],
+        "properties": {
+          "stat_id": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]+$" },
+          "label_key": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+          "label": { "type": "string", "minLength": 1 },
+          "value": { "type": "string" },
+          "unit": { "type": "string", "enum": ["", "%", "s", "倍"] },
+          "add": { "type": "string" },
+          "icon": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+\\.png$" },
+          "raw_source": { "$ref": "#/$defs/rawSource" }
+        },
+        "additionalProperties": false
+      },
+      "unlockConditionEvidence": {
+        "type": "object",
+        "required": ["source_type", "raw_value", "value", "label_zh", "source_note"],
+        "properties": {
+          "source_type": { "type": "string", "enum": ["owner_confirmed", "client_table_confirmed"] },
+          "raw_value": { "type": "string" },
+          "value": { "type": "string", "pattern": "^[0-9]+$" },
+          "label_zh": { "type": "string", "minLength": 1 },
+          "source_note": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "resourceFreeCostPolicy": {
+        "type": "object",
+        "required": ["policy", "node_id", "reason", "source_type", "source_note", "raw_costs", "effective_costs"],
+        "properties": {
+          "policy": { "const": "resource_free" },
+          "node_id": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "enum": ["initial_dice", "special_unlock_dice"] },
+          "source_type": { "const": "owner_confirmed" },
+          "source_note": { "type": "string", "minLength": 1 },
+          "raw_costs": { "$ref": "#/$defs/costSnapshot" },
+          "effective_costs": { "$ref": "#/$defs/costSnapshot" }
+        },
+        "additionalProperties": false
+      },
+      "costSnapshot": {
+        "type": "object",
+        "required": ["gold_costs", "core_costs", "unlock_gold", "unlock_core", "total_gold", "total_core"],
+        "properties": {
+          "gold_costs": { "type": "array", "items": { "type": "number" } },
+          "core_costs": { "type": "array", "items": { "type": "number" } },
+          "unlock_gold": { "type": "number" },
+          "unlock_core": { "type": "number" },
+          "total_gold": { "type": "number" },
+          "total_core": { "type": "number" }
+        },
+        "additionalProperties": false
+      }
+  },
+  "additionalProperties": true
+}

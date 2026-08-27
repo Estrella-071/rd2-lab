@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 2,
+  "snapshotId": "random-dice-2-1.0.3",
+  "verifiedAt": "2026-08-23",
+  "publishedData": {
+    "json": {
+      "path": "site/data/dice_tree.json",
+      "sha256": "A2B19C9B512B0F068BF88B489AF272FC94A95ACC9AA2DC6D3EDD557183EFD864"
+    },
+    "svg": {
+      "path": "site/data/dice_tree.svg",
+      "sha256": "013ACF45A9C0A6610F18C2675DA84A5F8A541DA570115ACB7AE928300BCCAB93"
+    },
+    "compendium": {
+      "path": "site/boss_event_data.json",
+      "sha256": "BF783532716BB8CBC30EFB534AF3B13F0E4927C6D22F430BE5D2346970BC4BAD"
+    },
+    "metadata": {
+      "path": "site/data/game_data_metadata.json",
+      "sha256": "336C65AFFBFFC506D154864B55A79063F63298662ADDD896E1102256D95A6055"
+    },
+    "changelog": {
+      "path": "site/data/changelog.json",
+      "sha256": "CC9CE60DDDAE8E23E3FA63DC22C651167DFD84C870181BCBB7DBC611C2342538"
+    },
+    "officialNotices": {
+      "path": "site/data/official_update_notices.json",
+      "sha256": "FDC6B69BB62C82EDA472C1E56572F541EFAF64C7CA1D0BFB1A21C6630C9350EC"
+    },
+    "visuals": {
+      "path": "site/monster_visuals.json",
+      "sha256": "9C9B095A1ADF258F62491CB3D9ABDE33A09C354905EA7FDDC82971FEEA68BD01"
+    },
+    "nodeCount": 239,
+    "edgeCount": 248,
+    "gameDataVersion": "1.0.3"
+  },
+  "limitations": [
+    "This is a version-specific data snapshot, not proof of current live balance.",
+    "The public contract covers the files listed in publishedData; upstream inputs are not part of this repository.",
+    "Third-party game assets and trademarks remain subject to their rights holders."
+  ]
+}

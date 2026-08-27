@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rd2-lab.example/schema/boss-event-data.schema.json",
+  "title": "Random Dice 2 Lab compendium data",
+  "type": "object",
+  "required": ["meta", "monsters", "monster_types", "modes", "events", "historical_events", "raw_lineage"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["schema_version", "snapshot", "metadata_ref", "game_data_version", "event_counts"],
+      "properties": {
+        "schema_version": { "const": 4 },
+        "snapshot": {
+          "type": "object",
+          "required": ["snapshot_id", "metadata_ref", "verified_at"],
+          "properties": {
+            "snapshot_id": { "type": "string" },
+            "metadata_ref": { "const": "data/game_data_metadata.json" },
+            "verified_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+          },
+          "additionalProperties": false
+        },
+        "metadata_ref": { "const": "data/game_data_metadata.json" },
+        "game_data_version": { "type": "string" },
+        "scope_zh": { "type": "string" },
+        "event_counts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "limitations_zh": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "monsters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/monster" }
+    },
+    "monster_types": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/monsterType" }
+    },
+    "modes": {
+      "type": "object",
+      "additionalProperties": { "type": "object" }
+    },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/event" }
+    },
+    "historical_events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/historicalEvent" }
+    },
+    "raw_lineage": {
+      "type": "object",
+      "required": ["snapshot_id", "generator", "source_manifest_sha256", "unlock_supplement_sha256", "unlock_supplement_count", "official_notice_sha256", "official_coop_override_count", "path"],
+      "properties": {
+        "snapshot_id": { "type": "string", "pattern": "^random-dice-2-\\d+\\.\\d+\\.\\d+$" },
+        "generator": { "type": "string", "minLength": 1 },
+        "source_manifest_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "unlock_supplement_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "unlock_supplement_count": { "type": "integer", "const": 4 },
+        "official_notice_sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "official_coop_override_count": { "type": "integer", "const": 3 },
+        "path": { "type": "string", "pattern": "^data/raw_snapshot_[0-9]+\\.[0-9]+\\.[0-9]+\\.json$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "monster": {
+      "type": "object",
+      "required": ["id", "name_zh"],
+      "properties": {
+        "id": { "type": "string" }, "category": { "type": "string" }, "subType": { "type": "string" }, "subType_zh": { "type": "string" },
+        "name_zh": { "type": "string" }, "name_en": { "type": "string" }, "desc_zh": { "type": "string" }, "desc_en": { "type": "string" },
+        "speed": { "type": ["number", "null"] }, "sp_gain_base": { "type": ["number", "null"] }, "hp_percent": { "type": ["number", "null"] },
+        "icon": { "type": ["string", "null"] }, "sp_per": { "type": ["number", "null"] }, "boss_hp_per": { "type": ["number", "null"] },
+        "trophy_level": { "type": ["number", "null"] }, "hp_display_zh": { "type": ["string", "null"] }, "hp_note_zh": { "type": ["string", "null"] },
+        "sp_display_zh": { "type": ["string", "null"] }, "sp_note_zh": { "type": ["string", "null"] }, "boss_hp_per_versus": { "type": ["number", "null"] },
+        "sp_reward_rule_zh": { "type": "string" }, "hp_rule_zh": { "type": "string" }, "hunt_rewards": { "type": "array" },
+        "bossType": { "type": ["string", "null"] }, "display_name_zh": { "type": "string" }, "display_name_en": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "monsterType": {
+      "type": "object",
+      "required": ["id", "internal_type"],
+      "properties": {
+        "id": { "anyOf": [{ "type": "string" }, { "type": "integer" }] }, "internal_type": { "type": "string" }, "boss_type": { "type": ["string", "null"] },
+        "name_zh": { "type": "string" }, "name_en": { "type": "string" }, "base_move_speed": { "type": ["number", "null"] },
+        "sp_per": { "type": ["number", "null"] }, "boss_hp_per": { "type": ["number", "null"] }, "trophy_level": { "type": ["number", "null"] },
+        "boss_hp_per_versus": { "type": ["number", "null"] }, "icon": { "type": ["string", "null"] }, "visual_id": { "type": ["string", "null"] },
+        "visible_in_compendium": { "type": "boolean" }, "visual_status": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "required": ["id", "name_zh", "eventKind"],
+      "properties": {
+        "id": { "type": "string" }, "index": { "type": "integer" }, "eventKind": { "type": "string" }, "name_zh": { "type": "string" },
+        "name_en": { "type": "string" }, "name_ko": { "type": "string" }, "phase": { "type": "string" }, "timing_type": { "type": "string" },
+        "coop_time": { "type": ["string", "null"] }, "versus_time": { "type": ["string", "null"] }, "coop_seconds": { "type": "number" },
+        "versus_seconds": { "type": "number" }, "desc_zh": { "type": "string" }, "desc_en": { "type": "string" }, "icon": { "type": "string" },
+        "display_name_zh": { "type": "string" }, "display_name_en": { "type": "string" }, "mode_flags": { "type": "object", "additionalProperties": { "anyOf": [{ "type": "boolean" }, { "type": "number" }, { "type": "string" }] } },
+        "coop_wave_refs": { "type": "array", "items": { "type": "integer" } }, "mode_desc_coop_zh": { "type": "string" }, "mode_desc_versus_zh": { "type": "string" },
+        "mode_desc_coop_en": { "type": "string" }, "mode_desc_versus_en": { "type": "string" }, "augment_choices": { "type": "array" }
+      },
+      "additionalProperties": false
+    },
+    "historicalEvent": {
+      "type": "object",
+      "required": ["id", "status", "is_removed"],
+      "properties": {
+        "id": { "type": "string" }, "status": { "const": "removed" }, "is_removed": { "const": true },
+        "last_seen_version": { "type": "string" }, "removed_in_version": { "type": "string" }, "name_zh": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

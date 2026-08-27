@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: Random Dice 2 Lab
+message: Cite the repository commit and the documented data snapshot when using the project.
+type: software
+authors:
+  - name: Random Dice 2 Community Contributors
+repository-code: https://github.com/Estrella-071/rd2-lab
+url: https://rd2-lab.pages.dev/
+abstract: Versioned data, compendium, and planning tools for Random Dice 2.
+keywords:
+  - game data
+  - compendium
+  - planning tools
+license: MIT
+version: 0.1.0

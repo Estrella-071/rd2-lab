@@ -1,0 +1,184 @@
+name: Validate project
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '30 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: Static data/docs validation
+    runs-on: ubuntu-latest
+    outputs:
+      full: ${{ steps.scope.outputs.full }}
+      browser: ${{ steps.scope.outputs.browser }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Detect change scope
+        id: scope
+        shell: bash
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          CI_FORCE_FULL: ${{ github.event_name != 'pull_request' }}
+          BEFORE_SHA: ${{ github.event.before }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/changed-files"
+            git diff --check "$BASE_SHA" "$HEAD_SHA"
+          elif [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+            git diff --name-only "$BEFORE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/changed-files"
+            git diff --check "$BEFORE_SHA" "$HEAD_SHA"
+          else
+            # A force-pushed root commit has no local BEFORE_SHA. Treat the
+            # complete tree as changed and let the full validation gate inspect
+            # content; a root diff has no stable parent for whitespace checks.
+            git diff-tree --root --no-commit-id --name-only -r "$HEAD_SHA" > "$RUNNER_TEMP/changed-files"
+          fi
+          node scripts/ci_scope.mjs < "$RUNNER_TEMP/changed-files"
+      - name: Install locked dependencies
+        if: steps.scope.outputs.full == 'true'
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Audit dependency graph
+        if: steps.scope.outputs.full == 'true'
+        run: npm run audit:deps
+      - name: Validate data, generated files and documentation
+        if: steps.scope.outputs.full == 'true'
+        run: npm run validate
+      - name: Build Cloudflare Pages staging
+        if: steps.scope.outputs.full == 'true'
+        run: npm run build:pages
+      - name: Verify Cloudflare Pages staging integrity
+        if: steps.scope.outputs.full == 'true'
+        run: npm run check:staging
+      - name: Upload verified site staging
+        if: steps.scope.outputs.full == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verified-site-${{ github.run_id }}
+          path: .pages
+          include-hidden-files: true
+          if-no-files-found: error
+      - name: Validate documentation-only change
+        if: steps.scope.outputs.docs_only == 'true'
+        run: node scripts/check_docs.mjs
+
+  browser:
+    name: Chromium smoke suite
+    runs-on: ubuntu-latest
+    needs: static
+    if: always()
+    steps:
+      - name: Fail when static gate failed
+        if: needs.static.result != 'success'
+        run: exit 1
+      - name: Skip browser suite for non-runtime changes
+        if: needs.static.outputs.browser != 'true'
+        run: echo "No browser-relevant files changed; static validation remains the required gate."
+      - name: Checkout
+        if: needs.static.outputs.browser == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        if: needs.static.outputs.browser == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install locked dependencies
+        if: needs.static.outputs.browser == 'true'
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install Chromium
+        if: needs.static.outputs.browser == 'true'
+        run: ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Download verified site staging
+        if: needs.static.outputs.browser == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: verified-site-${{ github.run_id }}
+          path: .pages
+      - name: Run browser smoke suite
+        if: needs.static.outputs.browser == 'true'
+        env:
+          VERIFY_SITE_DIR: .pages
+        run: npm run test:browser
+      - name: Enforce hosted performance budget
+        if: needs.static.outputs.browser == 'true'
+        env:
+          VERIFY_SITE_DIR: .pages
+          RD2_PERFORMANCE_PROFILE: hosted-ci
+        run: npm run check:performance
+      - name: Run modular browser E2E suites
+        if: needs.static.outputs.browser == 'true'
+        env:
+          VERIFY_SITE_DIR: .pages
+        run: npm run test:e2e
+      - name: Upload browser evidence
+        if: always() && needs.static.outputs.browser == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-evidence
+          path: |
+            artifacts/test-results/
+            artifacts/performance/
+          if-no-files-found: ignore
+
+  cross-browser:
+    name: ${{ matrix.browser }} E2E suite
+    runs-on: ubuntu-latest
+    needs: static
+    if: needs.static.result == 'success' && needs.static.outputs.browser == 'true' && (github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - name: Fail when static gate failed
+        if: needs.static.result != 'success'
+        run: exit 1
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install browser
+        run: ./node_modules/.bin/playwright install --with-deps ${{ matrix.browser }}
+      - name: Download verified site staging
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: verified-site-${{ github.run_id }}
+          path: .pages
+      - name: Run modular browser E2E suites
+        env:
+          VERIFY_SITE_DIR: .pages
+        run: node tests/run_all_tests.mjs --browser=${{ matrix.browser }}
+      - name: Upload cross-browser evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-evidence-${{ matrix.browser }}
+          path: artifacts/test-results/
+          if-no-files-found: ignore

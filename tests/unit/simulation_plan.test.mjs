@@ -1,0 +1,246 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+
+import { AppStore, ActionTypes } from "../../src/app/store/app_store.js";
+import {
+  applyMaxRank,
+  applyBatchUnlock,
+  createSimulationState,
+  getNodeCost,
+  INITIAL_UNLOCKED_DICE_IDS,
+  isInitialSimulationNode,
+  isSpecialUnlockNode,
+  planBatchUnlock,
+  planMaxRank,
+  sumNodeCosts
+} from "../../src/domain/simulation_plan.js";
+
+const nodes = [
+  { id: "1", is_base: true, node_type: "DICE", max_rank: 1, gold_costs: [0], core_costs: [0] },
+  { id: "2", incoming: ["1"], node_type: "PLAYER_PASSIVE", max_rank: 1, gold_costs: [100], core_costs: [2] },
+  { id: "3", incoming: ["1"], node_type: "PLAYER_PASSIVE", max_rank: 1, gold_costs: [200], core_costs: [0] },
+  { id: "4", incoming: ["2", "3"], node_type: "DICE", max_rank: 1, gold_costs: [400], core_costs: [3] },
+  { id: "5", incoming: ["1"], node_type: "DICE_RUNE", max_rank: 3, gold_costs: [10, 20, 30], core_costs: [1, 2, 3] },
+  { id: "6", incoming: ["1"], node_type: "DICE", max_rank: 1, unlock_condition: "LV_Nature", unlock_condition_zh: "自然等級", unlock_condition_value: "10", gold_costs: [999], core_costs: [9] },
+  { id: "7", incoming: ["6"], node_type: "DICE_RUNE", max_rank: 1, gold_costs: [50], core_costs: [0] },
+  // `is_base` is a content flag; this base dice still needs its parent.
+  { id: "8", is_base: true, incoming: ["1"], node_type: "DICE", max_rank: 1, gold_costs: [0], core_costs: [5] }
+];
+
+test("simulation domain: only five initial dice bypass resource and special gates", () => {
+  assert.deepEqual(INITIAL_UNLOCKED_DICE_IDS, ["1001", "1005", "1007", "2001", "3001"]);
+  for (const id of INITIAL_UNLOCKED_DICE_IDS) {
+    assert.equal(isInitialSimulationNode({ id, node_type: "DICE" }), true);
+  }
+  for (const [id, condition] of [
+    ["4008", "REWARD_UNLOCKED"],
+    ["5002", "COOP_KILL_COUNT"],
+    ["5006", "COOP_REWARD_UNLOCKED"],
+    ["5008", "ARENA_REWARD_UNLOCKED"]
+  ]) {
+    const node = { id, node_type: "DICE", unlock_condition: condition, unlock_condition_zh: "special", unlock_condition_value: "1" };
+    assert.equal(isInitialSimulationNode(node), false);
+    assert.equal(isSpecialUnlockNode(node), true);
+  }
+});
+
+test("simulation domain: batch unlock is unique and topologically ordered", () => {
+  const state = createSimulationState(nodes, { active: true });
+  assert.deepEqual(Object.keys(state.ranks).sort((a, b) => a.localeCompare(b)), ["1"]);
+  assert.deepEqual(planBatchUnlock("8", state, nodes).nodeIds, ["8"]);
+  const plan = planBatchUnlock("4", state, nodes);
+  assert.equal(plan.ok, true);
+  assert.deepEqual(plan.nodeIds, ["2", "3", "4"]);
+  assert.deepEqual(plan.total, { gold: 700, core: 5 });
+
+  const result = applyBatchUnlock("4", state, nodes);
+  assert.equal(result.ok, true);
+  assert.deepEqual(Object.keys(result.state.ranks).sort((a, b) => a.localeCompare(b)), ["1", "2", "3", "4"]);
+  assert.deepEqual(result.cost, plan.total);
+
+  const repeat = planBatchUnlock("4", result.state, nodes);
+  assert.deepEqual(repeat.nodeIds, []);
+  assert.deepEqual(repeat.total, { gold: 0, core: 0 });
+});
+
+test("simulation domain: canonical edge lists backfill missing incoming prerequisites", () => {
+  const tree = {
+    nodes: [
+      { id: "root", node_type: "DICE", max_rank: 1 },
+      { id: "child", node_type: "PLAYER_PASSIVE", max_rank: 1, gold_costs: [7], core_costs: [0] }
+    ],
+    edges: [{ from: "root", to: "child" }]
+  };
+  const state = createSimulationState(tree, { active: true });
+  const plan = planBatchUnlock("child", state, tree);
+  assert.equal(plan.ok, true);
+  assert.deepEqual(plan.nodeIds, ["child"]);
+  assert.equal(state.ranks.root, 1);
+});
+
+test("simulation store: canonical edge list also controls initial roots", () => {
+  const store = new AppStore();
+  store.dispatch({
+    type: ActionTypes.SET_GAME_DATA,
+    payload: {
+      nodes: [
+        { id: "root", node_type: "DICE", max_rank: 1 },
+        { id: "child", node_type: "DICE", max_rank: 1, core_costs: [4] }
+      ],
+      edges: [{ from: "root", to: "child" }]
+    }
+  });
+  assert.deepEqual(store.getState().simulation.ranks, { root: 1 });
+});
+
+test("simulation domain: special conditions stay visible but cannot be simulated", () => {
+  const state = createSimulationState(nodes, { active: true });
+  const plan = planBatchUnlock("7", state, nodes);
+  assert.equal(plan.ok, false);
+  assert.equal(plan.reason, "special-condition");
+  assert.equal(plan.blockedBySpecial[0].id, "6");
+});
+
+test("simulation domain: multi-level costs sum each canonical rank and can max", () => {
+  const state = createSimulationState(nodes, { active: true });
+  assert.deepEqual(getNodeCost(nodes[4], 2), { gold: 20, core: 2 });
+  assert.deepEqual(sumNodeCosts(nodes[4], 0, 3), { gold: 60, core: 6 });
+  const first = applyMaxRank("5", state, nodes);
+  assert.equal(first.ok, true);
+  assert.equal(first.state.ranks["5"], 3);
+  assert.deepEqual(first.cost, { gold: 60, core: 6 });
+  assert.equal(planMaxRank("5", first.state, nodes).ok, false);
+});
+
+test("simulation domain: an eligible unallocated multi-level node can max directly", () => {
+  const state = createSimulationState(nodes, { active: true });
+  const plan = planMaxRank("5", state, nodes);
+  assert.equal(plan.ok, true);
+  assert.equal(plan.remainingRanks, 3);
+  const result = applyMaxRank("5", state, nodes);
+  assert.equal(result.ok, true);
+  assert.equal(result.state.ranks["5"], 3);
+  assert.deepEqual(result.cost, { gold: 60, core: 6 });
+});
+
+test("simulation store: mode guard and reset restore initial allocation and spent totals", () => {
+  const store = new AppStore();
+  store.dispatch({ type: ActionTypes.SET_GAME_DATA, payload: { nodes, edges: [] } });
+  store.dispatch({ type: ActionTypes.SIMULATION_UNLOCK_NODE, payload: { nodeId: "2" } });
+  assert.equal(store.getState().simulation.lastResult.reason, "simulation-inactive");
+  store.dispatch({ type: ActionTypes.SET_SIMULATION_MODE, payload: true });
+  store.dispatch({ type: ActionTypes.SIMULATION_UNLOCK_NODE, payload: { nodeId: "2" } });
+  assert.equal(store.getState().simulation.ranks["2"], 1);
+  assert.deepEqual(store.getState().simulation.spent, { gold: 100, core: 2 });
+  store.dispatch({ type: ActionTypes.SIMULATION_SET_TEAM, payload: { dice: [{ id: "1", runes: [] }], commonNodes: [] } });
+  store.dispatch({ type: ActionTypes.SIMULATION_RESET });
+  assert.deepEqual(store.getState().simulation.spent, { gold: 0, core: 0 });
+  assert.deepEqual(store.getState().simulation.ranks, { "1": 1 });
+  assert.deepEqual(store.getState().simulation.team.dice[0], { id: "1", runes: [] });
+});
+
+test("simulation store: canonical metadata is the share/version authority", () => {
+  const store = new AppStore();
+  store.dispatch({ type: ActionTypes.SET_GAME_DATA, payload: { nodes, edges: [] } });
+  assert.notEqual(store.getState().simulation.dataVersion, "1.0.3");
+  store.dispatch({
+    type: ActionTypes.SET_DATA_METADATA,
+    payload: { canonical: { game_version: "1.0.3" }, source: {}, versions: [] }
+  });
+  assert.equal(store.getState().simulation.dataVersion, "1.0.3");
+});
+
+test("simulation store: canonical refresh reconciles stale descendants and keeps roots data-driven", () => {
+  const store = new AppStore();
+  store.dispatch({ type: ActionTypes.SET_GAME_DATA, payload: { nodes, edges: [] } });
+  store.dispatch({ type: ActionTypes.SET_SIMULATION_MODE, payload: true });
+  store.dispatch({ type: ActionTypes.SIMULATION_UNLOCK_NODE, payload: { nodeId: "2" } });
+  assert.equal(store.getState().simulation.ranks["2"], 1);
+
+  const refreshed = nodes.map((node) => node.id === "2" ? { ...node, incoming: ["3"] } : node);
+  store.dispatch({ type: ActionTypes.SET_GAME_DATA, payload: { nodes: refreshed, edges: [] } });
+  assert.equal(store.getState().simulation.ranks["2"], undefined);
+  assert.equal(store.getState().simulation.ranks["1"], 1);
+  assert.deepEqual(store.getState().simulation.spent, { gold: 0, core: 0 });
+});
+
+test("faction level domain: correctly computes dynamic and full-unlocked levels excluding global passives", async () => {
+  const { calculateBranchFactionLevel, calculateAllFactionLevels, isNodeContributingToFactionLevel } = await import("../../src/domain/simulation_plan.js");
+  const testNodes = [
+    { id: "101", branch: 1, node_type: "DICE", max_rank: 1 },
+    { id: "102", branch: 1, node_type: "DICE_RUNE", max_rank: 50, gold_costs: new Array(50).fill(100) },
+    { id: "103", branch: 1, node_type: "PLAYER_PASSIVE", name_zh: "自然骰子傷害", max_rank: 20, gold_costs: new Array(20).fill(200) },
+    { id: "104", branch: 1, node_type: "PLAYER_PASSIVE", name_zh: "所有骰子傷害", max_rank: 50, gold_costs: new Array(50).fill(500) },
+    { id: "105", branch: 1, node_type: "PLAYER_PASSIVE", name_zh: "起始SP增加", max_rank: 1 },
+    { id: "106", branch: 1, node_type: "PLAYER_PASSIVE", name_zh: "粉碎強化", max_rank: 1 },
+    { id: "107", branch: 1, node_type: "PERK", name_zh: "大衛", max_rank: 1 }
+  ];
+
+  assert.equal(isNodeContributingToFactionLevel(testNodes[0]), true); // DICE -> true
+  assert.equal(isNodeContributingToFactionLevel(testNodes[1]), true); // DICE_RUNE -> true
+  assert.equal(isNodeContributingToFactionLevel(testNodes[2]), true); // 專屬被動 -> true
+  assert.equal(isNodeContributingToFactionLevel(testNodes[3]), false); // 所有骰子傷害 -> false (排除)
+  assert.equal(isNodeContributingToFactionLevel(testNodes[4]), false); // 起始SP增加 -> false (排除)
+  assert.equal(isNodeContributingToFactionLevel(testNodes[5]), true); // 粉碎強化 -> true
+  assert.equal(isNodeContributingToFactionLevel(testNodes[6]), true); // PERK -> true
+
+  // 全解鎖（瀏覽模式）：1 + 50 + 20 + 1 + 1 = 73
+  const fullLevel = calculateBranchFactionLevel(1, { ranks: null, nodes: testNodes });
+  assert.equal(fullLevel, 73);
+
+  // 部分模擬分配：骰子(1) + 符文升到 15 階(15) + 專屬被動升到 5 階(5) + 粉碎強化(1) = 22
+  const simRanks = { "101": 1, "102": 15, "103": 5, "104": 50, "106": 1 };
+  const simLevel = calculateBranchFactionLevel(1, { ranks: simRanks, nodes: testNodes });
+  assert.equal(simLevel, 22);
+
+  const allLevels = calculateAllFactionLevels({ ranks: simRanks, nodes: testNodes });
+  assert.equal(allLevels[1], 22);
+  assert.equal(allLevels[2], 0);
+});
+
+test("simulation revoke: single node revoke and downstream batch revoke (取消至此)", async () => {
+  const { planRevokeNode, applyRevokeNode } = await import("../../src/domain/simulation_plan.js");
+  const chainNodes = [
+    { id: "A", is_base: true, node_type: "DICE", max_rank: 1, gold_costs: [0] },
+    { id: "B", incoming: ["A"], node_type: "PLAYER_PASSIVE", max_rank: 1, gold_costs: [100] },
+    { id: "C", incoming: ["B"], node_type: "PLAYER_PASSIVE", max_rank: 1, gold_costs: [200] },
+    { id: "D", incoming: ["C"], node_type: "DICE", max_rank: 1, gold_costs: [300] }
+  ];
+
+  // 全部解鎖 A -> B -> C -> D
+  const fullRanks = { A: 1, B: 1, C: 1, D: 1 };
+  const state = { active: true, ranks: fullRanks, initialIds: ["A"], spent: { gold: 600, core: 0 } };
+
+  // 1. 取消末端節點 D（沒有後續已解鎖節點 -> 取消解鎖）
+  const planD = planRevokeNode("D", state, chainNodes);
+  assert.equal(planD.ok, true);
+  assert.equal(planD.isBatchRevoke, false);
+  assert.deepEqual(planD.nodesToRevoke, ["D"]);
+
+  const resD = applyRevokeNode("D", state, chainNodes);
+  assert.equal(resD.ok, true);
+  assert.deepEqual(resD.state.ranks, { A: 1, B: 1, C: 1 });
+  assert.equal(resD.state.spent.gold, 300);
+
+  // 2. 取消中間節點 B（後續 C 和 D 依賴 B -> 取消至此）
+  const planB = planRevokeNode("B", state, chainNodes);
+  assert.equal(planB.ok, true);
+  assert.equal(planB.isBatchRevoke, true);
+  assert.deepEqual(planB.nodesToRevoke.sort((a, b) => a.localeCompare(b)), ["B", "C", "D"].sort((a, b) => a.localeCompare(b)));
+
+  const resB = applyRevokeNode("B", state, chainNodes);
+  assert.equal(resB.ok, true);
+  assert.deepEqual(resB.state.ranks, { A: 1 });
+  assert.equal(resB.state.spent.gold, 0);
+
+  // 3. Store 整合驗證
+  const store = new AppStore();
+  store.dispatch({ type: ActionTypes.SET_GAME_DATA, payload: { nodes: chainNodes, edges: [] } });
+  store.dispatch({ type: ActionTypes.SET_SIMULATION_MODE, payload: true });
+  store.dispatch({ type: ActionTypes.SIMULATION_BATCH_UNLOCK, payload: { nodeId: "D" } });
+  assert.deepEqual(store.getState().simulation.ranks, { A: 1, B: 1, C: 1, D: 1 });
+
+  store.dispatch({ type: ActionTypes.SIMULATION_REVOKE_NODE, payload: { nodeId: "B" } });
+  assert.deepEqual(store.getState().simulation.ranks, { A: 1 });
+  assert.equal(store.getState().simulation.spent.gold, 0);
+});
