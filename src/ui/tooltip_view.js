@@ -1095,8 +1095,23 @@ export class TooltipView {
     const maxTop = Math.max(padding, window.innerHeight - dimensions.height - padding);
     const left = Math.min(maxLeft, Math.max(padding, screenX - dimensions.width / 2));
     const top = Math.min(maxTop, Math.max(padding, rawTop));
-    this.tooltipEl.style.left = `${Math.round(left)}px`;
+    const roundedLeft = Math.round(left);
+    this.tooltipEl.style.left = `${roundedLeft}px`;
     this.tooltipEl.style.top = `${Math.round(top)}px`;
+    if (typeof this.tooltipEl.style?.setProperty === "function") {
+      const computedStyle = typeof window.getComputedStyle === "function"
+        ? window.getComputedStyle(this.tooltipEl)
+        : null;
+      const borderLeft = Number.parseFloat(computedStyle?.borderLeftWidth || "0") || 0;
+      const borderRight = Number.parseFloat(computedStyle?.borderRightWidth || "0") || 0;
+      const arrowInset = 14;
+      const innerWidth = Math.max(arrowInset * 2, dimensions.width - borderLeft - borderRight);
+      const arrowX = Math.min(
+        Math.max(screenX - roundedLeft - borderLeft, arrowInset),
+        innerWidth - arrowInset
+      );
+      this.tooltipEl.style.setProperty("--tooltip-arrow-x", `${Math.round(arrowX)}px`);
+    }
   }
 
   _readTooltipDimensions(isMobile) {

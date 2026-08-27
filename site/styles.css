@@ -1491,6 +1491,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   z-index: 70;
   top: 0;
   left: 0;
+  --tooltip-arrow-x: 50%;
   width: min(440px, calc(100vw - 32px));
   max-width: min(440px, calc(100vw - 32px));
   max-height: min(720px, calc(100vh - 60px));
@@ -1564,7 +1565,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   content: "";
   position: absolute;
   top: calc(100% + 2px);
-  left: 50%;
+  left: var(--tooltip-arrow-x, 50%);
   transform: translateX(-50%);
   width: 0;
   height: 0;

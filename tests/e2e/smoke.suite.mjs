@@ -6,6 +6,43 @@ import { startTestServer, createTestBrowser } from '../helpers/test_server.mjs';
 import { assert, assertEqual, assertNoUnexpectedBrowserDiagnostics, captureFailureArtifacts } from '../helpers/test_utils.mjs';
 import { orderedStylesheets } from '../../scripts/stylesheet_contract.mjs';
 
+async function runLocaleChecks(page, localeChecks) {
+  let assertions = 0;
+  for (const { key, placeholder, unlockLabels } of localeChecks) {
+    await page.click('#locale-toggle-btn');
+    await page.waitForSelector('#locale-widget.is-expanded');
+    await page.click(`#locale-widget [data-locale="${key}"]`);
+    await page.waitForFunction(
+      ({ expectedLocale, expectedPlaceholder }) => document.documentElement.lang === expectedLocale
+        && document.querySelector('#search-input')?.placeholder.includes(expectedPlaceholder),
+      { expectedLocale: key, expectedPlaceholder: placeholder },
+    );
+    const localeUi = await page.evaluate((locale) => ({
+      title: document.title,
+      filter: document.querySelector('#filter-heading')?.textContent.trim(),
+      language: document.documentElement.lang,
+      option: document.querySelector(`#locale-widget [data-locale="${locale}"]`)?.getAttribute('aria-pressed'),
+    }), key);
+    assertEqual(localeUi.title, 'RANDOM DICE 2 LAB', `${key} switch must update the document title`);
+    assert(localeUi.filter, `${key} switch must update visible filter text`);
+    assertEqual(localeUi.language, key, `${key} switch must update the document language`);
+    assertEqual(localeUi.option, 'true', `${key} locale option must be active`);
+    const renderedUnlockLabels = await page.evaluate((ids) => Object.fromEntries(
+      Object.keys(ids).map((id) => [
+        id,
+        document.querySelector(`g.node[data-node-id="${id}"] .cost-badge .cost-special-label`)?.textContent.trim()
+          || document.querySelector(`g.node[data-node-id="${id}"] .cost-badge .cost-value`)?.textContent.trim()
+          || '',
+      ]),
+    ), unlockLabels);
+    for (const [id, expectedLabel] of Object.entries(unlockLabels)) {
+      assertEqual(renderedUnlockLabels[id], expectedLabel, `${key} unlock label for node ${id}`);
+    }
+    assertions += 4 + Object.keys(unlockLabels).length;
+  }
+  return assertions;
+}
+
 export async function runSmokeSuite(options = {}) {
   const startTime = Date.now();
   console.log('\n========================================');
@@ -792,38 +829,7 @@ export async function runSmokeSuite(options = {}) {
         },
       },
     ];
-    for (const { key, placeholder, unlockLabels } of localeChecks) {
-      await page.click('#locale-toggle-btn');
-      await page.waitForSelector('#locale-widget.is-expanded');
-      await page.click(`#locale-widget [data-locale="${key}"]`);
-      await page.waitForFunction(
-        ({ expectedLocale, expectedPlaceholder }) => document.documentElement.lang === expectedLocale
-          && document.querySelector('#search-input')?.placeholder.includes(expectedPlaceholder),
-        { expectedLocale: key, expectedPlaceholder: placeholder },
-      );
-      const localeUi = await page.evaluate((locale) => ({
-        title: document.title,
-        filter: document.querySelector('#filter-heading')?.textContent.trim(),
-        language: document.documentElement.lang,
-        option: document.querySelector(`#locale-widget [data-locale="${locale}"]`)?.getAttribute('aria-pressed'),
-      }), key);
-      assertEqual(localeUi.title, 'RANDOM DICE 2 LAB', `${key} switch must update the document title`);
-      assert(localeUi.filter, `${key} switch must update visible filter text`);
-      assertEqual(localeUi.language, key, `${key} switch must update the document language`);
-      assertEqual(localeUi.option, 'true', `${key} locale option must be active`);
-      const renderedUnlockLabels = await page.evaluate((ids) => Object.fromEntries(
-        Object.keys(ids).map((id) => [
-          id,
-          document.querySelector(`g.node[data-node-id="${id}"] .cost-badge .cost-special-label`)?.textContent.trim()
-            || document.querySelector(`g.node[data-node-id="${id}"] .cost-badge .cost-value`)?.textContent.trim()
-            || '',
-        ]),
-      ), unlockLabels);
-      for (const [id, expectedLabel] of Object.entries(unlockLabels)) {
-        assertEqual(renderedUnlockLabels[id], expectedLabel, `${key} unlock label for node ${id}`);
-      }
-      passedAssertions += 4 + Object.keys(unlockLabels).length;
-    }
+    passedAssertions += await runLocaleChecks(page, localeChecks);
 
     // A fresh client without a stored choice should follow its browser
     // language.  The main test context is explicitly Traditional Chinese so

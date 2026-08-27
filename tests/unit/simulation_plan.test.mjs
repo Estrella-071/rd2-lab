@@ -6,10 +6,15 @@ import {
   applyMaxRank,
   applyBatchUnlock,
   createSimulationState,
+  evaluateNode,
   getNodeCost,
   INITIAL_UNLOCKED_DICE_IDS,
+  SIMULATION_BATCH_UNLOCK_START_IDS,
+  SIMULATION_PREUNLOCKED_DICE_IDS,
+  SIMULATION_RESOURCE_UNLOCK_DICE_IDS,
   isInitialSimulationNode,
   isSpecialUnlockNode,
+  getConfiguredPrerequisiteIds,
   planBatchUnlock,
   planMaxRank,
   sumNodeCosts
@@ -27,21 +32,61 @@ const nodes = [
   { id: "8", is_base: true, incoming: ["1"], node_type: "DICE", max_rank: 1, gold_costs: [0], core_costs: [5] }
 ];
 
-test("simulation domain: only five initial dice bypass resource and special gates", () => {
+test("simulation domain: five base dice plus three reward dice are pre-unlocked while Fear uses resources", () => {
   assert.deepEqual(INITIAL_UNLOCKED_DICE_IDS, ["1001", "1005", "1007", "2001", "3001"]);
   for (const id of INITIAL_UNLOCKED_DICE_IDS) {
     assert.equal(isInitialSimulationNode({ id, node_type: "DICE" }), true);
   }
+  assert.deepEqual(SIMULATION_PREUNLOCKED_DICE_IDS, ["4008", "5006", "5008"]);
   for (const [id, condition] of [
     ["4008", "REWARD_UNLOCKED"],
-    ["5002", "COOP_KILL_COUNT"],
     ["5006", "COOP_REWARD_UNLOCKED"],
     ["5008", "ARENA_REWARD_UNLOCKED"]
   ]) {
     const node = { id, node_type: "DICE", unlock_condition: condition, unlock_condition_zh: "special", unlock_condition_value: "1" };
-    assert.equal(isInitialSimulationNode(node), false);
-    assert.equal(isSpecialUnlockNode(node), true);
+    assert.equal(isInitialSimulationNode(node), true);
+    assert.equal(isSpecialUnlockNode(node), false);
   }
+  assert.deepEqual(SIMULATION_RESOURCE_UNLOCK_DICE_IDS, ["5002"]);
+  const fear = { id: "5002", node_type: "DICE", unlock_condition: "COOP_KILL_COUNT", unlock_condition_zh: "special", unlock_condition_value: "900", core_costs: [8] };
+  assert.equal(isInitialSimulationNode(fear), false);
+  assert.equal(isSpecialUnlockNode(fear), false);
+  const levelGate = { id: "1106", node_type: "PLAYER_PASSIVE", unlock_condition: "LV_Nature", unlock_condition_zh: "自然等級", unlock_condition_value: "10", core_costs: [10] };
+  assert.equal(isInitialSimulationNode(levelGate), false);
+  assert.equal(isSpecialUnlockNode(levelGate), true);
+  assert.equal(isSpecialUnlockNode({ id: "future", node_type: "DICE", unlock_condition: "UNKNOWN_GATE", unlock_condition_value: "1" }), false);
+});
+
+test("simulation domain: reward dice satisfy routes and Fear contributes its resource cost", () => {
+  const simulationNodes = [
+    { id: "1001", node_type: "DICE", max_rank: 1, gold_costs: [0], core_costs: [0] },
+    { id: "4008", node_type: "DICE", max_rank: 1, unlock_condition: "REWARD_UNLOCKED", unlock_condition_value: "700" },
+    { id: "5002", node_type: "DICE", max_rank: 1, unlock_condition: "COOP_KILL_COUNT", unlock_condition_value: "900", core_costs: [8] },
+    { id: "5006", node_type: "DICE", max_rank: 1, incoming: ["5007"], unlock_condition: "COOP_REWARD_UNLOCKED", unlock_condition_value: "2100" },
+    { id: "5008", node_type: "DICE", max_rank: 1, incoming: ["5009"], unlock_condition: "ARENA_REWARD_UNLOCKED", unlock_condition_value: "300" },
+    { id: "5101", node_type: "PLAYER_PASSIVE", max_rank: 1, incoming: ["5006"], core_costs: [2] },
+    { id: "5003", node_type: "DICE", max_rank: 1, incoming: ["5101"], core_costs: [8] },
+    { id: "5105", node_type: "PLAYER_PASSIVE", max_rank: 1, incoming: ["5008"], core_costs: [2] },
+    { id: "5110", node_type: "PLAYER_PASSIVE", max_rank: 1, incoming: ["5008"], core_costs: [3] },
+    { id: "5007", node_type: "DICE", max_rank: 1, incoming: ["5002"], core_costs: [2] },
+    { id: "5009", node_type: "DICE", max_rank: 1, incoming: ["5002"], core_costs: [3] },
+    { id: "5102", node_type: "PLAYER_PASSIVE", max_rank: 1, incoming: ["5007", "5006"], core_costs: [4] }
+  ];
+  const state = createSimulationState(simulationNodes, { active: true });
+  assert.deepEqual(Object.keys(state.ranks).sort(), ["1001", "4008", "5006", "5008"]);
+  assert.deepEqual(planBatchUnlock("5007", state, simulationNodes).nodeIds, ["5002", "5007"]);
+  assert.deepEqual(planBatchUnlock("5102", state, simulationNodes).nodeIds, ["5002", "5007", "5102"]);
+  assert.deepEqual(planBatchUnlock("5102", state, simulationNodes).total, { gold: 0, core: 14 });
+  assert.deepEqual(SIMULATION_BATCH_UNLOCK_START_IDS, { "5101": "5006", "5003": "5006", "5105": "5008", "5110": "5008" });
+  assert.deepEqual(planBatchUnlock("5101", state, simulationNodes).nodeIds, ["5101"]);
+  assert.deepEqual(planBatchUnlock("5003", state, simulationNodes).nodeIds, ["5101", "5003"]);
+  assert.deepEqual(planBatchUnlock("5105", state, simulationNodes).nodeIds, ["5105"]);
+  assert.deepEqual(planBatchUnlock("5110", state, simulationNodes).nodeIds, ["5110"]);
+  assert.deepEqual([...getConfiguredPrerequisiteIds("5003", simulationNodes)], ["5003", "5101", "5006"]);
+  assert.deepEqual([...getConfiguredPrerequisiteIds("5105", simulationNodes)], ["5105", "5008"]);
+  assert.deepEqual([...getConfiguredPrerequisiteIds("5110", simulationNodes)], ["5110", "5008"]);
+  assert.equal(evaluateNode("5002", state, simulationNodes).canUnlock, true);
+  assert.deepEqual(evaluateNode("5002", state, simulationNodes).nextCost, { gold: 0, core: 8 });
 });
 
 test("simulation domain: batch unlock is unique and topologically ordered", () => {

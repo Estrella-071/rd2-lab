@@ -844,40 +844,48 @@ function collectProjectileCandidates(node, defender, raw) {
   return candidates;
 }
 
+function collectSkillFieldCandidates({ table, key, row, fields, inferred = false, explicitLabelKeys = false }) {
+  const candidates = [];
+  for (const [labelField, valueField, dotField, powerField, typeField] of fields) {
+    const candidate = statCandidate({
+      table,
+      key,
+      row,
+      labelField: explicitLabelKeys ? null : labelField,
+      labelKey: explicitLabelKeys ? labelField : undefined,
+      valueField,
+      dotField,
+      powerField,
+      typeField,
+      inferred
+    });
+    if (candidate) candidates.push(candidate);
+  }
+  return candidates;
+}
+
 function collectSkillCandidates(node, defender, raw) {
   const skillKind = trim(defender.DefenderSkillKind);
   const candidates = [];
-
   if (skillKind) {
     const row = raw.tables.DefenderSkillTable.byKey.get(skillKind);
     if (!row) throw new Error(`DefenderSkillTable is missing ${skillKind} for ${node.dice_type}`);
-    for (const [labelField, valueField, dotField, powerField, typeField] of SKILL_FIELDS) {
-      const candidate = statCandidate({ table: "DefenderSkillTable", key: skillKind, row, labelField, valueField, dotField, powerField, typeField });
-      if (candidate) candidates.push(candidate);
-    }
+    candidates.push(...collectSkillFieldCandidates({ table: "DefenderSkillTable", key: skillKind, row, fields: SKILL_FIELDS }));
   }
 
   const semanticFields = SKILL_SEMANTIC_FIELDS[trim(node.dice_type)] || [];
-  if (semanticFields.length > 0) {
-    const semanticKey = trim(node.dice_type);
-    const row = raw.tables.DefenderSkillTable.byKey.get(semanticKey);
-    if (!row) throw new Error(`DefenderSkillTable is missing semantic row ${semanticKey}`);
-    for (const [labelKey, valueField, dotField, powerField, typeField] of semanticFields) {
-      const candidate = statCandidate({
-        table: "DefenderSkillTable",
-        key: semanticKey,
-        row,
-        labelKey,
-        valueField,
-        dotField,
-        powerField,
-        typeField,
-        inferred: true
-      });
-      if (candidate) candidates.push(candidate);
-    }
-  }
-  return candidates;
+  if (semanticFields.length === 0) return candidates;
+  const semanticKey = trim(node.dice_type);
+  const row = raw.tables.DefenderSkillTable.byKey.get(semanticKey);
+  if (!row) throw new Error(`DefenderSkillTable is missing semantic row ${semanticKey}`);
+  return candidates.concat(collectSkillFieldCandidates({
+    table: "DefenderSkillTable",
+    key: semanticKey,
+    row,
+    fields: semanticFields,
+    inferred: true,
+    explicitLabelKeys: true
+  }));
 }
 
 function collectDefenderCandidates(defender) {

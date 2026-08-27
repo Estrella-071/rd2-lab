@@ -52,6 +52,24 @@ test("simulation share: URL round-trips ranks, team, runes and common nodes", ()
   assert.deepEqual(hydrated.team.commonNodes[0], { id: "4", rank: 6 });
 });
 
+test("simulation share: preserves the three pre-unlocked reward dice despite their graph routes", () => {
+  const rewardNodes = [
+    { id: "1001", node_type: "DICE", max_rank: 1 },
+    { id: "4008", node_type: "DICE", max_rank: 1, incoming: [], unlock_condition: "REWARD_UNLOCKED" },
+    { id: "5006", node_type: "DICE", max_rank: 1, incoming: ["5007"], unlock_condition: "COOP_REWARD_UNLOCKED" },
+    { id: "5008", node_type: "DICE", max_rank: 1, incoming: ["5009"], unlock_condition: "ARENA_REWARD_UNLOCKED" },
+    { id: "5007", node_type: "DICE", max_rank: 1, incoming: ["5002"] },
+    { id: "5009", node_type: "DICE", max_rank: 1, incoming: ["5002"] },
+    { id: "5002", node_type: "DICE", max_rank: 1, core_costs: [8] }
+  ];
+  const serialized = serializeSimulationState({ simulation: { ranks: {} }, treeData: { nodes: rewardNodes } });
+  const hydrated = hydrateSimulationShare(decodeSimulationShare(serialized.url), rewardNodes);
+  assert.deepEqual(hydrated.initialIds.sort(), ["1001", "4008", "5006", "5008"]);
+  assert.equal(hydrated.ranks["4008"], 1);
+  assert.equal(hydrated.ranks["5006"], 1);
+  assert.equal(hydrated.ranks["5008"], 1);
+});
+
 test("simulation share: hash links and unsupported input fail cleanly", () => {
   const serialized = serializeSimulationState({ simulation: { ranks: {} }, treeData: { nodes } });
   const encoded = serialized.encoded;

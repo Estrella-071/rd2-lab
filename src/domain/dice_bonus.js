@@ -90,7 +90,7 @@ function formatBonusDisplayWithUnit(bonusText, unit = "") {
  */
 function combineSameSignBonusValues(powerupBonus, dotBonus) {
   const values = [powerupBonus, dotBonus].map((value) => String(value || ""));
-  const numbers = values.map((value) => Number(value));
+  const numbers = values.map(Number);
   if (!numbers.every((value) => Number.isFinite(value) && value !== 0)) return "";
   if (Math.sign(numbers[0]) !== Math.sign(numbers[1])) return "";
 

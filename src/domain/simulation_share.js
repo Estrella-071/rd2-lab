@@ -396,6 +396,11 @@ export function hydrateSimulationShare(decoded, nodesOrMap, options = {}) {
     changed = false;
     Object.keys(ranks).forEach((id) => {
       const node = nodesMap.get(id);
+      // The simulator intentionally starts with the five base dice plus the
+      // three externally granted dice. Their canonical graph edges remain
+      // available for topology display and must not remove those pre-unlocked
+      // ranks when a share is hydrated.
+      if (isInitialSimulationNode(node)) return;
       const prerequisites = Array.isArray(node?.incoming) ? node.incoming.map(asId) : [];
       const missing = prerequisites.filter((prerequisite) => !ranks[prerequisite]);
       if (missing.length > 0) {

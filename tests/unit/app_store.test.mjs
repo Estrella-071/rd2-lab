@@ -164,6 +164,48 @@ test("AppStore: SELECT_NODE computes DAG active path & edge states", () => {
   assert.equal(st.activeEdgeIds.size, 0);
 });
 
+test("AppStore: selection clips the four configured highlights at their start dice", () => {
+  const store = new AppStore();
+  const nodes = [
+    { id: "5002", node_type: "DICE", max_rank: 1 },
+    { id: "5007", node_type: "DICE", incoming: ["5002"], max_rank: 1 },
+    { id: "5006", node_type: "DICE", incoming: ["5007"], max_rank: 1 },
+    { id: "5101", node_type: "PLAYER_PASSIVE", incoming: ["5006"], max_rank: 1 },
+    { id: "5003", node_type: "DICE", incoming: ["5101"], max_rank: 1 },
+    { id: "5109", node_type: "PLAYER_PASSIVE", incoming: ["5002"], max_rank: 1 },
+    { id: "5009", node_type: "DICE", incoming: ["5109"], max_rank: 1 },
+    { id: "5008", node_type: "DICE", incoming: ["5009"], max_rank: 1 },
+    { id: "5105", node_type: "PLAYER_PASSIVE", incoming: ["5008"], max_rank: 10 },
+    { id: "5110", node_type: "PLAYER_PASSIVE", incoming: ["5008"], max_rank: 15 }
+  ];
+  const edges = [
+    ["5002", "5007"], ["5007", "5006"], ["5006", "5101"], ["5101", "5003"],
+    ["5002", "5109"], ["5109", "5009"], ["5009", "5008"], ["5008", "5105"], ["5008", "5110"]
+  ].map(([source, target]) => ({ source, target }));
+  store.dispatch({ type: ActionTypes.SET_GAME_DATA, payload: { nodes, edges } });
+  store.dispatch({ type: ActionTypes.SELECT_NODE, payload: "5003" });
+  let state = store.getState();
+  assert.deepEqual([...state.activePrereqIds], ["5003", "5101", "5006"], "the configured topology should stop at the Greed start dice in browse mode");
+  assert.equal(state.activeEdgeIds.has("5006->5101"), true);
+  assert.equal(state.activeEdgeIds.has("5002->5007"), false);
+
+  store.dispatch({ type: ActionTypes.SET_SIMULATION_MODE, payload: true });
+  state = store.getState();
+  assert.deepEqual([...state.activePrereqIds], ["5003", "5101", "5006"]);
+  assert.equal(state.activeEdgeIds.has("5006->5101"), true);
+  assert.equal(state.activeEdgeIds.has("5002->5007"), false);
+
+  store.dispatch({ type: ActionTypes.SELECT_NODE, payload: "5105" });
+  state = store.getState();
+  assert.deepEqual([...state.activePrereqIds], ["5105", "5008"]);
+  assert.equal(state.activeEdgeIds.has("5008->5105"), true);
+  assert.equal(state.activeEdgeIds.has("5002->5109"), false);
+
+  store.dispatch({ type: ActionTypes.SET_SIMULATION_MODE, payload: false });
+  state = store.getState();
+  assert.deepEqual([...state.activePrereqIds], ["5105", "5008"], "the same configured topology should remain after leaving simulation mode");
+});
+
 test("AppStore: SET_GOLEM_STAT cross-synchronizes with pure domain rules", () => {
   const store = new AppStore();
 

@@ -99,6 +99,9 @@ async function assertSimulationSurface(page) {
       centerText: document.querySelector("#tree-center-compendium-btn .simulation-title")?.textContent.trim(),
       centerDisabled: document.getElementById("tree-center-compendium-btn")?.getAttribute("aria-disabled"),
       initialDiceVisible: ["1001", "1005", "1007", "2001", "3001"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-unlocked")),
+      preUnlockedDiceVisible: ["4008", "5006", "5008"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-unlocked")),
+      fearLocked: document.querySelector('g.node[data-node-id="5002"]')?.classList.contains("is-sim-locked"),
+      levelGateSpecial: ["1106", "1107", "1108", "2106", "2107", "2108", "3106", "3107", "3108"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-special")),
       specialCount: document.querySelectorAll("g.node.is-sim-special").length,
       lockedDimmed: document.querySelector('g.node[data-node-id="1201"]')?.classList.contains("is-sim-locked"),
       lockedIconFilters,
@@ -115,7 +118,7 @@ async function assertSimulationSurface(page) {
     && modeState.lockedIconFilters.every((filter) => filter.includes("grayscale"))
     && modeState.lockedMotionIconFilters.every((filter) => filter.includes("grayscale"))
     && modeState.unlockedIconFilters.every((filter) => !filter.includes("grayscale"));
-  assert(modeState.initialDiceVisible && modeState.lockedDimmed && modeState.specialCount === 4, "initial, locked, and current special-condition simulation states should be represented");
+  assert(modeState.initialDiceVisible && modeState.preUnlockedDiceVisible && modeState.fearLocked && modeState.levelGateSpecial && modeState.lockedDimmed && modeState.specialCount === 9, "five base dice and three reward dice should start unlocked while level-gated milestones remain special");
   assert(lockedNodesStayGrayscale, `simulation mode should keep locked icons grayscale while unlocked icons remain colored (locked=${modeState.lockedIconFilters.join(",")}, unlocked=${modeState.unlockedIconFilters.join(",")}, motion=${modeState.lockedMotionIconFilters.join(",")})`);
   assert(modeState.dependentBaseVisible, "initial dice with prerequisites should remain available");
 
@@ -167,6 +170,69 @@ async function assertSimulationSurface(page) {
 }
 
 async function assertSimulationPlanning(page) {
+  await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("5003", true));
+  const tyrantBatchSelector = '[data-sim-action="batch"][data-sim-node-id="5003"]';
+  await page.waitForSelector(tyrantBatchSelector, { timeout: 3000 });
+  await page.waitForFunction(() => {
+    const nodeHas = (id, className) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains(className);
+    const edgeHas = (key, className) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains(className);
+    return nodeHas("5003", "is-prereq-target")
+      && nodeHas("5101", "is-prereq-active")
+      && nodeHas("5006", "is-prereq-active")
+      && !nodeHas("5002", "is-prereq-active")
+      && !nodeHas("5007", "is-prereq-active")
+      && edgeHas("5006->5101", "is-active-edge")
+      && !edgeHas("5002->5007", "is-active-edge");
+  }, null, { timeout: 3000 });
+  const tyrantHighlight = await page.evaluate(() => ({
+    activeNodes: ["5002", "5006", "5007", "5101", "5003"].filter((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-prereq-active")),
+    activeEdges: ["5002->5007", "5006->5101"].filter((key) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains("is-active-edge"))
+  }));
+  assert(tyrantHighlight.activeNodes.join(",") === "5006,5101,5003" && tyrantHighlight.activeEdges.join(",") === "5006->5101", "Tyrant simulation highlighting should stop at the Greed start dice");
+  await page.click(tyrantBatchSelector);
+  await page.waitForFunction(() => {
+    const ranks = window.__TEST_HOOKS__.getSimulationPlan().ranks;
+    return ranks["5101"] === 1 && ranks["5003"] === 1;
+  });
+  const tyrantState = await page.evaluate(() => window.__TEST_HOOKS__.getSimulationPlan());
+  assert(tyrantState.ranks["5002"] === undefined && tyrantState.ranks["5007"] === undefined, "Tyrant auto-unlock should start at Greed instead of traversing its earlier topology");
+
+  await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("5105", true));
+  await page.waitForFunction(() => {
+    const nodeHas = (id, className) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains(className);
+    const edgeHas = (key, className) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains(className);
+    return nodeHas("5105", "is-prereq-target")
+      && nodeHas("5008", "is-prereq-active")
+      && !nodeHas("5002", "is-prereq-active")
+      && !nodeHas("5009", "is-prereq-active")
+      && edgeHas("5008->5105", "is-active-edge")
+      && !edgeHas("5002->5109", "is-active-edge");
+  }, null, { timeout: 3000 });
+  const chaosHighlight = await page.evaluate(() => ({
+    activeNodes: ["5002", "5008", "5009", "5105"].filter((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-prereq-active")),
+    activeEdges: ["5002->5109", "5008->5105"].filter((key) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains("is-active-edge"))
+  }));
+  assert(chaosHighlight.activeNodes.join(",") === "5008,5105" && chaosHighlight.activeEdges.join(",") === "5008->5105", "Chaos critical-rate highlighting should stop at the Void start dice");
+
+  await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("5002", true));
+  const fearButtonSelector = '[data-sim-action="unlock"][data-sim-node-id="5002"]';
+  await page.waitForSelector(fearButtonSelector, { timeout: 3000 });
+  const fearButtonText = await page.$eval(fearButtonSelector, (button) => button.textContent.trim());
+  assert(fearButtonText.includes("8"), `Fear should expose its canonical resource cost (button=${fearButtonText})`);
+  await page.click(fearButtonSelector);
+  await page.waitForFunction(() => window.__TEST_HOOKS__.getSimulationPlan().ranks["5002"] === 1);
+
+  await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("1106", true));
+  const levelGateButton = page.locator(".simulation-action-btn-styled.is-special");
+  await levelGateButton.waitFor({ state: "visible", timeout: 3000 });
+  assert(await levelGateButton.isDisabled(), "a faction-level milestone should remain non-operable in simulation");
+  assert((await levelGateButton.textContent()).includes("特殊"), "a faction-level milestone should explain its special condition");
+
+  await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("5102", true));
+  const specialRouteButtonSelector = '[data-sim-action="batch"][data-sim-node-id="5102"]';
+  await page.waitForSelector(specialRouteButtonSelector, { timeout: 3000 });
+  assert(await page.$eval(specialRouteButtonSelector, (button) => !button.disabled), "a route through reward dice should remain batch-unlockable after Fear is purchased");
+
   await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("1301", true));
   const batchButtonSelector = '[data-sim-action="batch"][data-sim-node-id="1301"]';
   await page.waitForSelector(batchButtonSelector, { timeout: 3000 });
@@ -379,8 +445,8 @@ async function assertSimulationResetAndExit(page) {
   assertEqual(resetState.spent.gold, 0, "reset should clear gold spend");
   assertEqual(resetState.spent.core, 0, "reset should clear core spend");
   assertEqual(resetState.ranks["1201"], undefined, "reset should remove simulated ranks");
-  assert(resetState.ranks["1001"] === 1
-    && ["4008", "5002", "5006", "5008"].every((id) => resetState.ranks[id] === undefined), "reset should retain only the five resource-free initial dice");
+  assert(["1001", "1005", "1007", "2001", "3001", "4008", "5006", "5008"].every((id) => resetState.ranks[id] === 1)
+    && resetState.ranks["5002"] === undefined, "reset should retain the five base dice and three pre-unlocked reward dice");
 
   await page.click("#simulation-toggle-btn");
   await page.waitForTimeout(220);

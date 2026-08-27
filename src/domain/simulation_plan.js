@@ -74,36 +74,59 @@ export const INITIAL_UNLOCKED_DICE_IDS = Object.freeze([
   "3001"  // 電骰子
 ]);
 
+// These reward/arena dice are available before resource planning begins. They
+// stay separate from the five base dice so their canonical unlock fields can
+// remain intact.
+export const SIMULATION_PREUNLOCKED_DICE_IDS = Object.freeze([
+  "4008", // 陰陽骰子
+  "5006", // 貪婪骰子
+  "5008"  // 空虛骰子
+]);
+
+// Fear retains its co-op milestone in the canonical data, but its tree node is
+// a regular resource purchase in the simulator (8 Dice Cores in v1.0.3).
+export const SIMULATION_RESOURCE_UNLOCK_DICE_IDS = Object.freeze([
+  "5002" // 恐懼骰子
+]);
+
+// These auto-unlock routes stop walking the canonical incoming
+// ("前置節點") topology at their already available Chaos dice.
+export const SIMULATION_BATCH_UNLOCK_START_IDS = Object.freeze({
+  "5101": "5006", // 所有骰子傷害 <- 貪婪骰子
+  "5003": "5006", // 暴君骰子 <- 貪婪骰子
+  "5105": "5008", // 渾沌骰子暴擊率 <- 空虛骰子
+  "5110": "5008"  // 渾沌骰子傷害 <- 空虛骰子
+});
+
 export function getMaxRank(node) {
   return Math.max(1, Math.floor(toFiniteNumber(node?.max_rank ?? node?.max_level, 1)));
 }
 
 /**
- * A non-empty unlock_condition is an externally fulfilled gate. "前置節點"
- * is the canonical data label for ordinary DAG edges and is not a special
- * gate. The predicate intentionally uses the data fields rather than IDs.
+ * Only faction-level milestones are unavailable to the resource simulator.
+ * The four dice with other unlock-condition fields keep those fields as
+ * canonical metadata, but follow their actual simulation rules below.
  */
 export function isSpecialUnlockNode(node) {
   if (!node) return false;
   const id = asId(node.id);
-  if (INITIAL_UNLOCKED_DICE_IDS.includes(id)) return false;
+  if (INITIAL_UNLOCKED_DICE_IDS.includes(id)
+    || SIMULATION_PREUNLOCKED_DICE_IDS.includes(id)
+    || SIMULATION_RESOURCE_UNLOCK_DICE_IDS.includes(id)) return false;
   const condition = String(node.unlock_condition ?? node.special_unlock ?? node.unlock_condition_special ?? "").trim();
-  const label = String(node._canonical_unlock_condition_zh ?? node.unlock_condition_label_zh ?? node.unlock_condition_zh ?? "").trim();
-  if (condition.startsWith("LV_") && node.node_type !== "DICE") return false;
-  if (!condition && !node.special_unlock && !node.unlock_condition_special && (!label || label === "前置節點")) return false;
-  if (condition === "" && label === "") return false;
-  return condition !== "前置節點" && label !== "前置節點";
+  return condition.startsWith("LV_");
 }
 
 /**
- * Initial simulation allocation includes exactly the 5 resource-free initial
- * dice (Fire, Wind, Ice, Iron, Electric). Dice with a special unlock
- * condition remain visible but cannot be purchased by the resource planner.
+ * Initial simulation allocation includes the 5 resource-free base dice and
+ * the 3 dice that the game grants through external rewards. Fear is not in
+ * this set: after its milestone is satisfied, its 8-core tree purchase is
+ * represented as a normal simulation unlock.
  */
 export function isInitialSimulationNode(node) {
   if (!node) return false;
   const id = asId(node.id);
-  if (INITIAL_UNLOCKED_DICE_IDS.includes(id)) return true;
+  if (INITIAL_UNLOCKED_DICE_IDS.includes(id) || SIMULATION_PREUNLOCKED_DICE_IDS.includes(id)) return true;
   // Support unit test mock root fixtures safely
   if ((id === "1" || id === "root") && node.node_type === "DICE" && (!node.gold_costs || node.gold_costs[0] === 0) && (!node.core_costs || node.core_costs[0] === 0) && (!Array.isArray(node.incoming) || node.incoming.length === 0)) {
     return true;
@@ -310,6 +333,11 @@ function incomingIds(node) {
 
 export function getPrerequisiteIds(nodeId, nodesOrMap, options = {}) {
   const nodesMap = getNodeMap(nodesOrMap);
+  const stopAtIds = new Set(
+    (options.stopAt instanceof Set ? [...options.stopAt] : Array.isArray(options.stopAt) ? options.stopAt : [options.stopAt])
+      .map(asId)
+      .filter(Boolean)
+  );
   const visited = new Set();
   const result = [];
   const visiting = new Set();
@@ -321,12 +349,31 @@ export function getPrerequisiteIds(nodeId, nodesOrMap, options = {}) {
     if (!node) return;
     visiting.add(normalizedId);
     if (options.includeTarget || normalizedId !== asId(nodeId)) result.push(normalizedId);
+    if (stopAtIds.has(normalizedId)) {
+      visiting.delete(normalizedId);
+      visited.add(normalizedId);
+      return;
+    }
     for (const incoming of incomingIds(node)) walk(incoming);
     visiting.delete(normalizedId);
     visited.add(normalizedId);
   };
   walk(nodeId);
   return result;
+}
+
+/**
+ * Return the selected node and its configured prerequisite topology.
+ * The four configured routes include their resource-free start dice, but do
+ * not highlight or traverse ancestors before those starts in either view.
+ */
+export function getConfiguredPrerequisiteIds(nodeId, nodesOrMap) {
+  const targetId = asId(nodeId);
+  const nodesMap = getNodeMap(nodesOrMap);
+  const batchStartId = asId(SIMULATION_BATCH_UNLOCK_START_IDS[targetId] || "");
+  const batchStartNode = batchStartId ? nodesMap.get(batchStartId) : null;
+  const stopAt = batchStartNode && isInitialSimulationNode(batchStartNode) ? batchStartId : null;
+  return new Set(getPrerequisiteIds(targetId, nodesMap, { includeTarget: true, stopAt }));
 }
 
 export function evaluateNode(nodeId, state, nodesOrMap) {
@@ -397,6 +444,7 @@ export function applyNodeRank(stateOrNodeId, nodeIdOrState, nodesOrMap, targetRa
 export function planBatchUnlock(targetNodeId, state, nodesOrMap) {
   const nodesMap = getNodeMap(nodesOrMap);
   const targetId = asId(targetNodeId);
+  const batchStartId = asId(SIMULATION_BATCH_UNLOCK_START_IDS[targetId] || "");
   const collect = (id, context) => {
     const { order, visiting, visited, blockedBySpecial, missing } = context;
     if (visited.has(id)) return;
@@ -407,6 +455,10 @@ export function planBatchUnlock(targetNodeId, state, nodesOrMap) {
     const node = nodesMap.get(id);
     if (!node) {
       missing.push(id);
+      return;
+    }
+    if (batchStartId && id === batchStartId && id !== targetId && isInitialSimulationNode(node)) {
+      visited.add(id);
       return;
     }
     visiting.add(id);

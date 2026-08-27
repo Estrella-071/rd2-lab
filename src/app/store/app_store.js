@@ -1,4 +1,4 @@
-import { computeUpstreamTopologyPath, computeEdgeStates } from "../../domain/dag_topology.js";
+import { computeEdgeStates } from "../../domain/dag_topology.js";
 import { synchronizeGolemStats } from "../../domain/sp_golem.js";
 import {
   applyBatchUnlock,
@@ -6,6 +6,7 @@ import {
   applyNodeRank,
   applyRevokeNode,
   createSimulationState,
+  getConfiguredPrerequisiteIds,
   getNodeMap,
   normalizeTeam,
   recomputeSimulationSpent
@@ -129,10 +130,11 @@ function reduceGameData(state, action, computeMatchingNodes) {
     ? String(state.selectedNodeId)
     : null;
   const selectedNode = selectedNodeId ? nodesMap.get(selectedNodeId) : null;
-  const topologyResult = selectedNodeId ? computeUpstreamTopologyPath(selectedNodeId, nodesMap) : null;
-  const activePrereqIds = topologyResult?.activePathNodeIds || new Set();
-  const activeEdgeIds = computeEdgeStates(treeData.edges || [], activePrereqIds);
   const previousSimulation = state.simulation || createSimulationState(nodesMap);
+  const activePrereqIds = selectedNodeId
+    ? getSelectedPrerequisiteIds(selectedNodeId, nodesMap)
+    : new Set();
+  const activeEdgeIds = computeEdgeStates(treeData.edges || [], activePrereqIds);
   const simulation = createSimulationState(treeData, {
     active: previousSimulation.active,
     ranks: previousSimulation.ranks,
@@ -167,13 +169,34 @@ function reduceSelection(state, action) {
     };
   }
   const selectedNode = state.nodesMap.get(nodeId) || null;
-  const topologyResult = computeUpstreamTopologyPath(nodeId, state.nodesMap);
+  const activePrereqIds = getSelectedPrerequisiteIds(nodeId, state.nodesMap);
   return {
     ...state,
     selectedNodeId: nodeId,
     selectedNode,
-    activePrereqIds: topologyResult.activePathNodeIds || new Set(),
-    activeEdgeIds: computeEdgeStates(state.treeData.edges || [], topologyResult.activePathNodeIds || new Set())
+    activePrereqIds,
+    activeEdgeIds: computeEdgeStates(state.treeData.edges || [], activePrereqIds)
+  };
+}
+
+function getSelectedPrerequisiteIds(nodeId, nodesMap) {
+  return getConfiguredPrerequisiteIds(nodeId, nodesMap);
+}
+
+function reduceSimulationMode(state, action) {
+  const active = Boolean(action.payload);
+  const activePrereqIds = state.selectedNodeId
+    ? getSelectedPrerequisiteIds(state.selectedNodeId, state.nodesMap)
+    : new Set();
+  return {
+    ...state,
+    simulation: {
+      ...(state.simulation || createSimulationState(state.nodesMap)),
+      active,
+      lastResult: null
+    },
+    activePrereqIds,
+    activeEdgeIds: computeEdgeStates(state.treeData.edges || [], activePrereqIds)
   };
 }
 
@@ -317,14 +340,7 @@ const SIMPLE_REDUCERS = Object.freeze({
     compendium: { ...state.compendium, ...action.payload }
   }),
   [ActionTypes.SET_MODAL]: (state, action) => ({ ...state, activeModal: action.payload }),
-  [ActionTypes.SET_SIMULATION_MODE]: (state, action) => ({
-    ...state,
-    simulation: {
-      ...(state.simulation || createSimulationState(state.nodesMap)),
-      active: Boolean(action.payload),
-      lastResult: null
-    }
-  }),
+  [ActionTypes.SET_SIMULATION_MODE]: reduceSimulationMode,
   [ActionTypes.SIMULATION_SET_TEAM]: (state, action) => {
     const simulation = state.simulation || createSimulationState(state.nodesMap);
     return { ...state, simulation: { ...simulation, team: normalizeTeam(action.payload), lastResult: null } };

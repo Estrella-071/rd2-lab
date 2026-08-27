@@ -273,6 +273,30 @@ export async function runMobileViewportSuite(options = {}) {
     assertEqual(mobileTooltip.statGridColumns, 2, 'Mobile tooltip must retain its two-column stat layout');
     passedAssertions += 8;
 
+    // When the card is clamped against the viewport edge, its pointer must
+    // still track the node instead of remaining at the card midpoint.
+    const clampedArrow = await page.evaluate(() => {
+      const tooltipView = window.RD2App?.views?.tooltipView;
+      tooltipView?._applyTooltipScreenPosition(
+        { x: 100, y: 400 },
+        { node_type: 'DICE' },
+        { viewport: { x: 260, y: 0, scale: 1 } },
+        false
+      );
+      const tooltip = document.getElementById('tooltip');
+      const rect = tooltip?.getBoundingClientRect();
+      const style = tooltip ? window.getComputedStyle(tooltip) : null;
+      const pointerStyle = tooltip ? window.getComputedStyle(tooltip, '::after') : null;
+      const pointerLeft = Number.parseFloat(pointerStyle?.left || 'NaN');
+      const borderLeft = Number.parseFloat(style?.borderLeftWidth || '0') || 0;
+      const targetX = 260 + 100;
+      const pointerX = (rect?.left || 0) + borderLeft + pointerLeft;
+      return { targetX, pointerX, pointerLeft, tooltipLeft: rect?.left || 0 };
+    });
+    assert(Number.isFinite(clampedArrow.pointerLeft), 'Tooltip pointer should expose a computed horizontal position');
+    assert(Math.abs(clampedArrow.pointerX - clampedArrow.targetX) <= 3, `Clamped tooltip pointer must track the node: ${JSON.stringify(clampedArrow)}`);
+    passedAssertions += 2;
+
     // ==========================================
     // Tier 3/4: Tooltip 智慧避讓 (Smart Avoidance) 與關閉動畫維護
     // ==========================================

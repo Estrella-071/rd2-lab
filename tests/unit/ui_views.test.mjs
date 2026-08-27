@@ -296,6 +296,45 @@ test("TooltipView: Renders tooltip and smart avoidance class", () => {
   tooltipView.destroy();
 });
 
+test("TooltipView: anchors the pointer to a horizontally clamped node", () => {
+  const previousWindow = globalThis.window;
+  const styleValues = {};
+  const tooltipEl = {
+    offsetWidth: 300,
+    offsetHeight: 220,
+    style: {
+      setProperty(name, value) {
+        styleValues[name] = value;
+      }
+    }
+  };
+  globalThis.window = {
+    innerWidth: 390,
+    innerHeight: 844,
+    getComputedStyle: () => ({ borderLeftWidth: "2px", borderRightWidth: "2px" })
+  };
+
+  try {
+    const tooltipView = new TooltipView({
+      store: {},
+      selectNodeUseCase: {},
+      tooltipElement: tooltipEl
+    });
+    tooltipView._applyTooltipScreenPosition(
+      { x: 100, y: 400 },
+      { node_type: "DICE" },
+      { viewport: { x: 260, y: 0, scale: 1 } },
+      false
+    );
+
+    assert.equal(tooltipEl.style.left, "78px");
+    assert.equal(styleValues["--tooltip-arrow-x"], "280px");
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
 test("TreeView: locale refresh resizes an existing node name badge", () => {
   const makeRect = () => {
     const attributes = {};

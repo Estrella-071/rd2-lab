@@ -44,9 +44,14 @@ function getClientLanguageValues() {
  * @returns {string|null} A supported locale, or null when no match exists.
  */
 export function detectClientLocale(languageValues = undefined) {
-  const candidates = languageValues === undefined
-    ? getClientLanguageValues()
-    : (Array.isArray(languageValues) ? languageValues : [languageValues]);
+  let candidates;
+  if (languageValues === undefined) {
+    candidates = getClientLanguageValues();
+  } else if (Array.isArray(languageValues)) {
+    candidates = languageValues;
+  } else {
+    candidates = [languageValues];
+  }
   for (const value of candidates) {
     const candidate = String(value ?? "").trim().toLowerCase().replaceAll("_", "-");
     if (!candidate) continue;
