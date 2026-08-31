@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validatePublicPathReferences } from './public_path_contract.mjs';
+import { assertMapRenderManifestShape } from '../src/infra/http_data_repository.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +42,7 @@ const canonical = [
 ];
 
 const seoAssets = ['robots.txt', 'sitemap.xml', 'og-preview.png', '_redirects'];
+const renderManifestRelativePath = 'map-render-manifest.json';
 
 for (const c of canonical) {
   if (!fs.existsSync(path.join(pagesDir, c))) {
@@ -49,6 +51,9 @@ for (const c of canonical) {
 }
 for (const asset of seoAssets) {
   if (!fs.existsSync(path.join(pagesDir, asset))) errors.push(`Missing SEO asset: ${asset}`);
+}
+if (!fs.existsSync(path.join(pagesDir, renderManifestRelativePath))) {
+  errors.push(`Missing Canvas render manifest: ${renderManifestRelativePath}`);
 }
 
 // 3. ESM graph verification
@@ -86,6 +91,34 @@ if (!Array.isArray(runtimeManifest.files)) {
 if (!/^[a-f0-9]{16}$/.test(String(runtimeManifest.releaseId || ''))) {
   errors.push('runtime-manifest.json must declare a 16-character releaseId');
 }
+let renderManifest = null;
+try {
+  renderManifest = JSON.parse(fs.readFileSync(path.join(pagesDir, renderManifestRelativePath), 'utf8'));
+  assertMapRenderManifestShape(renderManifest, renderManifestRelativePath);
+} catch (error) {
+  errors.push(`Canvas render manifest: ${error.message}`);
+}
+if (runtimeManifest.renderManifest !== renderManifestRelativePath) {
+  errors.push(`runtime-manifest.json must point at ${renderManifestRelativePath}`);
+}
+const generatedFiles = Array.isArray(runtimeManifest.generatedFiles) ? runtimeManifest.generatedFiles : [];
+const runtimeFiles = new Set(Array.isArray(runtimeManifest.files) ? runtimeManifest.files : []);
+for (const relativePath of generatedFiles) {
+  if (!runtimeFiles.has(relativePath)) errors.push(`Generated Canvas file is absent from runtime manifest: ${relativePath}`);
+  if (!fs.existsSync(path.join(pagesDir, relativePath))) errors.push(`Missing generated Canvas file: ${relativePath}`);
+}
+if (renderManifest) {
+  const generatedBytes = generatedFiles.reduce((sum, relativePath) => {
+    const filePath = path.join(pagesDir, relativePath);
+    return sum + (fs.existsSync(filePath) ? fs.statSync(filePath).size : 0);
+  }, 0);
+  if (generatedBytes !== Number(renderManifest.budgets?.totalBytes)) {
+    errors.push(`Canvas raster byte total mismatch: runtime ${generatedBytes}, manifest ${renderManifest.budgets?.totalBytes}`);
+  }
+  if (generatedBytes > Number(renderManifest.budgets?.maxTotalBytes)) {
+    errors.push(`Canvas raster assets exceed the ${renderManifest.budgets?.maxTotalBytes}-byte limit`);
+  }
+}
 const metadataPathContract = validatePublicPathReferences({
   metadata,
   publicRoot: pagesDir,
@@ -106,6 +139,7 @@ console.log('=== Staging Integrity Check ===');
 console.log(`- index.html has module script: ${hasModuleScript}`);
 console.log(`- Canonical data files: ${canonical.length} verified`);
 console.log(`- SEO assets: ${seoAssets.length} verified`);
+console.log(`- Canvas render assets: ${generatedFiles.length} generated files verified`);
 console.log(`- Metadata public paths: ${metadataPathContract.references.length} verified`);
 console.log(`- ESM modules resolved: ${visited.size} files in graph`);
 console.log(`- Monster poster assets checked: ${posterAssetCount} files`);

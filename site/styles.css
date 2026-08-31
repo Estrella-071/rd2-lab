@@ -232,6 +232,13 @@ input:focus-visible,
     linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0%, transparent 100%);
 }
 
+/* Canvas map frames contain an opaque continuity surface. Keep the page
+   backdrop flat while that surface is mounted so its transformed bounds do
+   not expose a rectangular color seam against the shell gradient. */
+.app-shell.canvas-map-mode::before {
+  display: none;
+}
+
 /* ==========================================================================
    Header
    ========================================================================== */
@@ -500,7 +507,7 @@ input:focus-visible,
 }
 
 /* ViewportController applies transient motion styles to the map root. Keeping
-   them off the body prevents a gesture from restyling every SVG descendant. */
+   them off the body prevents a gesture from restyling every Canvas descendant. */
 
 body.is-navigating .search-field,
 body.is-zooming .search-field,
@@ -537,11 +544,270 @@ body.is-zooming #minimap-panel,
   width: 4000px;
   height: 3400px;
   transform-origin: 0 0;
-  contain: layout style paint;
+  /* Keep layout/style invalidation local without forcing every Canvas child
+     into one paint-containment snapshot. Each raster surface must be allowed
+     to be sampled from its own backing bitmap after a zoom settles. */
+  contain: layout style;
   transform: translate(0px, 0px) scale(1);
-  /* Keep the settled SVG on the normal paint path so zoomed text and icons
-     are rasterized at the current scale instead of an old compositor size. */
+  /* Do not promote the complete scene: mobile browsers can retain a
+     low-density compositor snapshot of this large transformed surface. */
   will-change: auto;
+}
+
+/* Canvas map contract. The scene is a fixed logical coordinate space; bounded
+   raster surfaces inherit the camera transform during a gesture. Semantic
+   buttons stay in the same coordinate space and provide accessible hit targets. */
+.map-scene.canvas-map-scene {
+  overflow: hidden;
+  /* Keeping this 4000x3400 container untransformed prevents browsers from
+     rasterizing the complete map as one low-density compositor snapshot. */
+  transform: none;
+}
+
+.tree-render-root {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: block;
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+.tree-canvas-layer,
+.tree-semantic-layer {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: block;
+  pointer-events: none;
+}
+
+.tree-canvas-layer canvas {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Canvas content is already generated at the selected physical resolution;
+   preserve that sampling policy when the fixed scene is transformed. */
+.canvas-map-scene canvas {
+  image-rendering: auto;
+}
+
+.tree-raster-layer {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: block;
+  pointer-events: none;
+}
+
+/* Apply the camera once to the shared render root. Its children keep native
+   backing bitmaps and cannot present edge/art/semantic layers from different
+   transforms during a camera RAF. */
+.canvas-map-scene > .tree-render-root {
+  transform: none;
+  transform-origin: 0 0;
+}
+
+/* The map is presented as one complete dynamic frame.  The legacy layer
+   markers remain hidden for diagnostics, but never participate in painting or
+   compositing. */
+.tree-frame-canvas {
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.tree-frame-surface {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+  z-index: 1;
+}
+
+/* A full-map continuity surface stays behind the current viewport frame in
+   the same stacking context as the fixed dim masks. Keeping it mounted avoids
+   a compositor-layer switch when the camera crosses a candidate boundary. */
+.tree-frame-surface > .tree-overview-surface {
+  position: absolute;
+  display: block;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Active edge highlights are stateful, so keep them in a dedicated full-map
+   overlay. It is painted before node art at the same z-index, which preserves
+   the line-under-icon order while allowing a click to repaint only the cheap
+   geometry instead of clearing the retained off-screen sprite atlas. */
+.tree-frame-surface > .tree-overview-edge-surface {
+  position: absolute;
+  display: block;
+  z-index: 3;
+  margin: 0;
+  padding: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Overview foreground surfaces mirror the live frame's node-art and dynamic
+   layers. Keeping them above the edge veil prevents out-of-frame node sprites
+   from receiving a second dim pass while the camera is moving. */
+.tree-frame-surface > .tree-overview-node-art-surface {
+  position: absolute;
+  display: block;
+  z-index: 3;
+  margin: 0;
+  padding: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.tree-frame-surface > .tree-overview-dynamic-surface {
+  position: absolute;
+  display: block;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.tree-frame-surface canvas {
+  z-index: 0;
+  opacity: 1;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+.tree-frame-surface .tree-static-surface {
+  z-index: 1;
+}
+
+.tree-frame-surface .tree-full-edge-dim-mask-surface {
+  z-index: 2;
+  display: block;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.tree-frame-surface .tree-active-edge-surface {
+  z-index: 3;
+  display: block;
+  pointer-events: none;
+  visibility: visible;
+}
+
+.tree-frame-surface .tree-node-art-surface {
+  z-index: 3;
+}
+
+.tree-frame-surface .tree-full-dim-mask-surface {
+  z-index: 4;
+  display: block;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.tree-frame-surface .tree-dynamic-surface {
+  z-index: 5;
+}
+
+.tree-selection-animation-canvas {
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.tree-selection-animation-surface {
+  z-index: 0;
+}
+
+.tree-canvas-layer.tree-active-edge-canvas,
+.tree-canvas-layer.tree-center-canvas,
+.tree-canvas-layer.tree-center-stats-canvas,
+.tree-canvas-layer.tree-node-canvas,
+.tree-canvas-layer.tree-node-occlusion-canvas,
+.tree-canvas-layer.tree-state-canvas,
+.tree-canvas-layer.tree-state-label-canvas,
+.tree-canvas-layer.tree-selection-canvas {
+  display: none !important;
+}
+
+.tree-node-surface,
+.tree-state-surface {
+  left: 0;
+  top: 0;
+}
+
+.tree-edge-canvas,
+.tree-active-edge-canvas,
+.tree-center-canvas,
+.tree-center-stats-canvas,
+.tree-node-canvas,
+.tree-node-occlusion-canvas,
+.tree-state-canvas,
+.tree-selection-canvas {
+  overflow: hidden;
+}
+
+.tree-edge-canvas { z-index: 0; }
+.tree-active-edge-canvas { z-index: 1; }
+.tree-center-canvas { z-index: 2; }
+.tree-node-canvas { z-index: 3; }
+.tree-node-occlusion-canvas { z-index: 3.5; }
+.tree-state-label-canvas { z-index: 4.5; }
+.tree-state-canvas { z-index: 4; }
+.tree-center-stats-canvas { z-index: 5; }
+.tree-selection-canvas { z-index: 5; }
+.tree-semantic-layer { z-index: 6; }
+
+/* During a camera transition the detached state surface carries its own
+   labels. Hide the settled label cache until the new surface is committed so
+   the two copies cannot overlap or flash at different bounds. */
+body.is-zooming .tree-state-label-canvas,
+body.is-navigating .tree-state-label-canvas {
+  visibility: hidden;
+}
+
+.tree-node-semantic,
+.tree-center-compendium-semantic {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: auto;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.tree-node-semantic:focus-visible,
+.tree-center-compendium-semantic:focus-visible {
+  opacity: 0.01;
+  outline: 3px solid rgba(255, 255, 255, 0.88);
+  outline-offset: 3px;
+}
+
+.tree-node-semantic.is-dimmed {
+  pointer-events: auto;
+}
+
+.tree-center-compendium-semantic {
+  z-index: 5;
 }
 
 .map-scene > svg {
@@ -587,14 +853,14 @@ body.is-zooming #minimap-panel,
   cursor: pointer;
   outline: none;
   pointer-events: all;
-  transition: opacity 20ms linear;
+  transition: none;
 }
 
 .map-scene path.edge,
 .map-scene line.edge,
 .map-scene path.tree-center-link {
   pointer-events: none;
-  transition: opacity 20ms linear;
+  transition: none;
 }
 
 .map-scene .node .node-body {
@@ -641,7 +907,7 @@ body.is-zooming #minimap-panel,
 
 .map-scene .node.is-selected .sel-box-runner,
 .map-scene .node.is-linked-selected .sel-box-runner {
-  animation: selRunnerSpin 2.4s linear infinite;
+  animation: selRunnerSpin 4.8s linear infinite;
   will-change: stroke-dashoffset;
 }
 
@@ -2333,6 +2599,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   flex-shrink: 0;
   overflow: visible;
   filter: drop-shadow(0 1.5px 2px rgba(0, 0, 0, 0.45));
+  object-fit: contain;
 }
 
 .node-link-pill {

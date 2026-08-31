@@ -20,6 +20,15 @@ export class DataRepositoryPort {
   }
 
   /**
+   * Load the build-generated Canvas map render manifest.
+   * @param {string} [url] - Optional override URL
+   * @returns {Promise<object>} Validated tile, atlas, geometry, and edge data
+   */
+  async loadRenderManifest(url) {
+    throw new Error("DataRepositoryPort.loadRenderManifest must be implemented by an adapter.");
+  }
+
+  /**
    * Load the boss & wave event JSON data.
    * @param {string} [url] - Optional override URL
    * @returns {Promise<object>} Parsed boss & wave event object

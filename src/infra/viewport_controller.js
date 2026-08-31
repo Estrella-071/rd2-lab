@@ -1,5 +1,9 @@
 import { ViewportPort } from "../app/ports/viewport_port.js";
 
+// Keep a short input guard so the final raster promotion starts as soon as a
+// gesture ends, without allowing the last pointer/wheel event to race it.
+const VIEWPORT_SETTLE_DELAY_MS = 48;
+
 function removeDomListeners(target, handlers) {
   if (!target || typeof target.removeEventListener !== "function") return;
   for (const [type, handler] of Object.entries(handlers || {})) {
@@ -56,6 +60,7 @@ export class ViewportController extends ViewportPort {
     this._cachedHeight = null;
     this._cachedContainerRect = null;
     this._sceneMotionActive = false;
+    this._canvasTransformTargets = null;
 
     // DOM event listeners cleanup
     this._domHandlers = null;
@@ -92,18 +97,20 @@ export class ViewportController extends ViewportPort {
   }
 
   /**
-   * Apply only the transient styles needed by the moving map root.
-   * Keeping these off the body avoids invalidating every SVG descendant when
-   * the navigation status changes at the start or end of a gesture.
+   * Track camera motion without promoting the complete Canvas scene.
+   * A 4000x3400 scene is too large to keep as one compositor texture: mobile
+   * browsers may choose a low-density snapshot and keep sampling it while
+   * the camera moves. The individual Canvas surfaces already have their own
+   * backing stores, so a scene-level will-change hint is counterproductive.
    * @param {boolean} active
    */
   _setSceneMotionState(active) {
-    const style = this.sceneElement?.style;
-    if (!style) return;
     if (this._sceneMotionActive === active) return;
     this._sceneMotionActive = active;
-    style.willChange = active ? "transform" : "";
-    style.pointerEvents = active ? "none" : "";
+    // Never promote the complete scene. Keep the explicit value so callers
+    // can still distinguish an active gesture, but let the browser sample
+    // each committed Canvas backing bitmap at the current transform.
+    if (this.sceneElement?.style) this.sceneElement.style.willChange = "auto";
   }
 
   /**
@@ -143,11 +150,13 @@ export class ViewportController extends ViewportPort {
    * Stop any active camera animation.
    */
   _stopAnimation() {
+    const hadCameraAnimation = Boolean(this._animState || this._animRafId);
     if (this._animRafId && typeof cancelAnimationFrame === "function") {
       cancelAnimationFrame(this._animRafId);
     }
     this._animRafId = null;
     this._animState = null;
+    if (hadCameraAnimation) this._setNavigating?.(false, true);
     this._stopInertiaPan();
   }
 
@@ -255,6 +264,8 @@ export class ViewportController extends ViewportPort {
     this._cleanupEventListeners();
     this.container = containerElement;
     this.sceneElement = sceneElement;
+    this._canvasTransformTargets = null;
+    if (this.sceneElement?.style) this.sceneElement.style.willChange = "auto";
     this.updateCachedDimensions();
 
     const limits = this.calculateScaleLimits();
@@ -288,6 +299,7 @@ export class ViewportController extends ViewportPort {
       dragStart: null,
       pinchStart: null,
       dragHistory: [],
+      dragEventDispatched: false,
       zoomingTimer: null,
       navigatingCooldownTimer: null
     };
@@ -335,8 +347,9 @@ export class ViewportController extends ViewportPort {
         if (!document.body.classList.contains("is-navigating")) {
           this._setSceneMotionState(false);
           this.requestRender();
+          this._dispatchViewportSettled();
         }
-      }, 450);
+      }, VIEWPORT_SETTLE_DELAY_MS);
       return;
     }
     if (state.zoomingTimer) {
@@ -347,10 +360,11 @@ export class ViewportController extends ViewportPort {
     if (!document.body.classList.contains("is-navigating")) {
       this._setSceneMotionState(false);
       this.requestRender();
+      this._dispatchViewportSettled();
     }
   }
 
-  _setNavigatingState(active, immediate = false) {
+  _setNavigatingState(active, immediate = false, manual = null) {
     if (typeof document === "undefined" || !document.body || !this._gestureState) return;
     const state = this._gestureState;
     if (state.navigatingCooldownTimer) {
@@ -359,7 +373,9 @@ export class ViewportController extends ViewportPort {
     }
     if (active) {
       this._setSceneMotionState(true);
-      document.body.classList.add("is-navigating", "is-manual-navigating");
+      document.body.classList.add("is-navigating");
+      if (manual === true) document.body.classList.add("is-manual-navigating");
+      else if (manual === false) document.body.classList.remove("is-manual-navigating");
       return;
     }
     if (immediate) {
@@ -367,6 +383,7 @@ export class ViewportController extends ViewportPort {
       if (!document.body.classList.contains("is-zooming")) {
         this._setSceneMotionState(false);
         this.requestRender();
+        this._dispatchViewportSettled();
       }
       return;
     }
@@ -377,14 +394,19 @@ export class ViewportController extends ViewportPort {
       if (!document.body.classList.contains("is-zooming")) {
         this._setSceneMotionState(false);
         this.requestRender();
+        this._dispatchViewportSettled();
       }
-    }, 120);
+    }, VIEWPORT_SETTLE_DELAY_MS);
   }
 
   _cleanupGestureTimers() {
     const state = this._gestureState;
     if (state?.zoomingTimer) clearTimeout(state.zoomingTimer);
     if (state?.navigatingCooldownTimer) clearTimeout(state.navigatingCooldownTimer);
+    if (state) {
+      state.zoomingTimer = null;
+      state.navigatingCooldownTimer = null;
+    }
     this._setNavigating = null;
     if (typeof document !== "undefined" && document.body) {
       document.body.classList.remove("is-zooming", "is-navigating", "is-manual-navigating");
@@ -403,15 +425,29 @@ export class ViewportController extends ViewportPort {
     }
   }
 
+  _dispatchViewportInteractionStart() {
+    if (typeof document !== "undefined" && typeof document.dispatchEvent === "function") {
+      document.dispatchEvent(new CustomEvent("rd2:viewport-interaction-start"));
+    }
+  }
+
+  _dispatchViewportSettled() {
+    if (typeof document !== "undefined" && typeof document.dispatchEvent === "function") {
+      document.dispatchEvent(new CustomEvent("rd2:viewport-settled", { detail: this.getState() }));
+    }
+  }
+
   _handlePointerDown(event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     if (event.pointerType === "pen" && event.button !== 0 && event.button !== -1) return;
 
     const state = this._gestureState;
     if (!state) return;
+    this._dispatchViewportInteractionStart();
     this._stopAnimation();
     this._stopSmoothWheelZoom();
     this._stopInertiaPan();
+    if (state.pointers.size === 0) state.dragEventDispatched = false;
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     state.dragHistory = [{ x: event.clientX, y: event.clientY, t: this._eventTimestamp() }];
 
@@ -419,7 +455,7 @@ export class ViewportController extends ViewportPort {
       state.dragStart = null;
       state.pinchStart = this._createPinchStart(state.pointers);
       this._setZoomingState(true);
-      this._setNavigatingState(true);
+      this._setNavigatingState(true, false, true);
       event.preventDefault?.();
       return;
     }
@@ -462,8 +498,11 @@ export class ViewportController extends ViewportPort {
 
   _updatePinchGesture(state, event) {
     this._setZoomingState(true);
-    this._setNavigatingState(true);
-    this._dispatchViewportDrag();
+    this._setNavigatingState(true, false, true);
+    if (!state.dragEventDispatched) {
+      state.dragEventDispatched = true;
+      this._dispatchViewportDrag();
+    }
     const points = Array.from(state.pointers.values());
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
     const ratio = dist / state.pinchStart.initialDist;
@@ -480,8 +519,9 @@ export class ViewportController extends ViewportPort {
 
     if (!state.dragStart.hasMoved && moveDist >= 4) {
       state.dragStart.hasMoved = true;
-      this._setNavigatingState(true);
+      this._setNavigatingState(true, false, true);
       this.container?.classList?.add("is-dragging");
+      state.dragEventDispatched = true;
       this._dispatchViewportDrag();
     }
     if (!state.dragStart.hasMoved) return;
@@ -514,10 +554,19 @@ export class ViewportController extends ViewportPort {
 
     if (velocity) {
       this._startInertiaPan(velocity.vx, velocity.vy);
+      this._setZoomingState(false);
       return;
     }
-    this._settlePointerPosition();
-    this._setNavigatingState(false);
+    const settlingWithAnimation = this._settlePointerPosition();
+    // Mobile browsers do not expose a reliable pinch "zoomend" event. Clear
+    // this guard when the pointer sequence ends so warmed raster assets can
+    // be promoted without waiting for the fallback timer.
+    this._setZoomingState(false);
+    // A boundary correction starts its own camera animation.  That animation
+    // owns the navigation lifecycle until panTo() reaches its target; clearing
+    // the flag here would let a full settled-map refresh run halfway through
+    // the correction and produce a visible hitch.
+    if (!settlingWithAnimation) this._setNavigatingState(false);
   }
 
   _getDragVelocity(dragHistory) {
@@ -539,17 +588,19 @@ export class ViewportController extends ViewportPort {
     const needsAnimation = Math.abs(targetX - this._state.x) > 0.5 || Math.abs(targetY - this._state.y) > 0.5;
     if (needsAnimation) {
       this.panTo(targetX, targetY, true, 260);
-      return;
+      return true;
     }
     this.clampPosition();
     this.requestRender();
+    return false;
   }
 
   _handleWheel(event) {
     event.preventDefault?.();
+    this._dispatchViewportInteractionStart();
     this._stopAnimation();
     this._setZoomingState(true);
-    this._setNavigatingState(true);
+    this._setNavigatingState(true, false, true);
 
     const { width, height } = this.viewportSize();
     const cx = width / 2;
@@ -591,6 +642,10 @@ export class ViewportController extends ViewportPort {
       this.clampPosition();
       this.requestRender();
       this._stopSmoothWheelZoom();
+      // Let the short wheel guard own the final render boundary. Clearing it
+      // here would cancel the newly scheduled timer as soon as the smooth
+      // interpolation reaches its target, and makes a re-initialized
+      // controller indistinguishable from a stale gesture.
       this._setNavigatingState(false, true);
       return;
     }
@@ -715,8 +770,11 @@ export class ViewportController extends ViewportPort {
    */
   zoom(factor, cx, cy) {
     if (this._isDestroyed) return;
-    this._stopAnimation();
-    this._stopSmoothWheelZoom();
+    const pinchGestureActive = Boolean(this._gestureState?.pinchStart && this._gestureState.pointers?.size >= 2);
+    if (!pinchGestureActive) {
+      this._stopAnimation();
+      this._stopSmoothWheelZoom();
+    }
     const oldScale = this._state.scale;
     let newScale = oldScale * factor;
     newScale = Math.max(this._state.minScale, Math.min(this._state.maxScale, newScale));
@@ -764,6 +822,7 @@ export class ViewportController extends ViewportPort {
       this._state.x = targetX;
       this._state.y = targetY;
       this.clampPosition();
+      this._setNavigatingState(false, true);
       this.requestRender();
       return;
     }
@@ -771,10 +830,15 @@ export class ViewportController extends ViewportPort {
     const startX = this._state.x;
     const startY = this._state.y;
     const dist = Math.hypot(targetX - startX, targetY - startY);
-    if (dist < 0.5) return;
+    if (dist < 0.5) {
+      this._setNavigatingState(false, true);
+      return;
+    }
 
     const duration = customDuration || Math.min(480, Math.max(380, 380 + dist * 0.08));
     const startTime = (typeof performance !== "undefined" ? performance.now() : Date.now());
+
+    this._setNavigatingState(true, false, false);
 
     this._animState = {
       startX,
@@ -804,6 +868,7 @@ export class ViewportController extends ViewportPort {
         this._state.y = this._animState.targetY;
         this._stopAnimation();
         this.clampPosition();
+        this._setNavigatingState(false, true);
         this.requestRender();
       }
     };
@@ -843,15 +908,21 @@ export class ViewportController extends ViewportPort {
       this._state.x = targetPanX;
       this._state.y = targetPanY;
       this.clampPosition();
+      this._setNavigatingState(false, true);
       this.requestRender();
       return;
     }
 
     const dist = Math.hypot(targetPanX - this._state.x, targetPanY - this._state.y);
-    if (Math.abs(clampedScale - this._state.scale) < 0.001 && dist < 0.5) return;
+    if (Math.abs(clampedScale - this._state.scale) < 0.001 && dist < 0.5) {
+      this._setNavigatingState(false, true);
+      return;
+    }
 
     const duration = customDuration || Math.min(480, Math.max(380, 380 + dist * 0.08));
     const startTime = (typeof performance !== "undefined" ? performance.now() : Date.now());
+
+    this._setNavigatingState(true, false, false);
 
     this._animState = {
       startScale: this._state.scale,
@@ -884,6 +955,7 @@ export class ViewportController extends ViewportPort {
         this._state.y = this._animState.targetPanY;
         this._stopAnimation();
         this.clampPosition();
+        this._setNavigatingState(false, true);
         this.requestRender();
       }
     };
@@ -1156,19 +1228,67 @@ export class ViewportController extends ViewportPort {
   _applyRender() {
     this._needsRender = false;
     if (this._isDestroyed) return;
+    this._applySceneTransform();
+    this._notifyRenderListeners(this.getState());
+    this._dispatchSettledIfIdle();
+  }
 
+  _applySceneTransform() {
     const targetEl = this.sceneElement;
-    if (targetEl?.style) {
-      targetEl.style.transform = `translate3d(${this._state.x}px, ${this._state.y}px, 0) scale(${this._state.scale})`;
+    if (!targetEl?.style) return;
+    const cameraTransform = `translate(${this._state.x}px, ${this._state.y}px) scale(${this._state.scale})`;
+    // Keep the large scene element untransformed. Canvas maps use one stable
+    // render root so edge, art, labels, selection animation and semantic
+    // hit targets are committed in the same compositor transform; separate
+    // transforms can expose an intermediate mosaic while layers update.
+    // Direct style updates avoid propagating a custom property through 239
+    // semantic buttons every RAF. Keep the root path for SVG maps/tests.
+    if (!targetEl.classList?.contains?.("canvas-map-scene")) {
+      targetEl.style.transform = cameraTransform;
+      return;
     }
+    targetEl.style.transform = "none";
+    for (const layer of this._resolveCanvasTransformTargets(targetEl)) {
+      if (layer?.style) layer.style.transform = cameraTransform;
+    }
+  }
 
-    const snapshot = this.getState();
+  _resolveCanvasTransformTargets(targetEl) {
+    const firstChild = targetEl.firstElementChild;
+    const renderRoot = firstChild?.classList?.contains?.("tree-render-root") ? firstChild : null;
+    if (renderRoot) {
+      if (this._canvasTransformTargets?.length !== 1 || this._canvasTransformTargets[0] !== renderRoot) {
+        this._canvasTransformTargets = [renderRoot];
+      }
+      return this._canvasTransformTargets;
+    }
+    if (!this._canvasTransformTargets?.length
+      || this._canvasTransformTargets.some((element) => element?.parentElement !== targetEl)) {
+      // Compatibility path for a pre-raster test double or an older DOM.
+      this._canvasTransformTargets = [...targetEl.children].filter((element) => (
+        element?.classList?.contains?.("tree-edge-canvas")
+        || element?.classList?.contains?.("tree-frame-canvas")
+        || element?.classList?.contains?.("tree-selection-animation-canvas")
+        || element?.classList?.contains?.("tree-semantic-layer")
+      ));
+    }
+    return this._canvasTransformTargets;
+  }
+
+  _notifyRenderListeners(snapshot) {
     for (const listener of this._listeners) {
       try {
         listener(snapshot);
       } catch (err) {
         console.error("ViewportController listener error:", err);
       }
+    }
+  }
+
+  _dispatchSettledIfIdle() {
+    const body = typeof document !== "undefined" ? document.body : null;
+    if (body && !body.classList.contains("is-navigating") && !body.classList.contains("is-zooming")) {
+      this._dispatchViewportSettled();
     }
   }
 
@@ -1209,5 +1329,9 @@ export class ViewportController extends ViewportPort {
       cancelAnimationFrame(this._rafId);
     }
     this._listeners.clear();
+    if (this.sceneElement?.style) this.sceneElement.style.willChange = "";
+    this._canvasTransformTargets = null;
+    this.sceneElement = null;
+    this.container = null;
   }
 }

@@ -64,9 +64,12 @@ for (const relativePath of publicFiles) {
   if (lower.includes(oldRepository)) errors.push(`${relativePath}: old repository slug`);
   if (text.includes(languageLabel)) errors.push(`${relativePath}: locale branding phrase`);
 
+  const isDependencyMetadata = relativePath === "package-lock.json" || relativePath === "npm-shrinkwrap.json";
   const publicProcessPatterns = [
-    { value: termA, label: "mobile platform marker" },
-    { value: termB, label: "mobile platform marker" },
+    ...(isDependencyMetadata ? [] : [
+      { value: termA, label: "mobile platform marker" },
+      { value: termB, label: "mobile platform marker" },
+    ]),
     { value: termC, label: "private path or label" },
     { value: termD, label: "restricted path" },
     { value: termE, label: "private artifact" },

@@ -42,14 +42,16 @@ export class MorphingWidgets {
    * @param {HTMLElement} [dependencies.changelogWidgetElement]
    * @param {HTMLElement} [dependencies.localeWidgetElement]
    * @param {import("../app/usecases/filter_tree.js").FilterTreeUseCase} [dependencies.filterTreeUseCase]
+   * @param {import("../app/usecases/navigate_viewport.js").NavigateViewportUseCase} [dependencies.navigateViewportUseCase]
    */
-  constructor({ searchWidgetElement, filterWidgetElement, disclaimerWidgetElement, changelogWidgetElement, localeWidgetElement, filterTreeUseCase } = {}) {
+  constructor({ searchWidgetElement, filterWidgetElement, disclaimerWidgetElement, changelogWidgetElement, localeWidgetElement, filterTreeUseCase, navigateViewportUseCase } = {}) {
     this.searchWidgetEl = searchWidgetElement || (typeof document !== "undefined" ? document.getElementById("search-widget") : null);
     this.filterWidgetEl = filterWidgetElement || (typeof document !== "undefined" ? document.getElementById("filter-widget") : null);
     this.disclaimerWidgetEl = disclaimerWidgetElement || (typeof document !== "undefined" ? document.getElementById("disclaimer-widget") : null);
     this.changelogWidgetEl = changelogWidgetElement || (typeof document !== "undefined" ? document.getElementById("changelog-widget") : null);
     this.localeWidgetEl = localeWidgetElement || (typeof document !== "undefined" ? document.getElementById("locale-widget") : null);
     this.filterTreeUseCase = filterTreeUseCase || null;
+    this.navigateViewportUseCase = navigateViewportUseCase || null;
 
     this.isSearchOpen = false;
     this.isFilterOpen = false;
@@ -84,6 +86,11 @@ export class MorphingWidgets {
       if (this.filterTreeUseCase) {
         this.filterTreeUseCase.clear();
       }
+      // The clear button owns the click event so the topbar's delegated
+      // ControlsView handler cannot perform the camera reset. Keep clearing a
+      // filter equivalent to the old direct control path and return to the
+      // normal browsing viewport immediately after the state update.
+      this.navigateViewportUseCase?.reset?.();
     };
     this._boundFilterWidgetClick = (event) => {
       if (!this.isFilterOpen && !event.target?.closest?.("#filter-close-btn, .filter-chip, #filter-clear-btn")) {

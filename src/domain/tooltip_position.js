@@ -56,59 +56,32 @@ function averagePrerequisiteY(prereqSet, nodeId, getPoint) {
   return count > 0 ? totalY / count : null;
 }
 
-function hasTooltipViewport(params, tipWidth, tipHeight) {
+function hasTooltipViewport(params, tipWidth) {
   return Number.isFinite(params.viewportWidth)
-    && Number.isFinite(params.viewportHeight)
     && params.viewportWidth > 0
-    && params.viewportHeight > 0
-    && tipWidth > 0
-    && tipHeight > 0;
 }
 
-function fitsTooltipVertically(candidateTop, tipHeight, viewportHeight, viewportPadding) {
-  return candidateTop >= viewportPadding
-    && candidateTop + tipHeight <= viewportHeight - viewportPadding;
-}
-
-function fitsTooltipWithinViewport(candidateTop, tipHeight, viewportHeight) {
-  return candidateTop >= 0 && candidateTop + tipHeight <= viewportHeight;
-}
-
-function resolveTooltipVerticalPlacement({ screenY, nodeRadius, tipHeight, gap, placeBelow, hasViewport, viewportHeight, viewportPadding }) {
+function resolveTooltipVerticalPlacement({ screenY, nodeRadius, tipHeight, gap, placeBelow }) {
   const aboveTop = screenY - nodeRadius - tipHeight - gap;
   const belowTop = screenY + nodeRadius + gap;
-  let isPlacedBelow = placeBelow;
-  let top = isPlacedBelow ? belowTop : aboveTop;
-
-  if (!hasViewport || fitsTooltipVertically(top, tipHeight, viewportHeight, viewportPadding)) {
-    return { top, isPlacedBelow };
-  }
-
-  // The padding is a comfort inset, not a reason to reverse the requested
-  // side when the complete card still fits inside the viewport.
-  if (fitsTooltipWithinViewport(top, tipHeight, viewportHeight)) {
-    return { top, isPlacedBelow };
-  }
-
-  const alternativeTop = isPlacedBelow ? aboveTop : belowTop;
-  if (fitsTooltipVertically(alternativeTop, tipHeight, viewportHeight, viewportPadding)) {
-    return { top: alternativeTop, isPlacedBelow: !isPlacedBelow };
-  }
-
-  const aboveSpace = Math.max(0, screenY - nodeRadius - viewportPadding);
-  const belowSpace = Math.max(0, viewportHeight - viewportPadding - belowTop);
-  isPlacedBelow = belowSpace >= aboveSpace;
-  top = isPlacedBelow ? belowTop : aboveTop;
-  return { top, isPlacedBelow };
+  // Vertical placement is semantic, not viewport-adaptive.  The card belongs
+  // above its node by default; shouldPlaceTooltipBelow() is the only rule that
+  // may request the lower side when the prerequisite path is above the node.
+  // Clamping or flipping against the camera viewport makes the card jump sides
+  // while the camera is moving and can place it over the node itself.
+  return {
+    top: placeBelow ? belowTop : aboveTop,
+    isPlacedBelow: Boolean(placeBelow)
+  };
 }
 
-function clampTooltipScreenPosition({ left, top, tipWidth, tipHeight, viewportWidth, viewportHeight, viewportPadding }) {
-  const maxLeft = Math.max(viewportPadding, viewportWidth - tipWidth - viewportPadding);
-  const maxTop = Math.max(viewportPadding, viewportHeight - tipHeight - viewportPadding);
-  return {
-    left: Math.min(maxLeft, Math.max(viewportPadding, left)),
-    top: Math.min(maxTop, Math.max(viewportPadding, top))
-  };
+function resolveNodeRadius(params, scale, isLarge) {
+  const screenRadius = Number(params.screenNodeRadius);
+  if (Number.isFinite(screenRadius) && screenRadius >= 0) return screenRadius;
+  const nodeRadius = Number(params.nodeRadius);
+  if (Number.isFinite(nodeRadius) && nodeRadius >= 0) return nodeRadius * scale;
+  const fallback = isLarge ? 52 : 36;
+  return fallback * scale;
 }
 
 export function shouldPlaceTooltipBelow(nodeIdOrParams, nodePositions, activePrereqNodeIds, options = {}) {
@@ -148,13 +121,14 @@ export function shouldPlaceTooltipBelow(nodeIdOrParams, nodePositions, activePre
  * @param {number} [params.panY=0]
  * @param {string} [params.nodeType="DICE_RUNE"]
  * @param {boolean} [params.isLarge=false]
+ * @param {number} [params.nodeRadius] Node radius in logical/map units.
+ * @param {number} [params.screenNodeRadius] Node radius already converted to screen pixels.
  * @param {number} [params.tipWidth=0]
  * @param {number} [params.tipHeight=0]
  * @param {boolean} [params.placeBelow=false]
  * @param {number} [params.gap=16]
- * @param {number} [params.viewportWidth] Viewport width for adaptive placement.
- * @param {number} [params.viewportHeight] Viewport height for adaptive placement.
- * @param {number} [params.viewportPadding=12] Viewport inset.
+ * @param {number} [params.viewportWidth] Viewport width for horizontal clamping.
+ * @param {number} [params.viewportPadding=12] Horizontal viewport inset.
  * @returns {{ left: number, top: number, isPlacedBelow: boolean }}
  */
 export function computeTooltipScreenCoordinates(params = {}) {
@@ -175,33 +149,23 @@ export function computeTooltipScreenCoordinates(params = {}) {
   const screenY = panY + pt.y * scale;
 
   const isLarge = Boolean(params.isLarge || params.nodeType === "DICE" || params.nodeType === "PERK");
-  const nodeRadius = (isLarge ? 52 : 36) * scale;
+  const nodeRadius = resolveNodeRadius(params, scale, isLarge);
 
-  const hasViewport = hasTooltipViewport(params, tipWidth, tipHeight);
+  const hasViewport = hasTooltipViewport(params, tipWidth);
   const viewportPadding = Math.max(0, Number(params.viewportPadding ?? 12) || 0);
   const verticalPlacement = resolveTooltipVerticalPlacement({
     screenY,
     nodeRadius,
     tipHeight,
     gap,
-    placeBelow,
-    hasViewport,
-    viewportHeight: params.viewportHeight,
-    viewportPadding
+    placeBelow
   });
   let { top, isPlacedBelow } = verticalPlacement;
 
   let left = screenX - tipWidth / 2;
   if (hasViewport) {
-    ({ left, top } = clampTooltipScreenPosition({
-      left,
-      top,
-      tipWidth,
-      tipHeight,
-      viewportWidth: params.viewportWidth,
-      viewportHeight: params.viewportHeight,
-      viewportPadding
-    }));
+    const maxLeft = Math.max(viewportPadding, params.viewportWidth - tipWidth - viewportPadding);
+    left = Math.min(maxLeft, Math.max(viewportPadding, left));
   }
 
   return {

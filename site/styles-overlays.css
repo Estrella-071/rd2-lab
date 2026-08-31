@@ -628,8 +628,11 @@
 }
 
 .simulation-action-btn-styled .sim-btn-cost .currency-icon-svg {
-  width: 25px;
-  height: 25px;
+  /* The source sprites include a generous shadow canvas. Keep the visible
+     currency mark legible in the 48px action row instead of reducing it to a
+     barely visible dot. */
+  width: 32px;
+  height: 32px;
   vertical-align: middle;
 }
 

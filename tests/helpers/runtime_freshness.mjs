@@ -95,9 +95,20 @@ export function findRuntimeFreshnessMismatches({ rootDir, runtimeDir }) {
     ...(allowlist.assetFiles || []),
     ...(allowlist.iconFiles || []),
   ])].sort(compareText);
+  const manifestPath = path.join(resolvedRuntimeDir, 'runtime-manifest.json');
+  let generatedRuntimeFiles = [];
+  if (fs.existsSync(manifestPath)) {
+    try {
+      const runtimeManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      generatedRuntimeFiles = [...new Set(runtimeManifest.generatedFiles || [])].sort(compareText);
+    } catch (error) {
+      mismatches.push(`runtime-manifest.json (invalid JSON: ${error.message})`);
+    }
+  }
   const expectedRuntimeFiles = new Set([
     ...runtimeFilesFromAllowlist,
     ...sourceFiles.map(relativePath => `src/${relativePath}`),
+    ...generatedRuntimeFiles,
     'runtime-manifest.json',
   ]);
   // A fresh artifact must contain exactly the reviewed allowlist, mirrored
@@ -114,15 +125,18 @@ export function findRuntimeFreshnessMismatches({ rootDir, runtimeDir }) {
   const canonicalStaticFiles = runtimeFilesFromAllowlist.filter((relativePath) => !relativePath.startsWith('src/'));
   compareFileTrees(canonicalSiteDir, resolvedRuntimeDir, canonicalStaticFiles, mismatches);
 
-  const manifestPath = path.join(resolvedRuntimeDir, 'runtime-manifest.json');
   if (!fs.existsSync(manifestPath)) {
     mismatches.push('runtime-manifest.json (missing from runtime)');
   } else {
     try {
       const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
       const manifestFiles = [...new Set(manifest.files || [])].sort(compareText);
-      if (JSON.stringify(manifestFiles) !== JSON.stringify(runtimeFilesFromAllowlist)) {
+      const expectedManifestFiles = [...new Set([...runtimeFilesFromAllowlist, ...generatedRuntimeFiles])].sort(compareText);
+      if (JSON.stringify(manifestFiles) !== JSON.stringify(expectedManifestFiles)) {
         mismatches.push('runtime-manifest.json (file list differs from canonical allowlist)');
+      }
+      if (!Array.isArray(manifest.generatedFiles)) {
+        mismatches.push('runtime-manifest.json (generatedFiles is missing)');
       }
     } catch (error) {
       mismatches.push(`runtime-manifest.json (invalid JSON: ${error.message})`);

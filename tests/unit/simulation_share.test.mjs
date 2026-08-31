@@ -3,8 +3,6 @@ import assert from "node:assert/strict";
 
 import {
   buildShareImageLayout,
-  buildSimulationSnapshotCss,
-  resolveSnapshotImageReferences,
   computeShareRenderUnlockState
 } from "../../src/infra/share_image_exporter.js";
 import {
@@ -216,41 +214,4 @@ test("share image render state: unrelated pre-unlocked roots are treated as lock
   assert.ok(state.renderUnlockedIds.has("2"));
   assert.ok(!state.renderUnlockedIds.has("1005"));
   assert.ok(!state.renderUnlockedIds.has("4008"));
-});
-
-test("share image SVG snapshot: locked nodes mirror the game's type-specific hierarchy", () => {
-  const css = buildSimulationSnapshotCss();
-  assert.ok(css.includes(".node.is-sim-locked.node-type-dice:not(.is-selected):not(.is-linked-selected),"));
-  assert.match(css, /\.node-simulation-occlusion-layer\s*\{\s*display:\s*block/);
-  assert.match(css, /\.node-simulation-occlusion\.is-sim-locked:not\(\.is-selected\):not\(\.is-linked-selected\)/);
-  assert.ok(css.includes(".node.is-sim-locked.node-type-dice-rune:not(.is-selected):not(.is-linked-selected) { opacity: 0.18 !important;"));
-  assert.ok(css.includes(".node.is-sim-locked.node-type-player-passive:not(.is-selected):not(.is-linked-selected) { opacity: 0.52 !important;"));
-  assert.ok(css.includes(".node.is-sim-special:not(.is-selected):not(.is-linked-selected) { opacity: 0.34 !important;"));
-  assert.match(css, /\.node\.is-sim-locked\.node-type-dice[^{}]*\.node-body \.node-icon[\s\S]*grayscale\(1\) brightness\(0\.6\)/);
-  assert.match(css, /fill: #5c4d83 !important/);
-  assert.match(css, /path\.is-simulation-locked-edge\s*\{\s*opacity:\s*0\.06/);
-  assert.match(css, /\.node\.is-sim-unlocked\s*\{\s*opacity:\s*1/);
-});
-
-test("share image SVG snapshot: external image references survive Blob serialization", () => {
-  const attributes = new Map([
-    ["href", "icons/Dice_Fire3.png"],
-    ["xlink:href", "icons/Dice_Fire3.png"]
-  ]);
-  const image = {
-    getAttribute(name) {
-      return attributes.get(name) || null;
-    },
-    setAttribute(name, value) {
-      attributes.set(name, value);
-    },
-    setAttributeNS(_namespace, name, value) {
-      attributes.set(name, value);
-    }
-  };
-  const svg = { querySelectorAll: (selector) => selector === "image" ? [image] : [] };
-
-  assert.equal(resolveSnapshotImageReferences(svg, "https://rd2-lab.pages.dev/tree/index.html"), 2);
-  assert.equal(attributes.get("href"), "https://rd2-lab.pages.dev/tree/icons/Dice_Fire3.png");
-  assert.equal(attributes.get("xlink:href"), "https://rd2-lab.pages.dev/tree/icons/Dice_Fire3.png");
 });

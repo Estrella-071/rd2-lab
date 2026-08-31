@@ -780,10 +780,9 @@ export function getNodeMaxRank(node) {
  * @param {Array<object>|Map<string, object>} options.nodes 所有節點
  * @returns {number}
  */
-export function calculateBranchFactionLevel(branchId, { ranks = null, nodes = [] } = {}) {
+function calculateBranchFactionLevelFromMap(branchId, { ranks = null, nodesMap }) {
   let level = 0;
   const isFullUnlocked = ranks === null;
-  const nodesMap = getNodeMap(nodes);
 
   for (const node of nodesMap.values()) {
     if (Number(node.branch) !== Number(branchId)) continue;
@@ -801,6 +800,12 @@ export function calculateBranchFactionLevel(branchId, { ranks = null, nodes = []
   return level;
 }
 
+export function calculateBranchFactionLevel(branchId, { ranks = null, nodes = [] } = {}) {
+  return calculateBranchFactionLevelFromMap(branchId, { ranks, nodesMap: getNodeMap(nodes) });
+}
+
+const fullFactionLevelCache = new WeakMap();
+
 /**
  * 計算所有 5 個派系的等級
  * @param {object} [options]
@@ -809,9 +814,14 @@ export function calculateBranchFactionLevel(branchId, { ranks = null, nodes = []
  * @returns {Record<number, number>} 派系ID -> 派系等級
  */
 export function calculateAllFactionLevels({ ranks = null, nodes = [] } = {}) {
+  const nodesMap = nodes instanceof Map ? nodes : getNodeMap(nodes);
+  if (ranks === null && nodesMap instanceof Map && fullFactionLevelCache.has(nodesMap)) {
+    return { ...fullFactionLevelCache.get(nodesMap) };
+  }
   const result = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   for (let b = 1; b <= 5; b++) {
-    result[b] = calculateBranchFactionLevel(b, { ranks, nodes });
+    result[b] = calculateBranchFactionLevelFromMap(b, { ranks, nodesMap });
   }
+  if (ranks === null && nodesMap instanceof Map) fullFactionLevelCache.set(nodesMap, result);
   return result;
 }

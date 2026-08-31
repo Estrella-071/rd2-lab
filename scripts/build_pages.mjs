@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveNode3Icon } from '../src/domain/dice_icon.js';
+import { buildMapRaster } from './build_map_raster.mjs';
 import { minifyCssForStaging } from './lib/css_runtime.mjs';
 import { normalizePublicIconPath } from './runtime_asset_paths.mjs';
 import { orderedStylesheets } from './stylesheet_contract.mjs';
@@ -266,6 +267,13 @@ for (const stylesheet of orderedStylesheets) {
   fs.writeFileSync(stylesheetPath, minifyCssForStaging(source), 'utf8');
 }
 
+// Generate the Canvas-only map assets after the reviewed runtime files have
+// been copied. Raster output is staging-only and is included in the runtime
+// manifest/release hash, but never added to the tracked source tree.
+const mapRaster = buildMapRaster({ rootDir, siteDir, stagingDir });
+const generatedFiles = mapRaster.generatedFiles;
+const runtimeFiles = [...files, ...generatedFiles];
+
 function calculateReleaseId(relativePaths) {
   const hash = createHash('sha256');
   for (const relativePath of [...new Set(relativePaths)].sort(compareText)) {
@@ -305,11 +313,12 @@ function versionStagingRuntime(releaseId) {
   }
 }
 
-const releaseId = calculateReleaseId(files);
+const releaseId = calculateReleaseId(runtimeFiles);
 versionStagingRuntime(releaseId);
 fs.writeFileSync(
   path.join(stagingDir, 'runtime-manifest.json'),
-  `${JSON.stringify({ ...allowlist, files, releaseId }, null, 2)}\n`,
+  `${JSON.stringify({ ...allowlist, files: runtimeFiles, generatedFiles, renderManifest: 'map-render-manifest.json', releaseId }, null, 2)}\n`,
   'utf8',
 );
-console.log(`Pages staging built: ${files.length} files in ${path.relative(rootDir, stagingDir)}.`);
+console.log(`Pages staging built: ${runtimeFiles.length} files in ${path.relative(rootDir, stagingDir)}.`);
+console.log(`Map raster: ${mapRaster.totalBytes} bytes total, ${mapRaster.initialBytes} bytes initial.`);

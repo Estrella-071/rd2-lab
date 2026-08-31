@@ -1,4 +1,5 @@
 export { TreeView } from "./tree_view.js";
+export { CanvasTreeRenderer } from "./canvas_tree_renderer.js";
 export { TooltipView } from "./tooltip_view.js";
 export { CompendiumView } from "./compendium_view.js";
 export { MinimapView } from "./minimap_view.js";

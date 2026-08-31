@@ -171,6 +171,38 @@ test("AppStore: SELECT_NODE computes DAG active path & edge states", () => {
   assert.equal(store.getState().showPrereqMode, false);
 });
 
+test("AppStore: tooltip close preserves prerequisite display until the next blank click", () => {
+  const store = new AppStore();
+  store.dispatch({
+    type: ActionTypes.SET_GAME_DATA,
+    payload: {
+      nodes: [
+        { id: "1", name: "Parent", next_nodes: ["2"] },
+        { id: "2", name: "Child", incoming: ["1"] }
+      ],
+      edges: [{ source: "1", target: "2" }]
+    }
+  });
+  store.dispatch({ type: ActionTypes.SELECT_NODE, payload: "2" });
+  const selectedPath = store.getState().activePrereqIds;
+
+  store.dispatch({
+    type: ActionTypes.DESELECT_NODE,
+    payload: { preservePrereqDisplay: true }
+  });
+  let state = store.getState();
+  assert.equal(state.selectedNodeId, null);
+  assert.deepEqual([...state.activePrereqIds], [...selectedPath]);
+  assert.equal(state.activeEdgeIds.has("1->2"), true);
+  assert.equal(state.showPrereqMode, true);
+
+  store.dispatch({ type: ActionTypes.DESELECT_NODE });
+  state = store.getState();
+  assert.equal(state.activePrereqIds.size, 0);
+  assert.equal(state.activeEdgeIds.size, 0);
+  assert.equal(state.showPrereqMode, true);
+});
+
 test("AppStore: selection clips the four configured highlights at their start dice", () => {
   const store = new AppStore();
   const nodes = [

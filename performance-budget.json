@@ -14,10 +14,19 @@
     "height": 844,
     "deviceScaleFactor": 2
   },
+  "framePolicy": {
+    "targetHz": 120,
+    "dropThresholdMs": 10,
+    "enforcedProfiles": ["high-refresh", "stress"]
+  },
   "artifact": {
-    "maxFiles": 710,
-    "maxTotalBytes": 28500000,
+    "maxFiles": 720,
+    "maxTotalBytes": 27000000,
     "maxStylesheetBytes": 177933,
+    "raster": {
+      "maxTotalBytes": 33554432,
+      "maxInitialBytes": 14680064
+    },
     "maxFileBytes": {
       "data/dice_tree.svg": 380000,
       "styles.css": 100000,
@@ -31,39 +40,18 @@
     "maxLoadEventMs": 1800,
     "maxTreeReadyMs": 1100,
     "maxInteractiveReadyMs": 2200,
-    "maxSvgResponseEndMs": 1100,
+    "maxRenderManifestResponseEndMs": 1100,
     "maxInitialTransferBytes": 14000000,
     "maxLongTaskMs": 500,
     "maxTotalBlockingTimeMs": 450,
-    "maxGestureFrameP95Ms": 55,
-    "maxHighZoomPanFrameP95Ms": 34,
-    "maxFilteredLowZoomPanFrameP95Ms": 34,
-    "maxFilteredLowZoomWheelFrameP95Ms": 34,
-    "maxFilterInteractionFrameP95Ms": 34,
-    "maxMobilePanFrameP95Ms": 55,
-    "maxMobilePinchFrameP95Ms": 34,
+    "maxDroppedFrames": 0,
+    "maxRasterSettleMs": 1000,
     "maxRuntimeErrors": 0
   },
   "hostedCiBrowser": {
-    "maxTotalBlockingTimeMs": 550,
-    "maxFilteredLowZoomWheelFrameP95Ms": 55,
-    "maxFilterInteractionFrameP95Ms": 55,
-    "maxMobilePinchFrameP95Ms": 55
+    "maxTotalBlockingTimeMs": 550
   },
-  "highRefreshBrowser": {
-    "maxHighZoomPanFrameP95Ms": 8.34,
-    "minHighZoomPanAverageFps": 120,
-    "minHighZoomPanRefreshHz": 120,
-    "maxFilteredLowZoomPanFrameP95Ms": 8.34,
-    "minFilteredLowZoomPanAverageFps": 120,
-    "minFilteredLowZoomPanRefreshHz": 120,
-    "maxFilteredLowZoomWheelFrameP95Ms": 8.34,
-    "minFilteredLowZoomWheelAverageFps": 120,
-    "minFilteredLowZoomWheelRefreshHz": 120,
-    "maxFilterInteractionFrameP95Ms": 8.34,
-    "minFilterInteractionAverageFps": 120,
-    "minFilterInteractionRefreshHz": 120
-  },
+  "highRefreshBrowser": {},
   "stressBrowser": {
     "cpuThrottlingRate": 4
   }

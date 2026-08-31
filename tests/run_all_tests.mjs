@@ -19,7 +19,7 @@ const artifactDir = path.resolve(__dirname, '..', 'artifacts', 'test-results');
 
 function assertRuntimeSourceFresh() {
   const rootDir = path.resolve(__dirname, '..');
-  const runtimeDir = path.resolve(process.env.VERIFY_SITE_DIR || path.join(rootDir, 'site'));
+  const runtimeDir = path.resolve(process.env.VERIFY_SITE_DIR || path.join(rootDir, '.pages'));
   const allowedRuntimeDirs = [path.join(rootDir, 'site'), path.join(rootDir, '.pages')].map((directory) => path.resolve(directory));
   if (!allowedRuntimeDirs.includes(runtimeDir)) return;
   assertRuntimeFreshness({ rootDir, runtimeDir });
@@ -141,7 +141,7 @@ async function main() {
   console.log('╔════════════════════════════════════════════════════════════════════╗');
   console.log('║        RANDOM DICE 2 — UNIFIED 4-TIER E2E TEST SUITE RUNNER        ║');
   console.log('╚════════════════════════════════════════════════════════════════════╝');
-  console.log(`[Config] Suite: ${options.suite.toUpperCase()} | Browser: ${options.browser} | Headless: ${options.headless} | Root: ${process.env.VERIFY_SITE_DIR || 'site'}\n`);
+  console.log(`[Config] Suite: ${options.suite.toUpperCase()} | Browser: ${options.browser} | Headless: ${options.headless} | Root: ${process.env.VERIFY_SITE_DIR || '.pages'}\n`);
   const suiteMap = createSuiteMap();
   const suitesToRun = resolveSuiteKeys(options, suiteMap);
   const { results, allPassed } = await executeSuites(suitesToRun, suiteMap, options);

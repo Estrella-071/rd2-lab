@@ -9,14 +9,16 @@ export class ControlsView {
    * @param {import("../app/usecases/navigate_viewport.js").NavigateViewportUseCase} [dependencies.navigateViewportUseCase]
    * @param {import("../app/usecases/select_node.js").SelectNodeUseCase} [dependencies.selectNodeUseCase]
    * @param {HTMLElement} [dependencies.container]
+   * @param {object} [dependencies.renderer] Canvas tree renderer to refresh
    */
-  constructor({ store, filterTreeUseCase, navigateViewportUseCase, selectNodeUseCase, container, localization }) {
+  constructor({ store, filterTreeUseCase, navigateViewportUseCase, selectNodeUseCase, container, localization, renderer = null }) {
     this.store = store;
     this.filterTreeUseCase = filterTreeUseCase;
     this.navigateViewportUseCase = navigateViewportUseCase;
     this.selectNodeUseCase = selectNodeUseCase;
     this.container = container;
     this.localization = localization || null;
+    this.renderer = renderer;
 
     this._unsubscribe = null;
     this._keydownHandler = null;
@@ -61,6 +63,15 @@ export class ControlsView {
     ).filter((button) => !button.closest(".compendium-overlay"));
     this._bindHudButtons();
     this._setupGlobalShortcuts();
+    this._addListener(document, "rd2:viewport-settled", (event) => {
+      // Viewport updates intentionally defer the readout while a gesture or
+      // camera animation is active. Flush the final value after the motion
+      // classes are removed so the control cannot remain on the last moving
+      // frame.
+      const state = this.store?.getState?.();
+      const viewport = event?.detail?.scale !== undefined ? event.detail : state?.viewport;
+      if (viewport) this._renderZoomReadout(viewport);
+    });
     this._unsubscribe = this.store.subscribe((state, action) => this.render(state, action));
     const initialState = this.store.getState?.();
     if (initialState?.filters && initialState?.viewport) this.render(initialState);
@@ -120,6 +131,10 @@ export class ControlsView {
       }
     };
 
+    const refreshTreeState = () => {
+      this.renderer?.render?.(this.store?.getState?.() || {}, { type: "DISPLAY_FLAGS_CHANGED" });
+    };
+
     if (toggleNodeNamesBtn) {
       this._addListener(toggleNodeNamesBtn, "click", (e) => {
         e.stopPropagation();
@@ -134,6 +149,7 @@ export class ControlsView {
           // 關閉名稱
           setNodeNamesActive(false);
         }
+        refreshTreeState();
       });
     }
 
@@ -151,6 +167,7 @@ export class ControlsView {
           // 關閉貨幣
           setCurrencyActive(false);
         }
+        refreshTreeState();
       });
     }
 
@@ -321,7 +338,7 @@ export class ControlsView {
 
   _handleFactionClick(event) {
     const button = event.target.closest(".faction-filter-btn, .branch-chip, [data-faction-id], [data-branch]");
-    if (!button || button.closest(".compendium-overlay") || button.closest("#compendium-tabs")) return false;
+    if (!button || button.closest(".compendium-overlay") || button.closest("#compendium-tabs") || button.closest(".tree-semantic-layer, .tree-node-semantic")) return false;
     const branchId = Number(button.dataset.factionId || button.dataset.branch);
     if (branchId) {
       this.filterTreeUseCase.toggleFaction(branchId);
@@ -332,7 +349,7 @@ export class ControlsView {
 
   _handleNodeTypeClick(event) {
     const button = event.target.closest(".type-filter-btn, .type-chip, [data-node-type], [data-type]");
-    if (!button || button.closest(".compendium-overlay")) return false;
+    if (!button || button.closest(".compendium-overlay") || button.closest(".tree-semantic-layer, .tree-node-semantic")) return false;
     const nodeType = button.dataset.nodeType || button.dataset.type;
     if (nodeType) {
       this.filterTreeUseCase.toggleNodeType(nodeType);

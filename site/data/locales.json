@@ -88,6 +88,18 @@
       "ja": "Random Dice 2 の{name}図鑑データ：{description}",
       "ko": "Random Dice 2 {name} 도감 데이터: {description}"
     },
+    "seo.compendiumCategoryTitle": {
+      "zh-tw": "{category}｜Random Dice 2 Lab 圖鑑",
+      "en": "{category} | Random Dice 2 Lab compendium",
+      "ja": "{category}｜Random Dice 2 Lab 図鑑",
+      "ko": "{category} | Random Dice 2 Lab 도감"
+    },
+    "seo.compendiumCategoryDescription": {
+      "zh-tw": "瀏覽 Random Dice 2 的{category}資料與參考條目。",
+      "en": "Browse Random Dice 2 {category} data and reference entries.",
+      "ja": "Random Dice 2 の{category}データと参照項目を確認できます。",
+      "ko": "Random Dice 2 {category} 데이터와 참고 항목을 확인하세요."
+    },
     "seo.simulationTitle": {
       "zh-tw": "模擬配點｜Random Dice 2 Lab",
       "en": "Build simulation | Random Dice 2 Lab",
@@ -171,6 +183,12 @@
       "en": "Data loading failed. Reload to try again.",
       "ja": "データの読み込みに失敗しました。再読み込みしてください。",
       "ko": "데이터를 불러오지 못했습니다. 다시 로드해 주세요."
+    },
+    "loader.canvasSupport": {
+      "zh-tw": "地圖需要瀏覽器支援 Canvas；確認支援後再試一次。",
+      "en": "The map requires Canvas support. Check the browser and try again.",
+      "ja": "このマップには Canvas 対応ブラウザが必要です。確認して再試行してください。",
+      "ko": "이 지도에는 Canvas를 지원하는 브라우저가 필요합니다. 확인 후 다시 시도해 주세요."
     },
     "loader.retry": {
       "zh-tw": "重新載入",

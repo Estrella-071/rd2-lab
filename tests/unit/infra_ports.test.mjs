@@ -348,7 +348,7 @@ test("ViewportController: destroy followed by init reactivates the controller", 
 
   assert.equal(controller._isDestroyed, false);
   assert.equal(controller.getState().x, 50);
-  assert.equal(mockSvg.style.transform, "translate3d(50px, 0px, 0) scale(1)");
+  assert.equal(mockSvg.style.transform, "translate(50px, 0px) scale(1)");
   controller.destroy();
 });
 

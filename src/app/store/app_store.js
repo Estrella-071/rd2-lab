@@ -285,6 +285,21 @@ function reduceGolemStat(state, action) {
   };
 }
 
+function reduceDeselect(state, action) {
+  const preservePrereqDisplay = Boolean(action.payload?.preservePrereqDisplay);
+  return {
+    ...state,
+    selectedNodeId: null,
+    selectedNode: null,
+    // Closing a tooltip and leaving the temporary prerequisite display
+    // are separate gestures. Keep the calculated path for the first
+    // blank click, but never mutate the user's persistent checkbox here.
+    activePrereqIds: preservePrereqDisplay ? state.activePrereqIds : new Set(),
+    activeEdgeIds: preservePrereqDisplay ? state.activeEdgeIds : new Set(),
+    showPrereqMode: action.payload?.resetPrereqMode ? false : state.showPrereqMode
+  };
+}
+
 function normalizeSearchText(value) {
   return String(value || "").replaceAll("渾", "混").toLowerCase();
 }
@@ -418,16 +433,7 @@ export class AppStore {
     }
     if (action.type === ActionTypes.SET_DATA_METADATA) return reduceDataMetadata(state, action);
     if (action.type === ActionTypes.SELECT_NODE) return reduceSelection(state, action);
-    if (action.type === ActionTypes.DESELECT_NODE) {
-      return {
-        ...state,
-        selectedNodeId: null,
-        selectedNode: null,
-        activePrereqIds: new Set(),
-        activeEdgeIds: new Set(),
-        showPrereqMode: action.payload?.resetPrereqMode ? false : state.showPrereqMode
-      };
-    }
+    if (action.type === ActionTypes.DESELECT_NODE) return reduceDeselect(state, action);
     if (action.type === ActionTypes.SET_FILTER || action.type === ActionTypes.CLEAR_FILTERS) {
       return reduceFilters(state, action, this._computeMatchingNodes.bind(this));
     }

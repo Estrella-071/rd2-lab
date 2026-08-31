@@ -21,15 +21,21 @@ export class LoadGameDataUseCase {
    * Execute data loading workflow.
    * @param {object} [options]
    * @param {string} [options.diceTreeUrl]
-   * @param {string} [options.diceTreeSvgUrl]
+   * @param {string} [options.diceTreeSvgUrl] Legacy source-artifact override; not used by Canvas runtime
+   * @param {string} [options.renderManifestUrl]
    * @param {string} [options.bossEventsUrl]
    * @param {string} [options.monsterPostersUrl]
-   * @returns {Promise<{ treeData: object, svgText: string, bossEvents: object, monsterPosters?: object, metadata?: object, changelog?: object, locales?: object }>}
+   * @returns {Promise<{ treeData: object, svgText?: string, renderManifest?: object, bossEvents: object, monsterPosters?: object, metadata?: object, changelog?: object, locales?: object }>}
    */
   async execute(options = {}) {
-    const [treeData, svgText, bossEvents, monsterPosters, metadata, changelog, locales] = await Promise.all([
+    const [treeData, svgText, renderManifest, bossEvents, monsterPosters, metadata, changelog, locales] = await Promise.all([
       this.dataRepository.loadDiceTree(options.diceTreeUrl),
-      this.dataRepository.loadDiceTreeSvg(options.diceTreeSvgUrl),
+      options.loadLegacySvg !== false && typeof this.dataRepository.loadDiceTreeSvg === "function"
+        ? this.dataRepository.loadDiceTreeSvg(options.diceTreeSvgUrl).catch(() => null)
+        : Promise.resolve(null),
+      typeof this.dataRepository.loadRenderManifest === "function"
+        ? this.dataRepository.loadRenderManifest(options.renderManifestUrl).catch(() => null)
+        : Promise.resolve(null),
       this.dataRepository.loadBossEvents(options.bossEventsUrl),
       typeof this.dataRepository.loadMonsterPosters === "function"
         ? this.dataRepository.loadMonsterPosters(options.monsterPostersUrl).catch(() => null)
@@ -88,6 +94,6 @@ export class LoadGameDataUseCase {
       });
     }
 
-    return { treeData, svgText, bossEvents: enrichedBossEvents, monsterPosters, metadata, changelog, locales };
+    return { treeData, svgText, renderManifest, bossEvents: enrichedBossEvents, monsterPosters, metadata, changelog, locales };
   }
 }

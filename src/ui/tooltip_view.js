@@ -34,8 +34,8 @@ const SVG_ICONS = {
   awakening: `<svg class="section-icon-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
   unlock: `<svg class="section-icon-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>`,
   upgrade: `<svg class="section-icon-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>`,
-  gold: `<svg class="currency-icon-svg gold-icon" viewBox="0 0 1 1" aria-hidden="true"><use href="#sprite-185" xlink:href="#sprite-185"></use></svg>`,
-  core: `<svg class="currency-icon-svg core-icon" viewBox="0 0 1 1" aria-hidden="true"><use href="#sprite-186" xlink:href="#sprite-186"></use></svg>`,
+  gold: `<img class="currency-icon-svg gold-icon" src="icons/TreeShadow_sprite-185.png" alt="" aria-hidden="true">`,
+  core: `<img class="currency-icon-svg core-icon" src="icons/TreeShadow_sprite-186.png" alt="" aria-hidden="true">`,
 };
 
 function hasClass(el, className) {
@@ -43,6 +43,15 @@ function hasClass(el, className) {
   if (typeof el.classList.contains === "function") return el.classList.contains(className);
   if (typeof el.classList.has === "function") return el.classList.has(className);
   return false;
+}
+
+function getNodeWorldRadius(node) {
+  const type = String(node?.node_type || node?.type || "").toUpperCase();
+  if (type === "DICE") return 95;
+  if (type === "PERK") return 82;
+  if (type === "DICE_RUNE") return 64;
+  if (type === "PLAYER_PASSIVE") return node?.is_big ? 77 : 66;
+  return 66;
 }
 
 function addClass(el, ...classNames) {
@@ -392,15 +401,17 @@ export class TooltipView {
    * @param {import("../app/usecases/navigate_viewport.js").NavigateViewportUseCase} [dependencies.navigateViewportUseCase]
    * @param {HTMLElement} [dependencies.tooltipElement]
    * @param {Map<string, { x: number, y: number }>} [dependencies.nodePositions]
+   * @param {object} [dependencies.renderer] Canvas renderer used for screen-space anchors
    * @param {Record<string, object>} [dependencies.tagDefinitions]
    * @param {import("../domain/localization.js").LocalizationService} [dependencies.localization]
    */
-  constructor({ store, selectNodeUseCase, navigateViewportUseCase, tooltipElement, nodePositions = new Map(), tagDefinitions = {}, localization }) {
+  constructor({ store, selectNodeUseCase, navigateViewportUseCase, tooltipElement, nodePositions = new Map(), tagDefinitions = {}, localization, renderer = null }) {
     this.store = store;
     this.selectNodeUseCase = selectNodeUseCase;
     this.navigateViewportUseCase = navigateViewportUseCase;
     this.tooltipEl = tooltipElement;
     this.nodePositions = nodePositions;
+    this.renderer = renderer;
     this.tagDefinitions = tagDefinitions || {};
     this.localization = localization || null;
 
@@ -423,6 +434,7 @@ export class TooltipView {
     this._unsubscribe = null;
     this._currentNodeId = null;
     this._closingNodeId = null;
+    this._closingPosition = null;
     this._tagPopoverKey = null;
     this._bonusPopoverTarget = null;
     this._initialized = false;
@@ -446,7 +458,8 @@ export class TooltipView {
     };
     this._boundWindowResize = () => {
       this._tooltipDimensionsDirty = true;
-      const targetId = this._currentNodeId || this._closingNodeId;
+      if (this._closingPosition) return;
+      const targetId = this._getTooltipPositionTargetId();
       const state = this.store?.getState?.();
       if (targetId && state && this.tooltipEl && !this.tooltipEl.hidden) {
         this._positionTooltip(targetId, state);
@@ -474,9 +487,15 @@ export class TooltipView {
     }
     this._boundViewportDrag = () => {
       if (this.store && this.selectNodeUseCase) {
-        const currentSelectedId = this.store.getState()?.selectedNodeId;
+        const state = this.store.getState?.() || {};
+        const currentSelectedId = state.selectedNodeId;
         if (currentSelectedId) {
-          this.selectNodeUseCase.execute(null);
+          const preservePrereqDisplay = Boolean(state.showPrereqMode && state.activePrereqIds?.size);
+          if (typeof this.selectNodeUseCase.deselect === "function") {
+            this.selectNodeUseCase.deselect({ preservePrereqDisplay });
+          } else {
+            this.selectNodeUseCase.execute(null);
+          }
         }
       }
     };
@@ -494,14 +513,31 @@ export class TooltipView {
 
   _handleViewportUpdate(state) {
     if (!this.tooltipEl || this.tooltipEl.hidden) return;
+    if (this._closingPosition) return;
 
-    const selectedNodeId = state?.selectedNodeId;
-    if (selectedNodeId && String(this._currentNodeId) === String(selectedNodeId)) {
-      this._positionTooltip(selectedNodeId, state);
+    const closingNodeId = this._getTooltipPositionTargetId();
+    if (closingNodeId && String(closingNodeId) !== String(this._currentNodeId)) {
+      this._positionTooltipAfterViewportUpdate(closingNodeId, state);
       return;
     }
 
-    if (this._closingNodeId) this._positionTooltip(this._closingNodeId, state);
+    const selectedNodeId = state?.selectedNodeId;
+    if (selectedNodeId && String(this._currentNodeId) === String(selectedNodeId)) {
+      this._positionTooltipAfterViewportUpdate(selectedNodeId, state);
+      return;
+    }
+
+    if (this._closingNodeId) this._positionTooltipAfterViewportUpdate(this._closingNodeId, state);
+  }
+
+  _isViewportMoving() {
+    return typeof document !== "undefined"
+      && (document.body?.classList?.contains("is-navigating")
+        || document.body?.classList?.contains("is-zooming"));
+  }
+
+  _positionTooltipAfterViewportUpdate(nodeId, state) {
+    this._positionTooltip(nodeId, state);
   }
 
   _handleClick(e) {
@@ -702,6 +738,58 @@ export class TooltipView {
     if (restoreFocus && typeof targetEl?.focus === "function") targetEl.focus();
   }
 
+  _clearEnterSwitchTimers() {
+    if (this._enterTimer) {
+      clearTimeout(this._enterTimer);
+      this._enterTimer = null;
+    }
+    if (this._switchTimer) {
+      clearTimeout(this._switchTimer);
+      this._switchTimer = null;
+    }
+  }
+
+  _resetClosedTooltipState() {
+    this._currentNodeId = null;
+    this._closingNodeId = null;
+    this._closingPosition = null;
+  }
+
+  _closeImmediately() {
+    if (this._closeTimer) {
+      clearTimeout(this._closeTimer);
+      this._closeTimer = null;
+    }
+    this.tooltipEl.hidden = true;
+    removeClass(this.tooltipEl, "is-visible", "is-active", "is-closing", "is-entering");
+    if (typeof document !== "undefined") document.body?.classList?.remove("has-active-tooltip");
+    if (typeof this.tooltipEl.setAttribute === "function") this.tooltipEl.setAttribute("aria-hidden", "true");
+    this._resetClosedTooltipState();
+  }
+
+  _closeWithTransition() {
+    const isActive = hasClass(this.tooltipEl, "is-active") || !this.tooltipEl.hidden;
+    if (this.tooltipEl.hidden && !isActive) return;
+    if (!this._closingNodeId) this._closingNodeId = this._currentNodeId;
+
+    removeClass(this.tooltipEl, "is-entering");
+    addClass(this.tooltipEl, "is-closing");
+    if (this._closingNodeId && !this._closingPosition) {
+      const state = this.store?.getState?.();
+      if (state) this._positionTooltip(this._closingNodeId, state);
+      this._lockClosingPosition();
+    }
+    if (typeof document !== "undefined") document.body?.classList?.remove("has-active-tooltip");
+    if (this._closeTimer) clearTimeout(this._closeTimer);
+    this._closeTimer = setTimeout(() => {
+      this.tooltipEl.hidden = true;
+      removeClass(this.tooltipEl, "is-visible", "is-active", "is-closing", "is-entering");
+      if (typeof this.tooltipEl.setAttribute === "function") this.tooltipEl.setAttribute("aria-hidden", "true");
+      this._resetClosedTooltipState();
+      this._closeTimer = null;
+    }, 140);
+  }
+
   /**
    * Close tooltip with smooth exit transition.
    * @param {boolean} [immediate]
@@ -711,49 +799,9 @@ export class TooltipView {
     this.hideTagPopover();
     this.hideBonusPopover();
     this._browsePreviewRanks.clear();
-    if (this._enterTimer) { clearTimeout(this._enterTimer); this._enterTimer = null; }
-    if (this._switchTimer) { clearTimeout(this._switchTimer); this._switchTimer = null; }
-
-    if (immediate) {
-      if (this._closeTimer) { clearTimeout(this._closeTimer); this._closeTimer = null; }
-      this.tooltipEl.hidden = true;
-      removeClass(this.tooltipEl, "is-visible", "is-active", "is-closing", "is-entering");
-      if (typeof document !== "undefined") {
-        document.body?.classList?.remove("has-active-tooltip");
-      }
-      if (typeof this.tooltipEl.setAttribute === "function") {
-        this.tooltipEl.setAttribute("aria-hidden", "true");
-      }
-      this._currentNodeId = null;
-      this._closingNodeId = null;
-      return;
-    }
-
-    const isActive = hasClass(this.tooltipEl, "is-active") || !this.tooltipEl.hidden;
-    if (this.tooltipEl.hidden && !isActive) {
-      return;
-    }
-
-    if (!this._closingNodeId) {
-      this._closingNodeId = this._currentNodeId;
-    }
-
-    removeClass(this.tooltipEl, "is-entering");
-    addClass(this.tooltipEl, "is-closing");
-    if (typeof document !== "undefined") {
-      document.body?.classList?.remove("has-active-tooltip");
-    }
-    if (this._closeTimer) clearTimeout(this._closeTimer);
-    this._closeTimer = setTimeout(() => {
-      this.tooltipEl.hidden = true;
-      removeClass(this.tooltipEl, "is-visible", "is-active", "is-closing", "is-entering");
-      if (typeof this.tooltipEl.setAttribute === "function") {
-        this.tooltipEl.setAttribute("aria-hidden", "true");
-      }
-      this._currentNodeId = null;
-      this._closingNodeId = null;
-      this._closeTimer = null;
-    }, 140);
+    this._clearEnterSwitchTimers();
+    if (immediate) this._closeImmediately();
+    else this._closeWithTransition();
   }
 
   /**
@@ -776,6 +824,7 @@ export class TooltipView {
     if (!this._closingNodeId) this._closingNodeId = this._currentNodeId;
     this.close(false);
     if (this._closingNodeId) this._positionTooltip(this._closingNodeId, state);
+    this._lockClosingPosition();
   }
 
   _refreshActiveContent(state, selectedNodeId, selectedNode) {
@@ -812,6 +861,7 @@ export class TooltipView {
     if (this._closeTimer) { clearTimeout(this._closeTimer); this._closeTimer = null; }
     if (this._enterTimer) { clearTimeout(this._enterTimer); this._enterTimer = null; }
     if (this._switchTimer) { clearTimeout(this._switchTimer); this._switchTimer = null; }
+    this._closingPosition = null;
 
     const oldSelectedId = this._currentNodeId;
     this._currentNodeId = selectedNodeId;
@@ -829,15 +879,27 @@ export class TooltipView {
     }
     this.tooltipEl.hidden = true;
     this._closingNodeId = null;
-    this._enterTimer = setTimeout(() => {
+    // Enter immediately so navigation can measure the real card before the
+    // camera transition starts. The CSS spring still supplies the visual
+    // entrance animation; delaying DOM creation made the first samples use a
+    // guessed height and caused a visible placement jump.
+    this._enterTooltip(selectedNodeId, selectedNode, state);
+  }
+
+  _scheduleTooltipEnter(selectedNodeId, selectedNode, state, delay = 0) {
+    if (this._enterTimer) clearTimeout(this._enterTimer);
+    const attempt = () => {
+      this._enterTimer = null;
       const latestState = this.store?.getState?.() || state;
+      if (String(latestState.selectedNodeId || "") !== String(selectedNodeId)) return;
       const latestNode = latestState.nodesMap?.get(String(selectedNodeId)) || selectedNode;
       this._enterTooltip(selectedNodeId, latestNode, latestState);
-      this._enterTimer = null;
-    }, 180);
+    };
+    this._enterTimer = setTimeout(attempt, Math.max(0, delay));
   }
 
   _enterTooltip(selectedNodeId, selectedNode, state) {
+    this._closingPosition = null;
     this._contentNeedsRender = false;
     this._renderFullContent(selectedNode, state);
     removeClass(this.tooltipEl, "is-closing");
@@ -860,20 +922,18 @@ export class TooltipView {
 
   _switchTooltipSelection(oldSelectedId, selectedNodeId, selectedNode, state) {
     this._closingNodeId = oldSelectedId;
+    this._closingPosition = null;
     removeClass(this.tooltipEl, "is-entering");
     addClass(this.tooltipEl, "is-closing");
     this._positionTooltip(this._closingNodeId, state);
+    this._lockClosingPosition();
     this._switchTimer = setTimeout(() => {
       this.tooltipEl.hidden = true;
       this._closingNodeId = null;
+      this._closingPosition = null;
       removeClass(this.tooltipEl, "is-closing", "is-active", "is-visible");
       this._switchTimer = null;
-      this._enterTimer = setTimeout(() => {
-        const latestState = this.store?.getState?.() || state;
-        const latestNode = latestState.nodesMap?.get(String(selectedNodeId)) || selectedNode;
-        this._enterTooltip(selectedNodeId, latestNode, latestState);
-        this._enterTimer = null;
-      }, 80);
+      this._scheduleTooltipEnter(selectedNodeId, selectedNode, state, 0);
     }, 130);
   }
 
@@ -904,9 +964,18 @@ export class TooltipView {
       document.removeEventListener("rd2:viewport-drag", this._boundViewportDrag);
     }
     this._initialized = false;
+    this._closingPosition = null;
   }
 
   _positionTooltip(selectedNodeId, state) {
+    if (this._closingPosition) return;
+    if (
+      hasClass(this.tooltipEl, "is-closing")
+      && this._closingNodeId
+      && String(selectedNodeId) !== String(this._closingNodeId)
+    ) {
+      return;
+    }
     const pos = this.nodePositions.get(String(selectedNodeId));
     const node = state.nodesMap?.get(String(selectedNodeId)) || state.selectedNode;
     const isBelow = this._resolveTooltipPlacement(selectedNodeId, state, pos);
@@ -915,6 +984,25 @@ export class TooltipView {
     if (!pos || typeof window === "undefined") return;
     const finalPlacement = this._applyTooltipScreenPosition(pos, node, state, isBelow);
     this.tooltipEl.classList.toggle("is-placed-below", finalPlacement);
+  }
+
+  _lockClosingPosition() {
+    if (!this.tooltipEl || !hasClass(this.tooltipEl, "is-closing")) return;
+    this._closingPosition = {
+      left: this.tooltipEl.style?.left || "",
+      top: this.tooltipEl.style?.top || "",
+      arrowX: typeof this.tooltipEl.style?.getPropertyValue === "function"
+        ? this.tooltipEl.style.getPropertyValue("--tooltip-arrow-x")
+        : "",
+      isPlacedBelow: hasClass(this.tooltipEl, "is-placed-below")
+    };
+  }
+
+  _getTooltipPositionTargetId() {
+    if (this._closingNodeId && hasClass(this.tooltipEl, "is-closing")) {
+      return this._closingNodeId;
+    }
+    return this._currentNodeId || this._closingNodeId;
   }
 
   _resolveTooltipPlacement(selectedNodeId, state, pos) {
@@ -935,24 +1023,46 @@ export class TooltipView {
     const isMobile = window.innerWidth <= 768;
     const viewport = state.viewport || { scale: 1.0, x: 0, y: 0 };
     const scale = viewport.scale || 1.0;
-    const screenX = (viewport.x || 0) + pos.x * scale;
+    const isCameraMoving = typeof document !== "undefined"
+      && (document.body?.classList?.contains("is-navigating")
+        || document.body?.classList?.contains("is-zooming"));
+    // Reading the semantic button's client rect after every camera sample
+    // forces layout before the tooltip write. During a camera animation the
+    // world point is exact enough and keeps the animation on the compositor.
+    const anchorRect = isCameraMoving ? null : (this.renderer?.getNodeScreenRect?.(node?.id) || null);
+    const hasScreenAnchor = anchorRect
+      && Number.isFinite(Number(anchorRect.left))
+      && Number.isFinite(Number(anchorRect.top))
+      && Number.isFinite(Number(anchorRect.width))
+      && Number.isFinite(Number(anchorRect.height));
+    const screenX = hasScreenAnchor
+      ? Number(anchorRect.left) + Number(anchorRect.width) / 2
+      : (viewport.x || 0) + pos.x * scale;
+    const screenY = hasScreenAnchor
+      ? Number(anchorRect.top) + Number(anchorRect.height) / 2
+      : (viewport.y || 0) + pos.y * scale;
+    const nodeWorldRadius = getNodeWorldRadius(node);
+    const screenNodeRadius = hasScreenAnchor
+      ? Math.max(Number(anchorRect.width), Number(anchorRect.height)) / 2
+      : null;
     const isLarge = node && ((node.node_type || node.type) === "DICE" || (node.node_type || node.type) === "PERK");
     const gap = isMobile ? 16 : 14;
     const dimensions = this._readTooltipDimensions(isMobile);
     const padding = isMobile ? 12 : 16;
     const placement = computeTooltipScreenCoordinates({
-      pt: pos,
-      scale,
-      panX: viewport.x || 0,
-      panY: viewport.y || 0,
+      pt: hasScreenAnchor ? { x: screenX, y: screenY } : pos,
+      scale: hasScreenAnchor ? 1 : scale,
+      panX: hasScreenAnchor ? 0 : (viewport.x || 0),
+      panY: hasScreenAnchor ? 0 : (viewport.y || 0),
       nodeType: node?.node_type || node?.type,
       isLarge,
+      nodeRadius: nodeWorldRadius,
+      ...(Number.isFinite(screenNodeRadius) ? { screenNodeRadius } : {}),
       tipWidth: dimensions.width,
       tipHeight: dimensions.height,
       placeBelow: isBelow,
       gap,
       viewportWidth: window.innerWidth,
-      viewportHeight: window.innerHeight,
       viewportPadding: padding
     });
     const roundedLeft = placement.left;

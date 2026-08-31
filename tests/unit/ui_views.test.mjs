@@ -124,24 +124,30 @@ function createMockElement(tagName = "div", attrs = {}) {
   return element;
 }
 
-test("TreeView: Renders node classes and handles click selection", () => {
+test("TreeView: delegates Canvas rendering and semantic button selection", () => {
   const store = new AppStore();
   const selectNodeUseCase = new SelectNodeUseCase({ store });
   const navigateViewportUseCase = new NavigateViewportUseCase({ store, viewportController: { pan(){}, zoom(){}, centerOn(){} } });
+  const interactionOrder = [];
+  const originalCenterOnNodeForTooltip = navigateViewportUseCase.centerOnNodeForTooltip.bind(navigateViewportUseCase);
+  navigateViewportUseCase.centerOnNodeForTooltip = (...args) => {
+    interactionOrder.push("center");
+    return originalCenterOnNodeForTooltip(...args);
+  };
 
   const container = createMockElement("div");
-  const svg = createMockElement("svg");
+  const scene = createMockElement("div");
+  scene.classList.add("map-scene");
+  container.appendChild(scene);
 
-  const node1 = createMockElement("g", { id: "node-101" });
-  node1.classList.add("tree-node");
+  const node1 = createMockElement("button", { id: "node-101" });
+  node1.classList.add("tree-node-semantic", "tree-node");
   node1.dataset.nodeId = "101";
-
-  const node2 = createMockElement("g", { id: "node-102" });
-  node2.classList.add("tree-node");
+  const node2 = createMockElement("button", { id: "node-102" });
+  node2.classList.add("tree-node-semantic", "tree-node");
   node2.dataset.nodeId = "102";
-
-  svg.appendChild(node1);
-  svg.appendChild(node2);
+  container.appendChild(node1);
+  container.appendChild(node2);
 
   store.dispatch({
     type: "SET_GAME_DATA",
@@ -154,51 +160,45 @@ test("TreeView: Renders node classes and handles click selection", () => {
     }
   });
 
+  const renderActions = [];
+  const renderer = {
+    render: (_state, action) => {
+      renderActions.push(action?.type || null);
+      if (action?.type === "SELECT_NODE") interactionOrder.push("render");
+    },
+    pauseBackgroundRenders: () => interactionOrder.push("pause"),
+    refreshLocalizedLabels: () => {},
+    destroy: () => {}
+  };
   const treeView = new TreeView({
     store,
     selectNodeUseCase,
     navigateViewportUseCase,
     container,
-    svgElement: svg
+    mapScene: scene,
+    renderer
   });
   treeView.init();
   treeView.init();
   assert.equal(container.listenerCount("click"), 1);
-  assert.equal(node1.listenerCount("pointerdown"), 1);
-  assert.equal(node1.getAttribute("role"), "button");
-  assert.equal(node1.getAttribute("tabindex"), "0");
-  assert.equal(node1.getAttribute("aria-label"), "風骰子");
-  assert.equal(node1.classList.has("node-type-dice"), true);
-  assert.equal(node2.classList.has("node-type-player-passive"), true);
-  assert.equal(node2.classList.has("node-size-large"), true);
-  assert.equal(node2.classList.has("node-size-small"), false);
+  assert.deepEqual(renderActions, [null]);
 
-  let viewportRenderCount = 0;
-  const originalRender = treeView.render.bind(treeView);
-  treeView.render = (state) => {
-    viewportRenderCount += 1;
-    return originalRender(state);
-  };
   store.dispatch({ type: "UPDATE_VIEWPORT", payload: { x: 20, y: 10, scale: 0.8 } });
-  assert.equal(viewportRenderCount, 0);
+  assert.equal(renderActions.at(-1), "UPDATE_VIEWPORT");
 
-  node1.dispatchEvent("keydown", {
-    key: "Enter",
-    preventDefault() {},
-    stopPropagation() {}
-  });
+  container.dispatchEvent("click", { target: node1 });
   assert.equal(store.getState().selectedNodeId, "101");
+  assert.deepEqual(interactionOrder, ["pause", "render", "center"],
+    "A semantic click must commit the Canvas state before starting tooltip camera navigation");
 
   // Select node 102
   selectNodeUseCase.execute("102");
   treeView.render(store.getState());
-
-  assert.equal(node2.classList.has("is-selected"), true);
-  assert.equal(node1.classList.has("is-active-path"), true);
+  assert.equal(renderActions.at(-1), null);
+  assert.equal(treeView.nodesMap.get("101").name, "風骰子");
 
   treeView.destroy();
   assert.equal(container.listenerCount("click"), 0);
-  assert.equal(node1.listenerCount("pointerdown"), 0);
   treeView.destroy();
 });
 
@@ -416,39 +416,27 @@ test("TooltipView: reuses measured dimensions during viewport motion", () => {
   }
 });
 
-test("TreeView: locale refresh resizes an existing node name badge", () => {
-  const makeRect = () => {
-    const attributes = {};
-    return {
-      attributes,
-      setAttribute: (name, value) => { attributes[name] = String(value); }
-    };
+test("TreeView: locale refresh forwards to the Canvas renderer", () => {
+  const container = createMockElement("div");
+  const renderActions = [];
+  const refreshedLocalizations = [];
+  const state = { nodesMap: new Map(), treeData: { nodes: [], edges: [] } };
+  const renderer = {
+    refreshLocalizedLabels: (localization) => refreshedLocalizations.push(localization),
+    render: (_state, action) => renderActions.push(action?.type || null)
   };
-  const rects = [makeRect(), makeRect()];
-  const badgeText = {
-    textContent: "",
-    setAttribute: () => {}
-  };
-  const badge = {
-    querySelectorAll: () => rects,
-    querySelector: () => badgeText
-  };
-  const element = { querySelector: () => badge };
   const treeView = new TreeView({
-    store: {},
+    store: { getState: () => state },
     selectNodeUseCase: {},
-    navigateViewportUseCase: {}
+    navigateViewportUseCase: {},
+    container,
+    renderer
   });
 
-  treeView._updateNodeNameBadge(element, { node_type: "DICE", name_zh: "Flower Dice" });
-  const firstWidth = Number(rects[0].attributes.width);
-  treeView._updateNodeNameBadge(element, { node_type: "DICE", name_zh: "花骰子" });
-
-  assert(firstWidth > Number(rects[0].attributes.width));
-  assert.equal(rects[0].attributes.width, "76");
-  assert.equal(rects[0].attributes.x, "-38");
-  assert.equal(rects[1].attributes.width, "73");
-  assert.equal(badgeText.textContent, "花骰子");
+  const localization = { getLocale: () => "en" };
+  treeView.refreshLocalizedLabels(localization);
+  assert.deepEqual(refreshedLocalizations, [localization]);
+  assert.deepEqual(renderActions, ["LOCALE_CHANGED"]);
 });
 
 test("TooltipView: locale changes force an active tooltip content refresh", () => {
@@ -515,6 +503,51 @@ test("TooltipView: viewport updates reposition without rerendering content", () 
   assert.equal(renderCount, 0);
   assert.equal(positionCount, 1);
   tooltipView.destroy();
+});
+
+test("TooltipView: keeps a closing tooltip anchored to its previous node", () => {
+  const tooltipEl = createMockElement("div");
+  tooltipEl.hidden = false;
+  tooltipEl.classList.add("is-active", "is-closing");
+  const state = {
+    selectedNodeId: "new",
+    selectedNode: { id: "new", node_type: "DICE" },
+    viewport: { x: 0, y: 0, scale: 1 }
+  };
+  const positionCalls = [];
+  const previousWindow = globalThis.window;
+  const tooltipView = new TooltipView({
+    store: { getState: () => state },
+    selectNodeUseCase: {},
+    tooltipElement: tooltipEl
+  });
+
+  try {
+    globalThis.window = { innerWidth: 390, innerHeight: 844 };
+    tooltipView._positionTooltip = (nodeId) => {
+      positionCalls.push(String(nodeId));
+      tooltipEl.style.left = "42px";
+      tooltipEl.style.top = "84px";
+    };
+    tooltipView._currentNodeId = "new";
+    tooltipView._switchTooltipSelection("old", "new", state.selectedNode, state);
+    assert.deepEqual(tooltipView._closingPosition, {
+      left: "42px",
+      top: "84px",
+      arrowX: "",
+      isPlacedBelow: false
+    });
+    tooltipView._handleViewportUpdate(state);
+    tooltipView._boundWindowResize();
+  } finally {
+    if (tooltipView._switchTimer) clearTimeout(tooltipView._switchTimer);
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+
+  assert.deepEqual(positionCalls, ["old"]);
+  assert.equal(tooltipEl.style.left, "42px");
+  assert.equal(tooltipEl.style.top, "84px");
 });
 
 test("TooltipView: simulation changes refresh visible content during an entrance transition", () => {
@@ -711,27 +744,21 @@ test("ControlsView: defers zoom readout mutations while navigating", () => {
   }
 });
 
-test("TreeView: filter-only render skips simulation badge queries", () => {
-  const svg = createMockElement("svg");
-  const node = createMockElement("g");
-  node.dataset.nodeId = "101";
-  let queryCount = 0;
-  const originalQuerySelector = node.querySelector;
-  node.querySelector = (selector) => {
-    queryCount += 1;
-    return originalQuerySelector(selector);
-  };
+test("TreeView: filter-only render delegates to Canvas without node DOM queries", () => {
+  const scene = createMockElement("div");
+  scene.classList.add("map-scene");
+  const container = createMockElement("div");
+  const renderActions = [];
+  const renderer = { render: (_state, action) => renderActions.push(action?.type || null) };
 
   const view = new TreeView({
     store: { subscribe: () => () => {}, getState: () => ({}) },
     selectNodeUseCase: {},
     navigateViewportUseCase: {},
-    svgElement: svg
+    container,
+    mapScene: scene,
+    renderer
   });
-  view.nodesMap = new Map([["101", node]]);
-  view.parsedEdges = [];
-  view.cachedCenterLinks = [];
-  view.cachedBranchMarks = [];
 
   view.render({
     selectedNodeId: null,
@@ -748,8 +775,43 @@ test("TreeView: filter-only render skips simulation badge queries", () => {
     simulation: { active: false, ranks: {} }
   }, { type: "SET_FILTER" });
 
-  assert.equal(queryCount, 0);
-  assert.equal(node.classList.contains("is-highlight-match"), true);
+  assert.deepEqual(renderActions, ["SET_FILTER"]);
+  assert.equal(scene.classList.contains("has-tree-filter"), true);
+});
+
+test("TreeView: blank dismissal separates tooltip close from prerequisite exit", () => {
+  const previousWindow = globalThis.window;
+  const scene = createMockElement("div");
+  scene.classList.add("map-scene");
+  const container = createMockElement("div");
+  const calls = [];
+  const view = new TreeView({
+    store: {
+      getState: () => ({
+        selectedNodeId: calls.length === 0 ? "2" : null,
+        showPrereqMode: true,
+        activePrereqIds: new Set(["1", "2"])
+      })
+    },
+    selectNodeUseCase: {
+      deselect: (options) => calls.push(options)
+    },
+    navigateViewportUseCase: {},
+    container,
+    mapScene: scene,
+    renderer: null
+  });
+
+  globalThis.window = { innerWidth: 1280 };
+  try {
+    view._dismissSelection();
+    assert.deepEqual(calls[0], { preservePrereqDisplay: true });
+    view._dismissSelection();
+    assert.deepEqual(calls[1], undefined);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
 });
 
 test("ControlsView: Toggles Show Names and Show Currency mutually exclusively", () => {

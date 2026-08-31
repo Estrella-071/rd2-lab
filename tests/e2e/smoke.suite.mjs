@@ -30,9 +30,7 @@ async function runLocaleChecks(page, localeChecks) {
     const renderedUnlockLabels = await page.evaluate((ids) => Object.fromEntries(
       Object.keys(ids).map((id) => [
         id,
-        document.querySelector(`g.node[data-node-id="${id}"] .cost-badge .cost-special-label`)?.textContent.trim()
-          || document.querySelector(`g.node[data-node-id="${id}"] .cost-badge .cost-value`)?.textContent.trim()
-          || '',
+        document.querySelector(`button.tree-node-semantic[data-node-id="${id}"]`)?.dataset.unlockLabel || '',
       ]),
     ), unlockLabels);
     for (const [id, expectedLabel] of Object.entries(unlockLabels)) {
@@ -98,33 +96,34 @@ export async function runSmokeSuite(options = {}) {
       recordLoaderState();
     });
 
-    // Failure injection: SVG markup is a required runtime asset. Unsafe
-    // markup must fail closed before it reaches the map scene innerHTML sink.
-    let failSvgRequest = true;
-    await page.route('**/data/dice_tree.svg', async (route) => {
-      if (failSvgRequest) {
-        failSvgRequest = false;
+    // Failure injection: the Canvas render manifest is a required runtime
+    // asset. An invalid manifest must fail closed before an incomplete map is
+    // exposed, with a retry path for the subsequent valid response.
+    let failManifestRequest = true;
+    await page.route('**/map-render-manifest.json', async (route) => {
+      if (failManifestRequest) {
+        failManifestRequest = false;
         await route.fulfill({
           status: 200,
-          contentType: 'image/svg+xml',
-          body: '<svg xmlns="http://www.w3.org/2000/svg"><image href="data:image/svg+xml,%3Csvg%20onload%3D%22window.__svgInjection%3Dtrue%22%2F%3E" /></svg>',
+          contentType: 'application/json',
+          body: JSON.stringify({ schema_version: 999, nodes: [], edges: [] }),
         });
         return;
       }
       await route.continue();
     });
-    await page.goto(`${baseUrl}/index.html?svg-failure-injection=1`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/index.html?manifest-failure-injection=1`, { waitUntil: 'networkidle' });
     await page.waitForSelector('#loader-retry-btn:not([hidden])', { timeout: 3000 });
-    const svgFailureState = await page.$eval('#loading-screen', (el) => ({
+    const manifestFailureState = await page.$eval('#loading-screen', (el) => ({
       hidden: el.hidden,
       isError: el.classList.contains('is-error'),
-      hasInjectedScene: Boolean(document.querySelector('#scene svg')),
+      hasIncompleteScene: Boolean(document.querySelector('#scene canvas, #scene .tree-semantic-layer')),
     }));
-    assert(!svgFailureState.hidden, 'Unsafe SVG must keep the loader visible');
-    assert(svgFailureState.isError, 'Unsafe SVG must expose a bootstrap error state');
-    assert(!svgFailureState.hasInjectedScene, 'Unsafe SVG must not reach the map scene');
+    assert(!manifestFailureState.hidden, 'Invalid Canvas manifest must keep the loader visible');
+    assert(manifestFailureState.isError, 'Invalid Canvas manifest must expose a bootstrap error state');
+    assert(!manifestFailureState.hasIncompleteScene, 'Invalid Canvas manifest must not reach the map scene');
     passedAssertions += 3;
-    await page.unroute('**/data/dice_tree.svg');
+    await page.unroute('**/map-render-manifest.json');
 
     // Failure injection: malformed required event data must also fail closed
     // instead of rendering an empty compendium and hiding the loader.
@@ -146,11 +145,11 @@ export async function runSmokeSuite(options = {}) {
     const malformedDataState = await page.$eval('#loading-screen', (el) => ({
       hidden: el.hidden,
       isError: el.classList.contains('is-error'),
-      hasInjectedScene: Boolean(document.querySelector('#scene svg')),
+      hasIncompleteScene: Boolean(document.querySelector('#scene canvas, #scene .tree-semantic-layer')),
     }));
     assert(!malformedDataState.hidden, 'Malformed event data must keep the loader visible');
     assert(malformedDataState.isError, 'Malformed event data must expose a bootstrap error state');
-    assert(!malformedDataState.hasInjectedScene, 'Malformed event data must not complete the bootstrap');
+    assert(!malformedDataState.hasIncompleteScene, 'Malformed event data must not complete the bootstrap');
     passedAssertions += 3;
     await page.unroute('**/boss_event_data.json');
 
@@ -242,9 +241,9 @@ export async function runSmokeSuite(options = {}) {
     assert(!failureState.retryDisabled && failureState.activeId === 'loader-retry-btn', 'Retry button must be actionable and receive focus after failure');
     passedAssertions += 4;
     await page.click('#loader-retry-btn');
-    await page.waitForSelector('g.node[data-node-id]', { timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
     await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
-    assertEqual(await page.$$eval('g.node[data-node-id]', (els) => els.length), 239, 'Retry must restore the canonical tree');
+    assertEqual(await page.$$eval('button.tree-node-semantic[data-node-id]', (els) => els.length), 239, 'Retry must restore the canonical tree');
     passedAssertions++;
     await page.unroute('**/data/dice_tree.json');
 
@@ -313,7 +312,7 @@ export async function runSmokeSuite(options = {}) {
       const malformedChangelogState = await malformedChangelogPage.$eval('#loading-screen', (el) => ({
         loaderHidden: el.hidden,
         appInitialized: Boolean(window.RD2App?._initialized),
-        treeNodeCount: document.querySelectorAll('g.node[data-node-id]').length
+        treeNodeCount: document.querySelectorAll('button.tree-node-semantic[data-node-id]').length
       }));
       assert(malformedChangelogState.loaderHidden, 'Malformed optional changelog must not keep the loader visible');
       assert(malformedChangelogState.appInitialized, 'Malformed optional changelog must not abort application bootstrap');
@@ -363,8 +362,8 @@ export async function runSmokeSuite(options = {}) {
     assertEqual(runtimeAssertion.runtime, 'ready', 'App runtime should be ready');
     passedAssertions += 1;
 
-    await page.waitForSelector('g.node[data-node-id]', { timeout: 4000 });
-    const httpNodeCount = await page.$$eval('g.node[data-node-id]', els => els.length);
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 4000 });
+    const httpNodeCount = await page.$$eval('button.tree-node-semantic[data-node-id]', els => els.length);
     assertEqual(httpNodeCount, 239, 'Must render exactly 239 tree nodes in DOM');
     passedAssertions++;
 
@@ -409,11 +408,11 @@ export async function runSmokeSuite(options = {}) {
     passedAssertions += 3;
 
     // 5. 快速節點點擊與 Tooltip 驗證 (Node 1001: 自然派系 火骰子)
-    const node1001 = await page.$('g.node[data-node-id="1001"]');
+    const node1001 = await page.$('button.tree-node-semantic[data-node-id="1001"]');
     assert(node1001, 'Node 1001 must exist');
     await page.evaluate(() => {
-      const el = document.querySelector('g.node[data-node-id="1001"]');
-      if (el) el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      const el = document.querySelector('button.tree-node-semantic[data-node-id="1001"]');
+      if (el) el.click();
     });
     await page.waitForSelector('#tooltip:not([hidden])', { timeout: 2000 });
 
@@ -630,16 +629,26 @@ export async function runSmokeSuite(options = {}) {
           });
           controller.init(container, scene, { initialScale: 1, initialX: 0, initialY: 0 });
           document.body.classList.remove('is-zooming', 'is-navigating');
+          const firstGestureState = controller._gestureState;
           wheel();
-          await new Promise((resolve) => setTimeout(resolve, 50));
+          const firstZoomTimer = firstGestureState?.zoomingTimer;
           controller.destroy();
+          const staleTimerCleared = firstGestureState?.zoomingTimer === null;
           controller.init(container, scene, { initialScale: 1, initialX: 0, initialY: 0 });
+          const secondGestureState = controller._gestureState;
           wheel();
           const activeAfterReinit = document.body.classList.contains('is-zooming');
-          await new Promise((resolve) => setTimeout(resolve, 320));
-          const activeBeforeNewTimer = document.body.classList.contains('is-zooming');
+          const newTimerOwned = Boolean(secondGestureState?.zoomingTimer)
+            && secondGestureState !== firstGestureState
+            && secondGestureState.zoomingTimer !== firstZoomTimer;
+          await new Promise((resolve) => setTimeout(resolve, 12));
+          const activeDuringNewTimer = document.body.classList.contains('is-zooming');
           controller.destroy();
-          return activeAfterReinit && activeBeforeNewTimer;
+          return Boolean(firstZoomTimer)
+            && staleTimerCleared
+            && activeAfterReinit
+            && newTimerOwned
+            && activeDuringNewTimer;
         })();
         await new Promise((resolve) => setTimeout(resolve, 950));
         const rootViewportPreservedAfterBootstrap = rootApp.viewportController._state.scale === 2
@@ -745,7 +754,7 @@ export async function runSmokeSuite(options = {}) {
         window.__BLOCK_DISMISS_LOADER__ = true;
       });
       await loaderRacePage.goto(`${baseUrl}/index.html?loader-race-probe=1`, { waitUntil: 'networkidle' });
-      await loaderRacePage.waitForSelector('g.node[data-node-id]', { timeout: 5000 });
+      await loaderRacePage.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
       const loaderRace = await loaderRacePage.evaluate(async () => {
         await new Promise((resolve) => setTimeout(resolve, 400));
         window.__BLOCK_DISMISS_LOADER__ = false;

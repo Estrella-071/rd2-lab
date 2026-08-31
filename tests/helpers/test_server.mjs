@@ -7,7 +7,10 @@ import { chromium, firefox, webkit } from 'playwright';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const websiteDir = path.resolve(__dirname, '..', '..');
-const siteDir = path.resolve(process.env.VERIFY_SITE_DIR || path.join(websiteDir, 'site'));
+// Browser suites exercise the release-shaped Pages artifact by default. The
+// canonical site directory remains available through VERIFY_SITE_DIR for
+// focused repository tests and staging diagnostics.
+const siteDir = path.resolve(process.env.VERIFY_SITE_DIR || path.join(websiteDir, '.pages'));
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -31,7 +34,7 @@ const mimeTypes = {
  * @returns {Promise<{ server: http.Server, baseUrl: string, port: number, close: () => Promise<void> }>}
  */
 export async function startTestServer(port = 0) {
-  const currentSiteDir = path.resolve(process.env.VERIFY_SITE_DIR || path.join(websiteDir, 'site'));
+    const currentSiteDir = path.resolve(process.env.VERIFY_SITE_DIR || path.join(websiteDir, '.pages'));
   const shares = new Map();
   const codesByPayload = new Map();
   let nextShareId = 0;

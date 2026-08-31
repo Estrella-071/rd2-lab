@@ -545,78 +545,61 @@ body.show-node-names .node-currency-badge {
 }
 
 /* Filter and prerequisite highlights */
-/* Dim unrelated nodes. */
-body.has-active-filter .map-scene g.node:not(.is-selected):not(.is-linked-selected),
-body.has-search-active .map-scene g.node:not(.is-selected):not(.is-linked-selected),
-body.has-prereq-highlight .map-scene g.node:not(.is-selected):not(.is-linked-selected) {
+/* Keep one scene-level focus state so a filter change invalidates one selector
+   family instead of re-evaluating separate body/filter/search combinations. */
+.map-scene.has-tree-focus g.node:not(.is-selected):not(.is-linked-selected) {
   opacity: 0.12;
-  transition: opacity 20ms linear;
 }
 
 /* Keep matching and selected nodes visible. */
-body.has-active-filter .map-scene g.node.is-highlight-match,
-body.has-search-active .map-scene g.node.is-highlight-match,
-body.has-prereq-highlight .map-scene g.node.is-prereq-active,
-body.has-prereq-highlight .map-scene g.node.is-prereq-target,
-body.has-active-filter .map-scene g.node.is-selected,
-body.has-active-filter .map-scene g.node.is-linked-selected,
-body.has-search-active .map-scene g.node.is-selected,
-body.has-search-active .map-scene g.node.is-linked-selected,
-body.has-prereq-highlight .map-scene g.node.is-selected,
-body.has-prereq-highlight .map-scene g.node.is-linked-selected {
+.map-scene.has-tree-filter g.node.is-highlight-match,
+.map-scene.has-tree-prereq g.node.is-prereq-active,
+.map-scene.has-tree-prereq g.node.is-prereq-target,
+.map-scene.has-tree-focus g.node.is-selected,
+.map-scene.has-tree-focus g.node.is-linked-selected {
   opacity: 1 !important;
 }
 
-body.has-active-filter .map-scene g.node.is-highlight-match .node-body,
-body.has-search-active .map-scene g.node.is-highlight-match .node-body,
-body.has-prereq-highlight .map-scene g.node.is-prereq-active .node-body,
-body.has-prereq-highlight .map-scene g.node.is-prereq-target .node-body {
+.map-scene.has-tree-filter g.node.is-highlight-match .node-body,
+.map-scene.has-tree-prereq g.node.is-prereq-active .node-body,
+.map-scene.has-tree-prereq g.node.is-prereq-target .node-body {
   filter: none !important;
 }
 
 .map-scene .node .node-filter-glow {
   opacity: 0;
-  transition: opacity 20ms linear;
   pointer-events: none;
 }
 
-body.has-active-filter .map-scene g.node.is-highlight-match .node-filter-glow,
-body.has-search-active .map-scene g.node.is-highlight-match .node-filter-glow,
-body.has-prereq-highlight .map-scene g.node.is-prereq-active .node-filter-glow,
-body.has-prereq-highlight .map-scene g.node.is-prereq-target .node-filter-glow {
+.map-scene.has-tree-filter g.node.is-highlight-match .node-filter-glow,
+.map-scene.has-tree-prereq g.node.is-prereq-active .node-filter-glow,
+.map-scene.has-tree-prereq g.node.is-prereq-target .node-filter-glow {
   opacity: 1 !important;
 }
 
 /* Dim nodes outside the active prerequisite path. */
-body.has-prereq-highlight.prereq-overrides-filter .map-scene g.node:not(.is-prereq-active):not(.is-prereq-target):not(.is-selected):not(.is-linked-selected) {
+.map-scene.has-tree-prereq.prereq-overrides-filter g.node:not(.is-prereq-active):not(.is-prereq-target):not(.is-selected):not(.is-linked-selected) {
   opacity: 0.12 !important;
   filter: none !important;
 }
 
 /* Dim unrelated links. */
-body.has-active-filter .map-scene path.edge,
-body.has-active-filter .map-scene line.edge,
-body.has-active-filter .map-scene path.tree-center-link,
-body.has-search-active .map-scene path.edge,
-body.has-search-active .map-scene line.edge,
-body.has-search-active .map-scene path.tree-center-link,
-body.has-prereq-highlight .map-scene path.edge,
-body.has-prereq-highlight .map-scene line.edge,
-body.has-prereq-highlight .map-scene path.tree-center-link {
+.map-scene.has-tree-filter path.edge,
+.map-scene.has-tree-filter line.edge,
+.map-scene.has-tree-filter path.tree-center-link,
+.map-scene.has-tree-prereq path.edge,
+.map-scene.has-tree-prereq line.edge,
+.map-scene.has-tree-prereq path.tree-center-link {
   opacity: 0.08;
-  transition: opacity 20ms linear;
 }
 
 /* Highlight active links. */
-body.has-active-filter .map-scene path.edge.is-highlight-edge,
-body.has-active-filter .map-scene line.edge.is-highlight-edge,
-body.has-active-filter .map-scene path.tree-center-link.is-highlight-edge,
-body.has-search-active .map-scene path.edge.is-highlight-edge,
-body.has-search-active .map-scene line.edge.is-highlight-edge,
-body.has-search-active .map-scene path.tree-center-link.is-highlight-edge,
-body.has-prereq-highlight .map-scene path.edge.is-prereq-edge,
-body.has-prereq-highlight .map-scene line.edge.is-prereq-edge,
-body.has-prereq-highlight .map-scene path.tree-center-link.is-prereq-edge {
+.map-scene.has-tree-filter path.edge.is-highlight-edge,
+.map-scene.has-tree-filter line.edge.is-highlight-edge,
+.map-scene.has-tree-filter path.tree-center-link.is-highlight-edge,
+.map-scene.has-tree-prereq path.edge.is-prereq-edge,
+.map-scene.has-tree-prereq line.edge.is-prereq-edge,
+.map-scene.has-tree-prereq path.tree-center-link.is-prereq-edge {
   opacity: 0.8 !important;
   stroke: rgba(255, 255, 255, 0.75) !important;
   stroke-width: 2.2px !important;
@@ -624,45 +607,27 @@ body.has-prereq-highlight .map-scene path.tree-center-link.is-prereq-edge {
 }
 
 /* Dim links outside the active prerequisite path. */
-body.has-prereq-highlight.prereq-overrides-filter .map-scene path.edge:not(.is-prereq-edge),
-body.has-prereq-highlight.prereq-overrides-filter .map-scene line.edge:not(.is-prereq-edge),
-body.has-prereq-highlight.prereq-overrides-filter .map-scene path.tree-center-link:not(.is-prereq-edge) {
+.map-scene.has-tree-prereq.prereq-overrides-filter path.edge:not(.is-prereq-edge),
+.map-scene.has-tree-prereq.prereq-overrides-filter line.edge:not(.is-prereq-edge),
+.map-scene.has-tree-prereq.prereq-overrides-filter path.tree-center-link:not(.is-prereq-edge) {
   opacity: 0.08 !important;
   stroke-width: 1.2px !important;
   filter: none !important;
 }
 
 /* Keep the center labels readable. */
-.map-scene .tree-center-stat-mark,
-.map-scene text.tree-center-stat-name,
-.map-scene text.tree-center-stat-value {
-  transition: opacity 20ms linear;
-}
-
-body.has-active-filter .map-scene .tree-center-stat-mark,
-body.has-active-filter .map-scene text.tree-center-stat-name,
-body.has-active-filter .map-scene text.tree-center-stat-value,
-body.has-search-active .map-scene .tree-center-stat-mark,
-body.has-search-active .map-scene text.tree-center-stat-name,
-body.has-search-active .map-scene text.tree-center-stat-value,
-body.has-prereq-highlight .map-scene .tree-center-stat-mark,
-body.has-prereq-highlight .map-scene text.tree-center-stat-name,
-body.has-prereq-highlight .map-scene text.tree-center-stat-value {
+.map-scene.has-tree-focus .tree-center-stat-mark,
+.map-scene.has-tree-focus text.tree-center-stat-name,
+.map-scene.has-tree-focus text.tree-center-stat-value {
   opacity: 0.08;
 }
 
-body.has-active-filter .map-scene text.tree-center-stat-name.is-branch-active,
-body.has-active-filter .map-scene text.tree-center-stat-value.is-branch-active,
-body.has-search-active .map-scene text.tree-center-stat-name.is-branch-active,
-body.has-search-active .map-scene text.tree-center-stat-value.is-branch-active,
-body.has-prereq-highlight .map-scene text.tree-center-stat-name.is-branch-active,
-body.has-prereq-highlight .map-scene text.tree-center-stat-value.is-branch-active {
+.map-scene.has-tree-focus text.tree-center-stat-name.is-branch-active,
+.map-scene.has-tree-focus text.tree-center-stat-value.is-branch-active {
   opacity: 1 !important;
 }
 
-body.has-active-filter .map-scene .tree-center-stat-mark.is-branch-active,
-body.has-search-active .map-scene .tree-center-stat-mark.is-branch-active,
-body.has-prereq-highlight .map-scene .tree-center-stat-mark.is-branch-active {
+.map-scene.has-tree-focus .tree-center-stat-mark.is-branch-active {
   opacity: 0.5 !important;
 }
 

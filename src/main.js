@@ -4,18 +4,16 @@ if (isTestMode()) {
   window.__RD2_RUNTIME__ = "ready";
 }
 
-const SVG_ASSET_WARMUP_TIMEOUT_MS = 8000;
 const FONT_WARMUP_TIMEOUT_MS = 5000;
-const LOADER_PROGRESS_STEP_MS = 80;
-const LOADER_READY_DELAY_MS = 120;
-const LOADER_HIDE_DELAY_MS = 360;
+const LOADER_PROGRESS_STEP_MS = 40;
+const LOADER_READY_DELAY_MS = 80;
+const LOADER_HIDE_DELAY_MS = 220;
 
 let loaderProgressValue = 0;
 let loaderProgressQueue = [];
 let loaderProgressTimer = null;
 let loaderProgressActive = null;
 let loaderProgressLabel = "";
-const svgImageWarmupCache = new Map();
 
 function findLoaderElement(primaryId, fallbackId) {
   if (typeof document === "undefined") return null;
@@ -106,75 +104,6 @@ function finishLoaderProgress(labelText = "") {
   loaderProgressValue = 100;
 }
 
-/** Load tree images before the loading screen closes. */
-async function warmupSvgImageAssets(svg) {
-  if (
-    !svg
-    || typeof svg.querySelectorAll !== "function"
-    || typeof Image === "undefined"
-    || typeof document === "undefined"
-  ) return { requested: 0, completed: 0 };
-
-  const urls = new Set();
-  const baseUrl = document.baseURI || window.location?.href || "";
-  svg.querySelectorAll("image").forEach((image) => {
-    for (const attribute of ["href", "xlink:href"]) {
-      const value = image.getAttribute(attribute);
-      if (!value || value.startsWith("#") || /^(?:data|blob):/i.test(value)) continue;
-      try {
-        urls.add(new URL(value, baseUrl).href);
-      } catch {
-        // Ignore optional image errors; the normal SVG fallback can continue.
-      }
-    }
-  });
-  if (urls.size === 0) return { requested: 0, completed: 0 };
-
-  let completed = 0;
-  const loads = [...urls].map((url) => {
-    const cached = svgImageWarmupCache.get(url);
-    if (cached) {
-      completed += 1;
-      return cached.promise;
-    }
-
-    const image = new Image();
-    image.decoding = "async";
-    const load = new Promise((resolve) => {
-      let settled = false;
-      let timeoutId = null;
-      const finish = (ok) => {
-        if (settled) return;
-        settled = true;
-        if (timeoutId) clearTimeout(timeoutId);
-        if (ok) {
-          svgImageWarmupCache.set(url, { image, promise: load });
-        } else {
-          svgImageWarmupCache.delete(url);
-        }
-        completed += 1;
-        resolve();
-      };
-      image.onload = async () => {
-        try {
-          if (typeof image.decode === "function") await image.decode();
-          finish(true);
-        } catch {
-          // The SVG can still render if decoding fails.
-          finish(true);
-        }
-      };
-      image.onerror = () => finish(false);
-      timeoutId = setTimeout(() => finish(false), SVG_ASSET_WARMUP_TIMEOUT_MS);
-      image.src = url;
-    });
-    svgImageWarmupCache.set(url, { image, promise: load });
-    return load;
-  });
-  await Promise.all(loads);
-  return { requested: urls.size, completed };
-}
-
 /** Wait briefly for fonts before showing the tree. */
 async function warmupDocumentFonts() {
   const fontSet = typeof document !== "undefined" ? document.fonts : null;
@@ -189,6 +118,7 @@ async function warmupDocumentFonts() {
 // Services
 import {
   HttpDataRepository,
+  MapTileRepository,
   ViewportController,
   LocalStorageAdapter,
   HttpShareRepository,
@@ -217,6 +147,7 @@ import {
   ChangelogView,
   SimulationView,
   DetailedStatsView,
+  CanvasTreeRenderer,
   LocaleView,
   applyLocalizationDocument,
   updateSeoMetadata
@@ -256,6 +187,12 @@ export function dismissLoader(isCurrent = () => true, viewportController = null,
   if (owner && typeof window !== "undefined") window.__RD2_LOADER_OWNER__ = owner;
   if (!canApply()) return;
 
+  // The map can become interactive before the loader hide transition ends.
+  // Capture the viewport that was visible when the transition was scheduled;
+  // a delayed reset must never overwrite a drag or zoom that started in the
+  // meantime.
+  const scheduledViewport = viewportController?.getState?.() || null;
+
   loadingScreen.classList.add("is-loaded");
   if (document.body) {
     document.body.classList.add("app-entering");
@@ -269,7 +206,12 @@ export function dismissLoader(isCurrent = () => true, viewportController = null,
       || (typeof window !== "undefined" ? window.RD2App?.viewportController : null);
     if (canContinue() && targetViewport) {
       targetViewport.updateCachedDimensions?.();
-      targetViewport.resetToCenter(true);
+      const currentViewport = targetViewport.getState?.() || null;
+      const unchanged = scheduledViewport && currentViewport
+        && Math.abs(Number(currentViewport.x) - Number(scheduledViewport.x)) < 0.01
+        && Math.abs(Number(currentViewport.y) - Number(scheduledViewport.y)) < 0.01
+        && Math.abs(Number(currentViewport.scale) - Number(scheduledViewport.scale)) < 0.0001;
+      if (unchanged) targetViewport.resetToCenter(true);
     }
   }, LOADER_HIDE_DELAY_MS);
 
@@ -349,7 +291,7 @@ export class Application {
     this.storage = new LocalStorageAdapter("rd2_");
     this.dataRepo = new HttpDataRepository({
       diceTreeUrl: "data/dice_tree.json",
-      diceTreeSvgUrl: "data/dice_tree.svg",
+      renderManifestUrl: "map-render-manifest.json",
       bossEventsUrl: "boss_event_data.json",
       monsterPostersUrl: "monster_posters.json",
       gameMetadataUrl: "data/game_data_metadata.json",
@@ -384,7 +326,20 @@ export class Application {
     });
     this.simulationPlanUseCase = new SimulationPlanUseCase({
       store: this.store,
-      shareImageExporter: { generate: generateSimulationShareImage },
+      shareImageExporter: {
+        generate: (options = {}) => generateSimulationShareImage({
+          ...options,
+          prepareRender: (params) => this.mapRenderer?.prepareShare?.(params),
+          renderTree: (params) => this.mapRenderer?.renderToCanvas?.({
+            ...params,
+            state: {
+              ...this.store.getState(),
+              simulation: options.simulation || this.store.getState().simulation,
+              renderUnlockState: params.renderUnlockState || null
+            }
+          }) || false
+        })
+      },
       shareRepository: new HttpShareRepository()
     });
 
@@ -412,6 +367,7 @@ export class Application {
     this._globalHooks = null;
     this._lifecycleGeneration = 0;
     this._loaderDismissTimer = null;
+    this.mapRenderer = null;
     this.initialUrlState = parseUrlState(typeof window !== "undefined" ? window.location.href : "/");
     this._lastUrlKey = "";
   }
@@ -461,6 +417,8 @@ export class Application {
     }
 
     destroyApplicationViews(this.views);
+    this.mapRenderer?.destroy?.();
+    this.mapRenderer = null;
     unsubscribeApplicationViewport(this);
     disposeApplicationServices(this);
   }
@@ -499,8 +457,16 @@ export class Application {
   async _loadBootstrapData(generation) {
     setLoaderProgress(15);
     setLoaderProgress(30);
-    const { treeData: rawTreeData, svgText, bossEvents: rawBossEvents, metadata, changelog, locales } = await this.loadGameDataUseCase.execute();
+    const {
+      treeData: rawTreeData,
+      renderManifest,
+      bossEvents: rawBossEvents,
+      metadata,
+      changelog,
+      locales
+    } = await this.loadGameDataUseCase.execute({ loadLegacySvg: false });
     if (generation !== this._lifecycleGeneration) return null;
+    if (!renderManifest) throw new Error("The Canvas map render manifest is unavailable.");
     if (!locales || locales.schema_version !== 1
       || JSON.stringify(locales.locales || []) !== JSON.stringify(SUPPORTED_LOCALES)) {
       throw new Error("The four-locale catalog is unavailable or invalid.");
@@ -521,7 +487,7 @@ export class Application {
     this.store.dispatch({ type: ActionTypes.SET_BOSS_EVENTS, payload: bossEvents });
     if (isTestMode()) {
       window.TREE_DATA = treeData;
-      window.DICE_TREE_SVG = svgText;
+      window.RD2_RENDER_MANIFEST = renderManifest;
       window.RD2_DATA_METADATA = metadata || null;
       window.RD2_DATA_VERSION = metadata?.canonical?.game_version || "unknown";
       window.RD2_CHANGELOG = changelog || null;
@@ -535,23 +501,15 @@ export class Application {
       _awakenClean: resolveGameText(node.dice_awaken || "", node, { tagDefinitions }),
       _unlockClean: resolveGameText(node.unlock_condition_zh || "", node, { tagDefinitions })
     }));
-    return { svgText, metadata, changelog, treeData, bossEvents, cleanNodes, tagDefinitions };
+    return { renderManifest, metadata, changelog, treeData, bossEvents, cleanNodes, tagDefinitions };
   }
 
-  _cacheBootstrapPositions(mapSvg, cleanNodes) {
+  _cacheBootstrapPositions(renderManifest, cleanNodes) {
     this.nodePositions.clear();
-    if (mapSvg) {
-      mapSvg.querySelectorAll("g.node[data-node-id]").forEach((element) => {
-        const id = element.dataset?.nodeId || element.getAttribute?.("data-node-id");
-        const transform = element.getAttribute?.("transform") || "";
-        const match = /translate\(\s*([\d.-]+)\s*,\s*([\d.-]+)\s*\)/.exec(transform);
-        if (id && match) {
-          this.nodePositions.set(String(id), {
-            x: Number.parseFloat(match[1]),
-            y: Number.parseFloat(match[2])
-          });
-        }
-      });
+    for (const node of renderManifest?.nodes || []) {
+      if (Number.isFinite(Number(node.x)) && Number.isFinite(Number(node.y))) {
+        this.nodePositions.set(String(node.id), { x: Number(node.x), y: Number(node.y) });
+      }
     }
     cleanNodes.forEach((node) => {
       if (!this.nodePositions.has(String(node.id)) && typeof node.x === "number" && typeof node.y === "number") {
@@ -562,23 +520,31 @@ export class Application {
 
   _prepareBootstrapMap(data, elements) {
     const { mapScene } = elements;
-    const { treeData, svgText, cleanNodes } = data;
+    const { treeData, renderManifest, cleanNodes } = data;
     setLoaderProgress(60, this._t("loader.rendering", {}, "Rendering the dice tree…"));
-    if (mapScene && svgText) {
-      mapScene.innerHTML = svgText;
-      mapScene.setAttribute("aria-hidden", "false");
-      mapScene.querySelector("svg")?.setAttribute("aria-label", this._t("map.label", {}, "Interactive dice tree"));
-    }
-    const mapSvg = document.querySelector("#scene svg") || document.querySelector("svg.dice-tree-svg") || mapScene?.querySelector("svg");
-    const svgAssetWarmup = warmupSvgImageAssets(mapSvg);
+    if (!mapScene) throw new Error("Canvas map container is unavailable.");
+    mapScene.innerHTML = "";
+    mapScene.setAttribute("aria-hidden", "false");
+    this._cacheBootstrapPositions(renderManifest, cleanNodes);
+    this.store.dispatch({ type: ActionTypes.SET_NODE_POSITIONS, payload: this.nodePositions });
+    this.mapRenderer = new CanvasTreeRenderer({
+      store: this.store,
+      tileRepository: new MapTileRepository({ manifest: renderManifest }),
+      onReady: () => { mapScene.dataset.canvasReady = "true"; },
+      onError: (error) => this._handleBootstrapError(error, elements, this._lifecycleGeneration)
+    });
+    const rendererReady = this.mapRenderer.init({
+      container: mapScene,
+      treeData,
+      renderManifest,
+      localization: this.localization
+    });
     const fontWarmup = warmupDocumentFonts();
     setLoaderProgress(65, this._t("loader.edges", {}, "Linking node paths…"));
-    this._cacheBootstrapPositions(mapSvg, cleanNodes);
-    this.store.dispatch({ type: ActionTypes.SET_NODE_POSITIONS, payload: this.nodePositions });
     setLoaderProgress(75, this._t("loader.prerequisites", {}, "Computing prerequisite paths…"));
     setLoaderProgress(82, this._t("loader.search", {}, "Building the search index…"));
     setLoaderProgress(88, this._t("loader.geometry", {}, "Computing node geometry…"));
-    return { mapSvg, svgAssetWarmup, fontWarmup, treeData };
+    return { renderer: this.mapRenderer, rendererReady, fontWarmup, treeData };
   }
 
   _initializeViewport(elements) {
@@ -592,26 +558,28 @@ export class Application {
     });
   }
 
-  _initializeTreeView(elements, mapSvg) {
+  _initializeTreeView(elements, renderer) {
     this.views.treeView = new TreeView({
       store: this.store,
       selectNodeUseCase: this.selectNodeUseCase,
       navigateViewportUseCase: this.navigateViewportUseCase,
       container: elements.mapViewport,
-      svgElement: mapSvg,
+      mapScene: elements.mapScene,
+      renderer,
       localization: this.localization
     });
     this.views.treeView.setNodePositions(this.nodePositions);
-    this.views.treeView.init(mapSvg);
+    this.views.treeView.init();
   }
 
-  _initializeTooltipView(elements, tagDefinitions) {
+  _initializeTooltipView(elements, tagDefinitions, renderer) {
     this.views.tooltipView = new TooltipView({
       store: this.store,
       selectNodeUseCase: this.selectNodeUseCase,
       navigateViewportUseCase: this.navigateViewportUseCase,
       tooltipElement: elements.tooltipEl,
       nodePositions: this.nodePositions,
+      renderer,
       tagDefinitions,
       localization: this.localization
     });
@@ -673,7 +641,8 @@ export class Application {
       navigateViewportUseCase: this.navigateViewportUseCase,
       selectNodeUseCase: this.selectNodeUseCase,
       container: elements.controlsContainer,
-      localization: this.localization
+      localization: this.localization,
+      renderer: this.mapRenderer
     });
     this.views.controlsView.init();
     const changelogWidgetEl = document.getElementById("changelog-widget");
@@ -683,7 +652,8 @@ export class Application {
       disclaimerWidgetElement: elements.disclaimerWidgetEl,
       changelogWidgetElement: changelogWidgetEl,
       localeWidgetElement: elements.localeWidgetEl,
-      filterTreeUseCase: this.filterTreeUseCase
+      filterTreeUseCase: this.filterTreeUseCase,
+      navigateViewportUseCase: this.navigateViewportUseCase
     });
     this.views.morphingWidgets.init();
     this.views.localeView = new LocaleView({
@@ -717,9 +687,9 @@ export class Application {
     this._localeUnsubscribe = this.localization.subscribe(() => this._handleLocaleChange(generation));
   }
 
-  _initializeSecondaryViews(elements, data, mapSvg, generation) {
-    this._initializeTreeView(elements, mapSvg);
-    this._initializeTooltipView(elements, data.tagDefinitions);
+  _initializeSecondaryViews(elements, data, renderer, generation) {
+    this._initializeTreeView(elements, renderer);
+    this._initializeTooltipView(elements, data.tagDefinitions, renderer);
     this._initializeSimulationView(elements);
     this._initializeCompendiumView(elements, data.tagDefinitions);
     this._initializeMinimapView(elements, data.treeData);
@@ -866,8 +836,8 @@ export class Application {
     this._refreshSeo(parseUrlState(typeof window !== "undefined" ? window.location.href : "/"));
   }
 
-  _bindCompendiumCenterButton(mapSvg) {
-    const button = document.querySelector("#tree-center-compendium-btn") || mapSvg?.querySelector("#tree-center-compendium-btn");
+  _bindCompendiumCenterButton() {
+    const button = document.querySelector("#tree-center-compendium-btn");
     if (!button) return;
     button.style.cursor = "pointer";
     const openCompendium = (triggerElement = null) => {
@@ -947,10 +917,11 @@ export class Application {
 
   async _finishBootstrap(generation, cleanNodes, warmups) {
     this.viewportController.resetToCenter(true);
-    await Promise.all([
-      warmups.svgAssetWarmup.catch(() => {}),
-      warmups.fontWarmup.catch(() => {})
-    ]);
+    await warmups.rendererReady;
+    // Font loading is allowed to finish in the background. Canvas labels are
+    // redrawn by the renderer when the requested web font becomes available;
+    // the network response must not hold the first interactive map hostage.
+    void warmups.fontWarmup.catch(() => {});
     await setLoaderProgress(100, this._t("loader.complete", {}, "Ready"));
     if (this._loaderDismissTimer) clearTimeout(this._loaderDismissTimer);
     this._loaderDismissTimer = setTimeout(() => {
@@ -964,13 +935,17 @@ export class Application {
     if (generation !== this._lifecycleGeneration) return;
     console.error("Application bootstrap failed:", error);
     this._cleanupBootstrap();
-    finishLoaderProgress(this._t("loader.failed", {}, "Data loading failed. Reload to try again."));
+    const isCanvasFailure = /canvas|raster|render manifest|map render/i.test(String(error?.message || ""));
+    const failureMessage = isCanvasFailure
+      ? this._t("loader.canvasSupport", {}, "The map requires Canvas support. Check the browser and try again.")
+      : this._t("loader.failed", {}, "Data loading failed. Reload to try again.");
+    finishLoaderProgress(failureMessage);
     const { loadingScreen, loaderRetryButton } = elements;
     if (loadingScreen) {
       loadingScreen.hidden = false;
       loadingScreen.classList.remove("is-loaded", "is-hidden");
       loadingScreen.classList.add("is-error");
-      loadingScreen.setAttribute("aria-label", this._t("loader.failed", {}, "Data loading failed"));
+      loadingScreen.setAttribute("aria-label", failureMessage);
     }
     const loaderStatusLabel = document.getElementById("loader-status-label");
     if (loaderStatusLabel) loaderStatusLabel.setAttribute("role", "alert");
@@ -992,11 +967,20 @@ export class Application {
     try {
       const data = await this._loadBootstrapData(generation);
       if (!data) return false;
-      const map = this._prepareBootstrapMap(data, elements);
       this._initializeViewport(elements);
-      this._initializeSecondaryViews(elements, data, map.mapSvg, generation);
+      // Establish the final viewport scale before the Canvas renderer starts
+      // its first asset decode.  On mobile the controller uses a 0.5 base
+      // scale; letting the renderer observe the store's desktop default of 1
+      // first can commit a low-density frame and leave the transformed scene
+      // soft even after the correct bucket is ready.
+      const initialViewport = this.viewportController.getState?.();
+      if (initialViewport) {
+        this.store.dispatch({ type: ActionTypes.UPDATE_VIEWPORT, payload: initialViewport });
+      }
+      const map = this._prepareBootstrapMap(data, elements);
+      this._initializeSecondaryViews(elements, data, map.renderer, generation);
       this._subscribeUrlState();
-      this._bindCompendiumCenterButton(map.mapSvg);
+      this._bindCompendiumCenterButton();
       const centerOnNodeForTooltip = this._createTooltipCenterHandler(elements.tooltipEl);
       this._installTestHooks(centerOnNodeForTooltip);
       this._openInitialUrlState(centerOnNodeForTooltip);

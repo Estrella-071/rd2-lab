@@ -166,6 +166,7 @@ const UI = {
   "loader.minimap": { "zh-tw": "產生全景小地圖…", en: "Preparing the minimap…", ja: "ミニマップを準備中…", ko: "미니맵을 준비하는 중…" },
   "loader.complete": { "zh-tw": "載入完成", en: "Ready", ja: "読み込み完了", ko: "로드 완료" },
   "loader.failed": { "zh-tw": "資料載入失敗，請重新載入。", en: "Data loading failed. Reload to try again.", ja: "データの読み込みに失敗しました。再読み込みしてください。", ko: "데이터를 불러오지 못했습니다. 다시 로드해 주세요." },
+  "loader.canvasSupport": { "zh-tw": "地圖需要瀏覽器支援 Canvas；確認支援後再試一次。", en: "The map requires Canvas support. Check the browser and try again.", ja: "このマップには Canvas 対応ブラウザが必要です。確認して再試行してください。", ko: "이 지도에는 Canvas를 지원하는 브라우저가 필요합니다. 확인 후 다시 시도해 주세요." },
   "loader.retry": { "zh-tw": "重新載入", en: "Reload", ja: "再読み込み", ko: "다시 로드" },
   "loader.retrying": { "zh-tw": "重新載入中…", en: "Reloading…", ja: "再読み込み中…", ko: "다시 로드하는 중…" },
   "search.label": { "zh-tw": "搜尋骰子樹節點", en: "Search dice tree nodes", ja: "ダイスツリーのノードを検索", ko: "주사위 트리 노드 검색" },

@@ -58,10 +58,13 @@ export class SelectNodeUseCase {
   /**
    * Clear current selection.
    */
-  deselect({ resetPrereqMode = false } = {}) {
+  deselect({ resetPrereqMode = false, preservePrereqDisplay = false } = {}) {
     this.store.dispatch({
       type: ActionTypes.DESELECT_NODE,
-      payload: { resetPrereqMode: Boolean(resetPrereqMode) }
+      payload: {
+        resetPrereqMode: Boolean(resetPrereqMode),
+        preservePrereqDisplay: Boolean(preservePrereqDisplay)
+      }
     });
   }
 }

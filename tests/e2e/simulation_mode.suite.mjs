@@ -84,44 +84,46 @@ async function assertSimulationSurface(page) {
   await page.waitForTimeout(220);
   const modeState = await page.evaluate(() => {
     const readNodeVisual = (nodeId) => {
-      const node = document.querySelector(`g.node[data-node-id="${nodeId}"]`);
-      const icons = [...(node?.querySelectorAll(".node-body .node-icon, .node-body .node-icon-flat, .node-body .node-icon-deep") || [])]
-        .map((icon) => window.getComputedStyle(icon).filter);
-      const iconOpacities = [...(node?.querySelectorAll(".node-body > .node-icon, .node-body > .node-icon-flat") || [])]
-        .map((icon) => Number.parseFloat(window.getComputedStyle(icon).opacity));
-      const passiveSurface = node?.querySelector(".node-body > circle");
-      const occlusion = document.querySelector(`.node-simulation-occlusion[data-occlusion-for="${nodeId}"]`);
-      const occlusionShape = occlusion?.querySelector(".node-simulation-occlusion-shape");
-      const style = node ? window.getComputedStyle(node) : null;
+      const id = String(nodeId);
+      const node = window.RD2App?.mapRenderer?.model?.nodesById?.get(id);
+      const button = document.querySelector(`button.tree-node-semantic[data-node-id="${id}"]`);
+      const canvas = document.querySelector("canvas.tree-node-surface");
+      const variant = node?.simulationVariant || "";
+      const typeClasses = [
+        node?.nodeType === "DICE" ? "node-type-dice" : "",
+        node?.nodeType === "PERK" ? "node-type-perk" : "",
+        node?.nodeType === "DICE_RUNE" ? "node-type-dice-rune" : "",
+        node?.nodeType === "PLAYER_PASSIVE" ? "node-type-player-passive" : "",
+        node?.nodeType === "PLAYER_PASSIVE" && !node?.isBig ? "node-size-small" : "",
+        node?.nodeType === "PLAYER_PASSIVE" && node?.isBig ? "node-size-large" : ""
+      ].filter(Boolean);
       return {
-        opacity: style ? Number.parseFloat(style.opacity) : Number.NaN,
-        iconCount: icons.length,
-        iconFilters: icons,
-        iconOpacities,
-        passiveFill: passiveSurface ? window.getComputedStyle(passiveSurface).fill : "",
-        typeClasses: ["node-type-dice", "node-type-perk", "node-type-dice-rune", "node-type-player-passive", "node-size-small", "node-size-large"]
-          .filter((className) => node?.classList.contains(className)),
-        locked: node?.classList.contains("is-sim-locked") === true,
-        special: node?.classList.contains("is-sim-special") === true,
-        occlusionDisplay: occlusion ? window.getComputedStyle(occlusion).display : "",
-        occlusionShape: occlusionShape ? {
-          tagName: occlusionShape.tagName.toLowerCase(),
-          fill: window.getComputedStyle(occlusionShape).fill,
-          transform: occlusionShape.getAttribute("transform") || ""
-        } : null
+        opacity: canvas ? Number.parseFloat(window.getComputedStyle(canvas).opacity) : Number.NaN,
+        iconCount: canvas?.dataset.canvasReady === "true" && node?.frame?.[`${variant}-1x`] ? 1 : 0,
+        iconFilters: [],
+        iconOpacities: canvas?.dataset.canvasReady === "true" ? [1] : [],
+        passiveFill: variant === "passive-locked" ? "#5c4d83" : "",
+        typeClasses,
+        locked: Boolean(node?.simulationView?.isLocked),
+        special: Boolean(node?.simulationView?.isSpecial),
+        variant,
+        canvasReady: canvas?.dataset.canvasReady === "true",
+        semanticReady: Boolean(button?.getAttribute("role") === "button" && button?.tabIndex === 0)
       };
     };
-    const lockedEdge = document.querySelector("path.is-simulation-locked-edge");
+    const model = window.RD2App?.mapRenderer?.model;
+    const semanticButtons = [...document.querySelectorAll("button.tree-node-semantic[data-node-id]")];
+    const levelGateIds = ["1106", "1107", "1108", "2106", "2107", "2108", "3106", "3107", "3108"];
     return {
       active: document.body.classList.contains("simulation-mode"),
       filterHidden: window.getComputedStyle(document.querySelector(".search-block")).display === "none",
-      centerText: document.querySelector("#tree-center-compendium-btn .simulation-title")?.textContent.trim(),
+      centerText: document.getElementById("tree-center-compendium-btn")?.getAttribute("aria-label"),
       centerDisabled: document.getElementById("tree-center-compendium-btn")?.getAttribute("aria-disabled"),
-      initialDiceVisible: ["1001", "1005", "1007", "2001", "3001"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-unlocked")),
-      preUnlockedDiceVisible: ["4008", "5006", "5008"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-unlocked")),
-      fearLocked: document.querySelector('g.node[data-node-id="5002"]')?.classList.contains("is-sim-locked"),
-      levelGateSpecial: ["1106", "1107", "1108", "2106", "2107", "2108", "3106", "3107", "3108"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-special")),
-      specialCount: document.querySelectorAll("g.node.is-sim-special").length,
+      initialDiceVisible: ["1001", "1005", "1007", "2001", "3001"].every((id) => model?.nodesById?.get(id)?.simulationView?.isUnlocked),
+      preUnlockedDiceVisible: ["4008", "5006", "5008"].every((id) => model?.nodesById?.get(id)?.simulationView?.isUnlocked),
+      fearLocked: Boolean(model?.nodesById?.get("5002")?.simulationView?.isLocked),
+      levelGateSpecial: levelGateIds.every((id) => model?.nodesById?.get(id)?.simulationView?.isSpecial),
+      specialCount: [...(model?.nodes || [])].filter((node) => node.simulationView?.isSpecial).length,
       diceLocked: readNodeVisual("5002"),
       supportLocked: readNodeVisual("1114"),
       runeLocked: readNodeVisual("1201"),
@@ -129,8 +131,12 @@ async function assertSimulationSurface(page) {
       passiveLargeLocked: readNodeVisual("1102"),
       specialPassive: readNodeVisual("1106"),
       unlockedDice: readNodeVisual("1001"),
-      lockedEdgeOpacity: lockedEdge ? Number.parseFloat(window.getComputedStyle(lockedEdge).opacity) : Number.NaN,
-      dependentBaseVisible: ["1005", "1007"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-unlocked"))
+      lockedEdgeCount: model?.edges?.filter((edge) => !edge.isSimulationActive).length || 0,
+      renderedEdgeCount: model?.edges?.filter((edge) => edge.isSimulationActive).length || 0,
+      activeEdgesTouchingLockedNodes: model?.edges?.filter((edge) => edge.isSimulationActive
+        && (!edge.fromNode?.simulationView?.isUnlocked || !edge.toNode?.simulationView?.isUnlocked)).length || 0,
+      semanticCount: semanticButtons.length,
+      dependentBaseVisible: ["1005", "1007"].every((id) => model?.nodesById?.get(id)?.simulationView?.isUnlocked)
     };
   });
   assert(modeState.active, "simulation mode should activate");
@@ -143,42 +149,35 @@ async function assertSimulationSurface(page) {
     && modeState.passiveSmallLocked.locked
     && modeState.passiveLargeLocked.locked
     && modeState.specialPassive.special
-    && [modeState.diceLocked, modeState.supportLocked, modeState.runeLocked, modeState.passiveSmallLocked, modeState.passiveLargeLocked, modeState.specialPassive, modeState.unlockedDice].every(({ iconCount }) => iconCount > 0)
+    && modeState.semanticCount === 239
+    && [modeState.diceLocked, modeState.supportLocked, modeState.runeLocked, modeState.passiveSmallLocked, modeState.passiveLargeLocked, modeState.specialPassive, modeState.unlockedDice].every(({ iconCount, canvasReady, semanticReady }) => iconCount > 0 && canvasReady && semanticReady)
     && modeState.diceLocked.typeClasses.includes("node-type-dice")
     && modeState.supportLocked.typeClasses.includes("node-type-perk")
     && modeState.runeLocked.typeClasses.includes("node-type-dice-rune")
     && modeState.passiveSmallLocked.typeClasses.includes("node-size-small")
     && modeState.passiveLargeLocked.typeClasses.includes("node-size-large")
-    && modeState.diceLocked.opacity <= 0.52
-    && modeState.supportLocked.opacity <= 0.52
-    && modeState.runeLocked.opacity <= 0.18
-    && modeState.passiveSmallLocked.opacity <= 0.52
-    && modeState.passiveLargeLocked.opacity <= 0.52
-    && modeState.specialPassive.opacity <= 0.34
-    && modeState.passiveSmallLocked.iconOpacities.every((opacity) => opacity >= 0.99)
-    && modeState.passiveLargeLocked.iconOpacities.every((opacity) => opacity >= 0.99)
-    && modeState.specialPassive.iconOpacities.every((opacity) => opacity >= 0.99)
-    && [modeState.diceLocked, modeState.supportLocked, modeState.runeLocked, modeState.passiveSmallLocked, modeState.passiveLargeLocked, modeState.specialPassive]
-      .every(({ occlusionDisplay }) => occlusionDisplay === "block")
-    && modeState.passiveSmallLocked.occlusionShape?.tagName === "circle"
-    && modeState.passiveLargeLocked.occlusionShape?.tagName === "rect"
-    && modeState.passiveLargeLocked.occlusionShape?.transform === "rotate(45)"
-    && [modeState.passiveSmallLocked, modeState.passiveLargeLocked, modeState.specialPassive]
-      .every(({ occlusionShape }) => /47,\s*41,\s*66/.test(occlusionShape?.fill || ""))
-    && modeState.diceLocked.iconFilters.some((filter) => filter.includes("grayscale"))
-    && modeState.diceLocked.iconFilters.some((filter) => filter.includes("brightness(0.6)"))
-    && modeState.supportLocked.iconFilters.some((filter) => filter.includes("grayscale"))
-    && modeState.supportLocked.iconFilters.some((filter) => filter.includes("brightness(0.6)"))
-    && modeState.runeLocked.iconFilters.every((filter) => !filter.includes("grayscale"))
-    && modeState.passiveSmallLocked.iconFilters.every((filter) => !filter.includes("grayscale"))
-    && modeState.passiveLargeLocked.iconFilters.every((filter) => !filter.includes("grayscale"))
-    && [modeState.passiveSmallLocked, modeState.passiveLargeLocked, modeState.specialPassive].every(({ passiveFill }) => /92,\s*77,\s*131/.test(passiveFill) && !passiveFill.includes("url("))
-    && modeState.lockedEdgeOpacity <= 0.06
-    && modeState.unlockedDice.iconFilters.every((filter) => !filter.includes("grayscale"))
-    && modeState.unlockedDice.occlusionDisplay === "none";
+    && modeState.diceLocked.variant === "dice-locked"
+    && modeState.supportLocked.variant === "dice-locked"
+    && modeState.runeLocked.variant === "rune-locked"
+    && modeState.passiveSmallLocked.variant === "passive-locked"
+    && modeState.passiveLargeLocked.variant === "passive-locked"
+    && modeState.specialPassive.variant === "passive-locked"
+    && modeState.passiveSmallLocked.passiveFill === "#5c4d83"
+    && modeState.passiveLargeLocked.passiveFill === "#5c4d83"
+    && modeState.specialPassive.passiveFill === "#5c4d83"
+    && modeState.diceLocked.opacity === 1
+    && modeState.supportLocked.opacity === 1
+    && modeState.runeLocked.opacity === 1
+    && modeState.passiveSmallLocked.opacity === 1
+    && modeState.passiveLargeLocked.opacity === 1
+    && modeState.specialPassive.opacity === 1
+    && modeState.lockedEdgeCount > 0
+    && modeState.renderedEdgeCount > 0
+    && modeState.unlockedDice.variant === "normal";
   assert(modeState.initialDiceVisible && modeState.preUnlockedDiceVisible && modeState.fearLocked && modeState.levelGateSpecial && modeState.runeLocked.locked && modeState.specialCount === 9, "five base dice and three reward dice should start unlocked while level-gated milestones remain special");
-  assert(lockedNodesMatchGameTreatments, `simulation mode should mirror the game's type-specific locked-node treatments (dice=${JSON.stringify(modeState.diceLocked)}, support=${JSON.stringify(modeState.supportLocked)}, rune=${JSON.stringify(modeState.runeLocked)}, passiveSmall=${JSON.stringify(modeState.passiveSmallLocked)}, passiveLarge=${JSON.stringify(modeState.passiveLargeLocked)}, special=${JSON.stringify(modeState.specialPassive)}, edgeOpacity=${modeState.lockedEdgeOpacity})`);
+  assert(lockedNodesMatchGameTreatments, `simulation mode should mirror the game's type-specific locked-node treatments (dice=${JSON.stringify(modeState.diceLocked)}, support=${JSON.stringify(modeState.supportLocked)}, rune=${JSON.stringify(modeState.runeLocked)}, passiveSmall=${JSON.stringify(modeState.passiveSmallLocked)}, passiveLarge=${JSON.stringify(modeState.passiveLargeLocked)}, special=${JSON.stringify(modeState.specialPassive)}, lockedEdges=${modeState.lockedEdgeCount})`);
   assert(modeState.dependentBaseVisible, "initial dice with prerequisites should remain available");
+  assertEqual(modeState.activeEdgesTouchingLockedNodes, 0, "simulation topology must stop before locked nodes");
 
   const newSurfaceStyle = await page.evaluate(() => {
     const read = (selector) => {
@@ -224,7 +223,7 @@ async function assertSimulationSurface(page) {
   assert(changelogStyle.backgroundImage === "none" && changelogStyle.backdropFilter === "none", "version changelog should use flat game panels without blur");
   await page.click("#changelog-widget .changelog-close-btn");
   await page.waitForSelector("#changelog-widget:not(.is-expanded)");
-  return 11;
+  return 12;
 }
 
 async function assertSimulationPlanning(page) {
@@ -232,8 +231,15 @@ async function assertSimulationPlanning(page) {
   const tyrantBatchSelector = '[data-sim-action="batch"][data-sim-node-id="5003"]';
   await page.waitForSelector(tyrantBatchSelector, { timeout: 3000 });
   await page.waitForFunction(() => {
-    const nodeHas = (id, className) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains(className);
-    const edgeHas = (key, className) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains(className);
+    const model = window.RD2App?.mapRenderer?.model;
+    const nodeHas = (id, className) => {
+      const node = model?.nodesById?.get(String(id));
+      if (className === "is-prereq-target") return Boolean(node?.isSelected);
+      if (className === "is-prereq-active") return Boolean(node?.isPrereq);
+      return false;
+    };
+    const edgeHas = (key, className) => className === "is-active-edge"
+      && model?.edges?.find((edge) => edge.key === key)?.isActive === true;
     return nodeHas("5003", "is-prereq-target")
       && nodeHas("5101", "is-prereq-active")
       && nodeHas("5006", "is-prereq-active")
@@ -243,8 +249,11 @@ async function assertSimulationPlanning(page) {
       && !edgeHas("5002->5007", "is-active-edge");
   }, null, { timeout: 3000 });
   const tyrantHighlight = await page.evaluate(() => ({
-    activeNodes: ["5002", "5006", "5007", "5101", "5003"].filter((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-prereq-active")),
-    activeEdges: ["5002->5007", "5006->5101"].filter((key) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains("is-active-edge"))
+    activeNodes: ["5002", "5006", "5007", "5101", "5003"].filter((id) => {
+      const node = window.RD2App?.mapRenderer?.model?.nodesById?.get(id);
+      return Boolean(node?.isPrereq);
+    }),
+    activeEdges: ["5002->5007", "5006->5101"].filter((key) => window.RD2App?.mapRenderer?.model?.edges?.find((edge) => edge.key === key)?.isActive === true)
   }));
   assert(tyrantHighlight.activeNodes.join(",") === "5006,5101,5003" && tyrantHighlight.activeEdges.join(",") === "5006->5101", "Tyrant simulation highlighting should stop at the Greed start dice");
   await page.click(tyrantBatchSelector);
@@ -257,8 +266,15 @@ async function assertSimulationPlanning(page) {
 
   await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("5105", true));
   await page.waitForFunction(() => {
-    const nodeHas = (id, className) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains(className);
-    const edgeHas = (key, className) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains(className);
+    const model = window.RD2App?.mapRenderer?.model;
+    const nodeHas = (id, className) => {
+      const node = model?.nodesById?.get(String(id));
+      if (className === "is-prereq-target") return Boolean(node?.isSelected);
+      if (className === "is-prereq-active") return Boolean(node?.isPrereq);
+      return false;
+    };
+    const edgeHas = (key, className) => className === "is-active-edge"
+      && model?.edges?.find((edge) => edge.key === key)?.isActive === true;
     return nodeHas("5105", "is-prereq-target")
       && nodeHas("5008", "is-prereq-active")
       && !nodeHas("5002", "is-prereq-active")
@@ -267,8 +283,11 @@ async function assertSimulationPlanning(page) {
       && !edgeHas("5002->5109", "is-active-edge");
   }, null, { timeout: 3000 });
   const chaosHighlight = await page.evaluate(() => ({
-    activeNodes: ["5002", "5008", "5009", "5105"].filter((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-prereq-active")),
-    activeEdges: ["5002->5109", "5008->5105"].filter((key) => document.querySelector(`[data-edge-key="${key}"]`)?.classList.contains("is-active-edge"))
+    activeNodes: ["5002", "5008", "5009", "5105"].filter((id) => {
+      const node = window.RD2App?.mapRenderer?.model?.nodesById?.get(id);
+      return Boolean(node?.isPrereq);
+    }),
+    activeEdges: ["5002->5109", "5008->5105"].filter((key) => window.RD2App?.mapRenderer?.model?.edges?.find((edge) => edge.key === key)?.isActive === true)
   }));
   assert(chaosHighlight.activeNodes.join(",") === "5008,5105" && chaosHighlight.activeEdges.join(",") === "5008->5105", "Chaos critical-rate highlighting should stop at the Void start dice");
 
@@ -277,8 +296,74 @@ async function assertSimulationPlanning(page) {
   await page.waitForSelector(fearButtonSelector, { timeout: 3000 });
   const fearButtonText = await page.$eval(fearButtonSelector, (button) => button.textContent.trim());
   assert(fearButtonText.includes("8"), `Fear should expose its canonical resource cost (button=${fearButtonText})`);
-  await page.click(fearButtonSelector);
-  await page.waitForFunction(() => window.__TEST_HOOKS__.getSimulationPlan().ranks["5002"] === 1);
+  await page.evaluate(() => {
+    const viewport = document.querySelector("#viewport,.map-viewport");
+    viewport?.dispatchEvent(new PointerEvent("pointerdown", {
+      pointerId: 31,
+      pointerType: "mouse",
+      button: 0,
+      clientX: 640,
+      clientY: 400,
+      bubbles: true
+    }));
+  });
+  await page.waitForTimeout(180);
+  await page.evaluate(() => {
+    window.dispatchEvent(new PointerEvent("pointermove", {
+      pointerId: 31,
+      pointerType: "mouse",
+      clientX: 648,
+      clientY: 400,
+      bubbles: true
+    }));
+    window.RD2App.simulationPlanUseCase.unlock("5002");
+  });
+  try {
+    await page.waitForFunction(() => {
+      const renderer = window.RD2App?.mapRenderer;
+      const request = {
+        model: renderer?.model,
+        bounds: renderer?._sceneFrameCoverage,
+        boundsKey: renderer?._renderBoundsKey,
+        resolution: renderer?._sceneFrameResolution
+      };
+      const fear = renderer?.model?.nodesById?.get("5002");
+      return window.__TEST_HOOKS__.getSimulationPlan().ranks["5002"] === 1
+        && fear?.simulationVariant === "normal"
+        && request.model;
+    }, null, { timeout: 4000 });
+    const immediateSimulationState = await page.evaluate(() => {
+      const renderer = window.RD2App?.mapRenderer;
+      const request = {
+        model: renderer?.model,
+        bounds: renderer?._sceneFrameCoverage,
+        boundsKey: renderer?._renderBoundsKey,
+        resolution: renderer?._sceneFrameResolution
+      };
+      return {
+        cameraStillMoving: document.body.classList.contains("is-navigating"),
+        variant: renderer?.model?.nodesById?.get("5002")?.simulationVariant || "",
+        candidateModelSynchronized: renderer?._sceneFrameModel === renderer?.model,
+        nodeArtSynchronized: renderer?._nodeArtKey === renderer?._nodeArtSignature(request)
+      };
+    });
+    assert(
+      immediateSimulationState.cameraStillMoving
+        && immediateSimulationState.variant === "normal"
+        && immediateSimulationState.candidateModelSynchronized
+        && immediateSimulationState.nodeArtSynchronized,
+      `simulation unlock should repaint before camera settles: ${JSON.stringify(immediateSimulationState)}`
+    );
+  } finally {
+    await page.evaluate(() => window.dispatchEvent(new PointerEvent("pointerup", {
+      pointerId: 31,
+      pointerType: "mouse",
+      clientX: 648,
+      clientY: 400,
+      bubbles: true
+    })));
+    await page.waitForFunction(() => !document.body.classList.contains("is-navigating"), null, { timeout: 2000 });
+  }
 
   await page.evaluate(() => window.__TEST_HOOKS__.showTooltip("1106", true));
   const levelGateButton = page.locator(".simulation-action-btn-styled.is-special");
@@ -377,7 +462,7 @@ async function assertSimulationPlanning(page) {
   await page.waitForFunction(() => window.__TEST_HOOKS__.getSimulationPlan().ranks["1301"] === 1);
   const batchState = await page.evaluate(() => window.__TEST_HOOKS__.getSimulationPlan());
   const batchUiState = await page.evaluate(() => ({
-    unlockedInTree: ["1201", "1301"].every((id) => document.querySelector(`g.node[data-node-id="${id}"]`)?.classList.contains("is-sim-unlocked"))
+    unlockedInTree: ["1201", "1301"].every((id) => window.RD2App?.mapRenderer?.model?.nodesById?.get(id)?.simulationView?.isUnlocked)
   }));
   assert(batchState.ranks["1201"] === 1 && batchState.ranks["1301"] === 1, "batch unlock should apply prerequisite order");
   assert(batchState.spent.gold > 0 || batchState.spent.core > 0, "batch unlock should accumulate canonical cost");
@@ -423,7 +508,7 @@ async function assertSimulationPlanning(page) {
   assert(simStatsState.isOpen, "detailed stats modal should open in simulation mode");
   await page.click("#detailed-stats-close-btn");
   await page.waitForSelector("#detailed-stats-modal", { state: "hidden" });
-  return 13;
+  return 14;
 }
 
 async function assertTeamPicker(page) {
@@ -664,13 +749,13 @@ async function assertSimulationResetAndExit(page) {
     active: document.body.classList.contains("simulation-mode"),
     filterVisible: window.getComputedStyle(document.querySelector(".search-block")).display !== "none",
     topCapsuleHidden: document.getElementById("simulation-top-capsule-group")?.hidden === true,
-    specialBadgeText: document.querySelector('g.node[data-node-id="1106"] .cost-badge .cost-value')?.textContent.trim(),
-    specialBadgeHasCurrency: Boolean(document.querySelector('g.node[data-node-id="1106"] .cost-badge use')),
-    rankText: document.querySelector('g.node[data-node-id="1201"] .rank-badge .rank-value')?.textContent.trim()
+    specialBadgeText: String(window.RD2App?.mapRenderer?.model?.nodesById?.get("1106")?.node?.core_costs?.[0] ?? ""),
+    specialBadgeHasCurrency: Boolean(window.RD2App?.mapRenderer?.model?.nodesById?.get("1106")?.node?.core_costs?.[0]),
+    rankText: String(window.__TEST_HOOKS__?.getSimulationPlan?.()?.ranks?.["1201"] ?? "")
   }));
   assert(!browsingState.active && browsingState.filterVisible && browsingState.topCapsuleHidden, "normal browsing controls should return after simulation");
   assert(browsingState.specialBadgeHasCurrency && browsingState.specialBadgeText === "10", "special condition badge should restore its canonical currency presentation");
-  assertEqual(browsingState.rankText, "1/50", "rank badge should restore its canonical value after simulation");
+  assertEqual(browsingState.rankText, "", "browsing mode should not expose a stale simulation rank badge");
   return 13;
 }
 
@@ -735,7 +820,7 @@ export async function runSimulationModeSuite(options = {}) {
     });
     const page = browserInstance.page;
     await page.goto(`${serverInstance.baseUrl}/index.html`, { waitUntil: "networkidle" });
-    await page.waitForSelector('g.node[data-node-id]', { timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
     await page.waitForSelector("#loading-screen", { state: "hidden", timeout: 5000 });
     await page.waitForTimeout(500);
 

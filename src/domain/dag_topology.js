@@ -30,8 +30,10 @@ function collectUpstreamIds(targetNodeIds, getNode) {
       queue.push(id);
     }
   }
-  while (queue.length > 0) {
-    const currentId = queue.shift();
+  let queueIndex = 0;
+  while (queueIndex < queue.length) {
+    const currentId = queue[queueIndex];
+    queueIndex += 1;
     const currentNode = getNode(currentId);
     for (const incomingId of currentNode?.incoming || []) {
       if (incomingId && !activePathNodeIds.has(incomingId) && getNode(incomingId)) {

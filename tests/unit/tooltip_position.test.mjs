@@ -116,6 +116,25 @@ test("tooltip_position: TP-08 大節點半徑與縮放倍率計算", () => {
   assert.equal(result.top, 714);
 });
 
+test("tooltip_position: TP-08a 使用語意命中框校正節點間距", () => {
+  const result = computeTooltipScreenCoordinates({
+    pt: { x: 180, y: 320 },
+    scale: 1,
+    panX: 0,
+    panY: 0,
+    nodeType: "DICE",
+    screenNodeRadius: 95,
+    tipWidth: 300,
+    tipHeight: 220,
+    placeBelow: true,
+    gap: 16
+  });
+
+  assert.equal(result.left, 30);
+  assert.equal(result.top, 431);
+  assert.equal(result.isPlacedBelow, true);
+});
+
 test("tooltip_position: TP-09 單一物件參數模式支援", () => {
   const params = {
     nodeId: "Target",
@@ -138,7 +157,7 @@ test("tooltip_position: TP-10 關閉過渡期防跳動鎖定", () => {
   assert.equal(shouldPlaceTooltipBelow(params), true);
 });
 
-test("tooltip_position: TP-11 preferred side flips when the card would leave the viewport", () => {
+test("tooltip_position: TP-11 preferred side stays above when the card leaves the viewport", () => {
   const result = computeTooltipScreenCoordinates({
     pt: { x: 180, y: 80 },
     scale: 1,
@@ -153,12 +172,12 @@ test("tooltip_position: TP-11 preferred side flips when the card would leave the
     viewportHeight: 640,
     viewportPadding: 12
   });
-  assert.equal(result.isPlacedBelow, true);
+  assert.equal(result.isPlacedBelow, false);
   assert.equal(result.left, 30);
-  assert.equal(result.top, 148);
+  assert.equal(result.top, -208);
 });
 
-test("tooltip_position: TP-12 viewport clamp keeps the card inside when neither side fits", () => {
+test("tooltip_position: TP-12 vertical placement is not clamped by the viewport", () => {
   const result = computeTooltipScreenCoordinates({
     pt: { x: 180, y: 320 },
     scale: 1,
@@ -172,7 +191,7 @@ test("tooltip_position: TP-12 viewport clamp keeps the card inside when neither 
     viewportPadding: 12
   });
   assert.equal(result.left, 30);
-  assert.equal(result.top, 12);
+  assert.equal(result.top, -352);
   assert.equal(result.isPlacedBelow, false);
 });
 

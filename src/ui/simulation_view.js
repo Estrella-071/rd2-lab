@@ -32,32 +32,19 @@ function updateSimulationModeChrome(active, localization) {
   if (topCapsule) topCapsule.hidden = !active;
 }
 
-function updateSimulationCenterLabels(center, active) {
+function updateSimulationCenterLabels(center, active, localization = null) {
   center.classList.toggle("is-simulation-disabled", active);
   center.setAttribute("aria-disabled", String(active));
   center.setAttribute("tabindex", active ? "-1" : "0");
-  const compendiumMark = center.querySelector(".compendium-core-mark");
-  if (compendiumMark) compendiumMark.style.display = active ? "none" : "";
-  const normalTitle = center.querySelector(".normal-title");
-  if (normalTitle) normalTitle.style.display = active ? "none" : "";
-  const simTitle = center.querySelector(".simulation-title");
-  if (simTitle) simTitle.style.display = active ? "" : "none";
-}
-
-function syncSimulationCenterDiceIcon(center, active) {
-  let diceIcon = center.querySelector(".simulation-center-dice-icon");
-  if (active && !diceIcon) {
-    const ownerDocument = center.ownerDocument || document;
-    diceIcon = ownerDocument.createElementNS("http://www.w3.org/2000/svg", "g");
-    diceIcon.setAttribute("class", "simulation-center-dice-icon");
-    diceIcon.setAttribute("transform", "translate(0, -30)");
-    diceIcon.setAttribute("aria-hidden", "true");
-    diceIcon.setAttribute("pointer-events", "none");
-    diceIcon.innerHTML = `<use href="#sprite-menu-tree" xlink:href="#sprite-menu-tree" x="-58" y="-58" width="116" height="116" preserveAspectRatio="xMidYMid meet"/>`;
-    const body = center.querySelector(".node-body");
-    (body || center).appendChild(diceIcon);
-  }
-  if (diceIcon) diceIcon.style.display = active ? "" : "none";
+  center.toggleAttribute("disabled", active);
+  const label = localization?.t?.(
+    active ? "compendium.simulationCenterTitle" : "compendium.centerTitle",
+    {},
+    active ? "Dice tree" : "Compendium"
+  ) || (active ? "Dice tree" : "Compendium");
+  center.setAttribute("aria-label", label);
+  center.dataset.renderedLabel = label;
+  center.dataset.simulationActive = String(active);
 }
 
 export class SimulationView {
@@ -106,6 +93,8 @@ export class SimulationView {
     const state = this.store?.getState?.();
     if (!state) return;
     updateSimulationModeChrome(Boolean(state.simulation?.active), this.localization);
+    const center = typeof document !== "undefined" ? document.getElementById("tree-center-compendium-btn") : null;
+    if (center) updateSimulationCenterLabels(center, Boolean(state.simulation?.active), this.localization);
     this._refreshLocalizedPicker(state);
   }
 
@@ -812,8 +801,7 @@ export class SimulationView {
   _setCenterSimulationState(active) {
     const center = document.querySelector("#tree-center-compendium-btn");
     if (!center) return;
-    updateSimulationCenterLabels(center, active);
-    syncSimulationCenterDiceIcon(center, active);
+    updateSimulationCenterLabels(center, active, this.localization);
   }
 
   destroy() {

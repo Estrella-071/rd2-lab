@@ -5,106 +5,6 @@ import { resolveNode3Icon } from "../domain/dice_icon.js";
 export const SHARE_IMAGE_LOGICAL_SIZE = Object.freeze({ width: 1600, height: 1000 });
 
 const imageCache = new Map();
-const snapshotImageDataCache = new Map();
-const XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
-
-/**
- * Resolve external SVG image references before the SVG is moved into a Blob.
- * Relative URLs resolve against the Blob URL after serialization, so they
- * would otherwise point at a non-existent `blob:` path and disappear from
- * the exported share image.
- *
- * @param {SVGElement} svg
- * @param {string} [baseUrl]
- * @returns {number} number of rewritten references
- */
-export function resolveSnapshotImageReferences(svg, baseUrl = null) {
-  if (!svg || typeof svg.querySelectorAll !== "function") return 0;
-
-  const documentBase = typeof document !== "undefined" ? document.baseURI : "";
-  const windowBase = typeof window !== "undefined" ? window.location?.href : "";
-  const resolvedBase = baseUrl || (documentBase && documentBase !== "about:blank" ? documentBase : windowBase);
-  if (!resolvedBase) return 0;
-
-  let rewritten = 0;
-  svg.querySelectorAll("image").forEach((image) => {
-    for (const attribute of ["href", "xlink:href"]) {
-      const value = image.getAttribute(attribute);
-      if (!value || value.startsWith("#") || /^(?:data|blob):/i.test(value)) continue;
-
-      let absoluteUrl;
-      try {
-        absoluteUrl = new URL(value, resolvedBase).href;
-      } catch {
-        continue;
-      }
-      if (absoluteUrl === value) continue;
-
-      if (attribute === "xlink:href" && typeof image.setAttributeNS === "function") {
-        image.setAttributeNS(XLINK_NAMESPACE, attribute, absoluteUrl);
-      } else {
-        image.setAttribute(attribute, absoluteUrl);
-      }
-      rewritten += 1;
-    }
-  });
-  return rewritten;
-}
-
-function readBlobAsDataUrl(blob) {
-  if (typeof FileReader === "undefined") return Promise.resolve(null);
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : null);
-    reader.onerror = () => resolve(null);
-    reader.readAsDataURL(blob);
-  });
-}
-
-async function loadSnapshotImageDataUrl(url) {
-  if (snapshotImageDataCache.has(url)) return snapshotImageDataCache.get(url);
-  const promise = (async () => {
-    if (typeof fetch !== "function") return null;
-    try {
-      const response = await fetch(url, { credentials: "same-origin", cache: "force-cache" });
-      if (!response.ok) return null;
-      return readBlobAsDataUrl(await response.blob());
-    } catch {
-      return null;
-    }
-  })();
-  snapshotImageDataCache.set(url, promise);
-  return promise;
-}
-
-async function inlineSnapshotImageReferences(svg) {
-  resolveSnapshotImageReferences(svg);
-  const imagesByUrl = new Map();
-  svg.querySelectorAll("image").forEach((image) => {
-    const urls = new Set();
-    for (const attribute of ["href", "xlink:href"]) {
-      const value = image.getAttribute(attribute);
-      if (value && /^(?:https?:)\/\//i.test(value)) urls.add(value);
-    }
-    for (const url of urls) {
-      if (!imagesByUrl.has(url)) imagesByUrl.set(url, []);
-      imagesByUrl.get(url).push(image);
-    }
-  });
-
-  await Promise.all([...imagesByUrl.entries()].map(async ([url, images]) => {
-    const dataUrl = await loadSnapshotImageDataUrl(url);
-    if (!dataUrl) return;
-    for (const image of images) {
-      image.setAttribute("href", dataUrl);
-      if (typeof image.setAttributeNS === "function") {
-        image.setAttributeNS(XLINK_NAMESPACE, "xlink:href", dataUrl);
-      } else {
-        image.setAttribute("xlink:href", dataUrl);
-      }
-    }
-  }));
-}
 
 function loadImageAsync(src) {
   if (typeof Image === "undefined" || !src) return Promise.resolve(null);
@@ -300,169 +200,6 @@ async function renderShareTeams(ctx, nodesMap, team1, team2, teamCount, height, 
   }
 }
 
-function calculateSnapshotViewBox(clonedSvg, targetWidth, targetHeight) {
-  const points = [{ x: 2000, y: 1700 }];
-  clonedSvg.querySelectorAll(".node.is-sim-unlocked, .tree-center").forEach((node) => {
-    const transform = node.getAttribute("transform") || "";
-    const match = /translate\(\s*([\d.-]+)\s*,\s*([\d.-]+)\s*\)/.exec(transform);
-    if (!match) return;
-    const x = Number.parseFloat(match[1]);
-    const y = Number.parseFloat(match[2]);
-    if (!Number.isNaN(x) && !Number.isNaN(y)) points.push({ x, y });
-  });
-
-  const padding = 280;
-  const xs = points.map(({ x }) => x);
-  const ys = points.map(({ y }) => y);
-  const minX = Math.min(...xs) - padding;
-  const maxX = Math.max(...xs) + padding;
-  const minY = Math.min(...ys) - padding;
-  const maxY = Math.max(...ys) + padding;
-  let spanX = Math.max(1400, maxX - minX);
-  let spanY = Math.max(850, maxY - minY);
-  const centerX = (minX + maxX) / 2;
-  const centerY = (minY + maxY) / 2;
-  const targetAspect = targetWidth / targetHeight;
-  if (spanX / spanY < targetAspect) spanX = spanY * targetAspect;
-  else spanY = spanX / targetAspect;
-  return [
-    Math.round(centerX - spanX / 2),
-    Math.round(centerY - spanY / 2),
-    Math.round(spanX),
-    Math.round(spanY)
-  ].join(" ");
-}
-
-function applySnapshotSimulationVisibility(clonedSvg, renderState) {
-  if (!clonedSvg || !renderState) return;
-  const { preUnlockedIds, renderUnlockedIds } = renderState;
-  clonedSvg.querySelectorAll(".node[data-node-id]").forEach((node) => {
-    const id = String(node.dataset.nodeId || "");
-    if (!preUnlockedIds.has(id) || renderUnlockedIds.has(id)) return;
-    node.classList.remove("is-sim-unlocked", "is-sim-visible", "is-selected", "is-linked-selected", "is-sim-special");
-    node.classList.add("is-sim-locked");
-  });
-
-  clonedSvg.querySelectorAll(".node-simulation-occlusion[data-occlusion-for]").forEach((occlusion) => {
-    const id = String(occlusion.dataset.occlusionFor || "");
-    if (!preUnlockedIds.has(id) || renderUnlockedIds.has(id)) return;
-    occlusion.classList.remove("is-sim-special", "is-selected", "is-linked-selected");
-    occlusion.classList.add("is-sim-locked");
-  });
-
-  clonedSvg.querySelectorAll("path.edge, line.edge, .tree-edge, [data-edge-key]").forEach((edge) => {
-    const startId = String(edge.dataset.startNodeId || "");
-    const endId = String(edge.dataset.endNodeId || "");
-    if (!startId || !endId) return;
-    const isVisiblePath = renderUnlockedIds.has(startId) && renderUnlockedIds.has(endId);
-    edge.classList.toggle("is-simulation-active-edge", isVisiblePath);
-    edge.classList.toggle("is-simulation-locked-edge", !isVisiblePath);
-  });
-}
-
-function collectSnapshotCss(baseCss) {
-  let cssText = baseCss;
-  if (typeof document === "undefined" || !document.styleSheets) return cssText;
-  for (const sheet of document.styleSheets) {
-    try {
-      for (const rule of sheet.cssRules) {
-        const ruleText = rule.cssText || "";
-        if (/\burl\s*\(/i.test(ruleText)) continue;
-        cssText += `${ruleText}\n`;
-      }
-    } catch (error) {
-      if (error?.name !== "SecurityError") throw error;
-    }
-  }
-  return cssText;
-}
-
-export function buildSimulationSnapshotCss() {
-  return `
-    .cost-badge { display: none !important; }
-    .node-simulation-occlusion-layer { display: block !important; pointer-events: none !important; }
-    .node-simulation-occlusion { display: none !important; pointer-events: none !important; }
-    .node-simulation-occlusion.is-sim-locked:not(.is-selected):not(.is-linked-selected),
-    .node-simulation-occlusion.is-sim-special:not(.is-selected):not(.is-linked-selected) { display: block !important; }
-    .node.is-sim-locked.node-type-dice:not(.is-selected):not(.is-linked-selected),
-    .node.is-sim-locked.node-type-perk:not(.is-selected):not(.is-linked-selected) { opacity: 0.52 !important; }
-    .node.is-sim-locked.node-type-dice:not(.is-selected):not(.is-linked-selected) .node-body .node-icon,
-    .node.is-sim-locked.node-type-perk:not(.is-selected):not(.is-linked-selected) .node-body .node-icon { filter: grayscale(1) brightness(0.6) !important; }
-    .node.is-sim-locked.node-type-dice-rune:not(.is-selected):not(.is-linked-selected) { opacity: 0.18 !important; filter: none !important; }
-    .node.is-sim-locked.node-type-player-passive:not(.is-selected):not(.is-linked-selected) { opacity: 0.52 !important; filter: none !important; }
-    .node.is-sim-special:not(.is-selected):not(.is-linked-selected) { opacity: 0.34 !important; filter: none !important; }
-    .node.is-sim-locked.node-type-player-passive:not(.is-selected):not(.is-linked-selected) .node-body > circle,
-    .node.is-sim-special.node-type-player-passive:not(.is-selected):not(.is-linked-selected) .node-body > circle { fill: #5c4d83 !important; }
-    .node.is-sim-locked.is-selected,
-    .node.is-sim-locked.is-linked-selected,
-    .node.is-sim-special.is-selected,
-    .node.is-sim-special.is-linked-selected { opacity: 1 !important; filter: none !important; }
-    .node.is-sim-unlocked { opacity: 1 !important; filter: none !important; }
-    .node.is-sim-unlocked .node-icon,
-    .node.is-sim-unlocked .node-icon-flat,
-    .node.is-sim-unlocked .node-icon-deep { filter: none !important; }
-    path.is-simulation-locked-edge { opacity: 0.06 !important; }
-    path.is-simulation-active-edge { opacity: 0.98 !important; stroke-width: 4.5px !important; filter: drop-shadow(0 0 6px rgba(205, 164, 255, 0.6)) !important; }
-    .tree-center { opacity: 1 !important; }
-  `;
-}
-
-/** Snapshot the tree used by the share image. */
-async function snapshotRealSvgTreeAsync({ svgElement, targetWidth = 1600, targetHeight = 780, renderState = null } = {}) {
-  const svg = svgElement || (typeof document !== "undefined" ? document.querySelector("#scene svg") : null);
-  if (!svg) return null;
-
-  // Clone the current SVG.
-  const clonedSvg = svg.cloneNode(true);
-  await inlineSnapshotImageReferences(clonedSvg);
-
-  // Remove cost badges from the share image.
-  clonedSvg.querySelectorAll(".cost-badge").forEach((el) => el.remove());
-
-  applySnapshotSimulationVisibility(clonedSvg, renderState);
-
-  // Set the viewBox used by the image.
-  clonedSvg.setAttribute("viewBox", calculateSnapshotViewBox(clonedSvg, targetWidth, targetHeight));
-  clonedSvg.setAttribute("width", String(targetWidth));
-  clonedSvg.setAttribute("height", String(targetHeight));
-
-  // Include the styles needed by the snapshot.
-  const cssText = collectSnapshotCss(buildSimulationSnapshotCss());
-
-  let defs = clonedSvg.querySelector("defs");
-  if (!defs) {
-    defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    clonedSvg.insertBefore(defs, clonedSvg.firstChild);
-  }
-  const styleEl = document.createElementNS("http://www.w3.org/2000/svg", "style");
-  styleEl.textContent = cssText;
-  defs.appendChild(styleEl);
-
-  const serializer = new XMLSerializer();
-  let svgString = serializer.serializeToString(clonedSvg);
-  if (!/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/.test(svgString)) {
-    svgString = svgString.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
-  }
-  if (!/^<svg[^>]+xmlns:xlink="http:\/\/www\.w3\.org\/1999\/xlink"/.test(svgString)) {
-    svgString = svgString.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
-  }
-
-  const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      resolve({ img, url, width: targetWidth, height: targetHeight });
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      resolve(null);
-    };
-    img.src = url;
-  });
-}
-
 /** Create a share image from the current tree. */
 export async function generateSimulationShareImage({
   simulation,
@@ -475,7 +212,8 @@ export async function generateSimulationShareImage({
   height,
   scale,
   canvas: suppliedCanvas,
-  svgElement = null
+  prepareRender = null,
+  renderTree = null
 } = {}) {
   const rawDice = Array.isArray(simulation?.team?.dice) ? simulation.team.dice.filter(Boolean) : [];
   const team1 = rawDice.slice(0, 5);
@@ -543,16 +281,29 @@ export async function generateSimulationShareImage({
     const treeAreaW = w - 80;
     const treeAreaX = 40;
 
-    const svgSnapshot = await snapshotRealSvgTreeAsync({
-      svgElement,
-      targetWidth: Math.max(1, Math.round(treeAreaW * layout.scale)),
-      targetHeight: Math.max(1, Math.round(treeAreaH * layout.scale)),
-      renderState: computeShareRenderUnlockState(simulation, treeData)
-    });
+    if (typeof prepareRender === "function") {
+      await prepareRender({
+        pixelScale: layout.scale,
+        rect: { x: treeAreaX, y: treeAreaTop, width: treeAreaW, height: treeAreaH },
+        mode: "share",
+        simulation,
+        treeData
+      });
+    }
 
-    if (svgSnapshot?.img) {
-      ctx.drawImage(svgSnapshot.img, treeAreaX, treeAreaTop, treeAreaW, treeAreaH);
-      if (svgSnapshot.url) URL.revokeObjectURL(svgSnapshot.url);
+    if (typeof renderTree === "function") {
+      const rendered = await renderTree({
+        context: ctx,
+        rect: { x: treeAreaX, y: treeAreaTop, width: treeAreaW, height: treeAreaH },
+        pixelScale: layout.scale,
+        mode: "share",
+        simulation,
+        treeData,
+        renderUnlockState: computeShareRenderUnlockState(simulation, treeData)
+      });
+      if (!rendered) return { ok: false, error: "tree-renderer-unavailable", layout };
+    } else {
+      return { ok: false, error: "tree-renderer-unavailable", layout };
     }
 
     // Teams.

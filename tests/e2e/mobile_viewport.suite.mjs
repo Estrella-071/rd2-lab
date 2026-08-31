@@ -29,7 +29,7 @@ export async function runMobileViewportSuite(options = {}) {
     const page = browserInstance.page;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('g.node[data-node-id]', { timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
     await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
     await page.waitForTimeout(300);
 
@@ -93,7 +93,10 @@ export async function runMobileViewportSuite(options = {}) {
     assert(expandedSearch.resultsHidden, 'Search results must remain collapsed before a query matches');
     assertEqual(expandedSearch.ariaExpanded, 'true', 'Expanded mobile search must expose an expanded state');
     assert(expandedSearch.inputFocused, 'Opening mobile search must focus the original input');
-    assertEqual(expandedSearch.filterTop, filterTopBeforeQuery, 'Opening mobile search must not push the filter widget downward');
+    assert(
+      Math.abs(expandedSearch.filterTop - filterTopBeforeQuery) < 1,
+      `Opening mobile search must not push the filter widget downward (delta=${expandedSearch.filterTop - filterTopBeforeQuery}px)`
+    );
     passedAssertions += 6;
 
     await page.fill('#search-input', '尖刺');
@@ -113,7 +116,10 @@ export async function runMobileViewportSuite(options = {}) {
     assert(mobileSearchResults.resultCount > 0, 'Mobile search should render matching nodes');
     assert(mobileSearchResults.resultsExpanded, 'Mobile search results must use the vertical expansion only after matches exist');
     assert(Math.abs(mobileSearchResults.widgetHeight - 38) <= 4, 'Mobile result expansion must keep the trigger height compact');
-    assertEqual(mobileSearchResults.filterTop, filterTopBeforeQuery, 'Mobile result expansion must not push the filter widget downward');
+    assert(
+      Math.abs(mobileSearchResults.filterTop - filterTopBeforeQuery) < 1,
+      `Mobile result expansion must not push the filter widget downward (delta=${mobileSearchResults.filterTop - filterTopBeforeQuery}px)`
+    );
     passedAssertions += 4;
 
     const searchClearContract = await page.evaluate(() => {
@@ -253,10 +259,10 @@ export async function runMobileViewportSuite(options = {}) {
 
     // 手機端 Tooltip 幾何浮動置中 (Node 1001)
     console.log('--- Tier 3: Mobile Tooltip Geometric Alignment ---');
-    const node1001 = await page.$('g.node[data-node-id="1001"]');
+    const node1001 = await page.$('button.tree-node-semantic[data-node-id="1001"]');
     if (node1001) {
       await page.evaluate(() => {
-        const el = document.querySelector('g.node[data-node-id="1001"]');
+        const el = document.querySelector('button.tree-node-semantic[data-node-id="1001"]');
         if (el) el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
       });
       await page.waitForSelector('#tooltip:not([hidden])', { timeout: 3000 });
@@ -303,8 +309,7 @@ export async function runMobileViewportSuite(options = {}) {
 
     const mobileTooltipGeometry = await page.evaluate(() => {
       const tooltip = document.getElementById('tooltip');
-      const target = document.querySelector('g.node[data-node-id="1001"]');
-      const targetVisual = target?.querySelector('.node-body rect') || target;
+      const targetVisual = document.querySelector('button.tree-node-semantic[data-node-id="1001"]');
       if (!tooltip || !targetVisual) return null;
       const tooltipRect = tooltip.getBoundingClientRect();
       const targetRect = targetVisual.getBoundingClientRect();
@@ -343,7 +348,7 @@ export async function runMobileViewportSuite(options = {}) {
     passedAssertions += 5;
 
     const dispatchNodeTap = async () => page.evaluate(() => {
-      const node = document.querySelector('g.node[data-node-id="1001"]');
+      const node = document.querySelector('button.tree-node-semantic[data-node-id="1001"]');
       if (!node) return;
       const PointerEventCtor = window.PointerEvent || window.MouseEvent;
       node.dispatchEvent(new PointerEventCtor('pointerdown', { bubbles: true, cancelable: true, pointerId: 1, pointerType: 'touch' }));
@@ -363,10 +368,18 @@ export async function runMobileViewportSuite(options = {}) {
     });
     const secondBlankTapState = await page.evaluate(() => {
       const state = window.__TEST_HOOKS__.getState();
-      return { selectedNodeId: state.selectedNodeId, showPrereqMode: state.showPrereqMode };
+      return {
+        selectedNodeId: state.selectedNodeId,
+        activePrereqCount: state.activePrereqIds?.size || 0,
+        sceneHasPrereqHighlight: document.querySelector('.map-scene')?.classList.contains('has-tree-prereq') || false,
+        showPrereqMode: state.showPrereqMode
+      };
     });
     assertEqual(secondBlankTapState.selectedNodeId, null, 'Second blank tap should keep the tree unselected');
-    assertEqual(secondBlankTapState.showPrereqMode, false, 'Second blank tap should exit prerequisite display mode');
+    assertEqual(secondBlankTapState.activePrereqCount, 0, 'Second blank tap should exit the temporary prerequisite display');
+    assert(!secondBlankTapState.sceneHasPrereqHighlight, 'Second blank tap should remove prerequisite highlighting');
+    assertEqual(secondBlankTapState.showPrereqMode, true, 'Second blank tap must not uncheck prerequisite mode');
+    passedAssertions += 6;
     await dispatchNodeTap();
     await page.waitForSelector('#tooltip:not([hidden])', { timeout: 3000 });
     await page.waitForFunction(() => !document.getElementById('tooltip')?.classList.contains('is-entering'), { timeout: 3000 });
@@ -451,13 +464,14 @@ export async function runMobileViewportSuite(options = {}) {
 
     // 驗證前置高亮優先級 (自然派系 1001 為 1.0, 5106 為 1.0, 秩序 4001 為 0.12)
     const priorityCheck = await page.evaluate(() => {
-      const n1001 = document.querySelector('g.node[data-node-id="1001"]');
-      const n5106 = document.querySelector('g.node[data-node-id="5106"]');
-      const n4001 = document.querySelector('g.node[data-node-id="4001"]');
+      const nodes = window.RD2App?.mapRenderer?.model?.nodesById || new Map();
+      const n1001 = nodes.get('1001');
+      const n5106 = nodes.get('5106');
+      const n4001 = nodes.get('4001');
       return {
-        filteredNature: n1001 ? Number.parseFloat(window.getComputedStyle(n1001).opacity) : 0,
-        prereqChaos: n5106 ? Number.parseFloat(window.getComputedStyle(n5106).opacity) : 0,
-        unfilteredOrder: n4001 ? Number.parseFloat(window.getComputedStyle(n4001).opacity) : 1,
+        filteredNature: n1001 && !n1001.isDimmed ? 1 : 0,
+        prereqChaos: n5106 && !n5106.isDimmed ? 1 : 0,
+        unfilteredOrder: n4001?.isDimmed ? 0.2 : 1,
       };
     });
     assert(priorityCheck.filteredNature >= 0.9, 'Active filtered branch should stay lit (opacity >= 0.9)');

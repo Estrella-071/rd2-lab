@@ -16,3 +16,5 @@ export * from "./simulation_plan.js";
 export * from "./simulation_share.js";
 export * from "./url_state.js";
 export * from "./detailed_stats.js";
+export * from "./tree_render_model.js";
+export * from "./map_resolution.js";
