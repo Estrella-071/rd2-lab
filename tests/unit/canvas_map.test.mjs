@@ -503,3 +503,52 @@ test("Canvas render model keeps prerequisite dimming after tooltip close", () =>
   assert.equal(afterTooltipClose.edges.find((edge) => edge.key === "1->2").isDimmed, false);
   assert.equal(afterTooltipClose.edges.find((edge) => edge.key === "2->3").isDimmed, false);
 });
+
+test("Canvas render model does not highlight upstream path when filtering by node type", () => {
+  const fixture = {
+    nodes: [
+      { id: "1", name_zh: "電骰子", node_type: "DICE", branch: 3 },
+      { id: "2", name_zh: "所有骰子傷害", node_type: "PLAYER_PASSIVE", branch: 3 },
+      { id: "3", name_zh: "艾科", node_type: "PERK", branch: 3 },
+      { id: "4", name_zh: "伊安", node_type: "PERK", branch: 1 }
+    ],
+    edges: [
+      { from: "1", to: "2" },
+      { from: "2", to: "3" }
+    ]
+  };
+  const nodesMap = getNodeMap(fixture);
+  const typeFilterModel = buildTreeRenderModel({
+    treeData: fixture,
+    state: makeState({
+      nodesMap,
+      selectedNodeId: null,
+      activePrereqIds: new Set(),
+      activeEdgeIds: new Set(),
+      showPrereqMode: false,
+      filters: { search: "", factions: new Set(), nodeTypes: new Set(["PERK"]) },
+      matchingNodeIds: new Set(["3", "4"])
+    }),
+    renderManifest: { viewBox: { x: 0, y: 0, width: 4000, height: 3400 } }
+  });
+
+  // 1. 目標支援魔像節點應亮起
+  assert.equal(typeFilterModel.nodesById.get("3").isDimmed, false);
+  assert.equal(typeFilterModel.nodesById.get("4").isDimmed, false);
+  assert.equal(typeFilterModel.nodesById.get("3").isMatching, true);
+
+  // 2. 前置路徑上的骰子與被動節點應正確變暗
+  assert.equal(typeFilterModel.nodesById.get("1").isDimmed, true);
+  assert.equal(typeFilterModel.nodesById.get("2").isDimmed, true);
+  assert.equal(typeFilterModel.nodesById.get("1").isMatching, false);
+  assert.equal(typeFilterModel.nodesById.get("2").isMatching, false);
+
+  // 3. 路徑上的連線不應被標記為活躍連線
+  const edge1to2 = typeFilterModel.edges.find((e) => e.key === "1->2");
+  const edge2to3 = typeFilterModel.edges.find((e) => e.key === "2->3");
+  assert.equal(edge1to2.isFilterActive, false);
+  assert.equal(edge2to3.isFilterActive, false);
+  assert.equal(edge1to2.isActive, false);
+  assert.equal(edge2to3.isActive, false);
+});
+

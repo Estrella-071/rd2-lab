@@ -103,7 +103,7 @@ function resolveActiveFilterPath(state, nodesMap) {
   const hasTypeFilter = Boolean(filters.nodeTypes?.size > 0);
   const hasFilter = hasSearch || hasFactionFilter || hasTypeFilter;
   const matching = new Set([...state?.matchingNodeIds || []].map(asId));
-  const filterPath = hasFilter && matching.size > 0
+  const filterPath = hasFilter && matching.size > 0 && !hasTypeFilter
     ? computeUpstreamTopologyPath(matching, nodesMap).activePathNodeIds
     : matching;
   return { hasFilter, hasSearch, hasFactionFilter, hasTypeFilter, matching, filterPath };
@@ -163,7 +163,7 @@ export function buildTreeRenderModel({ treeData, state = {}, renderManifest = nu
       if (node) activeBranches.add(Number(node.branch || node.faction || 0));
     });
   }
-  if (filter.hasFilter && filter.matching.size > 0) computeUpstreamTopologyPath(filter.matching, nodesMap).activeBranches.forEach((branch) => activeBranches.add(branch));
+  if (filter.hasFilter && !filter.hasTypeFilter && filter.matching.size > 0) computeUpstreamTopologyPath(filter.matching, nodesMap).activeBranches.forEach((branch) => activeBranches.add(branch));
   // Closing the tooltip is the first half of the mobile prerequisite gesture.
   // Keep the temporary path as the visual focus until the following blank tap,
   // so unrelated nodes and edges do not flash back to full brightness.
@@ -189,7 +189,7 @@ export function buildTreeRenderModel({ treeData, state = {}, renderManifest = nu
         alwaysVisible: false
       };
     }
-    const isFilterVisible = isMatching || filter.filterPath.has(id);
+    const isFilterVisible = filter.hasTypeFilter ? isMatching : (isMatching || filter.filterPath.has(id));
     const isDimmed = !isSimulation && (hasVisualFocus
       ? !isPrereq && !isLinkedSelected && (!context.hasFilter || !isFilterVisible)
       : context.hasFilter && !isFilterVisible);
@@ -236,7 +236,9 @@ export function buildTreeRenderModel({ treeData, state = {}, renderManifest = nu
     // Bright simulation topology must stop at the unlocked frontier instead
     // of extending through a merely visible gate toward locked content.
     const simulationActive = !isSimulation || Boolean(fromNode?.simulationView?.isUnlocked && toNode?.simulationView?.isUnlocked);
-    const filterActive = !filter.hasFilter || (filter.filterPath.has(edge.from) && filter.filterPath.has(edge.to));
+    const filterActive = !filter.hasFilter || (
+      !filter.hasTypeFilter && filter.filterPath.has(edge.from) && filter.filterPath.has(edge.to)
+    );
     return {
       ...edge,
       fromNode,
@@ -250,7 +252,7 @@ export function buildTreeRenderModel({ treeData, state = {}, renderManifest = nu
   const centerLinks = (renderManifest?.centerLinks || []).map((link) => {
     const branch = Number(link?.branch || 0);
     const branchActive = activeBranches.has(branch);
-    const isFilterActive = Boolean(filter.hasFilter && branchActive);
+    const isFilterActive = Boolean(filter.hasFilter && !filter.hasTypeFilter && branchActive);
     const isPrereqActive = Boolean(context.hasPrereqHighlight && branchActive);
     const isActive = isFilterActive || isPrereqActive;
     return {
