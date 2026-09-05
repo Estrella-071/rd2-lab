@@ -103,6 +103,8 @@ function resolveActiveFilterPath(state, nodesMap) {
   const hasTypeFilter = Boolean(filters.nodeTypes?.size > 0);
   const hasFilter = hasSearch || hasFactionFilter || hasTypeFilter;
   const matching = new Set([...state?.matchingNodeIds || []].map(asId));
+  // Type filters are exact-match views; topology context is only useful for
+  // search and faction filters, where upstream prerequisites remain relevant.
   const filterPath = hasFilter && matching.size > 0 && !hasTypeFilter
     ? computeUpstreamTopologyPath(matching, nodesMap).activePathNodeIds
     : matching;

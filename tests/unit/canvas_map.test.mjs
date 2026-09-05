@@ -542,6 +542,10 @@ test("Canvas render model does not highlight upstream path when filtering by nod
   assert.equal(typeFilterModel.nodesById.get("2").isDimmed, true);
   assert.equal(typeFilterModel.nodesById.get("1").isMatching, false);
   assert.equal(typeFilterModel.nodesById.get("2").isMatching, false);
+  assert.deepEqual(
+    typeFilterModel.nodes.filter((node) => !node.isDimmed).map((node) => node.id).sort(),
+    ["3", "4"]
+  );
 
   // 3. 路徑上的連線不應被標記為活躍連線
   const edge1to2 = typeFilterModel.edges.find((e) => e.key === "1->2");
@@ -551,4 +555,3 @@ test("Canvas render model does not highlight upstream path when filtering by nod
   assert.equal(edge1to2.isActive, false);
   assert.equal(edge2to3.isActive, false);
 });
-
