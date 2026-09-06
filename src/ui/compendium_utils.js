@@ -32,13 +32,11 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
   let isDragging = false;
   let activePointerId = null;
   let springTimer = null;
-  let isKeyboardAction = false;
   let currentRank = Math.max(1, Math.min(maxRank, Number.parseInt(sliderInput.value, 10) || 1));
-
-  // 穩態確認與抬手微抖動防護 (Dwell stabilization & lift-off jitter protection)
-  let confirmedRank = currentRank;
+  let isKeyboardAction = false;
   let dwellRank = currentRank;
-  let dwellStartTime = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
+  let confirmedRank = currentRank;
+  let dwellStartTime = 0;
 
   const getNow = () => (typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now());
 
@@ -83,9 +81,9 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
       pct = 100;
     } else {
       // 刻度磁吸與滯後死區 (Hysteresis deadband): 當前等級邊界微幅擴展 8%，避免臨界邊界晃動
-      const curProgress = (currentRank - 1) / (maxRank - 1);
+      const curProgress = maxRank > 1 ? (currentRank - 1) / (maxRank - 1) : 0;
       const diff = progress - curProgress;
-      const step = 1 / (maxRank - 1);
+      const step = maxRank > 1 ? 1 / (maxRank - 1) : 1;
       const hysteresisThreshold = 0.58 * step;
 
       if (Math.abs(diff) <= hysteresisThreshold) {
@@ -163,7 +161,7 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     const now = getNow();
     let finalRank = currentRank;
 
-    // 抬手防抖過濾：如果在前一個等級停留超過 60ms，且在抬手最後 40ms 內發生了 ±1 級的微小抖動，鎖定停留確認的等級
+    // 抬手防抖過濾：如果在前一個等級停留超過 60ms，且在抬手最後 40ms 內發生了 ±1 級的微小離地抖動，鎖定停留確認的等級
     if (now - dwellStartTime < 40 && Math.abs(currentRank - confirmedRank) === 1) {
       finalRank = confirmedRank;
     } else if (now - dwellStartTime >= 60) {
