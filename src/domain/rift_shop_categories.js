@@ -101,3 +101,91 @@ export function classifyRiftTactic(rawKind) {
 
   return "field";
 }
+
+const GRADE_ORDER = Object.freeze({
+  Common: 1,
+  Rare: 2,
+  Legendary: 3
+});
+
+/**
+ * 格式化單一數值（若為數字則加上逗號）
+ * @param {number|string} val
+ * @returns {string}
+ */
+function formatNumberValue(val) {
+  if (typeof val === "number") {
+    return val.toLocaleString("en-US");
+  }
+  return String(val ?? "");
+}
+
+/**
+ * 將裂縫商店同效果的佔位符數值合併，數值不同時以 " / " 分隔
+ * @param {Array<Object>} group - 同類別同名稱的裂縫商店項目
+ * @param {string} [loc="zh-tw"] - 語言代碼
+ * @returns {string}
+ */
+export function buildMergedDescription(group, loc = "zh-tw") {
+  if (!Array.isArray(group) || group.length === 0) return "";
+  const template = group[0].descriptions?.[loc] || group[0].descriptions?.["zh-tw"] || "";
+
+  return template.replace(/\{([0-3])\}/g, (token, i) => {
+    const idx = parseInt(i, 10);
+    const vals = group.map((item) => item.values?.[idx]).filter((v) => v !== null && v !== undefined);
+    if (vals.length === 0) return token;
+    const uniqueVals = [...new Set(vals)];
+    if (uniqueVals.length === 1) {
+      return formatNumberValue(uniqueVals[0]);
+    }
+    return vals.map((v) => formatNumberValue(v)).join(" / ");
+  });
+}
+
+/**
+ * 在按類型分類時，將相同的裂縫商店技能合併為聚合項目
+ * @param {Array<Object>} items - 原始裂縫商店技能清單
+ * @returns {Array<Object>} 合併後的裂縫商店技能清單
+ */
+export function mergeRiftShopItems(items) {
+  if (!Array.isArray(items)) return [];
+
+  const groupsMap = new Map();
+  for (const item of items) {
+    const baseKind = String(item.kind || "").replace(/(Low|Mid|High)$/, "");
+    if (!groupsMap.has(baseKind)) {
+      groupsMap.set(baseKind, []);
+    }
+    groupsMap.get(baseKind).push(item);
+  }
+
+  const result = [];
+  for (const [baseKind, group] of groupsMap.entries()) {
+    // 依品質排序 (Common -> Rare -> Legendary)
+    group.sort((a, b) => (GRADE_ORDER[a.grade] || 99) - (GRADE_ORDER[b.grade] || 99));
+
+    const grades = group.map((i) => i.grade).filter(Boolean);
+    const costs = group.map((i) => i.cost);
+    const uniqueCosts = [...new Set(costs)];
+    const costText = uniqueCosts.length === 1 ? String(costs[0]) : costs.join(" / ");
+
+    result.push({
+      id: group[0].id,
+      baseKind,
+      kind: group[0].kind,
+      grade: group[0].grade,
+      grades,
+      costs,
+      costText,
+      names: group[0].names,
+      descriptions: group[0].descriptions,
+      target: group[0].target,
+      items: group,
+      isMerged: group.length > 1,
+      getMergedDescription: (loc) => buildMergedDescription(group, loc)
+    });
+  }
+
+  return result;
+}
+

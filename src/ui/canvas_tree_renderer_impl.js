@@ -1413,6 +1413,7 @@ export class CanvasTreeRenderer {
     this._selectionStartTimestamp = null;
     this._selectionAnimating = false;
     this._pressedNodeId = null;
+    this._isCenterPressed = false;
     this.currentResolution = 1;
     this.desiredResolution = 1;
     this._renderBounds = null;
@@ -1771,6 +1772,17 @@ export class CanvasTreeRenderer {
     centerButton.style.top = "1630px";
     centerButton.style.width = "220px";
     centerButton.style.height = "150px";
+    centerButton.addEventListener("pointerdown", () => {
+      centerButton.classList.add("is-pressing");
+      this.setPressedCenter(true);
+    });
+    const endCenterPress = () => {
+      centerButton.classList.remove("is-pressing");
+      this.setPressedCenter(false);
+    };
+    centerButton.addEventListener("pointerup", endCenterPress);
+    centerButton.addEventListener("pointercancel", endCenterPress);
+    centerButton.addEventListener("lostpointercapture", endCenterPress);
     this.layers.semantic.appendChild(centerButton);
   }
 
@@ -2809,6 +2821,13 @@ export class CanvasTreeRenderer {
   }
 
   _drawCenter(ctx, model, resolution) {
+    const pressed = Boolean(this._isCenterPressed);
+    ctx.save();
+    if (pressed) {
+      ctx.translate(2000, 1700);
+      ctx.scale(0.94, 0.94);
+      ctx.translate(-2000, -1700);
+    }
     const variant = model.isSimulation ? "simulation" : "normal";
     const image = this.centerImages.get(`${variant}-${resolution}x`);
     const center = this.renderManifest?.center?.[variant]?.[`${resolution}x`];
@@ -2818,6 +2837,7 @@ export class CanvasTreeRenderer {
       ctx.drawImage(image, 2000 - width / 2, 1700 - height / 2, width, height);
     }
     drawCenterTitle(ctx, model, this.localization);
+    ctx.restore();
   }
 
   _drawStateLabel(ctx, node, model, options) {
@@ -4268,6 +4288,60 @@ export class CanvasTreeRenderer {
     if (this.lastState && this._initialAssetsReady) {
       this._scheduleSceneFrame(this.lastState, { force: true, reason: "press" }).catch((error) => this._setRenderError(error));
     }
+  }
+
+  setPressedCenter(pressed = true) {
+    const nextPressed = Boolean(pressed);
+    if (this._isCenterPressed === nextPressed) return;
+    this._isCenterPressed = nextPressed;
+    this.pauseBackgroundRenders();
+    this._sceneRevision += 1;
+    if (this._redrawDynamicFrameInPlace()) {
+      this.scene?.setAttribute?.("data-pressed-center", nextPressed ? "true" : "");
+      this.scene && (this.scene.dataset.sceneRevision = String(this._sceneRevision));
+      return;
+    }
+    if (this.lastState && this._initialAssetsReady) {
+      this._scheduleSceneFrame(this.lastState, { force: true, reason: "press-center" }).catch((error) => this._setRenderError(error));
+    }
+  }
+
+  _redrawDynamicFrameInPlace() {
+    const model = this._sceneFrameModel;
+    const canvas = this.nodeArtCanvas;
+    const bounds = this._renderBounds;
+    const resolution = this._sceneFrameResolution;
+    const state = this._sceneFrameState || this.lastState;
+    const dynamicCanvas = this.dynamicCanvas;
+    const dynamicContext = this.dynamicContext;
+    if (!model || !canvas || !bounds || !resolution || !state || !dynamicCanvas || !dynamicContext || dynamicCanvas.dataset.canvasReady !== "true") return false;
+
+    const options = this._sceneFrameOptions || this._sceneOptions(model);
+    const pixelScale = Number(canvas.dataset.pixelScale || this._dynamicPixelScale(state, resolution));
+    const dynamicPixelScale = Number(dynamicCanvas.dataset.pixelScale || pixelScale);
+
+    dynamicContext.save();
+    dynamicContext.setTransform(1, 0, 0, 1, 0, 0);
+    dynamicContext.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height);
+    dynamicContext.setTransform(
+      dynamicPixelScale,
+      0,
+      0,
+      dynamicPixelScale,
+      -bounds.left * dynamicPixelScale,
+      -bounds.top * dynamicPixelScale
+    );
+    this._drawCompleteDynamicFrame(
+      dynamicContext,
+      model,
+      resolution,
+      bounds,
+      state,
+      options,
+      { nodeArtCanvas: canvas }
+    );
+    dynamicContext.restore();
+    return true;
   }
 
   pauseBackgroundRenders({ preserveViewportCandidate = false, pauseWarmups = false } = {}) {

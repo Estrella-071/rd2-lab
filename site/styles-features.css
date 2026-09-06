@@ -120,6 +120,12 @@
   body.has-active-tooltip #filter-widget,
   body:has(#tooltip:not([hidden])) #filter-widget,
   body:has(#tooltip.is-closing) #filter-widget,
+  body.has-active-tooltip #search-widget,
+  body:has(#tooltip:not([hidden])) #search-widget,
+  body:has(#tooltip.is-closing) #search-widget,
+  body.has-active-tooltip #simulation-top-capsule-group,
+  body:has(#tooltip:not([hidden])) #simulation-top-capsule-group,
+  body:has(#tooltip.is-closing) #simulation-top-capsule-group,
   body.has-active-tooltip .disclaimer-widget,
   body.has-active-tooltip .changelog-widget,
   body.has-active-tooltip .locale-widget,
@@ -1285,9 +1291,13 @@ body.app-entering .statusbar {
    ========================================================================== */
 .compendium-category-widget {
   position: relative;
-  width: 80px;
+  width: 114px;
   height: 34px;
   flex-shrink: 0;
+}
+
+:lang(en) .compendium-category-widget {
+  width: 154px;
 }
 
 .compendium-sort-widget {
@@ -2176,8 +2186,11 @@ body.app-entering .statusbar {
     white-space: nowrap;
   }
   .compendium-category-widget {
-    width: 72px;
+    width: 96px;
     height: 32px;
+  }
+  :lang(en) .compendium-category-widget {
+    width: 136px;
   }
   .compendium-category-surface,
   .compendium-category-toggle-btn {
@@ -2185,6 +2198,7 @@ body.app-entering .statusbar {
   }
   .compendium-category-toggle-btn {
     padding-inline: 7px;
+    gap: 4px;
   }
   .category-current-text,
   .compendium-title-suffix {

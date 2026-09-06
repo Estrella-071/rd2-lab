@@ -1,7 +1,7 @@
 import { escapeHtml, formatGameText } from "../domain/game_text.js";
 import { installImageFallbacks } from "./image_fallback.js";
 import { translate } from "./compendium_utils.js";
-import { classifyRiftTactic, RIFT_SHOP_CATEGORIES } from "../domain/rift_shop_categories.js";
+import { classifyRiftTactic, RIFT_SHOP_CATEGORIES, mergeRiftShopItems } from "../domain/rift_shop_categories.js";
 
 const GRADE_DATA = Object.freeze({
   Common: {
@@ -43,8 +43,11 @@ function resolveTacticIconFile(kind) {
 
 export function createRiftCard(view, row, index = 0) {
   const locale = view.localization?.getLocale() || "zh-tw";
-  const gradeMeta = GRADE_DATA[row.grade] || GRADE_DATA.Common;
-  const gradeName = gradeMeta.names[locale] || gradeMeta.names["zh-tw"] || row.grade || "Common";
+  const grades = Array.isArray(row.grades) && row.grades.length > 0
+    ? row.grades
+    : [row.grade || "Common"];
+  const primaryGrade = grades[grades.length - 1] || "Common";
+  const gradeMeta = GRADE_DATA[primaryGrade] || GRADE_DATA.Common;
   const targetName = TARGET_DATA[row.target]?.[locale] || TARGET_DATA[row.target]?.["zh-tw"] || row.target || "Owner";
   const isSelfTarget = row.target === "Owner";
 
@@ -68,11 +71,18 @@ export function createRiftCard(view, row, index = 0) {
     ? ""
     : `<span class="badge normal-monster-badge">${escapeHtml(targetName)}</span>`;
 
+  // 並排顯示所有擁有的品質標籤 (普通、稀有、傳說)
+  const gradeBadgesHtml = grades.map((g) => {
+    const meta = GRADE_DATA[g] || GRADE_DATA.Common;
+    const name = meta.names[locale] || meta.names["zh-tw"] || g;
+    return `<span class="badge event-badge" style="background: ${meta.color}22 !important; border-color: ${meta.border} !important; color: ${meta.color} !important;">${escapeHtml(name)}</span>`;
+  }).join(" ");
+
   header.innerHTML = `
     <div class="tooltip-heading">
       <h3 class="tooltip-title">${escapeHtml(titleText)}</h3>
       <div class="tooltip-badges">
-        <span class="badge event-badge" style="background: ${gradeMeta.color}22 !important; border-color: ${gradeMeta.border} !important; color: ${gradeMeta.color} !important;">${escapeHtml(gradeName)}</span>
+        ${gradeBadgesHtml}
         ${targetBadgeHtml}
       </div>
     </div>
@@ -83,8 +93,10 @@ export function createRiftCard(view, row, index = 0) {
   card.appendChild(header);
 
   // Body
-  const rawDesc = (row.descriptions[locale] || row.descriptions["zh-tw"] || "")
-    .replace(/\{([0-3])\}/g, (token, i) => row.values[i] ?? token);
+  const rawDesc = typeof row.getMergedDescription === "function"
+    ? row.getMergedDescription(locale)
+    : (row.descriptions[locale] || row.descriptions["zh-tw"] || "")
+        .replace(/\{([0-3])\}/g, (token, i) => row.values?.[i] ?? token);
   const formattedDesc = formatGameText(rawDesc, null, 1, { tagDefinitions: view.tagDefinitions });
 
   const body = document.createElement("div");
@@ -103,11 +115,12 @@ export function createRiftCard(view, row, index = 0) {
   const costLabel = translate(view, "compendium.raidCoins", {}, "Raid Coins");
   const costItem = document.createElement("div");
   costItem.className = "dice-stat-item";
+  const costVal = row.costText !== undefined ? row.costText : String(row.cost ?? "—");
   costItem.innerHTML = `
     <div class="dice-stat-icon-box"><img src="icons/Icon_Goods_SP.png" alt="${escapeHtml(costLabel)}" /></div>
     <div class="dice-stat-text">
       <span class="dice-stat-label">${escapeHtml(costLabel)}</span>
-      <span class="dice-stat-val"><span class="stat-base-val">${escapeHtml(String(row.cost ?? "—"))}</span></span>
+      <span class="dice-stat-val"><span class="stat-base-val">${escapeHtml(costVal)}</span></span>
     </div>
   `;
   grid.appendChild(costItem);
@@ -135,7 +148,11 @@ export function createRiftCard(view, row, index = 0) {
 
 export function createRiftCompactItem(view, row, index = 0) {
   const locale = view.localization?.getLocale() || "zh-tw";
-  const gradeMeta = GRADE_DATA[row.grade] || GRADE_DATA.Common;
+  const grades = Array.isArray(row.grades) && row.grades.length > 0
+    ? row.grades
+    : [row.grade || "Common"];
+  const primaryGrade = grades[grades.length - 1] || "Common";
+  const gradeMeta = GRADE_DATA[primaryGrade] || GRADE_DATA.Common;
   const titleText = row.names[locale] || row.names["zh-tw"] || row.kind;
 
   const item = document.createElement("button");
@@ -241,10 +258,12 @@ export function renderRiftShop(view) {
       view.sectionsWrap.appendChild(section);
     });
   } else {
-    // Group by type (damage, sp, board, field)
+    // Group by type (damage, sp, board, field) with duplicate tiers merged
     RIFT_SHOP_CATEGORIES.forEach((cat) => {
-      const groupRows = rows.filter((r) => classifyRiftTactic(r.kind) === cat.key);
-      if (groupRows.length === 0) return;
+      const rawRows = rows.filter((r) => classifyRiftTactic(r.kind) === cat.key);
+      if (rawRows.length === 0) return;
+
+      const mergedRows = mergeRiftShopItems(rawRows);
 
       const section = document.createElement("section");
       section.className = "compendium-branch-section";
@@ -259,14 +278,14 @@ export function renderRiftShop(view) {
           <h3 class="branch-section-title">
             <span style="display:inline-block; width:4px; height:18px; border-radius:2px; background:${cat.color}; margin-right:8px; vertical-align:middle;"></span>${escapeHtml(sectionTitle)}
           </h3>
-          <span class="branch-section-count">${escapeHtml(translate(view, "compendium.countEvents", { count: groupRows.length }, `${groupRows.length} events`))}</span>
+          <span class="branch-section-count">${escapeHtml(translate(view, "compendium.countEvents", { count: mergedRows.length }, `${mergedRows.length} events`))}</span>
         </div>
       `;
       section.appendChild(header);
 
       const grid = document.createElement("div");
       grid.className = isGridMode ? "compendium-compact-grid" : "compendium-grid";
-      groupRows.forEach((row, idx) => {
+      mergedRows.forEach((row, idx) => {
         const item = isGridMode
           ? createRiftCompactItem(view, row, idx)
           : createRiftCard(view, row, idx);
