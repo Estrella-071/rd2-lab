@@ -1741,7 +1741,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   -webkit-backdrop-filter: none;
   opacity: 0;
   pointer-events: none;
-  transform-origin: 50% 25%;
+  transform-origin: var(--tooltip-arrow-x, 50%) 100%;
   box-sizing: border-box;
 }
 
@@ -1854,13 +1854,13 @@ g[transform^="scale(0.56)"] .sel-box-runner,
 }
 
 .node-tooltip.is-entering {
-  transform-origin: 50% 25%;
+  transform-origin: var(--tooltip-arrow-x, 50%) 100%;
   animation: tooltip-spring-enter 260ms cubic-bezier(0.18, 0.9, 0.3, 1) forwards;
 }
 
 .node-tooltip.is-closing {
   pointer-events: none;
-  transform-origin: 50% 85%;
+  transform-origin: var(--tooltip-arrow-x, 50%) 100%;
   animation: tooltip-scale-exit 140ms cubic-bezier(0.4, 0, 0.9, 0.4) forwards;
 }
 
@@ -1873,11 +1873,11 @@ g[transform^="scale(0.56)"] .sel-box-runner,
 }
 
 .node-tooltip.is-placed-below.is-entering {
-  transform-origin: 50% 0%;
+  transform-origin: var(--tooltip-arrow-x, 50%) 0%;
 }
 
 .node-tooltip.is-placed-below.is-closing {
-  transform-origin: 50% 15%;
+  transform-origin: var(--tooltip-arrow-x, 50%) 0%;
 }
 
 /* Tooltip Header */
