@@ -302,8 +302,8 @@ function versionStagingRuntime(releaseId) {
     indexHtml = indexHtml.replace(pattern, `$1${stylesheet}${versionQuery}$2`);
   }
   indexHtml = indexHtml.replace(
-    /(src=["'])src\/main\.js(["'])/,
-    `$1src/main.js${versionQuery}$2`,
+    /(src=["'])\/?src\/main\.js(["'])/,
+    `$1/src/main.js${versionQuery}$2`,
   );
   fs.writeFileSync(indexPath, indexHtml, 'utf8');
 
