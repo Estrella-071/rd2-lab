@@ -1461,6 +1461,11 @@ export class CanvasTreeRenderer {
       this._updateOverviewCutout(null);
       this.pauseBackgroundRenders({ pauseWarmups: true });
     };
+    this._boundViewportSettled = () => {
+      if (!this._isCameraMotionActive() && this._sceneFrameCoverage) {
+        this._updateOverviewCutout(this._sceneFrameCoverage);
+      }
+    };
   }
 
   init({ container, treeData, renderManifest, localization } = {}) {
@@ -1478,6 +1483,7 @@ export class CanvasTreeRenderer {
     }
     if (typeof document !== "undefined") {
       document.addEventListener("rd2:viewport-interaction-start", this._boundViewportInteractionStart);
+      document.addEventListener("rd2:viewport-settled", this._boundViewportSettled);
     }
     this._readyPromise = this._initialize(token);
     return this._readyPromise;
@@ -2084,7 +2090,9 @@ export class CanvasTreeRenderer {
     const x2 = Math.min(viewBox.width, Math.round(bounds.right - viewBox.x));
     const y2 = Math.min(viewBox.height, Math.round(bounds.bottom - viewBox.y));
     if (x2 <= x1 || y2 <= y1) return "";
-    return `polygon(evenodd, 0px 0px, ${viewBox.width}px 0px, ${viewBox.width}px ${viewBox.height}px, 0px ${viewBox.height}px, 0px 0px, ${x1}px ${y1}px, ${x2}px ${y1}px, ${x2}px ${y2}px, ${x1}px ${y2}px, ${x1}px ${y1}px)`;
+    const w = viewBox.width;
+    const h = viewBox.height;
+    return `polygon(0px 0px, ${w}px 0px, ${w}px ${h}px, 0px ${h}px, 0px ${y1}px, ${x1}px ${y1}px, ${x1}px ${y2}px, ${x2}px ${y2}px, ${x2}px ${y1}px, ${x1}px ${y1}px, 0px ${y1}px, 0px 0px)`;
   }
 
   _updateOverviewCutout(bounds = null) {
@@ -4048,6 +4056,8 @@ export class CanvasTreeRenderer {
     this.lastState = state;
     if (this._isCameraMotionActive()) {
       this._updateOverviewCutout(null);
+    } else if (this._sceneFrameCoverage) {
+      this._updateOverviewCutout(this._sceneFrameCoverage);
     }
     if (!this._isCameraMotionActive()) this._backgroundRendersPaused = false;
     this._setOverviewVisibility(this.model);
@@ -4508,6 +4518,7 @@ export class CanvasTreeRenderer {
     this._cancelAtlasTrim();
     if (typeof document !== "undefined") {
       document.removeEventListener("rd2:viewport-interaction-start", this._boundViewportInteractionStart);
+      document.removeEventListener("rd2:viewport-settled", this._boundViewportSettled);
     }
     if (this._coverageWarmupHandle !== null) clearTimeout(this._coverageWarmupHandle);
     this._coverageWarmupHandle = null;

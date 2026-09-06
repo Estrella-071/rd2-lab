@@ -2,11 +2,18 @@ import { SHARE_CODE_PATTERN } from "../../../_shared/share_api.js";
 
 function resolveTargetThumbnail(rawThumbnail, locale) {
   if (typeof rawThumbnail !== "string" || !rawThumbnail) return null;
-  if (rawThumbnail.startsWith("data:image/")) return rawThumbnail;
+  const normalizedLocale = String(locale || "").trim().toLowerCase();
+  if (rawThumbnail.startsWith("data:image/")) {
+    // Legacy single image format fallback only for default locale
+    if (!normalizedLocale || normalizedLocale === "zh-tw") {
+      return rawThumbnail;
+    }
+    return null;
+  }
   if (rawThumbnail.startsWith("{")) {
     try {
       const map = JSON.parse(rawThumbnail);
-      return (locale && map[locale]) || map["zh-tw"] || Object.values(map)[0] || null;
+      return (normalizedLocale && map[normalizedLocale]) || map["zh-tw"] || Object.values(map)[0] || null;
     } catch {
       return null;
     }
