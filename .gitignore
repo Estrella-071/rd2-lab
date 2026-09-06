@@ -9,6 +9,7 @@ artifacts/
 .wrangler/
 test-results/
 coverage/
+.scannerwork/
 
 # Big Binary & Archives
 *.zip
