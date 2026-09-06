@@ -535,7 +535,6 @@ export class TooltipView {
     };
     this._boundWindowResize = () => {
       this._tooltipDimensionsDirty = true;
-      if (this._closingPosition) return;
       const targetId = this._getTooltipPositionTargetId();
       const state = this.store?.getState?.();
       if (targetId && state && this.tooltipEl && !this.tooltipEl.hidden) {
@@ -590,11 +589,13 @@ export class TooltipView {
 
   _handleViewportUpdate(state) {
     if (!this.tooltipEl || this.tooltipEl.hidden) return;
-    if (this._closingPosition) return;
 
-    const closingNodeId = this._getTooltipPositionTargetId();
-    if (closingNodeId && String(closingNodeId) !== String(this._currentNodeId)) {
-      this._positionTooltipAfterViewportUpdate(closingNodeId, state);
+    const isClosing = hasClass(this.tooltipEl, "is-closing");
+    if (isClosing) {
+      const closingNodeId = this._closingNodeId || this._getTooltipPositionTargetId();
+      if (closingNodeId) {
+        this._positionTooltipAfterViewportUpdate(closingNodeId, state);
+      }
       return;
     }
 
@@ -604,7 +605,10 @@ export class TooltipView {
       return;
     }
 
-    if (this._closingNodeId) this._positionTooltipAfterViewportUpdate(this._closingNodeId, state);
+    const targetNodeId = this._getTooltipPositionTargetId();
+    if (targetNodeId) {
+      this._positionTooltipAfterViewportUpdate(targetNodeId, state);
+    }
   }
 
   _isViewportMoving() {
@@ -1053,12 +1057,12 @@ export class TooltipView {
   }
 
   _positionTooltip(selectedNodeId, state) {
-    if (this._closingPosition) return;
-    if (
-      hasClass(this.tooltipEl, "is-closing")
-      && this._closingNodeId
-      && String(selectedNodeId) !== String(this._closingNodeId)
-    ) {
+    const isClosing = hasClass(this.tooltipEl, "is-closing");
+    if (isClosing) {
+      if (this._closingNodeId && String(selectedNodeId) !== String(this._closingNodeId)) {
+        return;
+      }
+    } else if (this._closingPosition) {
       return;
     }
     const pos = this.nodePositions.get(String(selectedNodeId));
@@ -1069,6 +1073,9 @@ export class TooltipView {
     if (!pos || typeof window === "undefined") return;
     const finalPlacement = this._applyTooltipScreenPosition(pos, node, state, isBelow);
     this.tooltipEl.classList.toggle("is-placed-below", finalPlacement);
+    if (isClosing) {
+      this._lockClosingPosition();
+    }
   }
 
   _lockClosingPosition() {

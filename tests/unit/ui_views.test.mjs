@@ -545,7 +545,7 @@ test("TooltipView: keeps a closing tooltip anchored to its previous node", () =>
     else globalThis.window = previousWindow;
   }
 
-  assert.deepEqual(positionCalls, ["old"]);
+  assert.deepEqual(positionCalls, ["old", "old", "old"]);
   assert.equal(tooltipEl.style.left, "42px");
   assert.equal(tooltipEl.style.top, "84px");
 });
