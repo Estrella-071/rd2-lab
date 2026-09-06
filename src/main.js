@@ -209,11 +209,12 @@ export function dismissLoader(isCurrent = () => true, viewportController = null,
     if (canContinue() && targetViewport) {
       targetViewport.updateCachedDimensions?.();
       const currentViewport = targetViewport.getState?.() || null;
+      const hasSelectedNode = Boolean(owner?.store?.getState?.()?.selectedNodeId);
       const unchanged = scheduledViewport && currentViewport
         && Math.abs(Number(currentViewport.x) - Number(scheduledViewport.x)) < 0.01
         && Math.abs(Number(currentViewport.y) - Number(scheduledViewport.y)) < 0.01
         && Math.abs(Number(currentViewport.scale) - Number(scheduledViewport.scale)) < 0.0001;
-      if (unchanged) targetViewport.resetToCenter(true);
+      if (unchanged && !hasSelectedNode) targetViewport.resetToCenter(true);
     }
   }, LOADER_HIDE_DELAY_MS);
 
@@ -968,13 +969,19 @@ export class Application {
   }
 
   async _finishBootstrap(generation, cleanNodes, warmups) {
-    this.viewportController.resetToCenter(true);
+    const selectedNodeId = this.store.getState()?.selectedNodeId;
+    if (!selectedNodeId) {
+      this.viewportController.resetToCenter(true);
+    }
     await warmups.rendererReady;
     // Font loading is allowed to finish in the background. Canvas labels are
     // redrawn by the renderer when the requested web font becomes available;
     // the network response must not hold the first interactive map hostage.
     void warmups.fontWarmup.catch(() => {});
     await setLoaderProgress(100, this._t("loader.complete", {}, "Ready"));
+    if (selectedNodeId && this._globalHooks?.center) {
+      this._globalHooks.center(selectedNodeId, true);
+    }
     if (this._loaderDismissTimer) clearTimeout(this._loaderDismissTimer);
     this._loaderDismissTimer = setTimeout(() => {
       this._loaderDismissTimer = null;
