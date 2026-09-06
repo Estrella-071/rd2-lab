@@ -3045,7 +3045,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   .node-tooltip {
     width: min(330px, calc(100vw - 32px));
     max-width: min(330px, calc(100vw - 32px));
-    max-height: min(460px, calc(100vh - 128px));
+    max-height: min(560px, calc(100dvh - 64px));
     border-width: 2.5px;
     border-radius: 16px;
   }
@@ -3081,7 +3081,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   .tooltip-body {
     padding: 10px 12px 12px;
     gap: 10px;
-    max-height: calc(min(460px, calc(100vh - 120px)) - 56px);
+    max-height: calc(min(560px, calc(100dvh - 64px)) - 56px);
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
   }
@@ -3119,7 +3119,7 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   #tooltip.node-tooltip {
     width: min(320px, calc(100vw - 36px));
     max-width: min(320px, calc(100vw - 36px));
-    max-height: min(440px, calc(100vh - 128px));
+    max-height: min(560px, calc(100dvh - 64px));
   }
 
   #tooltip .tooltip-main-panel,
