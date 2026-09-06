@@ -322,7 +322,7 @@ test("TooltipView: Renders tooltip and smart avoidance class", () => {
   tooltipView.destroy();
 });
 
-test("TooltipView: anchors the pointer to a horizontally clamped node", () => {
+test("TooltipView: anchors the tooltip and pointer directly to the node without horizontal clamping", () => {
   const previousWindow = globalThis.window;
   const styleValues = {};
   const tooltipEl = {
@@ -353,8 +353,8 @@ test("TooltipView: anchors the pointer to a horizontally clamped node", () => {
       false
     );
 
-    assert.equal(tooltipEl.style.left, "78px");
-    assert.equal(styleValues["--tooltip-arrow-x"], "280px");
+    assert.equal(tooltipEl.style.left, "210px");
+    assert.equal(styleValues["--tooltip-arrow-x"], "148px");
   } finally {
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;
@@ -409,7 +409,7 @@ test("TooltipView: reuses measured dimensions during viewport motion", () => {
     assert.equal(widthReads, 1);
     assert.equal(heightReads, 1);
     assert.equal(styleReads, 1);
-    assert.equal(styleValues["--tooltip-arrow-x"], "280px");
+    assert.equal(styleValues["--tooltip-arrow-x"], "148px");
   } finally {
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;

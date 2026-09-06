@@ -1113,7 +1113,6 @@ export class TooltipView {
     const isLarge = Boolean(node && (nodeType === "DICE" || nodeType === "PERK"));
     const gap = isMobile ? 16 : 14;
     const dimensions = this._readTooltipDimensions(isMobile);
-    const padding = isMobile ? 12 : 16;
     const placement = computeTooltipScreenCoordinates({
       pt: anchor.hasScreenAnchor ? { x: anchor.screenX, y: anchor.screenY } : pos,
       scale: anchor.hasScreenAnchor ? 1 : scale,
@@ -1126,9 +1125,7 @@ export class TooltipView {
       tipWidth: dimensions.width,
       tipHeight: dimensions.height,
       placeBelow: isBelow,
-      gap,
-      viewportWidth: window.innerWidth,
-      viewportPadding: padding
+      gap
     });
     this.tooltipEl.style.left = `${placement.left}px`;
     this.tooltipEl.style.top = `${placement.top}px`;

@@ -56,11 +56,6 @@ function averagePrerequisiteY(prereqSet, nodeId, getPoint) {
   return count > 0 ? totalY / count : null;
 }
 
-function hasTooltipViewport(params, tipWidth) {
-  return Number.isFinite(params.viewportWidth)
-    && params.viewportWidth > 0
-}
-
 function resolveTooltipVerticalPlacement({ screenY, nodeRadius, tipHeight, gap, placeBelow }) {
   const aboveTop = screenY - nodeRadius - tipHeight - gap;
   const belowTop = screenY + nodeRadius + gap;
@@ -151,8 +146,6 @@ export function computeTooltipScreenCoordinates(params = {}) {
   const isLarge = Boolean(params.isLarge || params.nodeType === "DICE" || params.nodeType === "PERK");
   const nodeRadius = resolveNodeRadius(params, scale, isLarge);
 
-  const hasViewport = hasTooltipViewport(params, tipWidth);
-  const viewportPadding = Math.max(0, Number(params.viewportPadding ?? 12) || 0);
   const verticalPlacement = resolveTooltipVerticalPlacement({
     screenY,
     nodeRadius,
@@ -160,13 +153,12 @@ export function computeTooltipScreenCoordinates(params = {}) {
     gap,
     placeBelow
   });
-  let { top, isPlacedBelow } = verticalPlacement;
+  const { top, isPlacedBelow } = verticalPlacement;
 
-  let left = screenX - tipWidth / 2;
-  if (hasViewport) {
-    const maxLeft = Math.max(viewportPadding, params.viewportWidth - tipWidth - viewportPadding);
-    left = Math.min(maxLeft, Math.max(viewportPadding, left));
-  }
+  // Tooltip placement is semantic and centered on the node, not viewport-adaptive.
+  // Neither vertical nor horizontal placement is clamped to the camera viewport,
+  // preventing the card from being locked to screen edges or feeling pulled toward center.
+  const left = screenX - tipWidth / 2;
 
   return {
     left: Math.round(left),
