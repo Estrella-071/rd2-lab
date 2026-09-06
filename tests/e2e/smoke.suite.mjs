@@ -243,7 +243,7 @@ export async function runSmokeSuite(options = {}) {
     await page.click('#loader-retry-btn');
     await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
     await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
-    assertEqual(await page.$$eval('button.tree-node-semantic[data-node-id]', (els) => els.length), 239, 'Retry must restore the canonical tree');
+    assertEqual(await page.$$eval('button.tree-node-semantic[data-node-id]', (els) => els.length), 241, 'Retry must restore the canonical tree');
     passedAssertions++;
     await page.unroute('**/data/dice_tree.json');
 
@@ -316,7 +316,7 @@ export async function runSmokeSuite(options = {}) {
       }));
       assert(malformedChangelogState.loaderHidden, 'Malformed optional changelog must not keep the loader visible');
       assert(malformedChangelogState.appInitialized, 'Malformed optional changelog must not abort application bootstrap');
-      assertEqual(malformedChangelogState.treeNodeCount, 239, 'Malformed optional changelog must still render the canonical tree');
+      assertEqual(malformedChangelogState.treeNodeCount, 241, 'Malformed optional changelog must still render the canonical tree');
       passedAssertions += 3;
     } finally {
       await malformedChangelogPage.close();
@@ -326,12 +326,12 @@ export async function runSmokeSuite(options = {}) {
     // must not fall back to the website package version.
     await page.waitForSelector('#data-version-badge');
     const dataVersion = await page.$eval('#data-version-badge', (el) => ({ text: el.textContent.trim(), version: el.dataset.version }));
-    assertEqual(dataVersion.version, '1.0.3', 'Game-data badge must use canonical metadata version 1.0.3');
-    assertEqual(dataVersion.text, 'v1.0.3', 'Game-data badge must be human-readable');
+    assertEqual(dataVersion.version, '1.1.0', 'Game-data badge must use canonical metadata version 1.1.0');
+    assertEqual(dataVersion.text, 'v1.1.0', 'Game-data badge must be human-readable');
     await page.click('#changelog-open-btn');
     await page.waitForSelector('#changelog-widget.is-expanded');
-    const changelogVersion = await page.$eval('#changelog-widget', (el) => el.textContent.includes('v1.0.3'));
-    assert(changelogVersion, 'Changelog must include the canonical 1.0.3 entry');
+    const changelogVersion = await page.$eval('#changelog-widget', (el) => el.textContent.includes('v1.1.0'));
+    assert(changelogVersion, 'Changelog must include the canonical 1.1.0 entry');
     await page.locator('#changelog-widget .changelog-close-btn').click();
     await page.waitForSelector('#changelog-widget:not(.is-expanded)');
     const changelogReturnFocus = await page.evaluate(() => document.activeElement?.id || '');
@@ -364,7 +364,7 @@ export async function runSmokeSuite(options = {}) {
 
     await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 4000 });
     const httpNodeCount = await page.$$eval('button.tree-node-semantic[data-node-id]', els => els.length);
-    assertEqual(httpNodeCount, 239, 'Must render exactly 239 tree nodes in DOM');
+    assertEqual(httpNodeCount, 241, 'Must render exactly 241 tree nodes in DOM');
     passedAssertions++;
 
     // 檢查 loading indicator 與 loading-screen
@@ -378,7 +378,7 @@ export async function runSmokeSuite(options = {}) {
     const requiredLoaderStages = [
       '正在載入骰子樹資料…',
       '讀取節點資料…',
-      '解析 239 個節點…',
+      '解析 241 個節點…',
       '繪製骰子樹圖層…',
       '載入完成'
     ];
@@ -485,7 +485,7 @@ export async function runSmokeSuite(options = {}) {
       `Compendium overlay must cover the viewport: ${JSON.stringify(compendiumGeometry)}`
     );
     const cardCount = await page.$$eval('.compendium-card', els => els.length);
-    assertEqual(cardCount, 41, 'Compendium must display 41 dice cards by default');
+    assertEqual(cardCount, 42, 'Compendium must display 42 dice cards by default');
     const compendiumSelection = await page.evaluate(() => {
       const title = document.querySelector('.compendium-card .tooltip-title');
       const selection = document.getSelection();

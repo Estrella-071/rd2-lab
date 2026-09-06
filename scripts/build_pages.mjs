@@ -192,6 +192,12 @@ for (const event of compendiumData.events || []) {
     }
   }
 }
+for (const item of compendiumData.rift_shop || []) {
+  if (typeof item.kind === 'string') {
+    const iconName = item.kind.replace(/(Mid|High)$/, 'Low');
+    iconFiles.add(normalizePublicIconPath(`icons/${iconName}.png`, `rift shop item ${item.kind}`));
+  }
+}
 for (const poster of Object.values(monsterPosters.monsters || {})) {
   if (typeof poster.poster === 'string' && poster.poster.startsWith('icons/')) {
     iconFiles.add(normalizePublicIconPath(poster.poster, 'monster poster'));

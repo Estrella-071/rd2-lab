@@ -820,6 +820,18 @@
       "ja": "ダイス詳細を閉じる",
       "ko": "주사위 상세 닫기"
     },
+    "compendium.riftShop": {
+      "zh-tw": "裂縫商店",
+      "en": "Rift Shop",
+      "ja": "亀裂ショップ",
+      "ko": "균열 상점"
+    },
+    "compendium.raidCoins": {
+      "zh-tw": "討伐硬幣",
+      "en": "Raid Coins",
+      "ja": "討伐コイン",
+      "ko": "토벌 코인"
+    },
     "common.close": {
       "zh-tw": "關閉",
       "en": "Close",
@@ -1030,6 +1042,126 @@
       "ja": "空きスロット {slot}",
       "ko": "빈 슬롯 {slot}"
     },
+    "common.confirm": {
+      "zh-tw": "確定",
+      "en": "Confirm",
+      "ja": "確認",
+      "ko": "확인"
+    },
+    "simulation.quickUnlock": {
+      "zh-tw": "快速解鎖",
+      "en": "Quick Unlock",
+      "ja": "クイック解放",
+      "ko": "빠른 해금"
+    },
+    "simulation.save": {
+      "zh-tw": "儲存",
+      "en": "Save",
+      "ja": "保存",
+      "ko": "저장"
+    },
+    "simulation.reset": {
+      "zh-tw": "重置",
+      "en": "Reset",
+      "ja": "リセット",
+      "ko": "초기화"
+    },
+    "simulation.exit": {
+      "zh-tw": "結束",
+      "en": "Exit",
+      "ja": "終了",
+      "ko": "종료"
+    },
+    "simulation.showNames": {
+      "zh-tw": "顯示名稱",
+      "en": "Show Names",
+      "ja": "名前表示",
+      "ko": "이름 표시"
+    },
+    "simulation.showTeam": {
+      "zh-tw": "顯示隊伍",
+      "en": "Show Team",
+      "ja": "チーム表示",
+      "ko": "팀 표시"
+    },
+    "simulation.splitImage": {
+      "zh-tw": "分割圖片",
+      "en": "Split Image",
+      "ja": "画像分割",
+      "ko": "이미지 분할"
+    },
+    "simulation.settings": {
+      "zh-tw": "設定",
+      "en": "Settings",
+      "ja": "設定",
+      "ko": "설정"
+    },
+    "simulation.showTree": {
+      "zh-tw": "顯示骰子樹",
+      "en": "Show Tree",
+      "ja": "ツリー表示",
+      "ko": "트리 표시"
+    },
+    "simulation.showDetails": {
+      "zh-tw": "顯示詳情",
+      "en": "Show Details",
+      "ja": "詳細表示",
+      "ko": "상세 표시"
+    },
+    "simulation.shareTitleLabel": {
+      "zh-tw": "標題",
+      "en": "Title",
+      "ja": "タイトル",
+      "ko": "제목"
+    },
+    "simulation.shareTitlePlaceholder": {
+      "zh-tw": "自訂圖片標題",
+      "en": "Custom image title",
+      "ja": "画像タイトルを入力",
+      "ko": "사용자 지정 이미지 제목"
+    },
+    "simulation.downloadAll": {
+      "zh-tw": "下載全部",
+      "en": "Download All",
+      "ja": "すべてダウンロード",
+      "ko": "모두 다운로드"
+    },
+    "simulation.quickUnlockTitle": {
+      "zh-tw": "快速模擬配點",
+      "en": "Quick Simulation Build",
+      "ja": "クイック模擬配点",
+      "ko": "빠른 시뮬레이션 빌드"
+    },
+    "simulation.skip": {
+      "zh-tw": "跳過",
+      "en": "Skip",
+      "ja": "スキップ",
+      "ko": "건너뛰기"
+    },
+    "simulation.confirm": {
+      "zh-tw": "確定",
+      "en": "Confirm",
+      "ja": "確認",
+      "ko": "확인"
+    },
+    "simulation.saveSlotsTitle": {
+      "zh-tw": "模擬配點存檔管理",
+      "en": "Simulation Save Slots",
+      "ja": "シミュレーション保存管理",
+      "ko": "시뮬레이션 저장 관리"
+    },
+    "compendium.modeNormal": {
+      "zh-tw": "一般模式",
+      "en": "Normal Mode",
+      "ja": "一般モード",
+      "ko": "일반 모드"
+    },
+    "compendium.modeHard": {
+      "zh-tw": "困難模式",
+      "en": "Hard Mode",
+      "ja": "ハードモード",
+      "ko": "하드 모드"
+    },
     "changelog.empty": {
       "zh-tw": "目前沒有可呈現的版本更新。",
       "en": "No version updates are available.",
@@ -1101,6 +1233,48 @@
       "en": "Added wave tactic branches and SP Golem value calculations.",
       "ja": "ウェーブ戦術イベントの分岐とSPゴーレムの数値計算に対応しました。",
       "ko": "웨이브 전술 이벤트 분기와 SP 골렘 수치 계산을 지원합니다."
+    },
+    "changelog.1.1.0.1": {
+      "zh-tw": "新增太陽骰子與太陽強化符文，支援太陽核心消耗與前置符文條件。",
+      "en": "Added Solar Dice and Solar Rune, supporting Solar Core costs and rune prerequisites.",
+      "ja": "太陽ダイスと太陽ルーンを追加し、太陽のコア消費と前提ルーン条件に対応しました。",
+      "ko": "태양 주사위 및 태양 룬 추가, 태양의 코어 소모 및 전제 룬 조건 지원."
+    },
+    "changelog.1.1.0.2": {
+      "zh-tw": "調整天賦節點位置，全樹更新為 241 個節點與 249 條連線。",
+      "en": "Adjusted talent node positions, updating the tree to 241 nodes and 249 edges.",
+      "ja": "才能ノードの配置を調整し、ツリー全体を241ノード・249エッジに更新しました。",
+      "ko": "특성 노드 위치를 조정하고 전체 트리를 241개 노드와 249개 연결선으로 업데이트했습니다."
+    },
+    "changelog.1.1.0.3": {
+      "zh-tw": "圖鑑新增困難模式強化首領與裂縫商店事件。",
+      "en": "Added Hard Mode enhanced bosses and Rift Shop events to the compendium.",
+      "ja": "図鑑にハードモード強化ボスと亀裂ショップイベントを追加しました。",
+      "ko": "도감에 하드 모드 강화 보스와 균열 상점 이벤트를 추가했습니다."
+    },
+    "changelog.1.1.0.4": {
+      "zh-tw": "改進模擬配點使用體驗，支援快速解鎖、存檔管理與依賴自動處理。",
+      "en": "Improved build simulation experience, supporting quick unlock, save slots, and automatic dependency handling.",
+      "ja": "シミュレーションの使い勝手を改善し、クイック解放、セーブ管理、依存関係の自動処理に対応しました。",
+      "ko": "시뮬레이션 사용성 개선, 빠른 해금, 저장 슬롯 관리 및 종속성 자동 처리 지원."
+    },
+    "changelog.1.1.0.5": {
+      "zh-tw": "改進配置分享體驗，支援短代碼分享連結。",
+      "en": "Improved build sharing experience, supporting short code share links.",
+      "ja": "ビルド共有の使い勝手を改善し、短縮コード共有リンクに対応しました。",
+      "ko": "빌드 공유 경험 개선, 단축 코드 공유 링크 지원."
+    },
+    "changelog.1.1.0.6": {
+      "zh-tw": "圖片分享新增詳細資訊視圖，可導出出戰陣容與被動統計。",
+      "en": "Added detailed stats view to image export, supporting active team and passive summaries.",
+      "ja": "画像共有に詳細情報ビューを追加し、編成チームとパッシブ一覧を出力可能にしました。",
+      "ko": "이미지 공유에 상세 정보 뷰를 추가하여 출전 덱과 패시브 요약을 내보낼 수 있도록 지원."
+    },
+    "changelog.1.1.0.7": {
+      "zh-tw": "改善地圖渲染方式，採用 Canvas 架構提升效能。",
+      "en": "Improved map rendering architecture using Canvas to enhance performance.",
+      "ja": "マップ描画方式を改善し、Canvas設計を採用してパフォーマンスを向上させました。",
+      "ko": "맵 렌더링 방식을 개선하여 Canvas 아키텍처를 도입하고 성능을 향상했습니다."
     },
     "notice.officialPrefix": {
       "zh-tw": "官方公告：",
@@ -1209,6 +1383,24 @@
       "en": "Gold spent in this simulation",
       "ja": "このシミュレーションで消費したゴールド",
       "ko": "이번 시뮬레이션에서 사용한 골드"
+    },
+    "simulation.solarCoreSpent": {
+      "zh-tw": "本次模擬消耗太陽核心",
+      "en": "Solar cores spent in this simulation",
+      "ja": "このシミュレーションで消費した太陽のコア",
+      "ko": "이번 시뮬레이션에서 사용한 태양의 코어"
+    },
+    "simulation.solarLabel": {
+      "zh-tw": "太陽核心",
+      "en": "Solar Cores",
+      "ja": "太陽のコア",
+      "ko": "태양의 코어"
+    },
+    "currency.solarCore": {
+      "zh-tw": "太陽核心",
+      "en": "Solar Core",
+      "ja": "太陽のコア",
+      "ko": "태양의 코어"
     },
     "stats.max": {
       "zh-tw": "最大",
@@ -1413,6 +1605,12 @@
       "en": "Gold",
       "ja": "ゴールド",
       "ko": "골드"
+    },
+    "compendium.monsterGroup.hard": {
+      "zh-tw": "困難首領",
+      "en": "Hard bosses",
+      "ja": "ハードのボス",
+      "ko": "어려움 보스"
     },
     "simulation.coreLabel": {
       "zh-tw": "核心",
@@ -2370,11 +2568,11 @@
       "ja": "岩追加召喚",
       "ko": "바위 추가 소환"
     },
-    "LineSkillAdditionalShot_desc": {
-      "zh-tw": "發動技能時，{0}%機率額外發動1次",
-      "en": "When the skill activates, {0}% chance to trigger it 1 additional time",
-      "ja": "スキル発動時、{0}%の確率で1回追加発動",
-      "ko": "스킬 발동 시 {0}% 확률로 1회 추가 발동"
+    "RockSkillAdditionalShot_desc": {
+      "zh-tw": "召喚巨石骰子時，{0}%機率額外召喚1個巨石",
+      "en": "{0}% chance to summon 1 additional Rock when summoning a Pillar Dice",
+      "ja": "岩のダイス召喚時、{0}%の確率で岩を1個追加召喚",
+      "ko": "바위 주사위 소환 시 {0}% 확률로 바위 1개 추가 소환"
     },
     "BulletAtkPercentUp_Wind_name": {
       "zh-tw": "子彈傷害%增加",
@@ -2677,7 +2875,7 @@
       "ko": "철갑 주사위"
     },
     "dice_iron_lv7": {
-      "zh-tw": "攻擊<tag>BOSS_MONSTER</tag>時，對周遭怪物造成100%範圍傷害",
+      "zh-tw": "攻擊<tag>BOSS_MONSTER</tag>時，<br>對周遭怪物造成100%範圍傷害",
       "en": "When attacking a <tag>BOSS_MONSTER</tag>, deals 100% AoE DMG to nearby monsters",
       "ja": "<tag>BOSS_MONSTER</tag>攻撃時、周囲のモンスターに100%の範囲ダメージ",
       "ko": "<tag>BOSS_MONSTER</tag> 공격 시 주변 몬스터에게 100% 범위 대미지"
@@ -3162,6 +3360,12 @@
       "ja": "ノコ刃追加召喚",
       "ko": "톱날 추가 소환"
     },
+    "LineSkillAdditionalShot_desc": {
+      "zh-tw": "召喚鋸齒骰子時，{0}%機率額外召喚1個鋸齒",
+      "en": "{0}% chance to summon +1 Saw when summoning a Saw Dice",
+      "ja": "ノコ刃のダイス召喚時、<br>{0}%の確率でノコ刃1個追加召喚",
+      "ko": "톱날 주사위 소환 시 {0}% 확률로 톱날 1개 추가 소환"
+    },
     "SPGainPercentUp_Mine_name": {
       "zh-tw": "SP獲得%增加",
       "en": "SP Gain % Up",
@@ -3236,7 +3440,7 @@
     },
     "BulletAtkSpeedPercentUp_Ray_name": {
       "zh-tw": "攻擊速度%增加",
-      "en": "ATK SPD % Up",
+      "en": "ATK SPD Up %",
       "ja": "攻撃速度%増加",
       "ko": "공격 속도% 증가"
     },
@@ -3655,10 +3859,10 @@
       "ko": "공명 증폭"
     },
     "ResonanceBaseBuff_desc": {
-      "zh-tw": "<tag>RESONANCE</tag>基本增益量增加{0}%",
-      "en": "Base <tag>RESONANCE</tag> Buff Effect +{0}%",
-      "ja": "<tag>RESONANCE</tag>基本バフ量{0}%増加",
-      "ko": "<tag>RESONANCE</tag> 기본 버프량 {0}% 증가"
+      "zh-tw": "<tag>RESONANCE</tag>基本增益量增加{0}%<color=#00FF00>(+{1}%)</color>",
+      "en": "Base <tag>RESONANCE</tag> Buff Effect +{0}% <color=#00FF00>(+{1}%)</color>",
+      "ja": "<tag>RESONANCE</tag>基本バフ量{0}%<color=#00FF00>(+{1}%)</color>増加",
+      "ko": "<tag>RESONANCE</tag> 기본 버프량 {0}% <color=#00FF00>(+{1}%)</color> 증가"
     },
     "ResonanceGolemSpdUp_Resonance_name": {
       "zh-tw": "魔像回音",
@@ -3679,10 +3883,10 @@
       "ko": "삼중 공명"
     },
     "ResonanceTrioDmgUp_desc": {
-      "zh-tw": "存在3個以上相同骰點的共鳴骰子時，<br>額外獲得{0}%基本傷害增益",
-      "en": "When at least 3 Resonance Dice have the same dot count, gains {0}% Base DMG Buff",
-      "ja": "同じ出目の共鳴のダイスが3個以上ある場合、{0}%の基本ダメージバフ追加獲得",
-      "ko": "같은 눈금의 공명 주사위 3개 이상 존재 시 {0}%의 기본 대미지 버프 추가 획득"
+      "zh-tw": "存在3個以上相同骰點的共鳴骰子時，<br>每個獲得{0}%基本傷害增益",
+      "en": "When 3 or more Resonance Dice have the same dot count, Base DMG +{0}% for each matching Dice",
+      "ja": "同じ出目の共鳴のダイスが3個以上ある場合、1個につき{0}%の基本ダメージバフ獲得",
+      "ko": "같은 눈금의 공명 주사위 3개 이상 존재 시 개당 {0}%의 기본 대미지 버프 획득"
     },
     "ShurikenThrowCountPlus1_Shuriken_name": {
       "zh-tw": "魔彈額外發射",
@@ -3705,7 +3909,7 @@
     "ShurikenDefenderUniqueRune_desc": {
       "zh-tw": "召喚或合成時，{2}%機率召喚<tag>OVERSHURIKEN</tag>",
       "en": "On summon or merge, {2}% chance to summon an <tag>OVERSHURIKEN</tag>",
-      "ja": "召喚または合成時、{2}%の確率で<tag>OVERSHURIKEN</tag>召喚",
+      "ja": "召喚または合成時、<br>{2}%の確率で<tag>OVERSHURIKEN</tag>召喚",
       "ko": "소환 또는 합성 시 {2}% 확률로 <tag>OVERSHURIKEN</tag> 소환"
     },
     "ShurikenDefenderCloneOnMerge_Shuriken_name": {
@@ -3717,7 +3921,7 @@
     "ShurikenDefenderCloneOnMerge_desc": {
       "zh-tw": "合成時，於空格召喚1骰點魔彈骰子",
       "en": "On merge, summons a 1-dot Hex Bullet Dice on an empty tile",
-      "ja": "合成時、空きマスに出目1の魔弾のダイス召喚",
+      "ja": "合成時、空きマスに出目1の<br>魔弾のダイス召喚",
       "ko": "합성 시 빈칸에 1눈금 마탄 주사위 소환"
     },
     "BulletAtkPercentUp_Summon_name": {
@@ -4131,7 +4335,7 @@
     "dice_executioner_desc": {
       "zh-tw": "周遭十字1格內的骰子每次攻擊時，計數減少 / 計數達到0時，發動<tag>EXECUTIONER</tag>",
       "en": "Each attack by dice within the adjacent cross range reduces the count. Triggers <tag>EXECUTIONER</tag> when the count reaches 0",
-      "ja": "周囲十字範囲内の1マスにあるダイスが攻撃するたびに、カウントが減少する。<br>カウントが0になると<tag>EXECUTIONER</tag>を発動する。",
+      "ja": "周囲十字1マス以内のダイスが攻撃するたびにカウント減少<br>カウントが0になると<tag>EXECUTIONER</tag>発動",
       "ko": "주변 십자 1칸 이내의 주사위들의 공격마다 카운트 감소 <br>카운트 0 도달 시 <tag>EXECUTIONER</tag> 발동"
     },
     "dice_executioner_full_name": {
@@ -4783,10 +4987,10 @@
       "ko": "파멸"
     },
     "dice_doom_desc": {
-      "zh-tw": "每隔一段時間發動<tag>DOOM</tag>後，骰點-1",
-      "en": "Activates <tag>DOOM</tag> at set intervals, then loses 1 dot",
-      "ja": "一定時間ごとに<tag>DOOM</tag>を発動した後、出目を1減らす。",
-      "ko": "일정 시간마다 <tag>DOOM</tag> 발동 후 눈금 1 감소"
+      "zh-tw": "每隔一段時間發動<tag>DOOM</tag>後，骰點減少1，並轉換骰子",
+      "en": "Periodically activates <tag>DOOM</tag>, reducing its dot count by 1 and transforming the dice",
+      "ja": "一定時間ごとに<tag>DOOM</tag>を発動した後、出目を1減らしダイスを変換する。",
+      "ko": "일정 시간마다 <tag>DOOM</tag> 발동 후 눈금 1 감소와 주사위 변환"
     },
     "dice_doom_full_name": {
       "zh-tw": "破滅骰子",
@@ -5092,7 +5296,7 @@
       "zh-tw": "點擊支援時，<br>召喚持續造成傷害的熔岩區域<br>(冷卻時間：90秒)",
       "en": "Tap the Supporter to summon a lava zone that continuously deals damage<br>(Cooldown: 60s)",
       "ja": "サポーターをタップすると、<br>持続的にダメージを与える<br>溶岩地帯召喚<br>(クールタイム：90秒)",
-      "ko": "서포터 터치 시 지속적으로 대미지를 주는 용암지대를 소환합니다<br>(쿨타임 : 90초)"
+      "ko": "서포터 터치 시 지속적으로 대미지를 주는 용암지대를 소환<br>(쿨타임 : 90초)"
     },
     "LavaDelay01_name": {
       "zh-tw": "熔岩強化",
@@ -5131,14 +5335,14 @@
       "ko": "고독의 힘"
     },
     "SolitudeEmptyDmgBonus_desc": {
-      "zh-tw": "每1個骰盤空格，使傷害增加{0}%",
+      "zh-tw": "骰盤上每有1個空格，使傷害增加{0}%",
       "en": "DMG +{0}% per empty tile on the field",
       "ja": "フィールドの空きマス1個につき、<br>ダメージ{0}%増加",
       "ko": "필드 빈칸 1개당 대미지 {0}% 증가"
     },
     "BulletAtkSpeedPercentUp_Fear_name": {
       "zh-tw": "攻擊速度%增加",
-      "en": "Bullet ATK SPD %",
+      "en": "ATK SPD Up %",
       "ja": "攻撃速度%増加",
       "ko": "공격 속도% 증가"
     },
@@ -5329,10 +5533,10 @@
       "ko": "연쇄 포식"
     },
     "BonusPredatorChance_desc": {
-      "zh-tw": "獲得<tag>PREDATOR</tag>時，{0}%機率額外獲得{1}疊加",
-      "en": "When gaining <tag>PREDATOR</tag>, {0}% chance to gain {1} additional stacks",
-      "ja": "<tag>PREDATOR</tag>獲得時、<br>{0}%の確率で{1}スタック追加獲得",
-      "ko": "<tag>PREDATOR</tag> 획득 시 {0}% 확률로 {1}중첩 추가 획득"
+      "zh-tw": "獲得<tag>PREDATOR</tag>時，{0}%機率額外獲得{2}疊加",
+      "en": "When gaining <tag>PREDATOR</tag>, {0}% chance to gain {2} additional stacks",
+      "ja": "<tag>PREDATOR</tag>獲得時、<br>{0}%の確率で{2}スタック追加獲得",
+      "ko": "<tag>PREDATOR</tag> 획득 시 {0}% 확률로 {2}중첩 추가 획득"
     },
     "InstaPredatorHpThreshold_Predator_name": {
       "zh-tw": "吞噬弱者",
@@ -5348,7 +5552,7 @@
     },
     "BulletAtkSpeedPercentUp_Death_name": {
       "zh-tw": "攻擊速度%增加",
-      "en": "Bullet ATK SPD %",
+      "en": "ATK SPD Up %",
       "ja": "攻撃速度%増加",
       "ko": "공격 속도% 증가"
     },
@@ -5411,6 +5615,48 @@
       "en": "Increases <tag>DECAY</tag> DMG Boost against <tag>BOSS_MONSTER</tag> by {0}%",
       "ja": "<tag>BOSS_MONSTER</tag>に対する<br><tag>DECAY</tag>のダメージ増加量が{0}%増加",
       "ko": "<tag>BOSS_MONSTER</tag> 대상으로 <tag>DECAY</tag>의 피해 증폭량 {0}% 증가"
+    },
+    "dice_solar_name": {
+      "zh-tw": "太陽",
+      "en": "Solar",
+      "ja": "太陽",
+      "ko": "태양"
+    },
+    "dice_solar_desc": {
+      "zh-tw": "每攻擊相同怪物時，傷害增加，直到達到最大疊加<br>召喚3、5、7、9個「太陽骰子」時，變為【啟用】狀態，並造成範圍傷害",
+      "en": "DMG increases with each consecutive attack on the same monster, up to the maximum stacks.<br>When 3, 5, 7, or 9 Solar Dice are on the field, they become [Active] and deal AoE DMG",
+      "ja": "同じモンスターを攻撃するたびにダメージが増加し、最大スタックに達するまで増加する。<br>「太陽のダイス」が3、5、7、9個召喚されている場合は[活性化]状態になり、範囲ダメージを与える。",
+      "ko": "같은 몬스터를 공격할 때마다 <tag>SOLAR_POWER</tag> 증가.<br>\"태양 주사위\"가 3, 5, 7, 9개 소환된 경우에는 [활성화] 상태로 변해, 범위 대미지를 입힘"
+    },
+    "dice_solar_full_name": {
+      "zh-tw": "太陽骰子",
+      "en": "Solar Dice",
+      "ja": "太陽のダイス",
+      "ko": "태양 주사위"
+    },
+    "dice_solar_lv7": {
+      "zh-tw": "無論骰子數量，總是啟用效果",
+      "en": "Effect is always active regardless of the number of dice on the field",
+      "ja": "ダイスの数に関係なく効果が常に活性化",
+      "ko": "주사위 개수 관계없이 효과 항상 활성화"
+    },
+    "pa_Solar_value": {
+      "zh-tw": "太陽之力階段",
+      "en": "Solar Power Level",
+      "ja": "太陽の力段階",
+      "ko": "태양의 힘 단계"
+    },
+    "SolarMaxStackUp_Solar_name": {
+      "zh-tw": "太陽強化",
+      "en": "Solar Enhancement",
+      "ja": "太陽強化",
+      "ko": "태양 강화"
+    },
+    "SolarMaxStackUp_desc": {
+      "zh-tw": "<tag>SOLAR_POWER</tag>+{0}<color=#00FF00>(+{1})</color>階段增加",
+      "en": "<tag>SOLAR_POWER</tag> Level +{0}<color=#00FF00>(+{1})</color>",
+      "ja": "<tag>SOLAR_POWER</tag>+{0}<color=#00FF00>(+{1})</color>段階増加",
+      "ko": "<tag>SOLAR_POWER</tag> +{0}<color=#00FF00>(+{1})</color>단계 증가"
     },
     "tag_name_BULLET": {
       "zh-tw": "子彈",
@@ -6055,10 +6301,10 @@
       "ko": "축복"
     },
     "tag_desc_BLESS": {
-      "zh-tw": "將獲得以下1個隨機祝福。<br><br>－骰子傷害 / 攻擊速度 / 暴擊傷害 / 暴擊率增加<br>－擊殺怪物時，額外獲得SP<br>－SP魔像生命值減少<br>－立即獲得SP<br>－立即強化隨機骰子<br>",
-      "en": "Gain 1 random Blessing:<br><br>- Increased Dice DMG / ATK SPD / CRIT DMG / CRIT Rate<br>- Gain bonus SP from monster kills<br>- Reduce SP Golem HP<br>- Instantly gain SP<br>- Instantly Power-Up a random dice type",
-      "ja": "以下の祝福の中から1個をランダムに獲得する。<br>- ダイスダメージ/攻撃速度/クリティカルダメージ/クリティカル率増加<br>- モンスター撃破時、SP追加獲得<br>- SPゴーレムHP減少<br>- SP即時獲得<br>- ランダムなダイス即時パワーアップ",
-      "ko": "아래의 축복 중 랜덤한 1개를 획득합니다. <br><br>- 주사위 대미지 / 공격속도/ 치명타 대미지/ 치명타 확률 증가<br>- 몬스터 처치 시 SP 추가 획득 <br>- SP골렘 체력 감소<br>- 즉시 SP 획득<br>- 즉시 랜덤한 주사위 파워업<br>"
+      "zh-tw": "獲得以下1個隨機祝福（全池24種）：<br><br>【普通 89%】各14.83%<br>－骰子傷害 +5%<br>－攻擊速度 +3%<br>－暴擊傷害 +10%<br>－暴擊率 +1%<br>－SP魔像生命 -1%<br>－擊殺怪物SP +1<br><br>【稀有 9%】各1.50%<br>－骰子傷害 +15%<br>－攻擊速度 +7%<br>－暴擊傷害 +30%<br>－暴擊率 +2%<br>－SP魔像生命 -3%<br>－擊殺怪物SP +2<br><br>【史詩 1%】各0.17%<br>－骰子傷害 +30%<br>－攻擊速度 +15%<br>－暴擊傷害 +60%<br>－暴擊率 +5%<br>－SP魔像生命 -5%<br>－擊殺怪物SP +3<br><br>【傳說 1%】各0.17%<br>－立即獲得 3000 SP<br>－立即強化隨機骰子 1次<br>－立即設置 10個地雷<br>－立即於盤面發動海嘯<br>－所有骰子獲得保護泡泡<br>－最高骰點骰子提升骰點(非7星)",
+      "en": "Gain 1 random Blessing (24 in total):<br><br>[Common 89%] 14.83% each<br>- Dice DMG +5%<br>- ATK SPD +3%<br>- CRIT DMG +10%<br>- CRIT Rate +1%<br>- SP Golem HP -1%<br>- Monster Kill SP +1<br><br>[Rare 9%] 1.50% each<br>- Dice DMG +15%<br>- ATK SPD +7%<br>- CRIT DMG +30%<br>- CRIT Rate +2%<br>- SP Golem HP -3%<br>- Monster Kill SP +2<br><br>[Epic 1%] 0.17% each<br>- Dice DMG +30%<br>- ATK SPD +15%<br>- CRIT DMG +60%<br>- CRIT Rate +5%<br>- SP Golem HP -5%<br>- Monster Kill SP +3<br><br>[Legendary 1%] 0.17% each<br>- Instantly gain 3000 SP<br>- Instantly Power-Up random dice 1 time<br>- Instantly place 10 landmines<br>- Instantly trigger Tsunami on field<br>- All dice gain protective Bubble<br>- Upgrade highest non-7-dot dice",
+      "ja": "以下の祝福から1個をランダムに獲得（全24種）：<br><br>【ノーマル 89%】各14.83%<br>- ダイスダメージ +5%<br>- 攻撃速度 +3%<br>- クリティカルダメージ +10%<br>- クリティカル率 +1%<br>- SPゴーレムHP -1%<br>- 撃破SP +1<br><br>【レア 9%】各1.50%<br>- ダイスダメージ +15%<br>- 攻撃速度 +7%<br>- クリティカルダメージ +30%<br>- クリティカル率 +2%<br>- SPゴーレムHP -3%<br>- 撃破SP +2<br><br>【エピック 1%】各0.17%<br>- ダイスダメージ +30%<br>- 攻撃速度 +15%<br>- クリティカルダメージ +60%<br>- クリティカル率 +5%<br>- SPゴーレムHP -5%<br>- 撃破SP +3<br><br>【伝説 1%】各0.17%<br>- SP 3000 即時獲得<br>- ランダムなダイス即時パワーアップ 1回<br>- 地雷 10個 即時設置<br>- 盤面に津波 即時発動<br>- すべてのダイスにバブル獲得<br>- 7星以外の最高出目ダイスが出目上昇",
+      "ko": "아래 축복 중 랜덤한 1개를 획득합니다 (총 24종):<br><br>【일반 89%】각 14.83%<br>- 주사위 대미지 +5%<br>- 공격속도 +3%<br>- 치명타 대미지 +10%<br>- 치명타 확률 +1%<br>- SP골렘 체력 -1%<br>- 몬스터 처치 시 SP +1<br><br>【희귀 9%】각 1.50%<br>- 주사위 대미지 +15%<br>- 공격속도 +7%<br>- 치명타 대미지 +30%<br>- 치명타 확률 +2%<br>- SP골렘 체력 -3%<br>- 몬스터 처치 시 SP +2<br><br>【영웅 1%】각 0.17%<br>- 주사위 대미지 +30%<br>- 공격속도 +15%<br>- 치명타 대미지 +60%<br>- 치명타 확률 +5%<br>- SP골렘 체력 -5%<br>- 몬스터 처치 시 SP +3<br><br>【전설 1%】각 0.17%<br>- 즉시 3000 SP 획득<br>- 즉시 랜덤한 주사위 1회 파워업<br>- 즉시 지뢰 10개 설치<br>- 즉시 필드에 쓰나미 발동<br>- 모든 주사위 버블 획득<br>- 7눈금을 제외한 최고 눈금 주사위 눈금 상승"
     },
     "tag_name_SOW": {
       "zh-tw": "果實",
@@ -6155,6 +6401,18 @@
       "en": "A monster carrying a large amount of SP. Defeat it to claim the SP",
       "ja": "SPを大量所持するモンスター<br>このモンスターを倒すと、SPを獲得できる",
       "ko": "SP를 가득 가진 몬스터, 처치 시 그 SP를 가질 수 있음"
+    },
+    "tag_name_SOLAR_POWER": {
+      "zh-tw": "太陽之力",
+      "en": "Solar Power",
+      "ja": "太陽の力",
+      "ko": "태양의 힘"
+    },
+    "tag_desc_SOLAR_POWER": {
+      "zh-tw": "太陽之力每2階段，強化攻擊力。",
+      "en": "DMG increases for every 2 levels of Solar Power.",
+      "ja": "攻撃力が太陽の力2段階ごとに強化される。",
+      "ko": "공격력이 태양의 힘 2단계마다 강화됩니다."
     },
     "tactics_name_InitialSpawnDice": {
       "zh-tw": "召喚精英",
@@ -6319,7 +6577,7 @@
       "ko": "루프탑"
     },
     "tactics_desc_TopRowDiceChange": {
-      "zh-tw": "立即將上方第1列變更為相同骰子",
+      "zh-tw": "立即將上方1列變更為相同骰子",
       "en": "Changes the top row into the same dice type",
       "ja": "上段1列を同じダイスに変える",
       "ko": "즉시 상단 1열을 동일 주사위로 변경"
@@ -6691,10 +6949,10 @@
       "ko": "폭탄마"
     },
     "tactics_desc_BombDiceKillAllMinions": {
-      "zh-tw": "炸彈骰子登場！<br>合成時，使除了首領以外的所有怪物暴斃",
-      "en": "Bomb Dice appears! When merged, instantly defeats all monsters except bosses",
-      "ja": "爆弾のダイス登場！<br>合成時、ボスを除く<br>すべてのモンスター即死",
-      "ko": "폭탄 주사위 등장!<br>합성 시 보스를 제외한 모든 몬스터 즉사"
+      "zh-tw": "炸彈骰子登場！<br>合成時，使除了首領與SP魔像以外的<br>所有怪物暴斃",
+      "en": "Bomb Dice appears!<br>When merged, Insta-Kill all monsters except Bosses and SP Golems",
+      "ja": "爆弾のダイス登場！<br>合成時、ボスとSPゴーレムを除く<br>すべてのモンスターを即死",
+      "ko": "폭탄 주사위 등장!<br>합성 시 보스와 SP골렘을 제외한 모든 몬스터 즉사"
     },
     "tactics_name_CornerGuardian": {
       "zh-tw": "角落守護者",
@@ -6931,7 +7189,7 @@
       "ko": "볼케이노"
     },
     "boss_assassin_desc": {
-      "zh-tw": "發射隕石技能，使隨機減少骰點減少",
+      "zh-tw": "發射隕石技能，使隨機骰子骰點減少",
       "en": "Launches a meteor that reduces the Dot Count of a random dice",
       "ja": "隕石スキルを発動し、<br>ランダムなダイスの出目を減少",
       "ko": "운석 스킬을 날려 무작위 주사위 눈금 감소"
@@ -6971,6 +7229,138 @@
       "en": "On skill use,<br>changes a random dice into a Joker Dice",
       "ja": "スキル発動時、<br>ランダムなダイスをジョーカーのダイスに変更",
       "ko": "스킬 사용 시,<br>무작위 주사위를 조커 주사위로 변경"
+    },
+    "boss_Snake_Hard_neme": {
+      "zh-tw": "女王蛇",
+      "en": "Queen Snake",
+      "ja": "クイーンスネーク",
+      "ko": "퀸 스네이크"
+    },
+    "boss_Snake_Hard_desc": {
+      "zh-tw": "使用技能時，召喚更多<tag>NORMAL_MONSTER</tag>",
+      "en": "On skill use,<br>summons more <tag>NORMAL_MONSTER</tag>",
+      "ja": "スキル発動時、<tag>NORMAL_MONSTER</tag>をさらに多く召喚",
+      "ko": "스킬 사용 시 <tag>NORMAL_MONSTER</tag>을 더 많이 소환"
+    },
+    "boss_Royal_Hard_neme": {
+      "zh-tw": "皇家騎士",
+      "en": "Royal Knight",
+      "ja": "ロイヤルナイト",
+      "ko": "로얄 나이트"
+    },
+    "boss_Royal_Hard_desc": {
+      "zh-tw": "使用技能時，變更骰盤上5個骰子種類",
+      "en": "On skill use,<br>changes the types of 6 dice on the field",
+      "ja": "スキル発動時、フィールドにある5個のダイスの種類変更",
+      "ko": "스킬 사용 시 필드 내 5개의 주사위 종류를 변경"
+    },
+    "boss_Bubble_Hard_neme": {
+      "zh-tw": "深層軟泥怪",
+      "en": "Deep Sludge",
+      "ja": "ディープスラッジ",
+      "ko": "딥 슬러지"
+    },
+    "boss_Bubble_Hard_desc": {
+      "zh-tw": "3骰點以下的骰子傷害大幅減少",
+      "en": "Takes greatly reduced DMG from dice with 3 dots or fewer",
+      "ja": "出目3以下のダイスから受けるダメージ大幅減少",
+      "ko": "3눈금 이하의 주사위에겐 대미지 대폭 감소"
+    },
+    "boss_Quick_Hard_neme": {
+      "zh-tw": "疾風仙子",
+      "en": "Quick Pixie",
+      "ja": "クイックピクシー",
+      "ko": "퀵픽시"
+    },
+    "boss_Quick_Hard_desc": {
+      "zh-tw": "以更快的速度移動",
+      "en": "Moves much faster",
+      "ja": "さらに高速で移動",
+      "ko": "더 더욱 빠른 속도로 이동"
+    },
+    "boss_Recovery_Hard_neme": {
+      "zh-tw": "雙重熵魔",
+      "en": "Double Entropy",
+      "ja": "ダブルエントロピー",
+      "ko": "더블 엔트로피"
+    },
+    "boss_Recovery_Hard_desc": {
+      "zh-tw": "使用技能時，<br>停留在原地立即恢復失去的生命值",
+      "en": "On skill use,<br>stops moving and instantly restores all lost HP",
+      "ja": "スキル発動時、<br>その場に停止し、失ったHPを一気に回復",
+      "ko": "스킬 사용 시,<br>자리에 멈춰 단번에 잃은 체력을 회복"
+    },
+    "boss_Thief_Hard_neme": {
+      "zh-tw": "幻影掠奪者",
+      "en": "Phantom Snatcher",
+      "ja": "ファントムスナッチャー",
+      "ko": "팬텀 스내처"
+    },
+    "boss_Thief_Hard_desc": {
+      "zh-tw": "對更多骰子發射植物，<br>之後發動技能時，該骰子骰點減少",
+      "en": "Fires more plants at dice. On subsequent skill uses, reduces the dots of affected dice",
+      "ja": "より多くのダイスに植物を放ち、次のスキル発動時、そのダイスの出目減少",
+      "ko": "더 많은 주사위에 식물 발사, 이후 스킬 발동 시 해당 주사위 눈금 감소"
+    },
+    "boss_Assassin_Hard_neme": {
+      "zh-tw": "炙熱熔岩巨獸",
+      "en": "Hot Volcano",
+      "ja": "ホットボルケーノ",
+      "ko": "핫 볼케이노"
+    },
+    "boss_Assassin_Hard_desc": {
+      "zh-tw": "發射更多隕石技能，<br>使隨機骰子骰點減少",
+      "en": "Launches more meteors, reducing the dot counts of random dice",
+      "ja": "隕石スキルをさらに多く発動し、ランダムなダイスの出目を減少",
+      "ko": "운석 스킬을 더 많이 날려 무작위 주사위 눈금 감소"
+    },
+    "boss_Hacking_Hard_neme": {
+      "zh-tw": "狂野時空魔靈",
+      "en": "Wild Paradox",
+      "ja": "ワイルドパラドックス",
+      "ko": "와일드 패러독스"
+    },
+    "boss_Hacking_Hard_desc": {
+      "zh-tw": "被時空魔靈技能命中的骰子，<br>子彈攻擊可治療怪物",
+      "en": "Bullet attacks from dice hit by Paradox's skill heal monsters",
+      "ja": "パラドックスのスキルが命中したダイスの弾丸攻撃でモンスターを治癒",
+      "ko": "패러독스의 스킬에 맞은 주사위의 불렛 공격이 몬스터을 치유"
+    },
+    "boss_Slime_Hard_neme": {
+      "zh-tw": "國王史萊姆",
+      "en": "King Slime",
+      "ja": "キングスライム",
+      "ko": "킹 슬라임"
+    },
+    "boss_Slime_Hard_desc": {
+      "zh-tw": "持有更多生命值。<br>死亡時，分裂成2個小史萊姆",
+      "en": "Greater HP. Splits into 2 Small Slimes upon death",
+      "ja": "より多くのHPを保有し、撃破時、2つの小さなスライムに分裂",
+      "ko": "더 많은 체력을 보유, 사망 시 2개의 작은 슬라임으로 분리"
+    },
+    "boss_Joker_Hard_neme": {
+      "zh-tw": "瘋狂小丑",
+      "en": "Mad Joker",
+      "ja": "マッドジョーカー",
+      "ko": "매드 조커"
+    },
+    "boss_Joker_Hard_desc": {
+      "zh-tw": "使用技能時，<br>將隨機骰子變更為小丑骰子",
+      "en": "On skill use,<br>changes a random dice into a Joker Dice",
+      "ja": "スキル発動時、<br>ランダムなダイスをジョーカーのダイスに変更",
+      "ko": "스킬 사용 시,<br>무작위 주사위를 조커 주사위로 변경"
+    },
+    "boss_Leon_Hard_neme": {
+      "zh-tw": "雷昂",
+      "en": "Leon",
+      "ja": "レオン",
+      "ko": "레온"
+    },
+    "boss_Leon_Hard_desc": {
+      "zh-tw": "使用技能時，3骰點以下骰子骰點減少1<br>之後衝鋒一段距離",
+      "en": "On skill use, reduces the dot count of dice with 3 or fewer dots by 1,<br>then charges forward a set distance",
+      "ja": "スキル発動時、出目3以下のダイスの出目を1減少<br>その後、一定距離突進",
+      "ko": "스킬 사용 시, 3눈금 이하 주사위의 눈금을 1감소 <br>이후 일정 거리 돌진"
     }
   },
   "content": {
@@ -7431,7 +7821,7 @@
       },
       "1404": {
         "name": "LineSkillAdditionalShot_Pillar_name",
-        "description": "LineSkillAdditionalShot_desc",
+        "description": "RockSkillAdditionalShot_desc",
         "fullName": "LineSkillAdditionalShot_Pillar_name",
         "branch": "dicegroup_nature",
         "target": "target_front",
@@ -7488,6 +7878,26 @@
         "specialStats": [
           "pa_poison_effect_value"
         ]
+      },
+      "1501": {
+        "name": "dice_solar_name",
+        "description": "dice_solar_desc",
+        "fullName": "dice_solar_full_name",
+        "awakening": "dice_solar_lv7",
+        "branch": "dicegroup_nature",
+        "nodeType": "node.type.dice",
+        "unlockCondition": "unlock.prerequisite",
+        "specialStats": [
+          "pa_Solar_value"
+        ]
+      },
+      "1601": {
+        "name": "SolarMaxStackUp_Solar_name",
+        "description": "SolarMaxStackUp_desc",
+        "fullName": "SolarMaxStackUp_Solar_name",
+        "branch": "dicegroup_nature",
+        "nodeType": "node.type.dice_rune",
+        "unlockCondition": "unlock.prerequisite"
       },
       "2001": {
         "name": "dice_iron_name",
@@ -9868,6 +10278,10 @@
       "GOLEM_MONSTER": {
         "name": "tag_name_GOLEM_MONSTER",
         "description": "tag_desc_GOLEM_MONSTER"
+      },
+      "SOLAR_POWER": {
+        "name": "tag_name_SOLAR_POWER",
+        "description": "tag_desc_SOLAR_POWER"
       }
     },
     "events": {
@@ -10236,6 +10650,61 @@
         "name": "boss_joker_name",
         "description": "boss_joker_desc",
         "subType": "monster.subtype.boss"
+      },
+      "boss_18": {
+        "name": "boss_Snake_Hard_neme",
+        "description": "boss_Snake_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_19": {
+        "name": "boss_Royal_Hard_neme",
+        "description": "boss_Royal_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_20": {
+        "name": "boss_Bubble_Hard_neme",
+        "description": "boss_Bubble_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_21": {
+        "name": "boss_Quick_Hard_neme",
+        "description": "boss_Quick_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_22": {
+        "name": "boss_Recovery_Hard_neme",
+        "description": "boss_Recovery_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_23": {
+        "name": "boss_Thief_Hard_neme",
+        "description": "boss_Thief_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_24": {
+        "name": "boss_Assassin_Hard_neme",
+        "description": "boss_Assassin_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_25": {
+        "name": "boss_Hacking_Hard_neme",
+        "description": "boss_Hacking_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_26": {
+        "name": "boss_Slime_Hard_neme",
+        "description": "boss_Slime_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_27": {
+        "name": "boss_Joker_Hard_neme",
+        "description": "boss_Joker_Hard_desc",
+        "subType": "monster.subtype.boss"
+      },
+      "boss_28": {
+        "name": "boss_Leon_Hard_neme",
+        "description": "boss_Leon_Hard_desc",
+        "subType": "monster.subtype.boss"
       }
     },
     "factions": {
@@ -10247,9 +10716,9 @@
     }
   },
   "source_inventory": {
-    "total": 2157,
-    "complete": 2129,
-    "incomplete": 28,
+    "total": 2506,
+    "complete": 2479,
+    "incomplete": 27,
     "incomplete_keys": [
       "ARENA_WIN_STREAK_3_desc",
       "ARENA_WIN_STREAK_3_name",
@@ -10274,8 +10743,7 @@
       "TICKET_COOP_LACK_2_name",
       "TUTORIAL_COMPLETE_desc",
       "TUTORIAL_COMPLETE_name",
-      "noti_common_02_desc",
-      "noti_common_02_title",
+      "menu_node_collection",
       "package_boost_desc",
       "package_morenmore_desc",
       "package_newbie_subtitle"
@@ -10287,7 +10755,10 @@
     "PotionBounceToOtherDice_desc",
     "TriggerRebloomOnNewFlower_desc",
     "TyrantConsumeDmgPerStack_desc",
+    "dice_alignment_desc",
+    "dice_executioner_desc",
     "tactics_desc_BombDiceSpawnOnMerge",
+    "tag_desc_BLESS",
     "target_rangefront"
   ],
   "required_source_keys": [
@@ -10573,6 +11044,7 @@
     "ResonanceGolemSpdUp_desc",
     "ResonanceTrioDmgUp_Resonance_name",
     "ResonanceTrioDmgUp_desc",
+    "RockSkillAdditionalShot_desc",
     "SPGainPercentUp_Mine_name",
     "SPGainPercentUp_desc",
     "SawMoveSpeedUpPercent_SawBlade_name",
@@ -10589,6 +11061,8 @@
     "SniperCritPerDistance_desc",
     "SniperDmgPerDistance_Sniper_name",
     "SniperDmgPerDistance_desc",
+    "SolarMaxStackUp_Solar_name",
+    "SolarMaxStackUp_desc",
     "Solitude8WayDmg_Solitude_name",
     "Solitude8WayDmg_desc",
     "SolitudeEmptyDmgBonus_Solitude_name",
@@ -10637,6 +11111,28 @@
     "augment_RandomDiceGain_title",
     "augment_StartWithBomb2_desc",
     "augment_StartWithBomb2_title",
+    "boss_Assassin_Hard_desc",
+    "boss_Assassin_Hard_neme",
+    "boss_Bubble_Hard_desc",
+    "boss_Bubble_Hard_neme",
+    "boss_Hacking_Hard_desc",
+    "boss_Hacking_Hard_neme",
+    "boss_Joker_Hard_desc",
+    "boss_Joker_Hard_neme",
+    "boss_Leon_Hard_desc",
+    "boss_Leon_Hard_neme",
+    "boss_Quick_Hard_desc",
+    "boss_Quick_Hard_neme",
+    "boss_Recovery_Hard_desc",
+    "boss_Recovery_Hard_neme",
+    "boss_Royal_Hard_desc",
+    "boss_Royal_Hard_neme",
+    "boss_Slime_Hard_desc",
+    "boss_Slime_Hard_neme",
+    "boss_Snake_Hard_desc",
+    "boss_Snake_Hard_neme",
+    "boss_Thief_Hard_desc",
+    "boss_Thief_Hard_neme",
     "boss_assassin_desc",
     "boss_assassin_name",
     "boss_bubble_desc",
@@ -10797,6 +11293,10 @@
     "dice_sniper_full_name",
     "dice_sniper_lv7",
     "dice_sniper_name",
+    "dice_solar_desc",
+    "dice_solar_full_name",
+    "dice_solar_lv7",
+    "dice_solar_name",
     "dice_solitude_desc",
     "dice_solitude_full_name",
     "dice_solitude_lv7",
@@ -10870,6 +11370,7 @@
     "pa_Mutation_value",
     "pa_Predator_value",
     "pa_Ray_value",
+    "pa_Solar_value",
     "pa_Solitude_value",
     "pa_combo_value",
     "pa_decay_effect_value",
@@ -11051,6 +11552,7 @@
     "tag_desc_SAW",
     "tag_desc_SHURIKEN",
     "tag_desc_SLOW",
+    "tag_desc_SOLAR_POWER",
     "tag_desc_SOW",
     "tag_desc_SPAWN",
     "tag_desc_SPEED_MONSTER",
@@ -11113,6 +11615,7 @@
     "tag_name_SAW",
     "tag_name_SHURIKEN",
     "tag_name_SLOW",
+    "tag_name_SOLAR_POWER",
     "tag_name_SOW",
     "tag_name_SPAWN",
     "tag_name_SPEED_MONSTER",

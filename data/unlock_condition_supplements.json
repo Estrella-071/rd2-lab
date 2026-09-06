@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "snapshot_id": "random-dice-2-1.0.3",
+  "snapshot_id": "random-dice-2-1.1.0",
   "purpose": "Owner-confirmed special unlock thresholds, resource-free unlock policies, and effective topology corrections where the client tree fields do not represent the public unlock order.",
   "resource_free_nodes": [
     {

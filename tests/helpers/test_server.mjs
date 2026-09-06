@@ -37,6 +37,7 @@ export async function startTestServer(port = 0) {
     const currentSiteDir = path.resolve(process.env.VERIFY_SITE_DIR || path.join(websiteDir, '.pages'));
   const shares = new Map();
   const codesByPayload = new Map();
+  const thumbnails = new Map();
   let nextShareId = 0;
   const base62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const encodeShareCode = (value) => {
@@ -70,7 +71,7 @@ export async function startTestServer(port = 0) {
         req.on('data', (chunk) => {
           if (requestTooLarge) return;
           requestBody += chunk;
-          if (requestBody.length > 4096 + 256) {
+          if (requestBody.length > 128 * 1024 + 4096 + 512) {
             requestTooLarge = true;
             requestBody = '';
           }
@@ -89,6 +90,9 @@ export async function startTestServer(port = 0) {
             }
             const existingCode = codesByPayload.get(encoded);
             if (existingCode) {
+              if (body?.thumbnail && typeof body.thumbnail === 'string') {
+                thumbnails.set(existingCode, body.thumbnail);
+              }
               json(res, { ok: true, code: existingCode }, 200, { 'Cache-Control': 'no-store' });
               return;
             }
@@ -96,11 +100,35 @@ export async function startTestServer(port = 0) {
             while (shares.has(code)) code = encodeShareCode(nextShareId++);
             shares.set(code, encoded);
             codesByPayload.set(encoded, code);
+            if (body?.thumbnail && typeof body.thumbnail === 'string') {
+              thumbnails.set(code, body.thumbnail);
+            }
             json(res, { ok: true, code }, 201, { 'Cache-Control': 'no-store' });
           } catch {
             json(res, { ok: false, error: 'invalid-json' }, 400);
           }
         });
+        return;
+      }
+      const imageMatch = /^\/api\/shares\/([0-9A-Za-z]{6})\/image$/.exec(parsedUrl.pathname);
+      if (imageMatch && req.method === 'GET') {
+        const code = imageMatch[1];
+        const thumb = thumbnails.get(code);
+        if (thumb && typeof thumb === 'string' && thumb.startsWith('data:image/')) {
+          const match = /^data:(image\/(?:jpeg|webp|png));base64,(.+)$/.exec(thumb);
+          if (match) {
+            const buffer = Buffer.from(match[2], 'base64');
+            res.writeHead(200, {
+              'Content-Type': match[1],
+              'Content-Length': buffer.length,
+              'Cache-Control': 'public, max-age=31536000, immutable'
+            });
+            res.end(buffer);
+            return;
+          }
+        }
+        res.writeHead(302, { Location: '/og-preview.png' });
+        res.end();
         return;
       }
       const shareMatch = /^\/api\/shares\/([0-9A-Za-z]{6})$/.exec(parsedUrl.pathname);
@@ -141,6 +169,22 @@ export async function startTestServer(port = 0) {
 
       const ext = path.extname(filePath).toLowerCase();
       const contentType = mimeTypes[ext] || 'application/octet-stream';
+
+      const simCodeMatch = /^\/simulation\/([0-9A-Za-z]{6})$/.exec(relativePath);
+      if (ext === '.html' && simCodeMatch) {
+        const code = simCodeMatch[1];
+        let html = fs.readFileSync(filePath, 'utf8');
+        const imageUrl = `http://127.0.0.1:${server.address().port}/api/shares/${code}/image`;
+        html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${imageUrl}">`);
+        html = html.replace(/<meta name="twitter:image" content="[^"]*">/, `<meta name="twitter:image" content="${imageUrl}">`);
+        const buffer = Buffer.from(html, 'utf8');
+        res.writeHead(200, {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Content-Length': buffer.length
+        });
+        res.end(buffer);
+        return;
+      }
 
       const stream = fs.createReadStream(filePath);
       res.writeHead(200, { 'Content-Type': contentType });

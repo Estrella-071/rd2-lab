@@ -2,7 +2,7 @@
   "schema_version": 1,
   "generated_by": "scripts/generate_changelog.mjs",
   "official_notices_source": "data/official_update_notices.json",
-  "canonical_version": "1.0.3",
+  "canonical_version": "1.1.0",
   "entries": [
     {
       "version": "1.0.0",
@@ -196,7 +196,7 @@
       },
       "notes": [
         "此條目整理 1.0.0 至 1.0.2 的公開版本資料變化。",
-        "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。",
+        "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。 客戶端版本快照與官方公告；非伺服器即時執行結果。",
         "官方公告：伺服器穩定化、錯誤修正，以及五個骰子樹節點價格修正。",
         "官方公告來源：WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK（發布 2026-08-19T13:40:06.000Z）",
         "公告標題未明示版本；依使用者提供的 1.0.2／1.0.3 時序與 8/20、8/22 rollout 日期歸入 1.0.2，保留此映射註記。",
@@ -667,7 +667,7 @@
       },
       "notes": [
         "此條目整理 1.0.2 至 1.0.3 的公開版本資料變化。",
-        "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。",
+        "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。 客戶端版本快照與官方公告；非伺服器即時執行結果。",
         "官方公告：改善合作戰與競技場、增加檢舉與幀率設定、調整骰子平衡並修正多項錯誤。",
         "官方公告來源：WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo（發布 2026-08-19T13:40:06.000Z）",
         "公告的套用時間是各平台商店依序發布的起始時間，不代表所有玩家同時完成更新。",
@@ -680,6 +680,189 @@
           "published_at": "2026-08-19T13:40:06.000Z",
           "effective_at": "2026-08-22T07:00:00+08:00",
           "title_zh": "V1.0.3 更新公告"
+        }
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "from_version": "1.0.3",
+      "date": "2026-09-05T11:00:00+08:00",
+      "topology": {
+        "nodes": "239 -> 241",
+        "edges": "246 -> 249",
+        "changed_nodes": 2,
+        "changed_edges": 3
+      },
+      "categories": {
+        "added": [
+          {
+            "category": "nodes",
+            "ids": [
+              "1501",
+              "1601"
+            ],
+            "summary_zh": "新增太陽骰子與太陽強化符文，使用太陽核心並要求火骰子與前置符文等級。",
+            "entity_type": "nodes",
+            "entity": "nodes",
+            "id": "1501, 1601",
+            "detail": "新增太陽骰子與太陽強化符文，使用太陽核心並要求火骰子與前置符文等級。"
+          },
+          {
+            "category": "bosses",
+            "ids": [
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28"
+            ],
+            "summary_zh": "新增11筆困難模式強化首領資料。",
+            "entity_type": "bosses",
+            "entity": "bosses",
+            "id": "18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28",
+            "detail": "新增11筆困難模式強化首領資料。"
+          },
+          {
+            "category": "features",
+            "entity": "rift_shop",
+            "summary_zh": "新增裂縫商店，55筆商店能力與一般戰術事件分開呈現，支援討伐硬幣消耗試算。",
+            "entity_type": "features",
+            "id": "",
+            "detail": "新增裂縫商店，55筆商店能力與一般戰術事件分開呈現，支援討伐硬幣消耗試算。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD"
+            ],
+            "official_summaries_zh": [
+              "以擊殺SP魔像與首領取得的討伐硬幣購買能力。"
+            ]
+          },
+          {
+            "category": "features",
+            "entity": "simulation_ux",
+            "summary_zh": "改進模擬配點使用體驗，支援快速解鎖、存檔管理與依賴自動處理。",
+            "entity_type": "features",
+            "id": "",
+            "detail": "改進模擬配點使用體驗，支援快速解鎖、存檔管理與依賴自動處理。"
+          },
+          {
+            "category": "features",
+            "entity": "share_system",
+            "summary_zh": "改進配置分享體驗，支援短代碼分享連結。",
+            "entity_type": "features",
+            "id": "",
+            "detail": "改進配置分享體驗，支援短代碼分享連結。"
+          },
+          {
+            "category": "features",
+            "entity": "share_image_details",
+            "summary_zh": "圖片分享新增詳細資訊視圖，可導出出戰陣容與被動統計。",
+            "entity_type": "features",
+            "id": "",
+            "detail": "圖片分享新增詳細資訊視圖，可導出出戰陣容與被動統計。"
+          },
+          {
+            "category": "features",
+            "entity": "rendering_engine",
+            "summary_zh": "改善地圖渲染方式，採用 Canvas 架構提升效能。",
+            "entity_type": "features",
+            "id": "",
+            "detail": "改善地圖渲染方式，採用 Canvas 架構提升效能。"
+          },
+          {
+            "category": "features",
+            "entity": "hard_coop",
+            "summary_zh": "新增困難合作與強化首領，遊玩有機率獲得太陽核心。",
+            "source_notice_id": "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD",
+            "evidence": "official_notice",
+            "entity_type": "features",
+            "id": "",
+            "detail": "新增困難合作與強化首領，遊玩有機率獲得太陽核心。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD"
+            ]
+          },
+          {
+            "category": "dice",
+            "entity": "solar",
+            "ids": [
+              "1501"
+            ],
+            "summary_zh": "火骰子可超越為太陽骰子；需兩個指定能力及子彈傷害符文50級。",
+            "source_notice_id": "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD",
+            "evidence": "official_notice",
+            "entity_type": "dice",
+            "id": "1501",
+            "detail": "火骰子可超越為太陽骰子；需兩個指定能力及子彈傷害符文50級。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD"
+            ]
+          }
+        ],
+        "modified": [
+          {
+            "category": "nodes",
+            "table": "DiceTreeNodeTable",
+            "summary_zh": "節點位置全面校正，成本改為指定資源種類；原始連線251條，保留既有獎勵根節點修正後249條。",
+            "entity_type": "nodes",
+            "entity": "DiceTreeNodeTable",
+            "id": "",
+            "detail": "節點位置全面校正，成本改為指定資源種類；原始連線251條，保留既有獎勵根節點修正後249條。"
+          },
+          {
+            "category": "localization",
+            "summary_zh": "新增語系內容與既有描述修訂。",
+            "entity_type": "localization",
+            "entity": "localization",
+            "id": "",
+            "detail": "新增語系內容與既有描述修訂。"
+          },
+          {
+            "category": "features",
+            "entity": "convenience",
+            "summary_zh": "新增x1/x5/x10升級、伺服器選擇，快閃商店常駐；提高對戰體力。",
+            "source_notice_id": "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD",
+            "evidence": "official_notice",
+            "entity_type": "features",
+            "id": "",
+            "detail": "新增x1/x5/x10升級、伺服器選擇，快閃商店常駐；提高對戰體力。",
+            "official_notice_ids": [
+              "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD"
+            ]
+          }
+        ],
+        "removed": [],
+        "schema_changes": [
+          {
+            "category": "nodes",
+            "summary_zh": "增加資源種類與前置節點等級條件。",
+            "entity_type": "nodes",
+            "entity": "nodes",
+            "id": "",
+            "detail": "增加資源種類與前置節點等級條件。"
+          }
+        ],
+        "important_values": []
+      },
+      "notes": [
+        "直接比對1.0.3與1.1.0，全樹擴充至241個節點與249條連線。",
+        "以下是可重現的版本資料差異；遊戲服務端的即時狀態仍以遊戲內顯示為準。 客戶端版本快照與官方公告；非伺服器即時執行結果。",
+        "官方公告：新增困難合作、裂縫商店、火骰子超越為太陽骰子與14日任務，並調整便利性。",
+        "官方公告來源：WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD（發布 2026-09-04T17:37:18.656Z）",
+        "官方公告來源：https://notice.111percent.net/contents/prod/html/2026-09-04/9xAKnW90HyrZhX6mx9HQp.html"
+      ],
+      "official_notices": [
+        {
+          "id": "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD",
+          "locale": "zh-tw",
+          "published_at": "2026-09-04T17:37:18.656Z",
+          "effective_at": "2026-09-05T11:00:00+08:00",
+          "title_zh": "(新增) v1.1.0更新公告"
         }
       ]
     }

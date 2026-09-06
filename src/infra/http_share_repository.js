@@ -26,14 +26,17 @@ export class HttpShareRepository extends ShareRepositoryPort {
     this.fetchFn = fetchFn || (typeof fetch !== "undefined" ? fetch.bind(globalThis) : null);
   }
 
-  async createShare(encoded) {
+  async createShare(encoded, { thumbnail = null, locale = null } = {}) {
     if (!this.fetchFn) return { ok: false, error: "fetch-unavailable" };
     if (!isValidPayload(encoded)) return { ok: false, error: "invalid-share-payload" };
     try {
+      const payload = { encoded };
+      if (typeof thumbnail === "string" && thumbnail) payload.thumbnail = thumbnail;
+      if (typeof locale === "string" && locale) payload.locale = locale;
       const response = await this.fetchFn(this.endpoint, {
         method: "POST",
         headers: { "content-type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ encoded })
+        body: JSON.stringify(payload)
       });
       const body = normalizeResponseBody(await response.json().catch(() => null));
       if (!response.ok || body.ok !== true || !BASE62_CODE_PATTERN.test(String(body.code || ""))) {

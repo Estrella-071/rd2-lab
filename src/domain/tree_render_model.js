@@ -9,6 +9,7 @@ export const TREE_RENDER_VIEWBOX = Object.freeze({ x: 0, y: 0, width: 4000, heig
 
 const NODE_GEOMETRY = Object.freeze({
   DICE: Object.freeze({ width: 164, height: 190, shape: "dice" }),
+  MYTHIC_DICE: Object.freeze({ width: 156, height: 180, shape: "mythic-dice" }),
   PERK: Object.freeze({ width: 164, height: 112, shape: "perk" }),
   DICE_RUNE: Object.freeze({ width: 118, height: 128, shape: "rune" }),
   LARGE_PASSIVE: Object.freeze({ width: 154, height: 154, shape: "large-passive" }),
@@ -33,7 +34,12 @@ export function getNodeGeometry(node, manifestNode = null) {
     };
   }
   const type = getNodeType(node);
-  if (type === "DICE") return { ...NODE_GEOMETRY.DICE };
+  if (type === "DICE") {
+    if (String(node?.id) === "1501" || node?.dice_type === "Solar" || node?.cost_resource === "CORE_SOLAR" || node?.shape === "mythic-dice") {
+      return { ...NODE_GEOMETRY.MYTHIC_DICE };
+    }
+    return { ...NODE_GEOMETRY.DICE };
+  }
   if (type === "PERK") return { ...NODE_GEOMETRY.PERK };
   if (type === "DICE_RUNE") return { ...NODE_GEOMETRY.DICE_RUNE };
   return { ...(node?.is_big ? NODE_GEOMETRY.LARGE_PASSIVE : NODE_GEOMETRY.SMALL_PASSIVE) };
@@ -135,6 +141,25 @@ function hasRenderUnlock(renderUnlockState, id) {
   return isPreUnlocked && !isRenderedUnlocked;
 }
 
+function resolveNodeDimmed({
+  isSimulation,
+  simulationView,
+  hasVisualFocus,
+  isSelected,
+  isPrereq,
+  isLinkedSelected,
+  hasFilter,
+  isFilterVisible
+}) {
+  if (isSimulation) {
+    return !simulationView?.isUnlocked;
+  }
+  if (hasVisualFocus) {
+    return !isSelected && !isPrereq && !isLinkedSelected && (!hasFilter || !isFilterVisible);
+  }
+  return Boolean(hasFilter && !isFilterVisible);
+}
+
 /**
  * Build a serializable, DOM-free visual state. Both the live renderer and the
  * share exporter consume this model so unlock visibility and topology cannot
@@ -192,9 +217,16 @@ export function buildTreeRenderModel({ treeData, state = {}, renderManifest = nu
       };
     }
     const isFilterVisible = filter.hasTypeFilter ? isMatching : (isMatching || filter.filterPath.has(id));
-    const isDimmed = !isSimulation && (hasVisualFocus
-      ? !isPrereq && !isLinkedSelected && (!context.hasFilter || !isFilterVisible)
-      : context.hasFilter && !isFilterVisible);
+    const isDimmed = resolveNodeDimmed({
+      isSimulation,
+      simulationView,
+      hasVisualFocus,
+      isSelected,
+      isPrereq,
+      isLinkedSelected,
+      hasFilter: context.hasFilter,
+      isFilterVisible
+    });
     return {
       id,
       node,
@@ -251,12 +283,21 @@ export function buildTreeRenderModel({ treeData, state = {}, renderManifest = nu
       isDimmed: Boolean(hasVisualFocus && !active)
     };
   });
+  const branchRootNodeIds = {
+    1: "1001",
+    2: "2001",
+    3: "3001",
+    4: "4008",
+    5: "5002"
+  };
   const centerLinks = (renderManifest?.centerLinks || []).map((link) => {
     const branch = Number(link?.branch || 0);
     const branchActive = activeBranches.has(branch);
     const isFilterActive = Boolean(filter.hasFilter && !filter.hasTypeFilter && branchActive);
     const isPrereqActive = Boolean(context.hasPrereqHighlight && branchActive);
-    const isActive = isFilterActive || isPrereqActive;
+    const rootNode = nodesById.get(branchRootNodeIds[branch]);
+    const isSimulationActive = Boolean(isSimulation && rootNode?.simulationView?.isUnlocked);
+    const isActive = isFilterActive || isPrereqActive || isSimulationActive;
     return {
       ...link,
       branch,
@@ -265,6 +306,7 @@ export function buildTreeRenderModel({ treeData, state = {}, renderManifest = nu
       isActive,
       isFilterActive,
       isPrereqActive,
+      isSimulationActive,
       isDimmed: Boolean((filter.hasFilter || context.hasPrereqHighlight) && !isActive)
     };
   });

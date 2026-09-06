@@ -247,7 +247,7 @@ const removedCoopTactics = officialNotices.notices
   ?.find((notice) => String(notice.version) === '1.0.3')
   ?.categories?.removed
   ?.find((item) => item.category === 'events' && item.entity === 'tactics_effects')?.ids || [];
-for (const tacticName of removedCoopTactics) {
+for (const tacticName of metadata.canonical.game_version === '1.0.3' ? removedCoopTactics : []) {
   const event = (bossData.events || []).find((candidate) => candidate.name_zh === tacticName);
   if (!event) fail(`1.0.3 removed co-op tactic ${tacticName} is missing from the event catalogue`);
   else if (event.mode_flags?.coop !== false || event.coop_time !== null || event.coop_seconds !== 0 || (event.coop_wave_refs || []).length !== 0) {

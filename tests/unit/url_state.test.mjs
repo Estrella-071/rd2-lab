@@ -42,15 +42,21 @@ test("url state: route builders preserve IDs, language, event mode, and share ki
   assert.equal(buildLocaleUrl({ locale: "ja", kind: URL_ROUTE_KINDS.COMPENDIUM_CARD, category: "event", id: "event_6", eventMode: "coop" }), "/ja/compendium/event/event_6?mode=coop");
   assert.equal(buildLocaleUrl({ locale: "en", kind: URL_ROUTE_KINDS.COMPENDIUM, category: "dice" }), "/en/compendium/dice");
   assert.equal(buildLocaleUrl({ locale: "ja", kind: URL_ROUTE_KINDS.COMPENDIUM, category: "event", eventMode: "versus" }), "/ja/compendium/event?mode=versus");
-  assert.equal(buildPublicUrl({ origin: "https://example.test", locale: "en", kind: URL_ROUTE_KINDS.SIMULATION, share: "Ab1234" }), "https://example.test/simulation/Ab1234");
-  assert.equal(buildPublicUrl({ origin: "https://example.test", locale: "zh-tw", kind: URL_ROUTE_KINDS.SIMULATION, share: "encoded", shareKind: "state" }), "https://example.test/simulation/state/encoded");
+  assert.equal(buildPublicUrl({ origin: "https://example.test", locale: "en", kind: URL_ROUTE_KINDS.SIMULATION, share: "Ab1234" }), "https://example.test/en/simulation/Ab1234");
+  assert.equal(buildPublicUrl({ origin: "https://example.test", locale: "zh-tw", kind: URL_ROUTE_KINDS.SIMULATION, share: "encoded", shareKind: "state" }), "https://example.test/zh-tw/simulation/state/encoded");
+  assert.equal(buildPublicUrl({ origin: "https://example.test", includeLocale: false, kind: URL_ROUTE_KINDS.SIMULATION, share: "Ab1234" }), "https://example.test/simulation/Ab1234");
   const share = parseUrlState("https://example.test/simulation/Ab1234");
   assert.equal(share.locale, null);
   assert.equal(share.hasLocalePath, false);
+  const localizedShare = parseUrlState("https://example.test/en/simulation/Ab1234");
+  assert.equal(localizedShare.locale, "en");
+  assert.equal(localizedShare.hasLocalePath, true);
+  assert.equal(localizedShare.share, "Ab1234");
   assert.equal(buildAlternateLocaleUrl("https://example.test/zh-tw/compendium/dice/1001", "en"), "https://example.test/en/compendium/dice/1001");
   assert.equal(buildAlternateLocaleUrl("https://example.test/zh-tw/compendium/monster", "ja"), "https://example.test/ja/compendium/monster");
   assert.equal(buildUrlStatePath("/zh-tw/compendium/event?mode=coop", "en"), "/en/compendium/event?mode=coop");
-  assert.equal(buildAlternateLocaleUrl("https://example.test/simulation/Ab1234", "en"), "https://example.test/simulation/Ab1234");
+  assert.equal(buildAlternateLocaleUrl("https://example.test/simulation/Ab1234", "en"), "https://example.test/en/simulation/Ab1234");
+  assert.equal(buildAlternateLocaleUrl("https://example.test/zh-tw/simulation/Ab1234", "ja"), "https://example.test/ja/simulation/Ab1234");
 });
 
 test("url state: legacy query routes remain readable while new URLs are canonical", () => {

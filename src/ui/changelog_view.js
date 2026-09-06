@@ -68,7 +68,17 @@ function getFriendlySummary(entry, localization) {
   const version = entry?.version || "";
   const bullets = [];
 
-  if (version === "1.0.3") {
+  if (version === "1.1.0") {
+    bullets.push(
+      localization?.t?.("changelog.1.1.0.1", {}, "Added Solar Dice and Solar Rune, supporting Solar Core costs and rune prerequisites.") || "Added Solar Dice and Solar Rune, supporting Solar Core costs and rune prerequisites.",
+      localization?.t?.("changelog.1.1.0.2", {}, "Adjusted talent node positions, updating the tree to 241 nodes and 249 edges.") || "Adjusted talent node positions, updating the tree to 241 nodes and 249 edges.",
+      localization?.t?.("changelog.1.1.0.3", {}, "Added Hard Mode enhanced bosses and Rift Shop events to the compendium.") || "Added Hard Mode enhanced bosses and Rift Shop events to the compendium.",
+      localization?.t?.("changelog.1.1.0.4", {}, "Improved build simulation experience, supporting quick unlock, save slots, and automatic dependency handling.") || "Improved build simulation experience, supporting quick unlock, save slots, and automatic dependency handling.",
+      localization?.t?.("changelog.1.1.0.5", {}, "Improved build sharing experience, supporting short code share links.") || "Improved build sharing experience, supporting short code share links.",
+      localization?.t?.("changelog.1.1.0.6", {}, "Added detailed stats view to image export, supporting active team and passive summaries.") || "Added detailed stats view to image export, supporting active team and passive summaries.",
+      localization?.t?.("changelog.1.1.0.7", {}, "Improved map rendering architecture using Canvas to enhance performance.") || "Improved map rendering architecture using Canvas to enhance performance."
+    );
+  } else if (version === "1.0.3") {
     bullets.push(
       localization?.t?.("changelog.1.0.3.1", {}, "Synced version 1.0.3 data, including values and text for all 239 nodes.") || "Synced version 1.0.3 data, including values and text for all 239 nodes.",
       localization?.t?.("changelog.1.0.3.2", {}, "Added wave tactic branches and SP Golem value calculations.") || "Added wave tactic branches and SP Golem value calculations."

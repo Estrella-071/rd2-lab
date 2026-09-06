@@ -9,7 +9,7 @@ const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..",
 const tree = JSON.parse(fs.readFileSync(path.join(rootDir, "site", "data", "dice_tree.json"), "utf8"));
 const compendium = JSON.parse(fs.readFileSync(path.join(rootDir, "site", "boss_event_data.json"), "utf8"));
 const locales = JSON.parse(fs.readFileSync(path.join(rootDir, "site", "data", "locales.json"), "utf8"));
-const lineage = JSON.parse(fs.readFileSync(path.join(rootDir, "data", "raw_snapshot_1.0.3.json"), "utf8"));
+const lineage = JSON.parse(fs.readFileSync(path.join(rootDir, "data", "raw_snapshot_1.1.0.json"), "utf8"));
 
 function byId(items) {
   return new Map((items || []).map((item) => [String(item?.stat_id || item?.id), item]));
@@ -29,23 +29,23 @@ function assertNoAbsolutePaths(value) {
 
 test("raw pipeline: frozen lineage is complete, version-bound, and path-redacted", () => {
   assert.equal(lineage.schema_version, 1);
-  assert.equal(lineage.snapshot_id, "random-dice-2-1.0.3");
+  assert.equal(lineage.snapshot_id, "random-dice-2-1.1.0");
   assert.match(lineage.source.source_identity_sha256, /^[A-Fa-f0-9]{64}$/);
-  assert.equal(lineage.source.version, "1.0.3");
-  assert.equal(lineage.source.source_count, 4255);
-  assert.equal(lineage.projection.tree.nodes.length, 239);
-  assert.equal(lineage.projection.tree.edges.length, 248);
+  assert.equal(lineage.source.version, "1.1.0");
+  assert.equal(lineage.source.source_count, 4752);
+  assert.equal(lineage.projection.tree.nodes.length, 241);
+  assert.equal(lineage.projection.tree.edges.length, 251);
   assert.equal(lineage.unlock_supplements.topology_corrections.length, 2);
   assert.deepEqual(
     lineage.unlock_supplements.topology_corrections.map((entry) => `${entry.from_node_id}->${entry.to_node_id}`),
     ["5007->5006", "5009->5008"]
   );
-  assert.equal(Object.keys(lineage.projection.tables).length, 13);
-  assert.equal(lineage.projection.localization.count, 2157);
-  assert.equal(lineage.projection.localization.complete_count, 2129);
-  assert.equal(Object.keys(lineage.canonical_expectations).length, 239);
-  assert.equal(lineage.compendium_expectations.monster_types.length, 17);
-  assert.equal(lineage.compendium_expectations.monsters.length, 15);
+  assert.equal(Object.keys(lineage.projection.tables).length, 14);
+  assert.equal(lineage.projection.localization.count, 2506);
+  assert.equal(lineage.projection.localization.complete_count, 2478);
+  assert.equal(Object.keys(lineage.canonical_expectations).length, 241);
+  assert.equal(lineage.compendium_expectations.monster_types.length, 28);
+  assert.equal(lineage.compendium_expectations.monsters.length, 26);
   assert.equal(lineage.compendium_expectations.modes.coop.waves.length, 80);
   assert.equal(lineage.compendium_expectations.modes.hunt.rewards.length, 30);
   assert.equal(lineage.compendium_expectations.modes.versus.trophy_base_hp.length, 20);
@@ -56,7 +56,7 @@ test("raw pipeline: frozen lineage is complete, version-bound, and path-redacted
 
 test("raw pipeline: every published dice stat has stable raw identity and both axes match", () => {
   const dice = tree.nodes.filter((node) => node.node_type === "DICE");
-  assert.equal(dice.length, 41);
+  assert.equal(dice.length, 42);
   for (const node of dice) {
     const base = byId(node.special_stats);
     const powerup = byId(node.powerup_data?.special_stats);
@@ -132,8 +132,8 @@ test("raw pipeline: canonical expectations cover every generated node", () => {
 });
 
 test("raw pipeline: compendium values and countdown axes remain raw-backed", () => {
-  assert.equal(compendium.raw_lineage.snapshot_id, "random-dice-2-1.0.3");
-  assert.equal(compendium.monster_types.length, 17);
+  assert.equal(compendium.raw_lineage.snapshot_id, "random-dice-2-1.1.0");
+  assert.equal(compendium.monster_types.length, 28);
   assert.equal(compendium.modes.coop.waves.length, 80);
   assert.equal(compendium.modes.hunt.rewards.length, 30);
   assert.equal(compendium.modes.versus.trophy_base_hp.length, 20);
@@ -175,8 +175,8 @@ test("raw pipeline: reward-granted secondary dice are effective topology roots",
   const rawEdges = new Set(lineage.projection.tree.edges.map((edge) => `${edge.from}->${edge.to}`));
   const effectiveEdges = new Set(tree.edges.map((edge) => `${edge.from}->${edge.to}`));
   const corrections = new Set(["5007->5006", "5009->5008"]);
-  assert.equal(rawEdges.size, 248);
-  assert.equal(effectiveEdges.size, 246);
+  assert.equal(rawEdges.size, 251);
+  assert.equal(effectiveEdges.size, 249);
   assert.deepEqual(
     [...effectiveEdges].toSorted(),
     [...rawEdges].filter((key) => !corrections.has(key)).toSorted()
@@ -253,22 +253,12 @@ test("raw pipeline: Flower Bloom one-shot window is generated as a 60-second dur
   assert.equal(flower.special_stats.some((stat) => stat.stat_id.includes("FlowerSeven")), false);
 });
 
-test("raw pipeline: 1.0.3 notice disables exactly three tactics in co-op", () => {
-  const expected = new Map([
-    ["RandomTypeChange", "勢力戰"],
-    ["TopRowDiceChange", "頂樓"],
-    ["RandomDiceNoAttack", "和平主義者"]
-  ]);
-  for (const [kind, name] of expected) {
-    const event = compendium.events.find((candidate) => candidate.eventKind === kind);
-    assert.equal(event.name_zh, name);
-    assert.equal(event.mode_flags.coop, false);
-    assert.equal(event.coop_time, null);
-    assert.equal(event.coop_seconds, 0);
-    assert.deepEqual(event.coop_wave_refs, []);
+test("raw pipeline: current client flags supersede historical co-op notice overrides", () => {
+  assert.equal(lineage.source.official_notice.entries.length, 0);
+  for (const event of compendium.events) {
+    const row = lineage.projection.tables.TacticsEffectTable.records.find((item) => item.TacticsKind === event.eventKind);
+    assert.equal(event.mode_flags.coop, row.Coop === "True");
   }
-  assert.equal(lineage.source.official_notice.entries.length, 3);
-  assert.equal(lineage.source.official_notice.version, "1.0.3");
 });
 
 test("raw pipeline: stat identity keeps four-locale axes aligned after reordering", () => {

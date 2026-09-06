@@ -200,11 +200,32 @@ test("game_text: GT-08 純字串 XSS 惡意腳本注入消毒 (0 DOM 依賴)", (
   assert.ok(sanitized.includes("<strong>安全加粗</strong>"));
 });
 
-test("game_text: GT-09 HTML 實體解析與換行符號規整", () => {
-  const raw = "第一行<br/>第二行 &amp; &lt;第三行&gt;";
+test("game_text: GT-09 HTML 實體解析與換行符號保留", () => {
+  const raw = "第一行<br/>第二行 &amp; 結尾\n第四行\r\n第五行";
   const res = formatGameText(raw, null, 1);
-  assert.ok(res.includes("第一行 第二行"));
-  assert.ok(res.includes("&"));
+  assert.ok(res.includes("第一行<br>第二行"), "br 標籤應完整保留");
+  assert.ok(res.includes("&"), "實體符號應正確解碼");
+  assert.ok(res.includes("<br>第四行<br>第五行"), "換行符號應正規化為 br 標籤");
+});
+
+test("game_text: GT-09a 陰陽覺醒、太陽簡介與祝福標籤換行保留", () => {
+  // 陰陽覺醒文案
+  const awakenText = "召喚7骰點<tag>TAEGEUK</tag>骰子時，橫排與直排的<br>所有骰子變更為陰陽骰子";
+  const awakenRes = formatGameText(awakenText, null, 1);
+  assert.ok(awakenRes.includes("直排的<br>所有骰子"), "陰陽覺醒效果換行不可被壓成空格");
+  assert.ok(awakenRes.includes('data-tag-key="TAEGEUK"'), "陰陽 tag 標籤需正常渲染");
+
+  // 太陽簡介文案
+  const solarDesc = "每攻擊相同怪物時，傷害增加，直到達到最大疊加<br>召喚3、5、7、9個「太陽骰子」時，變為【啟用】狀態，並造成範圍傷害";
+  const solarRes = formatGameText(solarDesc, null, 1);
+  assert.ok(solarRes.includes("最大疊加<br>召喚3"), "太陽簡介換行不可被壓成空格");
+
+  // 祝福標籤多行文案
+  const blessDesc = "獲得以下1個隨機祝福（全池24種）：<br><br>【普通 89%】各14.83%<br>－骰子傷害 +5%<br>－攻擊速度 +3%<br>－暴擊傷害 +10%<br>－暴擊率 +1%<br>－SP魔像生命 -1%<br>－擊殺怪物SP +1<br><br>【稀有 9%】各1.50%<br>－骰子傷害 +15%<br>－攻擊速度 +7%<br>－暴擊傷害 +30%<br>－暴擊率 +2%<br>－SP魔像生命 -3%<br>－擊殺怪物SP +2<br><br>【史詩 1%】各0.17%<br>－骰子傷害 +30%<br>－攻擊速度 +15%<br>－暴擊傷害 +60%<br>－暴擊率 +5%<br>－SP魔像生命 -5%<br>－擊殺怪物SP +3<br><br>【傳說 1%】各0.17%<br>－立即獲得 3000 SP<br>－立即強化隨機骰子 1次<br>－立即設置 10個地雷<br>－立即於盤面發動海嘯<br>－所有骰子獲得保護泡泡<br>－最高骰點骰子提升骰點(非7星)";
+  const blessRes = formatGameText(blessDesc, null, 1);
+  assert.ok(blessRes.includes("（全池24種）：<br><br>【普通 89%】"), "祝福標籤雙換行應完整保留");
+  assert.ok(blessRes.includes("各14.83%<br>－骰子傷害 +5%"), "祝福條目換行不可被壓成空格");
+  assert.ok(blessRes.includes("擊殺怪物SP +3<br><br>【傳說 1%】"), "各階級段落換行應完整保留");
 });
 
 test("game_text: GT-10 resolveGameText 純文字搜尋版本解析", () => {
@@ -220,3 +241,4 @@ test("game_text: GT-10 resolveGameText 純文字搜尋版本解析", () => {
   assert.ok(!plainText.includes("<"));
   assert.ok(!plainText.includes(">"));
 });
+

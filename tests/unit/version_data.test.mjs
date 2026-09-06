@@ -18,33 +18,34 @@ test("version data: canonical metadata, public snapshots, and generated changelo
   const changelog = readJson("site/data/changelog.json");
   const officialNotices = readJson("site/data/official_update_notices.json");
 
-  assert.equal(metadata.canonical.game_version, "1.0.3");
-  assert.equal(metadata.canonical.snapshot_id, "random-dice-2-1.0.3");
+  assert.equal(metadata.canonical.game_version, "1.1.0");
+  assert.equal(metadata.canonical.snapshot_id, "random-dice-2-1.1.0");
   assert.equal(metadata.canonical.public_schema_versions.monster_posters, 1);
   assert.equal(metadata.canonical.posters_path, "monster_posters.json");
   assert.equal(metadata.canonical.official_notices_path, "data/official_update_notices.json");
-  assert.deepEqual(metadata.versions.map((entry) => entry.version), ["1.0.0", "1.0.2", "1.0.3"]);
+  assert.deepEqual(metadata.versions.map((entry) => entry.version), ["1.0.0", "1.0.2", "1.0.3", "1.1.0"]);
   assert.equal(metadata.versions[1].date, "2026-08-20T05:00:00+08:00");
   assert.equal(metadata.versions[2].date, "2026-08-22T07:00:00+08:00");
-  assert.deepEqual(metadata.versions.map((entry) => entry.text_asset_count), [47, 126, 126]);
-  assert.deepEqual(metadata.versions.map((entry) => entry.table_count), [47, 47, 47]);
+  assert.deepEqual(metadata.versions.map((entry) => entry.text_asset_count), [47, 126, 126, 157]);
+  assert.deepEqual(metadata.versions.map((entry) => entry.table_count), [47, 47, 47, 54]);
   assert.match(metadata.versions[0].completeness_zh, /部分視覺內容/);
   assert.equal(tree.metadata_ref, "data/game_data_metadata.json");
-  assert.equal(tree.summary.node_count, 239);
-  assert.equal(tree.summary.edge_count, 246);
-  assert.equal(metadata.source.tree_edge_count, 246);
-  assert.equal(metadata.source.raw_tree_edge_count, 248);
+  assert.equal(tree.summary.node_count, 241);
+  assert.equal(tree.summary.edge_count, 249);
+  assert.equal(metadata.source.tree_edge_count, 249);
+  assert.equal(metadata.source.raw_tree_edge_count, 251);
   assert.equal(metadata.source.topology_correction_count, 2);
   assert.equal(compendium.meta.game_data_version, metadata.canonical.game_version);
   assert.equal(posters.snapshot.snapshot_id, metadata.canonical.snapshot_id);
   assert.equal(posters.snapshot.metadata_ref, "data/game_data_metadata.json");
   assert.equal(changelog.canonical_version, metadata.canonical.game_version);
-  assert.equal(changelog.entries.at(-1).version, "1.0.3");
-  assert.ok(changelog.entries.at(-1).categories.schema_changes.some((item) => item.table === "MinionTable"));
+  assert.equal(changelog.entries.at(-1).version, "1.1.0");
+  assert.ok(changelog.entries.at(-1).categories.schema_changes.some((item) => item.category === "nodes"));
   assert.equal(changelog.official_notices_source, "data/official_update_notices.json");
   assert.deepEqual(officialNotices.notices.map((notice) => notice.id), [
     "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
-    "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+    "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo",
+    "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD"
   ]);
   assert.match(officialNotices.notices[0].version_basis_zh, /未明示版本/);
   assert.equal(changelog.entries.find((entry) => entry.version === "1.0.2").official_notices[0].id, officialNotices.notices[0].id);
@@ -120,7 +121,7 @@ test("removed event contract: historical records are valid and excluded from act
       unlock_supplement_sha256: "0000000000000000000000000000000000000000000000000000000000000000",
       unlock_supplement_count: 4,
       official_notice_sha256: "0000000000000000000000000000000000000000000000000000000000000000",
-      official_coop_override_count: 3,
+      official_coop_override_count: 0,
       path: "data/raw_snapshot_1.0.3.json"
     }
   };

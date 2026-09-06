@@ -206,25 +206,43 @@ function isAsciiWord(value) {
   return true;
 }
 
+function parseUnderlineTag(remainder) {
+  const prefix = 'class="tooltip-tag-inline" data-tag-key="';
+  const suffix = '" role="button" tabindex="0"';
+  const lowerRemainder = remainder.toLowerCase();
+  if (!lowerRemainder.startsWith(prefix) || !lowerRemainder.endsWith(suffix)) {
+    return null;
+  }
+  const tagKey = remainder.slice(prefix.length, remainder.length - suffix.length);
+  if (!isAsciiWord(tagKey)) {
+    return null;
+  }
+  return `<u class="tooltip-tag-inline" data-tag-key="${tagKey}" role="button" tabindex="0">`;
+}
+
+function resolveCanonicalOpenTag(tag) {
+  if (tag.name === "strong" && !tag.remainder) {
+    return "<strong>";
+  }
+  if (tag.name === "span" && tag.remainder.toLowerCase() === 'class="stat-green-add"') {
+    return '<span class="stat-green-add">';
+  }
+  if (tag.name === "u") {
+    return parseUnderlineTag(tag.remainder);
+  }
+  return null;
+}
+
 function allowedTagMarkup(source, start, end) {
   const tag = parseTag(source, start, end);
   if (!tag || tag.closing) return null;
-  let canonicalOpen = null;
-  if (tag.name === "strong" && !tag.remainder) {
-    canonicalOpen = "<strong>";
-  } else if (tag.name === "span" && tag.remainder.toLowerCase() === 'class="stat-green-add"') {
-    canonicalOpen = '<span class="stat-green-add">';
-  } else if (tag.name === "u") {
-    const prefix = 'class="tooltip-tag-inline" data-tag-key="';
-    const suffix = '" role="button" tabindex="0"';
-    const lowerRemainder = tag.remainder.toLowerCase();
-    if (lowerRemainder.startsWith(prefix) && lowerRemainder.endsWith(suffix)) {
-      const tagKey = tag.remainder.slice(prefix.length, tag.remainder.length - suffix.length);
-      if (isAsciiWord(tagKey)) {
-        canonicalOpen = `<u class="tooltip-tag-inline" data-tag-key="${tagKey}" role="button" tabindex="0">`;
-      }
-    }
+  if (tag.name === "br" && (tag.remainder === "" || tag.remainder === "/")) {
+    return {
+      end: end + 1,
+      html: "<br>"
+    };
   }
+  const canonicalOpen = resolveCanonicalOpenTag(tag);
   if (!canonicalOpen) return null;
   const closeToken = `</${tag.name}>`;
   const closeStart = source.toLowerCase().indexOf(closeToken, end + 1);
@@ -446,7 +464,8 @@ function normalizeFormattedMarkup(text) {
     .replaceAll("&gt;", ">")
     .replaceAll("&quot;", '"')
     .replaceAll("&#039;", "'")
-    .replaceAll(/<br\s*\/?>/gi, " ")
+    .replaceAll(/\r?\n/g, "<br>")
+    .replaceAll(/<br\s*\/?>/gi, "<br>")
     .trim();
 }
 

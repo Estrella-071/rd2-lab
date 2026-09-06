@@ -164,6 +164,8 @@ export function getDataVersion(treeData) {
     next: Array.isArray(node?.next_nodes) ? node.next_nodes.map(asId) : [],
     gold: Array.isArray(node?.gold_costs) ? node.gold_costs : [],
     core: Array.isArray(node?.core_costs) ? node.core_costs : [],
+    resource: node?.cost_resource || "NODE_STONE",
+    requirements: node?.rank_requirements || [],
     condition: node?.unlock_condition || "",
     conditionValue: node?.unlock_condition_value || ""
   })).sort((left, right) => left.id.localeCompare(right.id));
@@ -236,17 +238,17 @@ export function encodeSimulationShare(payload) {
   return encodePayload(normalized);
 }
 
-export function buildSimulationShareUrl({ payload, origin } = {}) {
+export function buildSimulationShareUrl({ payload, origin, locale = null } = {}) {
   const encoded = encodeSimulationShare(payload);
   const base = origin || "";
-  const path = buildSimulationSharePath({ share: encoded, shareKind: "state" });
+  const path = buildSimulationSharePath({ share: encoded, shareKind: "state", locale });
   return `${base}${path}`;
 }
 
-export function buildSimulationShareCodeUrl({ code, origin } = {}) {
+export function buildSimulationShareCodeUrl({ code, origin, locale = null } = {}) {
   const normalizedCode = String(code || "");
   const base = origin || "";
-  const path = buildSimulationSharePath({ share: normalizedCode, shareKind: "code" });
+  const path = buildSimulationSharePath({ share: normalizedCode, shareKind: "code", locale });
   return `${base}${path}`;
 }
 
@@ -465,11 +467,11 @@ export function hydrateSimulationShare(decoded, nodesOrMap, options = {}) {
   };
 }
 
-export function serializeSimulationState({ simulation, treeData, origin, dataVersion } = {}) {
+export function serializeSimulationState({ simulation, treeData, origin, dataVersion, locale = null } = {}) {
   const payload = createSimulationSharePayload({ simulation, treeData, team: simulation?.team, dataVersion });
   return {
     payload,
     encoded: encodeSimulationShare(payload),
-    url: buildSimulationShareUrl({ payload, origin })
+    url: buildSimulationShareUrl({ payload, origin, locale })
   };
 }

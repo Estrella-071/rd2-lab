@@ -137,12 +137,13 @@ function appendCompactStats(view, container, node) {
   container.append(list);
 }
 
-function createCostParts(gold, core, { includeZero = false, tight = false, wrapNumber = false } = {}) {
+function createCostParts(gold, core, { includeZero = false, tight = false, wrapNumber = false, solar = 0 } = {}) {
   const parts = [];
   const separator = tight ? "" : " ";
   const formatNumber = (value) => wrapNumber ? `<span class="sim-cost-num">${value.toLocaleString()}</span>` : value.toLocaleString();
   if (gold > 0) parts.push(`${SVG_ICONS.gold}${separator}${formatNumber(gold)}`);
   if (core > 0) parts.push(`${SVG_ICONS.core}${separator}${formatNumber(core)}`);
+  if (solar > 0) parts.push(`<img class="currency-icon-svg" src="icons/item_stone_solar.png" alt="" aria-hidden="true">${separator}${formatNumber(solar)}`);
   if (parts.length === 0 && includeZero) parts.push('<span class="sim-cost-num">0</span>');
   return parts;
 }
@@ -191,7 +192,7 @@ function appendUnlockPath(view, metaBox, specialCondition) {
 function setBatchSimulationAction(view, button, node, batchPlan) {
   const costGold = batchPlan.total?.gold || 0;
   const costCore = batchPlan.total?.core || 0;
-  const costParts = createCostParts(costGold, costCore, { includeZero: true, tight: true, wrapNumber: true });
+  const costParts = createCostParts(costGold, costCore, { includeZero: true, tight: true, wrapNumber: true, solar: batchPlan.total?.solar || 0 });
   button.dataset.simAction = "batch";
   button.dataset.simNodeId = String(node.id);
   button.innerHTML = `
@@ -224,12 +225,14 @@ function setRevokeSimulationAction(view, button, node, revokePlan) {
 function setUnrankedSimulationAction(view, button, context, simEval, batchPlan) {
   const { node, unlockGold, unlockCore } = context;
   let costGold = unlockGold;
-  let costCore = unlockCore;
+  let costCore = node.cost_resource === "CORE_SOLAR" ? 0 : unlockCore;
+  let solar = node.cost_resource === "CORE_SOLAR" ? unlockCore : 0;
   if (!simEval.canUnlock) {
     costGold = batchPlan.total?.gold || 0;
     costCore = batchPlan.total?.core || 0;
+    solar = batchPlan.total?.solar || 0;
   }
-  const costParts = createCostParts(costGold, costCore, { includeZero: true, tight: true, wrapNumber: true });
+  const costParts = createCostParts(costGold, costCore, { includeZero: true, tight: true, wrapNumber: true, solar });
   if (simEval.canUnlock) {
     button.dataset.simAction = "unlock";
     button.dataset.simNodeId = String(node.id);
@@ -283,10 +286,39 @@ function createRankSliderShell(view, { currentRank, maxRank, titleKey, titleFall
   return sliderWrap;
 }
 
-function setSliderCostText(costElement, gold, core) {
+function setSliderCostText(costElement, gold, core, node = null) {
   if (!costElement) return;
-  const parts = createCostParts(gold, core);
+  const resource = node?.cost_resource
+    || costElement.closest("[data-cost-resource]")?.dataset.costResource
+    || "";
+  const solar = resource === "CORE_SOLAR";
+  const parts = createCostParts(gold, solar ? 0 : core, { solar: solar ? core : 0 });
   costElement.innerHTML = parts.length > 0 ? parts.join(" ") : "—";
+}
+
+function updateRankSliderSingleCost(view, options) {
+  const { metaBox, node, rank, goldCosts, coreCosts, unlockGold, unlockCore } = options;
+  const metaLine = metaBox.querySelector(".meta-line-cost");
+  if (!metaLine) return;
+  const label = metaLine.querySelector(".cost-label");
+  if (label) {
+    const isUnlock = rank === 1;
+    label.textContent = view._t(
+      isUnlock ? "simulation.unlockCost" : "simulation.upgradeCost",
+      {},
+      isUnlock ? "Unlock cost" : "Upgrade cost"
+    );
+  }
+  const value = metaLine.querySelector(".meta-cost");
+  if (!value) return;
+  const isSolar = node.cost_resource === "CORE_SOLAR";
+  const singleCore = getRankCost(coreCosts, rank - 1, unlockCore);
+  const single = createCostParts(
+    getRankCost(goldCosts, rank - 1, unlockGold),
+    isSolar ? 0 : singleCore,
+    { solar: isSolar ? singleCore : 0 }
+  );
+  value.innerHTML = single.length > 0 ? single.join(" ") : "—";
 }
 
 function refreshRankSliderSummary(view, options) {
@@ -304,23 +336,10 @@ function refreshRankSliderSummary(view, options) {
   }
 
   const totals = totalRankCosts(goldCosts, coreCosts, rank, unlockGold, unlockCore);
-  setSliderCostText(metaBox.querySelector(".slider-cost-value"), totals.gold, totals.core);
-  if (!updateSingleCost) return;
-
-  const metaLine = metaBox.querySelector(".meta-line-cost");
-  if (!metaLine) return;
-  const label = metaLine.querySelector(".cost-label");
-  if (label) {
-    const key = rank === 1 ? "simulation.unlockCost" : "simulation.upgradeCost";
-    const fallback = rank === 1 ? "Unlock cost" : "Upgrade cost";
-    label.textContent = view._t(key, {}, fallback);
+  setSliderCostText(metaBox.querySelector(".slider-cost-value"), totals.gold, totals.core, node);
+  if (updateSingleCost) {
+    updateRankSliderSingleCost(view, options);
   }
-  const value = metaLine.querySelector(".meta-cost");
-  const single = createCostParts(
-    getRankCost(goldCosts, rank - 1, unlockGold),
-    getRankCost(coreCosts, rank - 1, unlockCore)
-  );
-  if (value) value.innerHTML = single.length > 0 ? single.join(" ") : "—";
 }
 
 function appendSimulationRankSlider(view, metaBox, context, currentRank) {
@@ -332,9 +351,10 @@ function appendSimulationRankSlider(view, metaBox, context, currentRank) {
     ariaKey: "simulation.unlockRankAdjust",
     ariaFallback: "Adjust unlock rank"
   });
+  sliderWrap.dataset.costResource = context.node?.cost_resource || "";
   const sliderInput = sliderWrap.querySelector(".rank-slider-input");
   const initial = totalRankCosts(context.goldCosts, context.coreCosts, currentRank, context.unlockGold, context.unlockCore);
-  setSliderCostText(sliderWrap.querySelector(".slider-cost-value"), initial.gold, initial.core);
+  setSliderCostText(sliderWrap.querySelector(".slider-cost-value"), initial.gold, initial.core, context.node);
   const pct = context.maxRank > 1 ? ((currentRank - 1) / (context.maxRank - 1)) * 100 : 0;
   sliderInput.style.setProperty("--slider-pct", `${pct}%`);
   metaBox.append(sliderWrap);
@@ -362,7 +382,12 @@ function appendBrowseCostLine(view, metaBox, context) {
   line.className = "meta-line meta-line-cost";
   const labelKey = previewRank === 1 ? "simulation.unlockCost" : "simulation.upgradeCost";
   const labelFallback = previewRank === 1 ? "Unlock cost" : "Upgrade cost";
-  const parts = createCostParts(singleGold, singleCore);
+  const isSolar = context.node?.cost_resource === "CORE_SOLAR";
+  const parts = createCostParts(
+    singleGold,
+    isSolar ? 0 : singleCore,
+    { solar: isSolar ? singleCore : 0 }
+  );
   line.innerHTML = `<span class="cost-label">${view._t(labelKey, {}, labelFallback)}</span><span class="meta-cost">${parts.length > 0 ? parts.join(" ") : "—"}</span>`;
   metaBox.append(line);
 }
@@ -376,9 +401,10 @@ function appendBrowseRankSlider(view, metaBox, context) {
     ariaKey: "simulation.previewRank",
     ariaFallback: "Adjust rank preview"
   });
+  sliderWrap.dataset.costResource = context.node?.cost_resource || "";
   const sliderInput = sliderWrap.querySelector(".rank-slider-input");
   const initial = totalRankCosts(context.goldCosts, context.coreCosts, context.previewRank, context.unlockGold, context.unlockCore);
-  setSliderCostText(sliderWrap.querySelector(".slider-cost-value"), initial.gold, initial.core);
+  setSliderCostText(sliderWrap.querySelector(".slider-cost-value"), initial.gold, initial.core, context.node);
   const initialPct = context.maxRank > 1 ? ((context.previewRank - 1) / (context.maxRank - 1)) * 100 : 0;
   sliderInput.style.setProperty("--slider-pct", `${initialPct}%`);
   metaBox.append(sliderWrap);
@@ -390,6 +416,57 @@ function appendBrowseRankSlider(view, metaBox, context) {
     },
     onCommit: () => view._triggerPopAnimation()
   });
+}
+
+function isCameraNavigating() {
+  return typeof document !== "undefined"
+    && (Boolean(document.body?.classList?.contains("is-navigating"))
+      || Boolean(document.body?.classList?.contains("is-zooming")));
+}
+
+function isValidAnchorRect(rect) {
+  return Boolean(
+    rect
+    && Number.isFinite(Number(rect.left))
+    && Number.isFinite(Number(rect.top))
+    && Number.isFinite(Number(rect.width))
+    && Number.isFinite(Number(rect.height))
+  );
+}
+
+function resolveTooltipAnchorGeometry(renderer, node, pos, viewport) {
+  const isCameraMoving = isCameraNavigating();
+  const anchorRect = isCameraMoving ? null : (renderer?.getNodeScreenRect?.(node?.id) || null);
+  const scale = viewport?.scale || 1.0;
+  if (isValidAnchorRect(anchorRect)) {
+    const left = Number(anchorRect.left);
+    const top = Number(anchorRect.top);
+    const width = Number(anchorRect.width);
+    const height = Number(anchorRect.height);
+    return {
+      hasScreenAnchor: true,
+      screenX: left + width / 2,
+      screenY: top + height / 2,
+      screenNodeRadius: Math.max(width, height) / 2
+    };
+  }
+  return {
+    hasScreenAnchor: false,
+    screenX: (viewport?.x || 0) + pos.x * scale,
+    screenY: (viewport?.y || 0) + pos.y * scale,
+    screenNodeRadius: null
+  };
+}
+
+function applyTooltipArrowPosition(tooltipEl, { screenX, roundedLeft, borderLeft, borderRight, tipWidth }) {
+  if (typeof tooltipEl?.style?.setProperty !== "function") return;
+  const arrowInset = 14;
+  const innerWidth = Math.max(arrowInset * 2, tipWidth - borderLeft - borderRight);
+  const arrowX = Math.min(
+    Math.max(screenX - roundedLeft - borderLeft, arrowInset),
+    innerWidth - arrowInset
+  );
+  tooltipEl.style.setProperty("--tooltip-arrow-x", `${Math.round(arrowX)}px`);
 }
 
 /** Displays node details and handles tooltip interactions. */
@@ -626,6 +703,7 @@ export class TooltipView {
 
     const rect = targetEl.getBoundingClientRect();
     const popWidth = Math.min(280, window.innerWidth - 32);
+    const popHeight = this.tagPopoverEl.offsetHeight || 120;
     let top = rect.bottom + 8;
     let left = rect.left + rect.width / 2 - popWidth / 2;
 
@@ -633,8 +711,8 @@ export class TooltipView {
     if (left + popWidth > window.innerWidth - 16) {
       left = window.innerWidth - 16 - popWidth;
     }
-    if (top + 110 > window.innerHeight) {
-      top = rect.top - 100;
+    if (top + popHeight > window.innerHeight - 16) {
+      top = Math.max(16, rect.top - popHeight - 8);
     }
 
     this.tagPopoverEl.style.left = `${Math.round(left)}px`;
@@ -682,9 +760,16 @@ export class TooltipView {
   _renderTagPopoverContent() {
     if (!this._tagPopoverKey) return;
     const tDef = this.tagDefinitions?.[this._tagPopoverKey];
-    if (this.tagPopoverBadge) this.tagPopoverBadge.textContent = `#${tDef?.name_zh || this._tagPopoverKey}`;
+    if (this.tagPopoverBadge) {
+      const name = this._t(`tag_name_${this._tagPopoverKey}`, {}, tDef?.name_zh || this._tagPopoverKey);
+      this.tagPopoverBadge.textContent = `#${name}`;
+    }
     if (this.tagPopoverDesc) {
-      const description = tDef?.desc_zh || this._t("tooltip.tagFallback", {}, "No detailed mechanics are available.");
+      const description = this._t(
+        `tag_desc_${this._tagPopoverKey}`,
+        {},
+        tDef?.desc_zh || this._t("tooltip.tagFallback", {}, "No detailed mechanics are available.")
+      );
       this.tagPopoverDesc.innerHTML = formatGameText(description, null, 1, { tagDefinitions: this.tagDefinitions });
     }
   }
@@ -1023,41 +1108,21 @@ export class TooltipView {
     const isMobile = window.innerWidth <= 768;
     const viewport = state.viewport || { scale: 1.0, x: 0, y: 0 };
     const scale = viewport.scale || 1.0;
-    const isCameraMoving = typeof document !== "undefined"
-      && (document.body?.classList?.contains("is-navigating")
-        || document.body?.classList?.contains("is-zooming"));
-    // Reading the semantic button's client rect after every camera sample
-    // forces layout before the tooltip write. During a camera animation the
-    // world point is exact enough and keeps the animation on the compositor.
-    const anchorRect = isCameraMoving ? null : (this.renderer?.getNodeScreenRect?.(node?.id) || null);
-    const hasScreenAnchor = anchorRect
-      && Number.isFinite(Number(anchorRect.left))
-      && Number.isFinite(Number(anchorRect.top))
-      && Number.isFinite(Number(anchorRect.width))
-      && Number.isFinite(Number(anchorRect.height));
-    const screenX = hasScreenAnchor
-      ? Number(anchorRect.left) + Number(anchorRect.width) / 2
-      : (viewport.x || 0) + pos.x * scale;
-    const screenY = hasScreenAnchor
-      ? Number(anchorRect.top) + Number(anchorRect.height) / 2
-      : (viewport.y || 0) + pos.y * scale;
-    const nodeWorldRadius = getNodeWorldRadius(node);
-    const screenNodeRadius = hasScreenAnchor
-      ? Math.max(Number(anchorRect.width), Number(anchorRect.height)) / 2
-      : null;
-    const isLarge = node && ((node.node_type || node.type) === "DICE" || (node.node_type || node.type) === "PERK");
+    const anchor = resolveTooltipAnchorGeometry(this.renderer, node, pos, viewport);
+    const nodeType = node?.node_type || node?.type;
+    const isLarge = Boolean(node && (nodeType === "DICE" || nodeType === "PERK"));
     const gap = isMobile ? 16 : 14;
     const dimensions = this._readTooltipDimensions(isMobile);
     const padding = isMobile ? 12 : 16;
     const placement = computeTooltipScreenCoordinates({
-      pt: hasScreenAnchor ? { x: screenX, y: screenY } : pos,
-      scale: hasScreenAnchor ? 1 : scale,
-      panX: hasScreenAnchor ? 0 : (viewport.x || 0),
-      panY: hasScreenAnchor ? 0 : (viewport.y || 0),
-      nodeType: node?.node_type || node?.type,
+      pt: anchor.hasScreenAnchor ? { x: anchor.screenX, y: anchor.screenY } : pos,
+      scale: anchor.hasScreenAnchor ? 1 : scale,
+      panX: anchor.hasScreenAnchor ? 0 : (viewport.x || 0),
+      panY: anchor.hasScreenAnchor ? 0 : (viewport.y || 0),
+      nodeType,
       isLarge,
-      nodeRadius: nodeWorldRadius,
-      ...(Number.isFinite(screenNodeRadius) ? { screenNodeRadius } : {}),
+      nodeRadius: getNodeWorldRadius(node),
+      ...(Number.isFinite(anchor.screenNodeRadius) ? { screenNodeRadius: anchor.screenNodeRadius } : {}),
       tipWidth: dimensions.width,
       tipHeight: dimensions.height,
       placeBelow: isBelow,
@@ -1065,18 +1130,15 @@ export class TooltipView {
       viewportWidth: window.innerWidth,
       viewportPadding: padding
     });
-    const roundedLeft = placement.left;
-    this.tooltipEl.style.left = `${roundedLeft}px`;
+    this.tooltipEl.style.left = `${placement.left}px`;
     this.tooltipEl.style.top = `${placement.top}px`;
-    if (typeof this.tooltipEl.style?.setProperty === "function") {
-      const arrowInset = 14;
-      const innerWidth = Math.max(arrowInset * 2, dimensions.width - this._tooltipBorderLeft - this._tooltipBorderRight);
-      const arrowX = Math.min(
-        Math.max(screenX - roundedLeft - this._tooltipBorderLeft, arrowInset),
-        innerWidth - arrowInset
-      );
-      this.tooltipEl.style.setProperty("--tooltip-arrow-x", `${Math.round(arrowX)}px`);
-    }
+    applyTooltipArrowPosition(this.tooltipEl, {
+      screenX: anchor.screenX,
+      roundedLeft: placement.left,
+      borderLeft: this._tooltipBorderLeft,
+      borderRight: this._tooltipBorderRight,
+      tipWidth: dimensions.width
+    });
     return placement.isPlacedBelow;
   }
 
@@ -1195,8 +1257,16 @@ export class TooltipView {
     const context = createCostContext(this, node, state);
     const metaBox = document.createElement("div");
     metaBox.className = "tooltip-meta-box";
+    metaBox.dataset.costResource = node.cost_resource || "NODE_STONE";
     if (context.isSimulation) this._renderSimulationCostPanel(metaBox, context);
     else this._renderBrowseCostPanel(metaBox, context);
+    if (node.cost_resource === "CORE_SOLAR" && !context.isSimulation) {
+      metaBox.querySelectorAll("img.core-icon").forEach((img) => { img.src = "icons/item_stone_solar.png"; img.title = this._t("currency.solarCore"); });
+    }
+    for (const requirement of node.rank_requirements || []) {
+      const required = state.nodesMap?.get(String(requirement.node_id));
+      appendUnlockPath(this, metaBox, `${required?.name_zh || requirement.node_id} Lv.${requirement.rank}`);
+    }
     if (metaBox.childNodes.length > 0) {
       container.append(metaBox);
       container.hidden = false;

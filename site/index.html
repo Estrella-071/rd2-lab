@@ -94,7 +94,7 @@
               <kbd class="search-kbd" aria-hidden="true">/</kbd>
             </div>
             <div id="search-results" class="search-results" aria-label="搜尋結果" data-i18n-attr="aria-label:search.results" aria-live="polite" aria-hidden="true" inert hidden></div>
-            <p id="search-status" class="search-status sr-only" aria-live="polite" data-i18n="search.count" data-i18n-values='{"count":239}'>239 個節點</p>
+            <p id="search-status" class="search-status sr-only" aria-live="polite" data-i18n="search.count" data-i18n-values='{"count":241}'>241 個節點</p>
           </div>
           <!-- Filter -->
           <div id="filter-widget" class="filter-widget" aria-label="條件篩選" data-i18n-attr="aria-label:filter.title">
@@ -235,8 +235,10 @@
               </header>
               <p class="simulation-exit-description" data-i18n="simulation.exitDescription">選擇如何處理目前的模擬配點。</p>
               <div class="simulation-exit-actions">
-                <button id="simulation-reset-exit-btn" class="simulation-exit-action-btn is-reset" type="button" data-i18n="simulation.resetAndExit">重置並離開</button>
-                <button id="simulation-pause-btn" class="simulation-exit-action-btn is-pause" type="button" data-i18n="simulation.pause">暫離</button>
+                <button id="simulation-quick-unlock-trigger-btn" class="simulation-exit-action-btn is-quick" type="button" data-i18n="simulation.quickUnlock">快速解鎖</button>
+                <button id="simulation-save-trigger-btn" class="simulation-exit-action-btn is-save" type="button" data-i18n="simulation.save">儲存</button>
+                <button id="simulation-reset-btn" class="simulation-exit-action-btn is-reset" type="button" data-i18n="simulation.reset">重置</button>
+                <button id="simulation-pause-btn" class="simulation-exit-action-btn is-pause" type="button" data-i18n="simulation.exit">結束</button>
               </div>
             </div>
           </dialog>
@@ -246,6 +248,10 @@
       <!-- Simulation -->
       <div id="simulation-top-capsule-group" class="simulation-top-capsule-group" hidden>
         <div class="simulation-currency-capsules">
+          <div class="simulation-currency-capsule is-solar" title="本次模擬消耗太陽核心" data-i18n-attr="title:simulation.solarCoreSpent" hidden>
+            <img class="simulation-currency-icon" src="icons/item_stone_solar.png" alt="" aria-hidden="true">
+            <span id="simulation-solar-total" class="simulation-capsule-value">0</span>
+          </div>
           <div class="simulation-currency-capsule is-core" title="本次模擬消耗核心" data-i18n-attr="title:simulation.coreSpent">
             <img class="simulation-currency-icon" src="icons/TreeShadow_sprite-186.png" alt="" aria-hidden="true">
             <span id="simulation-core-total" class="simulation-capsule-value">0</span>
@@ -291,14 +297,50 @@
                     <button id="simulation-copy-share-btn" class="simulation-share-copy-btn" type="button" data-i18n="simulation.copy">複製</button>
                   </div>
 
+                  <!-- Share Control Bar -->
+                  <div class="simulation-share-control-bar">
+                    <div class="simulation-share-options-group">
+                      <label id="simulation-share-names-wrap" class="simulation-share-checkbox-label">
+                        <input id="simulation-share-show-names" type="checkbox" class="simulation-share-checkbox" />
+                        <span data-i18n="simulation.showNames">顯示名稱</span>
+                      </label>
+                      <label id="simulation-share-team-wrap" class="simulation-share-checkbox-label">
+                        <input id="simulation-share-show-team" type="checkbox" class="simulation-share-checkbox" checked />
+                        <span data-i18n="simulation.showTeam">顯示隊伍</span>
+                      </label>
+                      <label id="simulation-share-split-wrap" class="simulation-share-checkbox-label">
+                        <input id="simulation-share-split-toggle" type="checkbox" class="simulation-share-checkbox" checked />
+                        <span data-i18n="simulation.splitImage">分割圖片</span>
+                      </label>
+                      <div id="simulation-share-title-wrap" class="simulation-share-title-wrap" hidden>
+                        <label for="simulation-share-title-input" class="simulation-share-title-label" data-i18n="simulation.shareTitleLabel">標題</label>
+                        <input id="simulation-share-title-input" class="simulation-share-title-input" type="text" maxlength="30" value="配點配置詳情" placeholder="自訂圖片標題" data-i18n-attr="placeholder:simulation.shareTitlePlaceholder" />
+                      </div>
+                      <button id="simulation-details-settings-btn" class="simulation-details-settings-btn" type="button" hidden data-i18n="simulation.settings">設定</button>
+                    </div>
+                  </div>
+
+                  <!-- Mode Switcher (Centered above preview) -->
+                  <div class="simulation-share-mode-center-wrap">
+                    <div class="simulation-share-mode-toggle-group" role="tablist">
+                      <button id="simulation-share-mode-tree-btn" class="simulation-share-mode-btn is-active" type="button" data-i18n="simulation.showTree">顯示骰子樹</button>
+                      <button id="simulation-share-mode-details-btn" class="simulation-share-mode-btn" type="button" data-i18n="simulation.showDetails">顯示詳情</button>
+                    </div>
+                  </div>
+
                   <!-- Preview -->
                   <div class="simulation-image-preview-wrap">
                     <div id="simulation-image-loading" class="simulation-image-loading" data-i18n="simulation.imageLoading">正在生成圖片…</div>
-                    <img id="simulation-share-image-preview" class="simulation-share-image-preview" alt="模擬配點圖片預覽" data-i18n-attr="alt:simulation.imageAlt" />
+                    <div id="simulation-share-preview-container" class="simulation-share-preview-container">
+                      <img id="simulation-share-image-preview" class="simulation-share-image-preview" alt="模擬配點圖片預覽" data-i18n-attr="alt:simulation.imageAlt" />
+                    </div>
                   </div>
 
-                  <!-- Download -->
-                  <button id="simulation-image-share-btn" class="simulation-download-image-btn" type="button" data-i18n="simulation.download">下載圖片</button>
+                  <!-- Download / Split Actions Bar (隱藏常駐按鈕，改由圖片上的浮動按鈕點擊彈出) -->
+                  <div id="simulation-download-actions-wrap" class="simulation-download-actions-wrap" hidden>
+                    <button id="simulation-image-share-btn" class="simulation-download-image-btn" type="button" data-i18n="simulation.download">下載圖片</button>
+                    <button id="simulation-image-download-all-btn" class="simulation-download-image-btn is-all" type="button" hidden data-i18n="simulation.downloadAll">下載全部圖片</button>
+                  </div>
 
                   <!-- Divider -->
                   <hr class="simulation-clean-divider" />
@@ -306,26 +348,13 @@
                   <!-- Teams -->
                   <div class="simulation-team-section">
                     <div class="simulation-team-section-header">
-                      <span class="simulation-team-section-title" data-i18n="simulation.teamOptional">隊伍設定 (可選)</span>
+                      <span class="simulation-team-section-title" data-i18n="simulation.teamOptional">隊伍配置</span>
                       <span class="simulation-team-section-hint" data-i18n="simulation.teamHint">點擊任意格子編輯</span>
                     </div>
 
                     <!-- Team 1 -->
                     <div id="simulation-team-row-1" class="simulation-team-row-clean">
-                      <div class="simulation-team-row-label-wrap">
-                        <span class="simulation-team-num" data-i18n="simulation.team" data-i18n-values='{"team":1}'>隊伍 1</span>
-                      </div>
                       <div id="simulation-team-slots-1" class="simulation-team-slots-grid">
-                        <!-- Team slots -->
-                      </div>
-                    </div>
-
-                    <!-- Team 2 -->
-                    <div id="simulation-team-row-2" class="simulation-team-row-clean" hidden>
-                      <div class="simulation-team-row-label-wrap">
-                        <span class="simulation-team-num" data-i18n="simulation.team" data-i18n-values='{"team":2}'>隊伍 2</span>
-                      </div>
-                      <div id="simulation-team-slots-2" class="simulation-team-slots-grid">
                         <!-- Team slots -->
                       </div>
                     </div>
@@ -343,7 +372,6 @@
                       </svg>
                     </button>
                     <div class="simulation-share-card-title-wrap">
-                      <span id="simulation-picker-badge" class="simulation-share-card-badge">TEAM 1</span>
                       <h2 id="simulation-picker-title" class="simulation-share-card-title" data-i18n="simulation.pickerTitle">選擇隊伍骰子</h2>
                     </div>
                   </div>
@@ -568,8 +596,8 @@
 
             <!-- Event tabs -->
             <div id="compendium-event-tabs" class="compendium-tabs compendium-event-tabs" role="tablist" aria-label="事件模式篩選" data-i18n-attr="aria-label:compendium.event" hidden>
-              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-event-mode="all" data-i18n="compendium.modeAll">全部模式</button>
-              <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="coop" style="--tab-color: #4ecdc4;" data-i18n="compendium.coop">合作模式</button>
+              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-event-mode="normal" style="--tab-color: #4ecdc4;" data-i18n="compendium.modeNormal">一般模式</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="hard" style="--tab-color: #f6ad55;" data-i18n="compendium.modeHard">困難模式</button>
               <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="versus" style="--tab-color: #ff5277;" data-i18n="compendium.versus">競技場</button>
             </div>
 
@@ -687,6 +715,98 @@
             </button>
           </header>
           <div id="detailed-stats-content-slot" class="detailed-stats-body"></div>
+        </div>
+      </dialog>
+
+      <!-- Simulation Modals -->
+      <!-- Quick Unlock Modal -->
+      <dialog id="simulation-quick-unlock-modal" class="simulation-modal-backdrop quick-unlock-backdrop" open aria-modal="true" aria-labelledby="quick-unlock-heading" aria-hidden="true" inert hidden>
+        <div class="quick-unlock-card">
+          <!-- Main Pane -->
+          <div id="quick-unlock-main-pane" class="quick-unlock-main-pane">
+            <header class="quick-unlock-header">
+              <div class="quick-unlock-title-wrap">
+                <span class="quick-unlock-badge" data-i18n="simulation.quickUnlock">快速解鎖</span>
+                <h2 id="quick-unlock-heading" class="quick-unlock-title" data-i18n="simulation.quickUnlockTitle">快速解鎖骰子與配置</h2>
+              </div>
+            </header>
+            <div class="quick-unlock-body">
+              <div class="quick-unlock-slots-layout">
+                <!-- Left: 5 Dice Slots -->
+                <div class="quick-unlock-dice-columns" id="quick-unlock-dice-columns">
+                  <!-- 5 columns injected by JS -->
+                </div>
+                <!-- Right: Support Slot -->
+                <div class="quick-unlock-support-column" id="quick-unlock-support-column">
+                  <!-- Support slot injected by JS -->
+                </div>
+              </div>
+
+            </div>
+            <footer class="quick-unlock-footer">
+              <button id="quick-unlock-skip-btn" class="quick-unlock-action-btn is-skip" type="button" data-i18n="simulation.skip">略過</button>
+              <button id="quick-unlock-confirm-btn" class="quick-unlock-action-btn is-confirm" type="button" data-i18n="simulation.confirm">確定</button>
+            </footer>
+          </div>
+
+          <!-- Picker Pane (Morphing View for Dice & Support Selection) -->
+          <div id="quick-unlock-picker-pane" class="quick-unlock-picker-pane simulation-picker-pane" hidden>
+            <header class="simulation-share-card-header simulation-picker-header">
+              <div class="simulation-picker-nav-left">
+                <button id="quick-unlock-picker-back-btn" class="simulation-picker-back-btn" type="button" aria-label="返回快速解鎖配置" title="返回" data-i18n-attr="aria-label:simulation.pickerBack;title:common.close">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+                <div class="simulation-share-card-title-wrap">
+                  <h2 id="quick-unlock-picker-title" class="simulation-share-card-title" data-i18n="simulation.pickerTitle">選擇隊伍骰子</h2>
+                </div>
+              </div>
+              <span id="quick-unlock-picker-count" class="simulation-picker-count" data-i18n="simulation.pickerCount" data-i18n-values='{"count":0}'>已選擇 0/5</span>
+            </header>
+            <div class="simulation-picker-body">
+              <div id="quick-unlock-picker-grid" class="simulation-picker-grid compendium-compact-grid">
+                <!-- All available dice rendered by JS -->
+              </div>
+            </div>
+            <footer class="simulation-picker-actions">
+              <button id="quick-unlock-picker-cancel" class="simulation-picker-btn is-cancel" type="button" data-i18n="common.cancel">取消</button>
+              <button id="quick-unlock-picker-save" class="simulation-picker-btn is-save" type="button" data-i18n="simulation.saveTeam">儲存隊伍</button>
+            </footer>
+          </div>
+        </div>
+      </dialog>
+
+      <!-- Save Slots Modal -->
+      <dialog id="simulation-save-modal" class="simulation-modal-backdrop simulation-save-backdrop" open aria-modal="true" aria-labelledby="save-modal-heading" aria-hidden="true" inert hidden>
+        <div class="simulation-save-card">
+          <header class="simulation-save-header">
+            <div class="simulation-save-title-wrap">
+              <span class="simulation-save-badge" data-i18n="simulation.save">存檔</span>
+              <h2 id="save-modal-heading" class="simulation-save-title" data-i18n="simulation.saveSlotsTitle">模擬配點存檔 (最多 5 組)</h2>
+            </div>
+            <button id="simulation-save-close-btn" class="simulation-save-close-btn" type="button" aria-label="關閉存檔面板" data-i18n-attr="aria-label:common.close">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </header>
+          <div id="simulation-save-slots-list" class="simulation-save-slots-list">
+            <!-- 5 slots injected by JS -->
+          </div>
+        </div>
+      </dialog>
+
+      <!-- Secondary Confirmation Modal -->
+      <dialog id="simulation-confirm-modal" class="simulation-modal-backdrop simulation-confirm-backdrop" open aria-modal="true" aria-labelledby="confirm-modal-heading" aria-hidden="true" inert hidden>
+        <div class="simulation-confirm-card">
+          <h3 id="confirm-modal-heading" class="simulation-confirm-title">確認操作</h3>
+          <p id="simulation-confirm-message" class="simulation-confirm-message">確定要執行此操作嗎？</p>
+          <div class="simulation-confirm-actions">
+            <button id="simulation-confirm-cancel-btn" class="simulation-confirm-btn is-cancel" type="button" data-i18n="common.cancel">取消</button>
+            <button id="simulation-confirm-ok-btn" class="simulation-confirm-btn is-ok" type="button" data-i18n="common.confirm">確定</button>
+          </div>
         </div>
       </dialog>
     </main>

@@ -2,7 +2,16 @@
 // pages) available after the first paint.  The cache is still bounded and
 // higher-resolution promotion naturally evicts the least-recently-used 1x
 // entries when device memory is constrained.
-const DEFAULT_TILE_CACHE_LIMIT = 96;
+function resolveDefaultTileCacheLimit() {
+  if (typeof window !== "undefined") {
+    const isMobileScreen = typeof window.matchMedia === "function" && window.matchMedia("(max-width: 768px)").matches;
+    const hasTouch = typeof navigator !== "undefined" && (navigator.maxTouchPoints > 1 || /mobile|tablet/i.test(navigator.userAgent || ""));
+    if (isMobileScreen || hasTouch) return 48;
+  }
+  return 96;
+}
+
+const DEFAULT_TILE_CACHE_LIMIT = resolveDefaultTileCacheLimit();
 import { selectMapResolution } from "../domain/map_resolution.js";
 import { assertMapRenderManifestShape } from "./http_data_repository.js";
 
@@ -21,8 +30,8 @@ function appendVersion(url, releaseId) {
 export { selectMapResolution } from "../domain/map_resolution.js";
 
 export class LruCache {
-  constructor(limit = DEFAULT_TILE_CACHE_LIMIT) {
-    this.limit = Math.max(1, Math.floor(Number(limit) || DEFAULT_TILE_CACHE_LIMIT));
+  constructor(limit = resolveDefaultTileCacheLimit()) {
+    this.limit = Math.max(1, Math.floor(Number(limit) || resolveDefaultTileCacheLimit()));
     this.entries = new Map();
   }
 
@@ -53,7 +62,7 @@ function getTileSet(manifest, scale) {
 }
 
 export class MapTileRepository {
-  constructor({ manifest = null, manifestUrl = "map-render-manifest.json", fetchFn = null, imageFactory = null, cacheLimit = DEFAULT_TILE_CACHE_LIMIT, imageTimeoutMs = DEFAULT_IMAGE_TIMEOUT_MS } = {}) {
+  constructor({ manifest = null, manifestUrl = "map-render-manifest.json", fetchFn = null, imageFactory = null, cacheLimit = resolveDefaultTileCacheLimit(), imageTimeoutMs = DEFAULT_IMAGE_TIMEOUT_MS } = {}) {
     this.manifest = manifest;
     this.manifestUrl = manifestUrl;
     this.fetchFn = fetchFn || (typeof fetch === "function" ? fetch.bind(globalThis) : null);

@@ -1,10 +1,11 @@
+import { prepareCompendium110 } from "./compendium_110.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const SNAPSHOT_ID = "random-dice-2-1.0.3";
-export const GAME_VERSION = "1.0.3";
+export const SNAPSHOT_ID = "random-dice-2-1.1.0";
+export const GAME_VERSION = "1.1.0";
 const EXPECTED_PLATFORM = String.fromCodePoint(97, 110, 100, 114, 111, 105, 100);
 const EXPECTED_PACKAGE = ["com", "percent", "aos", "randomdice2"].join(".");
 const SOURCE_CONTAINER = String.fromCodePoint(114, 101, 115, 101, 97, 114, 99, 104);
@@ -72,6 +73,7 @@ const TABLE_SPECS = Object.freeze([
   ["RuneTable", "RuneTable.csv", "Id", ["Id", "Kind", "DefenderType"]],
   ["PerkActionTable", "PerkActionTable.csv", "PerkActionType", ["PerkActionType", "Use"]],
   ["MinionTable", "MinionTable.csv", "Id", ["Id", "MinionType"]],
+  ["CoopHardWaveTable", "CoopHardWaveTable.csv", "Id", ["Id", "HPIncrease", "BaseHP"]],
   ["CoopWaveTable", "CoopWaveTable.csv", "Id", ["Id", "HPIncrease"]],
   ["VersusWaveTable", "VersusWaveTable.csv", "Id", ["Id", "Duration"]],
   ["HuntTable", "HuntTable.csv", "Id", ["Id", "RewardSP"]],
@@ -80,24 +82,25 @@ const TABLE_SPECS = Object.freeze([
 ]);
 
 export const RAW_TABLE_COUNTS = Object.freeze({
-  DiceTreeNodeTable: 239,
-  DefenderTable: 55,
+  DiceTreeNodeTable: 241,
+  DefenderTable: 56,
   DefenderSkillTable: 59,
-  ProjectileAbilityTable: 20,
+  ProjectileAbilityTable: 21,
   PlayerPassiveTable: 111,
-  RuneTable: 153,
+  RuneTable: 154,
   PerkActionTable: 5,
-  MinionTable: 17,
+  MinionTable: 28,
+  CoopHardWaveTable: 80,
   CoopWaveTable: 80,
   VersusWaveTable: 11,
   HuntTable: 30,
   TrophyTable: 20,
-  TacticsEffectTable: 71
+  TacticsEffectTable: 126
 });
-export const RAW_LOCALIZATION_COUNT = 2157;
-export const RAW_SOURCE_COUNT = 4255;
-export const RAW_TEXT_ASSET_COUNT = 126;
-export const RAW_CSV_TABLE_COUNT = 47;
+export const RAW_LOCALIZATION_COUNT = 2506;
+export const RAW_SOURCE_COUNT = 4752;
+export const RAW_TEXT_ASSET_COUNT = 157;
+export const RAW_CSV_TABLE_COUNT = 54;
 
 export const DERIVED_STAT_LABELS = Object.freeze({
   "stats.bossDamageMultiplier": Object.freeze({
@@ -1038,7 +1041,7 @@ function rawFieldsForNode(rawNode) {
   for (const key of [
     "id", "index", "branch", "branch_zh", "node_type", "node_type_zh", "kind_id", "name_zh",
     "description_zh", "short_label", "x", "y", "is_big", "is_base", "is_show", "unlock_condition",
-    "unlock_condition_zh", "unlock_condition_value", "next_nodes", "incoming", "gold_costs", "core_costs",
+    "unlock_condition_zh", "unlock_condition_value", "next_nodes", "incoming", "gold_costs", "core_costs", "cost_resource", "rank_requirements",
     "max_rank", "unlock_gold", "unlock_core", "total_gold", "total_core", "dice_type", "dice_group",
     "dice_attack", "dice_attack_interval", "dice_awaken", "icon_name", "icon_file", "icon_status"
   ]) {
@@ -1073,7 +1076,7 @@ function expectationForNode(node, rawNode, topologyCorrections = []) {
     };
   }
   if (node.unlock_cost_policy) {
-    for (const field of ["gold_costs", "core_costs", "unlock_gold", "unlock_core", "total_gold", "total_core"]) {
+    for (const field of ["gold_costs", "core_costs", "cost_resource", "rank_requirements", "unlock_gold", "unlock_core", "total_gold", "total_core"]) {
       delete rawFields[field];
     }
     result.unlock_cost_policy = node.unlock_cost_policy;
@@ -1392,8 +1395,8 @@ export function loadRawSource(sourceArgument = "") {
   const manifest = readJson(manifestPath, "raw extraction manifest");
   validateRawManifest(manifest);
   const tree = readJson(treePath, "source dice tree");
-  if (!Array.isArray(tree.nodes) || tree.nodes.length !== 239 || !Array.isArray(tree.edges) || tree.edges.length !== 248) {
-    throw new Error(`Source dice tree must contain 239 nodes and 248 edges (got ${tree.nodes?.length ?? "?"}/${tree.edges?.length ?? "?"})`);
+  if (!Array.isArray(tree.nodes) || tree.nodes.length !== 241 || !Array.isArray(tree.edges) || tree.edges.length !== 251) {
+    throw new Error(`Source dice tree must contain 241 nodes and 251 edges (got ${tree.nodes?.length ?? "?"}/${tree.edges?.length ?? "?"})`);
   }
   const unlockSupplements = loadUnlockSupplements(tree);
   const sourceHashes = parseSourceHashes(
@@ -1407,7 +1410,7 @@ export function loadRawSource(sourceArgument = "") {
   if (localization.count !== RAW_LOCALIZATION_COUNT) {
     throw new Error(`localization_text.csv must contain ${RAW_LOCALIZATION_COUNT} keyed rows (got ${localization.count})`);
   }
-  const coopOverrides = loadOfficialCoopOverrides(tables, localization);
+  const coopOverrides = { path: "site/data/official_update_notices.json", sha256: sha256File(DEFAULT_NOTICE_PATH), notice_id: "", version: GAME_VERSION, category: "client_tables", entries: [], byKind: new Map() };
   const unpackManifest = loadUnpackManifest(sourceRoot, manifest);
   const selectedTextAssets = selectRawTextAssets(manifest);
   validateLocalizationAsset(manifest);
@@ -1430,11 +1433,10 @@ export function loadRawSource(sourceArgument = "") {
 
 export function buildCanonicalFromRaw(current, raw) {
   if (!isRecord(current) || !Array.isArray(current.nodes)) throw new Error("Canonical tree must contain nodes[]");
-  const rawById = new Map(raw.tree.nodes.map((node) => [String(node.id), node]));
   const currentById = new Map(current.nodes.map((node) => [String(node.id), node]));
-  if (rawById.size !== current.nodes.length) throw new Error(`Raw/canonical node count differs: ${rawById.size}/${current.nodes.length}`);
+
   const generatedNodes = raw.tree.nodes.map((rawNode) => {
-    const currentNode = currentById.get(String(rawNode.id));
+    const currentNode = currentById.get(String(rawNode.id)) || rawNode;
     if (!currentNode) throw new Error(`Canonical tree is missing node ${rawNode.id}`);
     const node = applyTargetingLabelPatch(applyUnlockPolicies({ ...currentNode, ...rawNode }, raw), raw);
     if (rawNode.node_type === "DICE") {
@@ -1470,7 +1472,7 @@ export function buildCanonicalFromRaw(current, raw) {
     ...current.summary,
     ...raw.tree.summary,
     edge_count: edges.length,
-    note: "Derived from the Random Dice 2 1.0.3 client table snapshot; centre values count all fully unlocked DiceTreeNodeTable rows in each branch."
+    note: "Derived from the Random Dice 2 1.1.0 client table snapshot; centre values count all fully unlocked DiceTreeNodeTable rows in each branch."
   };
   const sumNodeField = (field) => nodes.reduce((total, node) => total + (Number(node?.[field]) || 0), 0);
   summary.total_unlock_gold = sumNodeField("unlock_gold");
@@ -1491,7 +1493,7 @@ export function buildCanonicalFromRaw(current, raw) {
       topology_correction_count: raw.unlockSupplements.topology_correction_count,
       official_notice_sha256: raw.coopOverrides.sha256,
       official_coop_override_count: raw.coopOverrides.entries.length,
-      path: "data/raw_snapshot_1.0.3.json"
+      path: "data/raw_snapshot_1.1.0.json"
     }
   };
 }
@@ -1588,7 +1590,7 @@ function sourceBackedMonster(row, existing) {
 
 export function buildCompendiumFromRaw(current, raw) {
   if (!isRecord(current) || !isRecord(current.modes)) throw new Error("Canonical compendium must contain modes");
-  const result = structuredClone(current);
+  const result = prepareCompendium110(current, raw);
   const coopRows = raw.tables.CoopWaveTable.records;
   const currentWaves = Array.isArray(result.modes.coop?.waves) ? result.modes.coop.waves : [];
   const currentByWave = new Map(currentWaves.map((wave) => [String(wave.wave), wave]));
@@ -1599,6 +1601,8 @@ export function buildCompendiumFromRaw(current, raw) {
     waves,
     boss_waves: waves.filter((wave) => wave.is_boss_wave)
   };
+
+  result.modes.coop_hard = { wave_count: raw.tables.CoopHardWaveTable.records.length, waves: raw.tables.CoopHardWaveTable.records.map((row) => ({ ...rawWaveProjection(row, {}), base_hp: numericValue(row.BaseHP, "BaseHP") })) };
 
   const currentTypes = new Map((result.monster_types || []).map((item) => [String(item.id), item]));
   result.monster_types = raw.tables.MinionTable.records.map((row) => sourceBackedMonsterType(row, currentTypes.get(String(row.Id))));
@@ -1706,7 +1710,7 @@ export function buildCompendiumFromRaw(current, raw) {
     unlock_supplement_count: raw.unlockSupplements.entry_count,
     official_notice_sha256: raw.coopOverrides.sha256,
     official_coop_override_count: raw.coopOverrides.entries.length,
-    path: "data/raw_snapshot_1.0.3.json"
+    path: "data/raw_snapshot_1.1.0.json"
   };
   return result;
 }

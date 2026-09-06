@@ -191,7 +191,7 @@ export function bindCompendiumControls(compendium) {
       });
       tab.classList.add("is-active");
       tab.setAttribute("aria-selected", "true");
-      compendium.eventMode = tab.dataset.eventMode || "all";
+      compendium.eventMode = tab.dataset.eventMode || "normal";
       compendium._syncTabsIndicator(eventTabsContainer, tab, true);
       compendium.render();
       compendium._navigateCollection?.();
@@ -364,7 +364,9 @@ export function syncCategoryTabs(compendium) {
 
   if (eventTabs) {
     eventTabs.querySelectorAll(".compendium-tab[data-event-mode]").forEach((tab) => {
-      const active = (tab.dataset.eventMode || "all") === (compendium.eventMode || "all");
+      const tabMode = tab.dataset.eventMode || "normal";
+      const currentMode = (compendium.eventMode === "coop" ? "normal" : compendium.eventMode) || "normal";
+      const active = tabMode === currentMode;
       tab.classList.toggle("is-active", active);
       tab.setAttribute("aria-selected", String(active));
     });

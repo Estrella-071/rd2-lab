@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import { onRequestPost } from "../../functions/api/shares.js";
 import { onRequestGet } from "../../functions/api/shares/[code].js";
+import { onRequestGet as onImageGet } from "../../functions/api/shares/[code]/image.js";
 import { HttpShareRepository } from "../../src/infra/http_share_repository.js";
 
 function responseJson(body, status = 200) {
@@ -47,12 +48,23 @@ function createD1Mock() {
         bind(...values) {
           return {
             async run() {
+              if (sql.includes("UPDATE simulation_shares SET thumbnail")) {
+                const [thumb, code] = values;
+                const row = rows.get(code);
+                if (row) row.thumbnail = thumb;
+                return { meta: { changes: 1 } };
+              }
               if (!sql.startsWith("INSERT OR IGNORE")) throw new Error("unexpected run query");
-              const [code, payload, createdAt] = values;
+              let code, payload, thumbnail, createdAt;
+              if (sql.includes("thumbnail")) {
+                [code, payload, thumbnail, createdAt] = values;
+              } else {
+                [code, payload, createdAt] = values;
+              }
               if (rows.has(code) || [...rows.values()].some((row) => row.payload === payload)) {
                 return { meta: { changes: 0 } };
               }
-              rows.set(code, { code, payload, created_at: createdAt });
+              rows.set(code, { code, payload, thumbnail: thumbnail || null, created_at: createdAt });
               return { meta: { changes: 1 } };
             },
             async first() {
@@ -149,7 +161,7 @@ test("Pages share Functions: enforce media type and body limits", async () => {
     request: new Request("https://example.test/api/shares", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ encoded: "a".repeat(5000) })
+      body: JSON.stringify({ encoded: "a".repeat(140000) })
     }),
     env: { DB: db }
   });
@@ -157,3 +169,112 @@ test("Pages share Functions: enforce media type and body limits", async () => {
 
   assert.equal(db.rows.size, 0);
 });
+
+test("Pages share Functions: supports thumbnail persistence and serves image", async () => {
+  const db = createD1Mock();
+  const payload = "0AThumb123";
+  const thumbnail = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/";
+  const post = await onRequestPost({
+    request: new Request("https://example.test/api/shares", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ encoded: payload, thumbnail })
+    }),
+    env: { DB: db }
+  });
+  assert.equal(post.status, 201);
+  const created = await post.json();
+  assert.equal(created.ok, true);
+  assert.equal(db.rows.get(created.code).thumbnail, thumbnail);
+
+  // 測試取得圖片端點
+  const imgRes = await onImageGet({
+    request: new Request(`https://example.test/api/shares/${created.code}/image`),
+    params: { code: created.code },
+    env: { DB: db }
+  });
+  assert.equal(imgRes.status, 200);
+  assert.equal(imgRes.headers.get("content-type"), "image/jpeg");
+  assert.match(imgRes.headers.get("cache-control"), /immutable/);
+
+  // 測試不存在的代碼會 fallback 重定向
+  const missingImg = await onImageGet({
+    request: new Request("https://example.test/api/shares/ZZZZZZ/image"),
+    params: { code: "ZZZZZZ" },
+    env: { DB: db }
+  });
+  assert.equal(missingImg.status, 302);
+});
+
+test("Pages share Functions: rejects invalid thumbnail formats", async () => {
+  const db = createD1Mock();
+  const badThumbnail = await onRequestPost({
+    request: new Request("https://example.test/api/shares", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ encoded: "0APayload", thumbnail: "javascript:alert(1)" })
+    }),
+    env: { DB: db }
+  });
+  assert.equal(badThumbnail.status, 400);
+  const body = await badThumbnail.json();
+  assert.equal(body.error, "invalid-thumbnail");
+});
+
+test("Pages share Functions: supports multi-locale thumbnail persistence and resolution", async () => {
+  const db = createD1Mock();
+  const payload = "0AMultiLocale";
+  const zhThumb = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/";
+  const enThumb = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/";
+
+  // 1. 中文先分享
+  const postZh = await onRequestPost({
+    request: new Request("https://example.test/api/shares", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ encoded: payload, thumbnail: zhThumb, locale: "zh-tw" })
+    }),
+    env: { DB: db }
+  });
+  assert.equal(postZh.status, 201);
+  const zhData = await postZh.json();
+  const code = zhData.code;
+
+  // 2. 英文環境下再次分享同一個配點
+  const postEn = await onRequestPost({
+    request: new Request("https://example.test/api/shares", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ encoded: payload, thumbnail: enThumb, locale: "en" })
+    }),
+    env: { DB: db }
+  });
+  assert.equal(postEn.status, 200);
+  const enData = await postEn.json();
+  assert.equal(enData.code, code);
+
+  // 3. 請求英文縮圖，應拿到英文縮圖
+  const enImgRes = await onImageGet({
+    request: new Request(`https://example.test/api/shares/${code}/image?locale=en`),
+    params: { code },
+    env: { DB: db }
+  });
+  assert.equal(enImgRes.status, 200);
+
+  // 4. 請求中文縮圖，應拿到中文縮圖
+  const zhImgRes = await onImageGet({
+    request: new Request(`https://example.test/api/shares/${code}/image?locale=zh-tw`),
+    params: { code },
+    env: { DB: db }
+  });
+  assert.equal(zhImgRes.status, 200);
+
+  // 5. 請求未生成的語言（如 ja），應 fallback 到中文縮圖
+  const jaImgRes = await onImageGet({
+    request: new Request(`https://example.test/api/shares/${code}/image?locale=ja`),
+    params: { code },
+    env: { DB: db }
+  });
+  assert.equal(jaImgRes.status, 200);
+});
+

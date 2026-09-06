@@ -1,12 +1,14 @@
 import {
   insertShare,
   isValidEncodedShare,
+  isValidThumbnail,
   jsonResponse,
   readRequestText,
-  SHARE_PAYLOAD_MAX_LENGTH
+  SHARE_PAYLOAD_MAX_LENGTH,
+  SHARE_THUMBNAIL_MAX_LENGTH
 } from "../_shared/share_api.js";
 
-const MAX_REQUEST_BYTES = SHARE_PAYLOAD_MAX_LENGTH + 256;
+const MAX_REQUEST_BYTES = SHARE_PAYLOAD_MAX_LENGTH + SHARE_THUMBNAIL_MAX_LENGTH + 512;
 
 export async function onRequestPost({ request, env }) {
   if (!env?.DB) {
@@ -33,8 +35,15 @@ export async function onRequestPost({ request, env }) {
     return jsonResponse({ ok: false, error: "invalid-share-payload" }, { status: 400 });
   }
 
+  const thumbnail = typeof body?.thumbnail === "string" && body.thumbnail ? body.thumbnail.trim() : null;
+  if (thumbnail && !isValidThumbnail(thumbnail)) {
+    return jsonResponse({ ok: false, error: "invalid-thumbnail" }, { status: 400 });
+  }
+
+  const locale = typeof body?.locale === "string" && body.locale ? body.locale.trim().toLowerCase() : "zh-tw";
+
   try {
-    const share = await insertShare({ db: env.DB, encoded });
+    const share = await insertShare({ db: env.DB, encoded, thumbnail, locale });
     return jsonResponse({ ok: true, code: share.code }, {
       status: share.created ? 201 : 200
     });

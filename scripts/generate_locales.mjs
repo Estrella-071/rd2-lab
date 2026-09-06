@@ -49,6 +49,12 @@ const SOURCE_FORMAT_PATCHES = {
     ja: "範囲内",
     ko: "범위 내"
   },
+  dice_alignment_desc: {
+    ja: "召喚時、<tag>ALIGNMENT</tag>方向を獲得する。<br>獲得した方向にあるすべてのダイスのダメージが増加する。"
+  },
+  dice_executioner_desc: {
+    ja: "周囲十字1マス以内のダイスが攻撃するたびにカウント減少<br>カウントが0になると<tag>EXECUTIONER</tag>発動"
+  },
   // RuneTable kind 53 stores Value2 as a signed rotation-interval modifier
   // (-0.5 sec). The client templates incorrectly present that value as an
   // effect duration, producing the ambiguous "rotation speed for 0.5 sec
@@ -62,6 +68,12 @@ const SOURCE_FORMAT_PATCHES = {
     en: "Every {0} sec, shortens the <tag>ELEMENT</tag> rotation interval by {2} sec; the effect lasts up to {4} sec",
     ja: "{0}秒ごとに<tag>ELEMENT</tag>の回転間隔を{2}秒短縮し、効果は最大{4}秒間持続",
     ko: "{0}초마다 <tag>ELEMENT</tag>의 회전 주기를 {2}초 줄이며, 효과는 최대 {4}초 동안 지속됩니다"
+  },
+  tag_desc_BLESS: {
+    "zh-tw": "獲得以下1個隨機祝福（全池24種）：<br><br>【普通 89%】各14.83%<br>－骰子傷害 +5%<br>－攻擊速度 +3%<br>－暴擊傷害 +10%<br>－暴擊率 +1%<br>－SP魔像生命 -1%<br>－擊殺怪物SP +1<br><br>【稀有 9%】各1.50%<br>－骰子傷害 +15%<br>－攻擊速度 +7%<br>－暴擊傷害 +30%<br>－暴擊率 +2%<br>－SP魔像生命 -3%<br>－擊殺怪物SP +2<br><br>【史詩 1%】各0.17%<br>－骰子傷害 +30%<br>－攻擊速度 +15%<br>－暴擊傷害 +60%<br>－暴擊率 +5%<br>－SP魔像生命 -5%<br>－擊殺怪物SP +3<br><br>【傳說 1%】各0.17%<br>－立即獲得 3000 SP<br>－立即強化隨機骰子 1次<br>－立即設置 10個地雷<br>－立即於盤面發動海嘯<br>－所有骰子獲得保護泡泡<br>－最高骰點骰子提升骰點(非7星)",
+    en: "Gain 1 random Blessing (24 in total):<br><br>[Common 89%] 14.83% each<br>- Dice DMG +5%<br>- ATK SPD +3%<br>- CRIT DMG +10%<br>- CRIT Rate +1%<br>- SP Golem HP -1%<br>- Monster Kill SP +1<br><br>[Rare 9%] 1.50% each<br>- Dice DMG +15%<br>- ATK SPD +7%<br>- CRIT DMG +30%<br>- CRIT Rate +2%<br>- SP Golem HP -3%<br>- Monster Kill SP +2<br><br>[Epic 1%] 0.17% each<br>- Dice DMG +30%<br>- ATK SPD +15%<br>- CRIT DMG +60%<br>- CRIT Rate +5%<br>- SP Golem HP -5%<br>- Monster Kill SP +3<br><br>[Legendary 1%] 0.17% each<br>- Instantly gain 3000 SP<br>- Instantly Power-Up random dice 1 time<br>- Instantly place 10 landmines<br>- Instantly trigger Tsunami on field<br>- All dice gain protective Bubble<br>- Upgrade highest non-7-dot dice",
+    ja: "以下の祝福から1個をランダムに獲得（全24種）：<br><br>【ノーマル 89%】各14.83%<br>- ダイスダメージ +5%<br>- 攻撃速度 +3%<br>- クリティカルダメージ +10%<br>- クリティカル率 +1%<br>- SPゴーレムHP -1%<br>- 撃破SP +1<br><br>【レア 9%】各1.50%<br>- ダイスダメージ +15%<br>- 攻撃速度 +7%<br>- クリティカルダメージ +30%<br>- クリティカル率 +2%<br>- SPゴーレムHP -3%<br>- 撃破SP +2<br><br>【エピック 1%】各0.17%<br>- ダイスダメージ +30%<br>- 攻撃速度 +15%<br>- クリティカルダメージ +60%<br>- クリティカル率 +5%<br>- SPゴーレムHP -5%<br>- 撃破SP +3<br><br>【伝説 1%】各0.17%<br>- SP 3000 即時獲得<br>- ランダムなダイス即時パワーアップ 1回<br>- 地雷 10個 即時設置<br>- 盤面に津波 即時発動<br>- すべてのダイスにバブル獲得<br>- 7星以外の最高出目ダイスが出目上昇",
+    ko: "아래 축복 중 랜덤한 1개를 획득합니다 (총 24종):<br><br>【일반 89%】각 14.83%<br>- 주사위 대미지 +5%<br>- 공격속도 +3%<br>- 치명타 대미지 +10%<br>- 치명타 확률 +1%<br>- SP골렘 체력 -1%<br>- 몬스터 처치 시 SP +1<br><br>【희귀 9%】각 1.50%<br>- 주사위 대미지 +15%<br>- 공격속도 +7%<br>- 치명타 대미지 +30%<br>- 치명타 확률 +2%<br>- SP골렘 체력 -3%<br>- 몬스터 처치 시 SP +2<br><br>【영웅 1%】각 0.17%<br>- 주사위 대미지 +30%<br>- 공격속도 +15%<br>- 치명타 대미지 +60%<br>- 치명타 확률 +5%<br>- SP골렘 체력 -5%<br>- 몬스터 처치 시 SP +3<br><br>【전설 1%】각 0.17%<br>- 즉시 3000 SP 획득<br>- 즉시 랜덤한 주사위 1회 파워업<br>- 즉시 지뢰 10개 설치<br>- 즉시 필드에 쓰나미 발동<br>- 모든 주사위 버블 획득<br>- 7눈금을 제외한 최고 눈금 주사위 눈금 상승"
   }
 };
 
@@ -272,6 +284,8 @@ const UI = {
   "compendium.sortName": { "zh-tw": "名稱排序", en: "Name", ja: "名前順", ko: "이름순" },
   "compendium.empty": { "zh-tw": "找不到符合條件的骰子", en: "No matching dice", ja: "条件に一致するダイスはありません", ko: "조건에 맞는 주사위가 없습니다" },
   "compendium.close": { "zh-tw": "關閉骰子詳情", en: "Close dice details", ja: "ダイス詳細を閉じる", ko: "주사위 상세 닫기" },
+  "compendium.riftShop": { "zh-tw": "裂縫商店", en: "Rift Shop", ja: "亀裂ショップ", ko: "균열 상점" },
+  "compendium.raidCoins": { "zh-tw": "討伐硬幣", en: "Raid Coins", ja: "討伐コイン", ko: "토벌 코인" },
   "common.close": { "zh-tw": "關閉", en: "Close", ja: "閉じる", ko: "닫기" },
   "common.cancel": { "zh-tw": "取消", en: "Cancel", ja: "キャンセル", ko: "취소" },
   "common.save": { "zh-tw": "儲存", en: "Save", ja: "保存", ko: "저장" },
@@ -307,6 +321,26 @@ const UI = {
   "simulation.pickerBack": { "zh-tw": "返回分享配置", en: "Back to share build", ja: "共有ビルドに戻る", ko: "공유 빌드로 돌아가기" },
   "simulation.saveTeam": { "zh-tw": "儲存隊伍", en: "Save team", ja: "チームを保存", ko: "팀 저장" },
   "simulation.emptySlot": { "zh-tw": "空槽位 {slot}", en: "Empty slot {slot}", ja: "空きスロット {slot}", ko: "빈 슬롯 {slot}" },
+  "common.confirm": { "zh-tw": "確定", en: "Confirm", ja: "確認", ko: "확인" },
+  "simulation.quickUnlock": { "zh-tw": "快速解鎖", en: "Quick Unlock", ja: "クイック解放", ko: "빠른 해금" },
+  "simulation.save": { "zh-tw": "儲存", en: "Save", ja: "保存", ko: "저장" },
+  "simulation.reset": { "zh-tw": "重置", en: "Reset", ja: "リセット", ko: "초기화" },
+  "simulation.exit": { "zh-tw": "結束", en: "Exit", ja: "終了", ko: "종료" },
+  "simulation.showNames": { "zh-tw": "顯示名稱", en: "Show Names", ja: "名前表示", ko: "이름 표시" },
+  "simulation.showTeam": { "zh-tw": "顯示隊伍", en: "Show Team", ja: "チーム表示", ko: "팀 표시" },
+  "simulation.splitImage": { "zh-tw": "分割圖片", en: "Split Image", ja: "画像分割", ko: "이미지 분할" },
+  "simulation.settings": { "zh-tw": "設定", en: "Settings", ja: "設定", ko: "설정" },
+  "simulation.showTree": { "zh-tw": "顯示骰子樹", en: "Show Tree", ja: "ツリー表示", ko: "트리 표시" },
+  "simulation.showDetails": { "zh-tw": "顯示詳情", en: "Show Details", ja: "詳細表示", ko: "상세 표시" },
+  "simulation.shareTitleLabel": { "zh-tw": "標題", en: "Title", ja: "タイトル", ko: "제목" },
+  "simulation.shareTitlePlaceholder": { "zh-tw": "自訂圖片標題", en: "Custom image title", ja: "画像タイトルを入力", ko: "사용자 지정 이미지 제목" },
+  "simulation.downloadAll": { "zh-tw": "下載全部", en: "Download All", ja: "すべてダウンロード", ko: "모두 다운로드" },
+  "simulation.quickUnlockTitle": { "zh-tw": "快速模擬配點", en: "Quick Simulation Build", ja: "クイック模擬配点", ko: "빠른 시뮬레이션 빌드" },
+  "simulation.skip": { "zh-tw": "跳過", en: "Skip", ja: "スキップ", ko: "건너뛰기" },
+  "simulation.confirm": { "zh-tw": "確定", en: "Confirm", ja: "確認", ko: "확인" },
+  "simulation.saveSlotsTitle": { "zh-tw": "模擬配點存檔管理", en: "Simulation Save Slots", ja: "シミュレーション保存管理", ko: "시뮬레이션 저장 관리" },
+  "compendium.modeNormal": { "zh-tw": "一般模式", en: "Normal Mode", ja: "一般モード", ko: "일반 모드" },
+  "compendium.modeHard": { "zh-tw": "困難模式", en: "Hard Mode", ja: "ハードモード", ko: "하드 모드" },
   "changelog.empty": { "zh-tw": "目前沒有可呈現的版本更新。", en: "No version updates are available.", ja: "表示できる更新履歴はありません。", ko: "표시할 버전 업데이트가 없습니다." },
   "changelog.datePending": { "zh-tw": "日期待確認", en: "Date pending", ja: "日付未確認", ko: "날짜 확인 중" },
   "changelog.added": { "zh-tw": "新增", en: "Added", ja: "追加", ko: "추가" },
@@ -319,6 +353,13 @@ const UI = {
   "changelog.1.0.2.2": { "zh-tw": "新增商店彈窗與違規提示等文字在地化內容。", en: "Added localization content for shop dialogs and violation notices.", ja: "ショップダイアログや違反通知などのローカライズ内容を追加しました。", ko: "상점 대화상자와 위반 알림 등의 현지화 내용을 추가했습니다." },
   "changelog.1.0.3.1": { "zh-tw": "同步 1.0.3 版本資料，更新 239 個節點的數值與文案。", en: "Synced version 1.0.3 data, including values and text for all 239 nodes.", ja: "1.0.3のデータを同期し、239個のノードの数値とテキストを更新しました。", ko: "1.0.3 데이터를 동기화하고 239개 노드의 수치와 텍스트를 업데이트했습니다." },
   "changelog.1.0.3.2": { "zh-tw": "支援波次戰術事件分支與 SP 魔像數值試算。", en: "Added wave tactic branches and SP Golem value calculations.", ja: "ウェーブ戦術イベントの分岐とSPゴーレムの数値計算に対応しました。", ko: "웨이브 전술 이벤트 분기와 SP 골렘 수치 계산을 지원합니다." },
+  "changelog.1.1.0.1": { "zh-tw": "新增太陽骰子與太陽強化符文，支援太陽核心消耗與前置符文條件。", en: "Added Solar Dice and Solar Rune, supporting Solar Core costs and rune prerequisites.", ja: "太陽ダイスと太陽ルーンを追加し、太陽のコア消費と前提ルーン条件に対応しました。", ko: "태양 주사위 및 태양 룬 추가, 태양의 코어 소모 및 전제 룬 조건 지원." },
+  "changelog.1.1.0.2": { "zh-tw": "調整天賦節點位置，全樹更新為 241 個節點與 249 條連線。", en: "Adjusted talent node positions, updating the tree to 241 nodes and 249 edges.", ja: "才能ノードの配置を調整し、ツリー全体を241ノード・249エッジに更新しました。", ko: "특성 노드 위치를 조정하고 전체 트리를 241개 노드와 249개 연결선으로 업데이트했습니다." },
+  "changelog.1.1.0.3": { "zh-tw": "圖鑑新增困難模式強化首領與裂縫商店事件。", en: "Added Hard Mode enhanced bosses and Rift Shop events to the compendium.", ja: "図鑑にハードモード強化ボスと亀裂ショップイベントを追加しました。", ko: "도감에 하드 모드 강화 보스와 균열 상점 이벤트를 추가했습니다." },
+  "changelog.1.1.0.4": { "zh-tw": "改進模擬配點使用體驗，支援快速解鎖、存檔管理與依賴自動處理。", en: "Improved build simulation experience, supporting quick unlock, save slots, and automatic dependency handling.", ja: "シミュレーションの使い勝手を改善し、クイック解放、セーブ管理、依存関係の自動処理に対応しました。", ko: "시뮬레이션 사용성 개선, 빠른 해금, 저장 슬롯 관리 및 종속성 자동 처리 지원." },
+  "changelog.1.1.0.5": { "zh-tw": "改進配置分享體驗，支援短代碼分享連結。", en: "Improved build sharing experience, supporting short code share links.", ja: "ビルド共有の使い勝手を改善し、短縮コード共有リンクに対応しました。", ko: "빌드 공유 경험 개선, 단축 코드 공유 링크 지원." },
+  "changelog.1.1.0.6": { "zh-tw": "圖片分享新增詳細資訊視圖，可導出出戰陣容與被動統計。", en: "Added detailed stats view to image export, supporting active team and passive summaries.", ja: "画像共有に詳細情報ビューを追加し、編成チームとパッシブ一覧を出力可能にしました。", ko: "이미지 공유에 상세 정보 뷰를 추가하여 출전 덱과 패시브 요약을 내보낼 수 있도록 지원." },
+  "changelog.1.1.0.7": { "zh-tw": "改善地圖渲染方式，採用 Canvas 架構提升效能。", en: "Improved map rendering architecture using Canvas to enhance performance.", ja: "マップ描画方式を改善し、Canvas設計を採用してパフォーマンスを向上させました。", ko: "맵 렌더링 방식을 개선하여 Canvas 아키텍처를 도입하고 성능을 향상했습니다." },
   "notice.officialPrefix": { "zh-tw": "官方公告：", en: "Official notice: ", ja: "公式告知：", ko: "공식 공지: " },
   "stats.damage": { "zh-tw": "傷害", en: "Damage", ja: "ダメージ", ko: "피해" },
   "stats.attack": { "zh-tw": "攻擊力", en: "Attack", ja: "攻撃力", ko: "공격력" },
@@ -337,6 +378,9 @@ const UI = {
   "stats.spDropVersus": { "zh-tw": "SP掉落 (競技)", en: "SP drop (Arena)", ja: "SPドロップ（アリーナ）", ko: "SP 드롭 (아레나)" },
   "simulation.coreSpent": { "zh-tw": "本次模擬消耗核心", en: "Cores spent in this simulation", ja: "このシミュレーションで消費したコア", ko: "이번 시뮬레이션에서 사용한 코어" },
   "simulation.goldSpent": { "zh-tw": "本次模擬消耗金幣", en: "Gold spent in this simulation", ja: "このシミュレーションで消費したゴールド", ko: "이번 시뮬레이션에서 사용한 골드" },
+  "simulation.solarCoreSpent": { "zh-tw": "本次模擬消耗太陽核心", en: "Solar cores spent in this simulation", ja: "このシミュレーションで消費した太陽のコア", ko: "이번 시뮬레이션에서 사용한 태양의 코어" },
+  "simulation.solarLabel": { "zh-tw": "太陽核心", en: "Solar Cores", ja: "太陽のコア", ko: "태양의 코어" },
+  "currency.solarCore": { "zh-tw": "太陽核心", en: "Solar Core", ja: "太陽のコア", ko: "태양의 코어" },
   "stats.max": { "zh-tw": "最大", en: "Max", ja: "最大", ko: "최대" },
   "stats.rankSlider": { "zh-tw": "階級滑桿", en: "Rank slider", ja: "ランクスライダー", ko: "등급 슬라이더" },
   "stats.adjustRank": { "zh-tw": "調整 {name} 階級", en: "Adjust {name} rank", ja: "{name}のランクを調整", ko: "{name} 등급 조정" },
@@ -371,6 +415,7 @@ const UI = {
   "simulation.shareImageFilename": { "zh-tw": "random-dice-2-lab-planning.png", en: "random-dice-2-lab-planning.png", ja: "random-dice-2-lab-planning.png", ko: "random-dice-2-lab-planning.png" },
   "simulation.imageTitle": { "zh-tw": "骰子樹模擬配點", en: "Dice tree build simulation", ja: "ダイスツリーのビルドシミュレーション", ko: "주사위 트리 빌드 시뮬레이션" },
   "simulation.goldLabel": { "zh-tw": "金幣", en: "Gold", ja: "ゴールド", ko: "골드" },
+  "compendium.monsterGroup.hard": { "zh-tw": "困難首領", en: "Hard bosses", ja: "ハードのボス", ko: "어려움 보스" },
   "simulation.coreLabel": { "zh-tw": "核心", en: "Cores", ja: "コア", ko: "코어" },
   "simulation.watermark": { "zh-tw": "Random Dice 2 Lab", en: "Random Dice 2 Lab", ja: "Random Dice 2 Lab", ko: "Random Dice 2 Lab" },
   "simulation.specialUnlock": { "zh-tw": "特殊解鎖條件", en: "Special unlock condition", ja: "特殊解放条件", ko: "특수 해금 조건" },

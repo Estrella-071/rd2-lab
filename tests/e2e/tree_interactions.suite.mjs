@@ -39,11 +39,11 @@ export async function runTreeInteractionsSuite(options = {}) {
     passedAssertions += 1;
 
     // ==========================================
-    // Tier 1: 239 節點 DAG 完備性與 DOM 結構
+    // Tier 1: 241 節點 DAG 完備性與 DOM 結構
     // ==========================================
     console.log('--- Tier 1: DAG Topology & Node Completeness ---');
     const nodeCount = await page.$$eval('button.tree-node-semantic[data-node-id]', els => els.length);
-    assertEqual(nodeCount, 239, 'Must have exactly 239 nodes in DAG');
+    assertEqual(nodeCount, 241, 'Must have exactly 241 nodes in DAG');
     const visualSvgCount = await page.$$eval('#scene svg', els => els.length);
     assertEqual(visualSvgCount, 0, 'Canvas map must not mount an SVG visual layer');
     passedAssertions += 2;
@@ -58,10 +58,10 @@ export async function runTreeInteractionsSuite(options = {}) {
       });
       return { total: nodes.length, branchCounts };
     });
-    assertEqual(branchStats.total, 239, 'TREE_DATA must have 239 nodes');
+    assertEqual(branchStats.total, 241, 'TREE_DATA must have 241 nodes');
     assert(Object.keys(branchStats.branchCounts).length >= 5, 'Must contain all 5 branches');
     passedAssertions += 2;
-    console.log(`✓ 239 Nodes verified across 5 branches:`, branchStats.branchCounts);
+    console.log(`✓ 241 Nodes verified across 5 branches:`, branchStats.branchCounts);
 
     // Canvas node accessibility: every interactive node must be reachable from
     // the keyboard and activate the same selection path as a pointer click.

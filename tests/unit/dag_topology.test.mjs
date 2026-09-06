@@ -124,7 +124,7 @@ test("dag_topology: DT-09 detectGraphCycles 與 validateGraphTopology", () => {
   assert.equal(validateGraphTopology(cycleGraph).isValid, false);
 });
 
-test("dag_topology: DT-10 真實資料庫 239 節點拓撲無環檢驗與快取預計算", () => {
+test("dag_topology: DT-10 真實資料庫 241 節點拓撲無環檢驗與快取預計算", () => {
   const candidatePaths = [
     path.resolve("site/data/dice_tree.json"),
     path.resolve("data/dice_tree.json")
@@ -135,12 +135,12 @@ test("dag_topology: DT-10 真實資料庫 239 節點拓撲無環檢驗與快取�
   const raw = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
   const nodes = raw.nodes || [];
 
-  assert.equal(nodes.length, 239, "應有 239 個節點");
+  assert.equal(nodes.length, 241, "應有 241 個節點");
   const validation = validateGraphTopology(nodes, raw.summary);
   assert.equal(validation.isValid, true, `拓撲驗證錯誤: ${validation.errors.join("; ")}`);
 
   const prereqMap = precomputePrerequisiteGraph(nodes);
-  assert.equal(prereqMap.size, 239);
+  assert.equal(prereqMap.size, 241);
   nodes.forEach((n) => {
     assert.ok(prereqMap.has(n.id));
     const entry = prereqMap.get(n.id);

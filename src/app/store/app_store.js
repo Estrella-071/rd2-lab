@@ -9,6 +9,7 @@ import {
   getConfiguredPrerequisiteIds,
   getNodeMap,
   normalizeTeam,
+  reconcileTeamAgainstRanks,
   recomputeSimulationSpent
 } from "../../domain/simulation_plan.js";
 import { getDataVersion } from "../../domain/simulation_share.js";
@@ -232,9 +233,11 @@ function reduceSimulationMutation(state, action) {
       simulation: { ...simulation, lastResult: { ...result, ok: false } }
     };
   }
+  const nextRanks = result.state?.ranks || simulation.ranks;
+  const cleanTeam = reconcileTeamAgainstRanks(simulation.team, nextRanks);
   return {
     ...state,
-    simulation: { ...result.state, active: simulation.active, team: simulation.team, lastResult: { ...result, ok: true } }
+    simulation: { ...result.state, active: simulation.active, team: cleanTeam, lastResult: { ...result, ok: true } }
   };
 }
 
@@ -252,14 +255,16 @@ function reduceSimulationState(state, action) {
 
 function reduceSimulationReset(state) {
   const current = state.simulation || {};
+  const base = createSimulationState(state.nodesMap, {
+    active: current.active,
+    dataVersion: current.dataVersion
+  });
+  const cleanTeam = reconcileTeamAgainstRanks(current.team, base.ranks);
   return {
     ...state,
     simulation: {
-      ...createSimulationState(state.nodesMap, {
-        active: current.active,
-        dataVersion: current.dataVersion,
-        team: current.team
-      }),
+      ...base,
+      team: cleanTeam,
       lastResult: { ok: true, type: "reset" }
     }
   };
@@ -357,7 +362,9 @@ const SIMPLE_REDUCERS = Object.freeze({
   [ActionTypes.SET_SIMULATION_MODE]: reduceSimulationMode,
   [ActionTypes.SIMULATION_SET_TEAM]: (state, action) => {
     const simulation = state.simulation || createSimulationState(state.nodesMap);
-    return { ...state, simulation: { ...simulation, team: normalizeTeam(action.payload), lastResult: null } };
+    const normalized = normalizeTeam(action.payload);
+    const cleanTeam = reconcileTeamAgainstRanks(normalized, simulation.ranks);
+    return { ...state, simulation: { ...simulation, team: cleanTeam, lastResult: null } };
   },
   [ActionTypes.TOGGLE_PREREQ_MODE]: (state, action) => ({
     ...state,

@@ -12,6 +12,9 @@ const runsArgument = args.find((arg) => arg.startsWith("--runs="));
 const siteArgument = args.find((arg) => arg.startsWith("--site="));
 const budgetPath = path.join(rootDir, "performance-budget.json");
 const budget = JSON.parse(fs.readFileSync(budgetPath, "utf8"));
+const canonicalTreePath = path.join(rootDir, "site", "data", "dice_tree.json");
+const canonicalTree = JSON.parse(fs.readFileSync(canonicalTreePath, "utf8"));
+const expectedNodeCount = Array.isArray(canonicalTree.nodes) ? canonicalTree.nodes.length : 241;
 let selectedProfile = process.env.RD2_PERFORMANCE_PROFILE?.trim() || "local";
 if (args.includes("--high-refresh")) selectedProfile = "high-refresh";
 if (args.includes("--stress")) selectedProfile = "stress";
@@ -240,7 +243,7 @@ async function measureRasterSettle(page, timeoutMs = 2000) {
 }
 
 async function readFilteredVisualState(page) {
-  return page.evaluate(() => {
+  return page.evaluate((nodeCount) => {
     const map = document.querySelector(".map-scene");
     const renderer = window.RD2App?.mapRenderer;
     const model = renderer?.model;
@@ -250,7 +253,7 @@ async function readFilteredVisualState(page) {
     const nodeCanvas = document.querySelector("canvas.tree-node-surface");
     const canvasSceneReady = Boolean(
       map?.dataset.canvasReady === "true"
-      && semanticButtons.length === 239
+      && semanticButtons.length === nodeCount
       && document.querySelector("canvas.tree-state-surface")
       && !map.querySelector("svg")
     );
@@ -262,7 +265,7 @@ async function readFilteredVisualState(page) {
       canvasSceneReady,
       noRuntimeMapSvg: !map?.querySelector("svg"),
     };
-  });
+  }, expectedNodeCount);
 }
 
 async function measureGesture(page) {
@@ -317,7 +320,7 @@ async function measureHighZoomPan(page) {
   await page.waitForTimeout(180);
 
   const sampleCount = isHighRefreshProfile ? 240 : 120;
-  const result = await page.evaluate(async ({ frameCount }) => {
+  const result = await page.evaluate(async ({ frameCount, nodeCount }) => {
     const viewport = document.getElementById("viewport");
     const app = window.RD2App;
     if (!viewport || !app?.viewportController) {
@@ -361,7 +364,7 @@ async function measureHighZoomPan(page) {
     const map = document.querySelector(".map-scene");
     const canvasSceneReady = Boolean(
       map?.dataset.canvasReady === "true"
-      && document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === 239
+      && document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === nodeCount
       && document.querySelector("canvas.tree-state-surface")
       && !map.querySelector("svg")
     );
@@ -375,7 +378,7 @@ async function measureHighZoomPan(page) {
       canvasSceneReady,
       noRuntimeMapSvg: !map?.querySelector("svg"),
     };
-  }, { frameCount: sampleCount });
+  }, { frameCount: sampleCount, nodeCount: expectedNodeCount });
 
   await page.evaluate(() => {
     window.RD2App.viewportController.resetToCenter(true);
@@ -643,9 +646,9 @@ async function measureMobilePan(
       timeout: readinessTimeoutMs,
     });
     await page.waitForFunction(
-      () => document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === 239
+      (nodeCount) => document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === nodeCount
         && document.querySelector(".map-scene[data-canvas-ready=\"true\"]"),
-      null,
+      expectedNodeCount,
       { timeout: readinessTimeoutMs },
     );
 
@@ -781,14 +784,14 @@ async function measureBrowserRuns() {
         },
         deviceScaleFactor: budget.viewport.deviceScaleFactor,
       });
-      await context.addInitScript(() => {
+      await context.addInitScript((nodeCount) => {
         window.__RD2_PERF_LONG_TASKS__ = [];
         window.__RD2_PERF_LONG_TASKS_SUPPORTED__ = false;
         window.__RD2_PERF_TREE_READY_MS__ = null;
         window.__RD2_PERF_INTERACTIVE_READY_MS__ = null;
         const observeReadiness = () => {
           const capture = () => {
-            const hasCanvasTree = document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === 239
+            const hasCanvasTree = document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === nodeCount
               && document.querySelector(".map-scene[data-canvas-ready=\"true\"]")
               && !document.querySelector(".map-scene svg");
             if (hasCanvasTree && window.__RD2_PERF_TREE_READY_MS__ === null) {
@@ -834,7 +837,7 @@ async function measureBrowserRuns() {
             // The unsupported state is included in the report and fails the gate.
           }
         }
-      });
+      }, expectedNodeCount);
 
       const page = await context.newPage();
       if (cpuThrottlingRate > 1) {
@@ -857,9 +860,9 @@ async function measureBrowserRuns() {
           timeout: readinessTimeoutMs,
         });
         await page.waitForFunction(
-          () => document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === 239
+          (nodeCount) => document.querySelectorAll("button.tree-node-semantic[data-node-id]").length === nodeCount
             && document.querySelector(".map-scene[data-canvas-ready=\"true\"]"),
-          null,
+          expectedNodeCount,
           { timeout: readinessTimeoutMs },
         );
 
