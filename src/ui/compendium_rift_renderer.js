@@ -1,6 +1,7 @@
 import { escapeHtml, formatGameText } from "../domain/game_text.js";
 import { installImageFallbacks } from "./image_fallback.js";
 import { translate } from "./compendium_utils.js";
+import { classifyRiftTactic, RIFT_SHOP_CATEGORIES } from "../domain/rift_shop_categories.js";
 
 const GRADE_DATA = Object.freeze({
   Common: {
@@ -45,6 +46,7 @@ export function createRiftCard(view, row, index = 0) {
   const gradeMeta = GRADE_DATA[row.grade] || GRADE_DATA.Common;
   const gradeName = gradeMeta.names[locale] || gradeMeta.names["zh-tw"] || row.grade || "Common";
   const targetName = TARGET_DATA[row.target]?.[locale] || TARGET_DATA[row.target]?.["zh-tw"] || row.target || "Owner";
+  const isSelfTarget = row.target === "Owner";
 
   const card = document.createElement("article");
   card.className = `compendium-card node-tooltip is-event-card is-rift-card phase-${gradeMeta.phase}`;
@@ -62,12 +64,16 @@ export function createRiftCard(view, row, index = 0) {
   // Header
   const header = document.createElement("div");
   header.className = "tooltip-header";
+  const targetBadgeHtml = isSelfTarget
+    ? ""
+    : `<span class="badge normal-monster-badge">${escapeHtml(targetName)}</span>`;
+
   header.innerHTML = `
     <div class="tooltip-heading">
       <h3 class="tooltip-title">${escapeHtml(titleText)}</h3>
       <div class="tooltip-badges">
         <span class="badge event-badge" style="background: ${gradeMeta.color}22 !important; border-color: ${gradeMeta.border} !important; color: ${gradeMeta.color} !important;">${escapeHtml(gradeName)}</span>
-        <span class="badge normal-monster-badge">${escapeHtml(targetName)}</span>
+        ${targetBadgeHtml}
       </div>
     </div>
     <div class="tooltip-dice-visual">
@@ -104,19 +110,22 @@ export function createRiftCard(view, row, index = 0) {
       <span class="dice-stat-val"><span class="stat-base-val">${escapeHtml(String(row.cost ?? "—"))}</span></span>
     </div>
   `;
+  grid.appendChild(costItem);
 
-  const targetHeading = translate(view, "compendium.target", {}, "Target");
-  const targetItem = document.createElement("div");
-  targetItem.className = "dice-stat-item";
-  targetItem.innerHTML = `
-    <div class="dice-stat-icon-box"><img src="icons/targetingtype_icon.png" alt="${escapeHtml(targetHeading)}" /></div>
-    <div class="dice-stat-text">
-      <span class="dice-stat-label">${escapeHtml(targetHeading)}</span>
-      <span class="dice-stat-val"><span class="stat-base-val">${escapeHtml(targetName)}</span></span>
-    </div>
-  `;
+  if (!isSelfTarget) {
+    const targetHeading = translate(view, "compendium.target", {}, "Target");
+    const targetItem = document.createElement("div");
+    targetItem.className = "dice-stat-item";
+    targetItem.innerHTML = `
+      <div class="dice-stat-icon-box"><img src="icons/targetingtype_icon.png" alt="${escapeHtml(targetHeading)}" /></div>
+      <div class="dice-stat-text">
+        <span class="dice-stat-label">${escapeHtml(targetHeading)}</span>
+        <span class="dice-stat-val"><span class="stat-base-val">${escapeHtml(targetName)}</span></span>
+      </div>
+    `;
+    grid.appendChild(targetItem);
+  }
 
-  grid.append(costItem, targetItem);
   body.appendChild(grid);
   card.appendChild(body);
 
@@ -187,46 +196,85 @@ export function renderRiftShop(view) {
   }
   if (view.emptyEl) view.emptyEl.hidden = true;
 
+  const groupMode = view.riftGroupMode || "type";
   const isGridMode = view.viewMode === "grid";
 
-  // Group by grade
-  const grades = [
-    { key: "Common", meta: GRADE_DATA.Common },
-    { key: "Rare", meta: GRADE_DATA.Rare },
-    { key: "Legendary", meta: GRADE_DATA.Legendary }
-  ];
+  if (groupMode === "grade") {
+    // Group by grade
+    const grades = [
+      { key: "Common", meta: GRADE_DATA.Common },
+      { key: "Rare", meta: GRADE_DATA.Rare },
+      { key: "Legendary", meta: GRADE_DATA.Legendary }
+    ];
 
-  grades.forEach((g) => {
-    const groupRows = rows.filter((r) => r.grade === g.key);
-    if (groupRows.length === 0) return;
+    grades.forEach((g) => {
+      const groupRows = rows.filter((r) => r.grade === g.key);
+      if (groupRows.length === 0) return;
 
-    const section = document.createElement("section");
-    section.className = "compendium-branch-section";
-    const gradeTitle = g.meta.names[locale] || g.meta.names["zh-tw"] || g.key;
-    const sectionTitle = `${translate(view, "compendium.riftShop", {}, "Rift Shop")} · ${gradeTitle}`;
-    section.setAttribute("aria-label", sectionTitle);
+      const section = document.createElement("section");
+      section.className = "compendium-branch-section";
+      const gradeTitle = g.meta.names[locale] || g.meta.names["zh-tw"] || g.key;
+      const sectionTitle = `${translate(view, "compendium.riftShop", {}, "Rift Shop")} · ${gradeTitle}`;
+      section.setAttribute("aria-label", sectionTitle);
 
-    const header = document.createElement("header");
-    header.className = "branch-section-header";
-    header.innerHTML = `
-      <div class="branch-section-title-wrap">
-        <h3 class="branch-section-title">
-          <span style="display:inline-block; width:4px; height:18px; border-radius:2px; background:${g.meta.color}; margin-right:8px; vertical-align:middle;"></span>${escapeHtml(sectionTitle)}
-        </h3>
-        <span class="branch-section-count">${escapeHtml(translate(view, "compendium.countEvents", { count: groupRows.length }, `${groupRows.length} events`))}</span>
-      </div>
-    `;
-    section.appendChild(header);
+      const header = document.createElement("header");
+      header.className = "branch-section-header";
+      header.innerHTML = `
+        <div class="branch-section-title-wrap">
+          <h3 class="branch-section-title">
+            <span style="display:inline-block; width:4px; height:18px; border-radius:2px; background:${g.meta.color}; margin-right:8px; vertical-align:middle;"></span>${escapeHtml(sectionTitle)}
+          </h3>
+          <span class="branch-section-count">${escapeHtml(translate(view, "compendium.countEvents", { count: groupRows.length }, `${groupRows.length} events`))}</span>
+        </div>
+      `;
+      section.appendChild(header);
 
-    const grid = document.createElement("div");
-    grid.className = isGridMode ? "compendium-compact-grid" : "compendium-grid";
-    groupRows.forEach((row, idx) => {
-      const item = isGridMode
-        ? createRiftCompactItem(view, row, idx)
-        : createRiftCard(view, row, idx);
-      grid.appendChild(item);
+      const grid = document.createElement("div");
+      grid.className = isGridMode ? "compendium-compact-grid" : "compendium-grid";
+      groupRows.forEach((row, idx) => {
+        const item = isGridMode
+          ? createRiftCompactItem(view, row, idx)
+          : createRiftCard(view, row, idx);
+        grid.appendChild(item);
+      });
+      section.appendChild(grid);
+      view.sectionsWrap.appendChild(section);
     });
-    section.appendChild(grid);
-    view.sectionsWrap.appendChild(section);
-  });
+  } else {
+    // Group by type (damage, sp, board, field)
+    RIFT_SHOP_CATEGORIES.forEach((cat) => {
+      const groupRows = rows.filter((r) => classifyRiftTactic(r.kind) === cat.key);
+      if (groupRows.length === 0) return;
+
+      const section = document.createElement("section");
+      section.className = "compendium-branch-section";
+      const catTitle = translate(view, cat.i18nKey, {}, cat.defaultName);
+      const sectionTitle = `${translate(view, "compendium.riftShop", {}, "Rift Shop")} · ${catTitle}`;
+      section.setAttribute("aria-label", sectionTitle);
+
+      const header = document.createElement("header");
+      header.className = "branch-section-header";
+      header.innerHTML = `
+        <div class="branch-section-title-wrap">
+          <h3 class="branch-section-title">
+            <span style="display:inline-block; width:4px; height:18px; border-radius:2px; background:${cat.color}; margin-right:8px; vertical-align:middle;"></span>${escapeHtml(sectionTitle)}
+          </h3>
+          <span class="branch-section-count">${escapeHtml(translate(view, "compendium.countEvents", { count: groupRows.length }, `${groupRows.length} events`))}</span>
+        </div>
+      `;
+      section.appendChild(header);
+
+      const grid = document.createElement("div");
+      grid.className = isGridMode ? "compendium-compact-grid" : "compendium-grid";
+      groupRows.forEach((row, idx) => {
+        const item = isGridMode
+          ? createRiftCompactItem(view, row, idx)
+          : createRiftCard(view, row, idx);
+        grid.appendChild(item);
+      });
+      section.appendChild(grid);
+      view.sectionsWrap.appendChild(section);
+    });
+  }
 }
+

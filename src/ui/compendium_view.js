@@ -99,6 +99,7 @@ export class CompendiumView {
     this._userChangedViewMode = false;
     this.sort = "default";
     this.search = "";
+    this.riftGroupMode = "type";
 
     this._unsubscribe = null;
     this._searchTimer = null;

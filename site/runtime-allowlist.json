@@ -32,6 +32,7 @@
     "src/domain/localization.js",
     "src/domain/map_resolution.js",
     "src/domain/monster_sp.js",
+    "src/domain/rift_shop_categories.js",
     "src/domain/simulation_plan.js",
     "src/domain/simulation_save.js",
     "src/domain/simulation_share.js",

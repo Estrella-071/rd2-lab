@@ -574,7 +574,7 @@
                     <div id="compendium-category-menu" class="compendium-category-menu" aria-label="圖鑑分類選項" data-i18n-attr="aria-label:compendium.categoryOptions" aria-hidden="true" inert>
                         <button type="button" class="category-option-item is-selected" data-value="dice" aria-pressed="true" tabindex="-1" data-i18n="compendium.dice">骰子</button>
                         <button type="button" class="category-option-item" data-value="monster" aria-pressed="false" tabindex="-1" data-i18n="compendium.monster">怪物</button>
-                        <button type="button" class="category-option-item" data-value="event" aria-pressed="false" tabindex="-1" data-i18n="compendium.event">事件</button>
+                        <button type="button" class="category-option-item" data-value="event" aria-pressed="false" tabindex="-1" data-i18n="compendium.event">戰術效果</button>
                       </div>
                     </div>
                   </div>
@@ -596,9 +596,15 @@
 
             <!-- Event tabs -->
             <div id="compendium-event-tabs" class="compendium-tabs compendium-event-tabs" role="tablist" aria-label="事件模式篩選" data-i18n-attr="aria-label:compendium.event" hidden>
-              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-event-mode="normal" style="--tab-color: #4ecdc4;" data-i18n="compendium.modeNormal">一般模式</button>
-              <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="hard" style="--tab-color: #f6ad55;" data-i18n="compendium.modeHard">困難模式</button>
+              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-event-mode="normal" style="--tab-color: #4ecdc4;" data-i18n="compendium.modeNormal">事件</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="hard" style="--tab-color: #f6ad55;" data-i18n="compendium.modeHard">裂縫商店</button>
               <button role="tab" aria-selected="false" class="compendium-tab" data-event-mode="versus" style="--tab-color: #ff5277;" data-i18n="compendium.versus">競技場</button>
+            </div>
+
+            <!-- Rift Shop grouping tabs -->
+            <div id="compendium-rift-group-tabs" class="compendium-tabs compendium-subgroup-tabs" role="tablist" aria-label="裂縫商店分類方式" data-i18n-attr="aria-label:compendium.groupByType" hidden>
+              <button role="tab" aria-selected="true" class="compendium-tab is-active" data-rift-group="type" style="--tab-color: #f6ad55;" data-i18n="compendium.groupByType">按類型分類</button>
+              <button role="tab" aria-selected="false" class="compendium-tab" data-rift-group="grade" style="--tab-color: #4591f0;" data-i18n="compendium.groupByGrade">按品質分類</button>
             </div>
 
             <!-- Monster tabs -->
@@ -810,6 +816,6 @@
         </div>
       </dialog>
     </main>
-    <script type="module" src="src/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

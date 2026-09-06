@@ -1521,8 +1521,12 @@ body.app-entering .statusbar {
   background: rgba(0, 0, 0, 0.38);
   padding: 3px;
   border-radius: 999px;
-  border: 1px solid var(--white-a10);
   isolation: isolate;
+}
+
+.compendium-subgroup-tabs {
+  background: rgba(18, 14, 28, 0.65);
+  border: 1px solid var(--white-a14);
 }
 
 /* Tab indicator */
@@ -2132,6 +2136,7 @@ body.app-entering .statusbar {
     grid-template-areas:
       "nav"
       "tabs"
+      "subtabs"
       "controls";
     align-items: center;
     gap: 6px;
@@ -2141,7 +2146,7 @@ body.app-entering .statusbar {
     width: 100%;
     gap: 8px;
     min-width: 0;
-    justify-content: flex-start;
+    justify-content: space-between;
   }
   .compendium-back-btn {
     flex: 0 1 auto;
@@ -2161,6 +2166,8 @@ body.app-entering .statusbar {
     flex: 1 1 auto;
     gap: 6px;
     min-width: 0;
+    justify-content: flex-end;
+    margin-left: auto;
   }
   .compendium-title-container {
     flex: 0 1 auto;
@@ -2196,8 +2203,11 @@ body.app-entering .statusbar {
     align-items: start;
   }
   .compendium-card.node-tooltip {
+    width: 100% !important;
+    max-width: 100% !important;
     height: auto;
     min-height: 0;
+    box-sizing: border-box;
   }
   .compendium-card.node-tooltip .tooltip-body {
     flex: 0 0 auto;
@@ -2255,15 +2265,28 @@ body.app-entering .statusbar {
     width: max-content;
     max-width: 100%;
     min-width: 0;
+    margin-inline: auto;
+    justify-self: center;
+    justify-content: center;
     overflow-x: auto;
     scrollbar-width: none;
   }
   #compendium-tabs {
-    width: 100%;
+    width: max-content;
+    max-width: 100%;
   }
   .compendium-event-tabs,
   .compendium-monster-tabs {
     width: max-content;
+    max-width: 100%;
+  }
+  .compendium-subgroup-tabs {
+    grid-area: subtabs;
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    justify-self: center;
+    justify-content: center;
   }
   .compendium-tabs::-webkit-scrollbar {
     display: none;
