@@ -27,13 +27,16 @@ export function resolvePublicIconFilename(value, fallback) {
   return /^[A-Za-z0-9_.-]+\.png$/.test(candidate) ? candidate : fallback;
 }
 
-export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate } = {}) {
+export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCommit, onBegin, thumbRadius = 10 } = {}) {
   if (!sliderInput) return () => {};
   let isDragging = false;
   let activePointerId = null;
   let springTimer = null;
+  let currentRank = Math.max(1, Math.min(maxRank, Number.parseInt(sliderInput.value, 10) || 1));
+  let ignoreNativeEventsUntil = 0;
 
   const updateSliderUI = (rank, pct, overshootX = 0) => {
+    currentRank = rank;
     sliderInput.value = String(rank);
     if (typeof sliderInput.style?.setProperty === "function") {
       sliderInput.style.setProperty("--slider-pct", `${pct}%`);
@@ -44,27 +47,28 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate } = {}
     }
   };
 
-  const handlePointerMove = (e) => {
-    if (!isDragging || e.pointerId !== activePointerId) return;
-    const rect = sliderInput.getBoundingClientRect();
-    if (!rect.width) return;
+  const computeRankAndProgress = (clientX) => {
+    const rect = sliderInput.getBoundingClientRect?.() || { left: 0, width: 0 };
+    if (!rect.width) return { rank: currentRank, pct: 0, overshootX: 0 };
 
-    const rawOffset = e.clientX - rect.left;
-    const progress = rawOffset / rect.width;
+    const rawOffset = clientX - rect.left;
+    const effectiveWidth = Math.max(1, rect.width - 2 * thumbRadius);
+    const effectiveOffset = rawOffset - thumbRadius;
+    const progress = effectiveOffset / effectiveWidth;
 
     let rank;
     let pct;
     let overshootX;
 
     if (progress < 0) {
-      const deltaX = rawOffset;
+      const deltaX = effectiveOffset;
       const k = 48;
       const maxOvershoot = 26;
       overshootX = -(Math.abs(deltaX) * maxOvershoot) / (Math.abs(deltaX) + k);
       rank = 1;
       pct = 0;
     } else if (progress > 1) {
-      const deltaX = rawOffset - rect.width;
+      const deltaX = effectiveOffset - effectiveWidth;
       const k = 48;
       const maxOvershoot = 26;
       overshootX = (deltaX * maxOvershoot) / (deltaX + k);
@@ -77,17 +81,36 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate } = {}
       overshootX = 0;
     }
 
+    return { rank, pct, overshootX };
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging || (activePointerId !== null && e.pointerId !== activePointerId)) return;
+    const { rank, pct, overshootX } = computeRankAndProgress(e.clientX);
     updateSliderUI(rank, pct, overshootX);
   };
 
   const handlePointerDown = (e) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 && typeof e.button === "number") return;
+    if (typeof e.preventDefault === "function") {
+      e.preventDefault();
+    }
+    try {
+      if (typeof sliderInput.focus === "function") sliderInput.focus();
+    } catch (_) {}
+
+    if (typeof onBegin === "function") {
+      onBegin();
+    }
+
     isDragging = true;
     activePointerId = e.pointerId;
-    sliderInput.classList.add("is-dragging");
-    sliderInput.classList.remove("is-springing");
+    sliderInput.classList?.add?.("is-dragging");
+    sliderInput.classList?.remove?.("is-springing");
     try {
-      sliderInput.setPointerCapture(activePointerId);
+      if (activePointerId !== null && typeof sliderInput.setPointerCapture === "function") {
+        sliderInput.setPointerCapture(activePointerId);
+      }
     } catch (_) {}
     handlePointerMove(e);
   };
@@ -96,29 +119,48 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate } = {}
     if (!isDragging || (activePointerId !== null && e.pointerId !== activePointerId)) return;
     isDragging = false;
     try {
-      sliderInput.releasePointerCapture(activePointerId);
+      if (activePointerId !== null && typeof sliderInput.releasePointerCapture === "function") {
+        sliderInput.releasePointerCapture(activePointerId);
+      }
     } catch (_) {}
     activePointerId = null;
 
-    sliderInput.classList.remove("is-dragging");
-    sliderInput.classList.add("is-springing");
+    sliderInput.classList?.remove?.("is-dragging");
+    sliderInput.classList?.add?.("is-springing");
 
-    const curVal = Number.parseInt(sliderInput.value, 10) || 1;
-    const targetPct = maxRank > 1 ? ((curVal - 1) / (maxRank - 1)) * 100 : 0;
-    updateSliderUI(curVal, targetPct, 0);
+    const finalRank = currentRank;
+    const targetPct = maxRank > 1 ? ((finalRank - 1) / (maxRank - 1)) * 100 : 0;
+    updateSliderUI(finalRank, targetPct, 0);
+
+    const now = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
+    ignoreNativeEventsUntil = now + 120;
+
+    if (typeof onCommit === "function") {
+      onCommit(finalRank);
+    }
 
     if (springTimer) clearTimeout(springTimer);
     springTimer = setTimeout(() => {
-      sliderInput.classList.remove("is-springing");
+      sliderInput.classList?.remove?.("is-springing");
       springTimer = null;
     }, 380);
   };
 
   const handleInput = (event) => {
-    if (isDragging) return;
-    const rank = Number.parseInt(event.target.value, 10) || 1;
+    const now = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
+    if (isDragging || now < ignoreNativeEventsUntil) return;
+    const rank = Math.max(1, Math.min(maxRank, Number.parseInt(event.target?.value, 10) || 1));
     const pct = maxRank > 1 ? ((rank - 1) / (maxRank - 1)) * 100 : 0;
     updateSliderUI(rank, pct, 0);
+  };
+
+  const handleChange = (event) => {
+    const now = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
+    if (isDragging || now < ignoreNativeEventsUntil) return;
+    const rank = Math.max(1, Math.min(maxRank, Number.parseInt(event.target?.value, 10) || 1));
+    if (typeof onCommit === "function") {
+      onCommit(rank);
+    }
   };
 
   sliderInput.addEventListener("pointerdown", handlePointerDown);
@@ -126,6 +168,9 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate } = {}
   sliderInput.addEventListener("pointerup", handlePointerUp);
   sliderInput.addEventListener("pointercancel", handlePointerUp);
   sliderInput.addEventListener("input", handleInput);
+  if (typeof onCommit === "function") {
+    sliderInput.addEventListener("change", handleChange);
+  }
 
   return () => {
     if (springTimer) clearTimeout(springTimer);
@@ -137,6 +182,9 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate } = {}
     sliderInput.removeEventListener("pointerup", handlePointerUp);
     sliderInput.removeEventListener("pointercancel", handlePointerUp);
     sliderInput.removeEventListener("input", handleInput);
-    sliderInput.classList.remove("is-dragging", "is-springing");
+    if (typeof onCommit === "function") {
+      sliderInput.removeEventListener("change", handleChange);
+    }
+    sliderInput.classList?.remove?.("is-dragging", "is-springing");
   };
 }

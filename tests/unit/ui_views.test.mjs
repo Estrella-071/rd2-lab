@@ -929,6 +929,53 @@ test("Compendium slider helper returns a reversible listener lifecycle", () => {
   assert.equal(slider.listenerCount("input"), 0);
 });
 
+test("attachElasticSlider: Locks drag value on pointerup without jumping and compensates thumb geometry", () => {
+  const slider = createMockElement("input");
+  slider.value = "1";
+  slider.style.setProperty = () => {};
+  slider.setPointerCapture = () => {};
+  slider.releasePointerCapture = () => {};
+  slider.focus = () => {};
+  slider.getBoundingClientRect = () => ({ left: 100, width: 200, top: 0, height: 10 });
+
+  let updatedRank = null;
+  let committedRank = null;
+  const dispose = attachElasticSlider(slider, {
+    maxRank: 50,
+    thumbRadius: 10,
+    onUpdate: (rank) => { updatedRank = rank; },
+    onCommit: (rank) => { committedRank = rank; }
+  });
+
+  // 1. 點擊最左側 thumb 中心 (left + 10px -> clientX = 110)
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 110, pointerId: 1, preventDefault: () => {} });
+  assert.equal(updatedRank, 1, "Clicking left thumb center must be Rank 1");
+
+  // 2. 拖曳到中間 (effectiveWidth = 180, 50% offset = 90 -> clientX = 100 + 10 + 90 = 200)
+  // progress = 90 / 180 = 0.5 -> rank = 1 + 0.5 * 49 = 25.5 -> 26
+  slider.dispatchEvent("pointermove", { clientX: 200, pointerId: 1 });
+  assert.equal(updatedRank, 26, "Moving to 50% must compute Rank 26");
+
+  // 3. 模擬瀏覽器原生 input 事件試圖篡改 DOM 數值（例如設為 24）
+  slider.value = "24";
+
+  // 4. 使用者放開指針 (pointerup)
+  slider.dispatchEvent("pointerup", { clientX: 200, pointerId: 1 });
+  // 放開後必須鎖定為拖曳確認的 26，絕不可跳變成篡改後的 24！
+  assert.equal(slider.value, "26", "Slider value must remain locked at 26 on pointerup");
+  assert.equal(updatedRank, 26, "Updated rank must remain 26 on pointerup");
+  assert.equal(committedRank, 26, "Committed rank must be 26 on pointerup");
+
+  // 5. 點擊最右側 thumb 中心 (left + width - 10px = 290)
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 290, pointerId: 2, preventDefault: () => {} });
+  assert.equal(updatedRank, 50, "Clicking right thumb center must be Rank 50");
+  slider.dispatchEvent("pointerup", { clientX: 290, pointerId: 2 });
+  assert.equal(slider.value, "50", "Slider value must be 50 on release");
+
+  dispose();
+  assert.equal(slider.listenerCount("change"), 0);
+});
+
 test("MorphingWidgets: Toggles filter and disclaimer expanded states", () => {
   const filterEl = createMockElement("div");
   const filterToggle = createMockElement("button");

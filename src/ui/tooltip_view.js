@@ -5,6 +5,7 @@ import { ActionTypes } from "../app/store/app_store.js";
 import { getRank, getUnlockConditionLabel, getFactionLevelProgressLabel, evaluateNode, planBatchUnlock, planRevokeNode, isInitialSimulationNode } from "../domain/simulation_plan.js";
 import { installImageFallbacks } from "./image_fallback.js";
 import { appendAwakeningSection, appendDiceStats, bindDiceUpgradeButtons } from "./dice_details_renderer.js";
+import { attachElasticSlider } from "./compendium_utils.js";
 
 export { DICE_3_ALIASES } from "../domain/dice_icon.js";
 export { resolveNode3Icon };
@@ -1312,97 +1313,18 @@ export class TooltipView {
   }
 
   _attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCommit } = {}) {
-    if (!sliderInput) return;
-    const gesture = { isDragging: false, activePointerId: null };
-    const updateSliderUI = (rank, pct, overshootX = 0) => {
-      sliderInput.value = String(rank);
-      if (typeof sliderInput.style?.setProperty === "function") {
-        sliderInput.style.setProperty("--slider-pct", `${pct}%`);
-        sliderInput.style.setProperty("--overshoot-x", overshootX ? `${overshootX.toFixed(2)}px` : "0px");
-      }
-      if (typeof onUpdate === "function") onUpdate(rank, pct, overshootX);
-    };
-    const handlePointerMove = (event) => this._handleElasticSliderMove(sliderInput, gesture, maxRank, event, updateSliderUI);
-    const handlePointerDown = (event) => this._beginElasticSliderDrag(sliderInput, gesture, event, handlePointerMove);
-    const handlePointerUp = () => this._finishElasticSliderDrag(sliderInput, gesture, maxRank, updateSliderUI, onCommit);
-
-    sliderInput.addEventListener("pointerdown", handlePointerDown);
-    sliderInput.addEventListener("pointermove", handlePointerMove);
-    sliderInput.addEventListener("pointerup", handlePointerUp);
-    sliderInput.addEventListener("pointercancel", handlePointerUp);
-    sliderInput.addEventListener("input", (event) => {
-      const rank = this._readElasticSliderRank(event.target, maxRank);
-      const pct = maxRank > 1 ? ((rank - 1) / (maxRank - 1)) * 100 : 0;
-      updateSliderUI(rank, pct, 0);
+    if (!sliderInput) return () => {};
+    return attachElasticSlider(sliderInput, {
+      maxRank,
+      onUpdate,
+      onCommit,
+      onBegin: () => this._clearSliderPopState()
     });
-    sliderInput.addEventListener("change", (event) => {
-      const rank = this._readElasticSliderRank(event.target, maxRank);
-      if (typeof onCommit === "function") onCommit(rank);
-    });
-  }
-
-  _handleElasticSliderMove(sliderInput, gesture, maxRank, event, updateSliderUI) {
-    if (!gesture.isDragging || (gesture.activePointerId !== null && event.pointerId !== gesture.activePointerId)) return;
-    const rect = sliderInput.getBoundingClientRect();
-    if (!rect.width) return;
-    const rawOffset = event.clientX - rect.left;
-    const progress = rawOffset / rect.width;
-    if (progress < 0) {
-      const overshootX = -(Math.abs(rawOffset) * 26) / (Math.abs(rawOffset) + 48);
-      updateSliderUI(1, 0, overshootX);
-      return;
-    }
-    if (progress > 1) {
-      const deltaX = rawOffset - rect.width;
-      const overshootX = (deltaX * 26) / (deltaX + 48);
-      updateSliderUI(maxRank, 100, overshootX);
-      return;
-    }
-    const rank = Math.max(1, Math.min(maxRank, Math.round(1 + progress * (maxRank - 1))));
-    const pct = maxRank > 1 ? ((rank - 1) / (maxRank - 1)) * 100 : 0;
-    updateSliderUI(rank, pct, 0);
-  }
-
-  _beginElasticSliderDrag(sliderInput, gesture, event, handlePointerMove) {
-    if (event.button !== 0) return;
-    gesture.isDragging = true;
-    gesture.activePointerId = event.pointerId;
-    sliderInput.classList.add("is-dragging");
-    sliderInput.classList.remove("is-springing");
-    this._clearSliderPopState();
-    try {
-      sliderInput.setPointerCapture(gesture.activePointerId);
-    } catch (_) {
-      // Pointer capture is unavailable in the lightweight test DOM.
-    }
-    handlePointerMove(event);
   }
 
   _clearSliderPopState() {
     const selectors = [".detail-copy", "#tooltip-rank-badge, .rank-badge", ".slider-rank-current"];
     selectors.forEach((selector) => this.tooltipEl?.querySelector(selector)?.classList?.remove("is-popping"));
-  }
-
-  _finishElasticSliderDrag(sliderInput, gesture, maxRank, updateSliderUI, onCommit) {
-    if (!gesture.isDragging) return;
-    gesture.isDragging = false;
-    try {
-      if (gesture.activePointerId !== null) sliderInput.releasePointerCapture(gesture.activePointerId);
-    } catch (_) {
-      // Pointer capture may already have been released by the browser.
-    }
-    gesture.activePointerId = null;
-    sliderInput.classList.remove("is-dragging");
-    sliderInput.classList.add("is-springing");
-    const currentRank = this._readElasticSliderRank(sliderInput, maxRank);
-    const targetPct = maxRank > 1 ? ((currentRank - 1) / (maxRank - 1)) * 100 : 0;
-    updateSliderUI(currentRank, targetPct, 0);
-    if (typeof onCommit === "function") onCommit(currentRank);
-    setTimeout(() => sliderInput.classList.remove("is-springing"), 380);
-  }
-
-  _readElasticSliderRank(sliderInput, maxRank) {
-    return Math.max(1, Math.min(maxRank, Number.parseInt(sliderInput.value, 10) || 1));
   }
 
   _updateDynamicValues(node, state) {
