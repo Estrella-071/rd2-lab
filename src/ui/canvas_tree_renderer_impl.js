@@ -1455,10 +1455,7 @@ export class CanvasTreeRenderer {
     this._warmSceneKeys = new Set();
     this._onSemanticPointerDown = new Map();
     this._boundViewportInteractionStart = () => {
-      // A real pointer/wheel sequence has priority over detached work. Keep
-      // the already committed frame on screen, but invalidate a candidate that
-      // could otherwise finish an atlas upload on the first gesture frame.
-      this._updateOverviewCutout(null);
+      // Pause detached background work while active gesture has priority.
       this.pauseBackgroundRenders({ pauseWarmups: true });
     };
     this._boundViewportSettled = () => {
@@ -2076,13 +2073,13 @@ export class CanvasTreeRenderer {
     for (const surface of overviewSurfaces) {
       if (surface.style.visibility !== visibility) surface.style.visibility = visibility;
     }
-    if (this._isCameraMotionActive() || !this._sceneFrameCoverage) {
+    if (!this._sceneFrameCoverage) {
       this._updateOverviewCutout(null);
     }
   }
 
   _computeOverviewCutoutClipPath(bounds) {
-    if (!bounds || this._isCameraMotionActive()) return "";
+    if (!bounds) return "";
     const viewBox = this.renderManifest?.viewBox;
     if (!viewBox) return "";
     const x1 = Math.max(0, Math.round(bounds.left - viewBox.x));
@@ -4054,12 +4051,12 @@ export class CanvasTreeRenderer {
   prepareViewport(state) {
     if (this._destroyed || !state?.viewport || !this._initialAssetsReady) return;
     this.lastState = state;
-    if (this._isCameraMotionActive()) {
-      this._updateOverviewCutout(null);
-    } else if (this._sceneFrameCoverage) {
-      this._updateOverviewCutout(this._sceneFrameCoverage);
+    if (!this._isCameraMotionActive()) {
+      this._backgroundRendersPaused = false;
+      if (this._sceneFrameCoverage) {
+        this._updateOverviewCutout(this._sceneFrameCoverage);
+      }
     }
-    if (!this._isCameraMotionActive()) this._backgroundRendersPaused = false;
     this._setOverviewVisibility(this.model);
     // A viewport update is a new scene generation even when the render model
     // is unchanged.  This prevents an older resolution candidate from being
