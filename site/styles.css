@@ -2700,6 +2700,9 @@ g[transform^="scale(0.56)"] .sel-box-runner,
   cursor: pointer;
   margin: 0;
   padding: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   transform: translateX(calc(var(--overshoot-x, 0px) * 0.25));
   transition: background 60ms linear, transform 0s;
 }

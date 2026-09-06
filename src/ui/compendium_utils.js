@@ -32,8 +32,15 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
   let isDragging = false;
   let activePointerId = null;
   let springTimer = null;
+  let isKeyboardAction = false;
   let currentRank = Math.max(1, Math.min(maxRank, Number.parseInt(sliderInput.value, 10) || 1));
-  let ignoreNativeEventsUntil = 0;
+
+  // 穩態確認與抬手微抖動防護 (Dwell stabilization & lift-off jitter protection)
+  let confirmedRank = currentRank;
+  let dwellRank = currentRank;
+  let dwellStartTime = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
+
+  const getNow = () => (typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now());
 
   const updateSliderUI = (rank, pct, overshootX = 0) => {
     currentRank = rank;
@@ -75,7 +82,18 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
       rank = maxRank;
       pct = 100;
     } else {
-      rank = Math.round(1 + progress * (maxRank - 1));
+      // 刻度磁吸與滯後死區 (Hysteresis deadband): 當前等級邊界微幅擴展 8%，避免臨界邊界晃動
+      const curProgress = (currentRank - 1) / (maxRank - 1);
+      const diff = progress - curProgress;
+      const step = 1 / (maxRank - 1);
+      const hysteresisThreshold = 0.58 * step;
+
+      if (Math.abs(diff) <= hysteresisThreshold) {
+        rank = currentRank;
+      } else {
+        rank = Math.round(1 + progress * (maxRank - 1));
+      }
+
       rank = Math.max(1, Math.min(maxRank, rank));
       pct = maxRank > 1 ? ((rank - 1) / (maxRank - 1)) * 100 : 0;
       overshootX = 0;
@@ -86,7 +104,17 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
 
   const handlePointerMove = (e) => {
     if (!isDragging || (activePointerId !== null && e.pointerId !== activePointerId)) return;
+    const now = getNow();
     const { rank, pct, overshootX } = computeRankAndProgress(e.clientX);
+
+    if (rank !== dwellRank) {
+      if (now - dwellStartTime >= 60) {
+        confirmedRank = dwellRank;
+      }
+      dwellRank = rank;
+      dwellStartTime = now;
+    }
+
     updateSliderUI(rank, pct, overshootX);
   };
 
@@ -112,6 +140,10 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
         sliderInput.setPointerCapture(activePointerId);
       }
     } catch (_) {}
+
+    dwellRank = currentRank;
+    confirmedRank = currentRank;
+    dwellStartTime = getNow();
     handlePointerMove(e);
   };
 
@@ -128,12 +160,18 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     sliderInput.classList?.remove?.("is-dragging");
     sliderInput.classList?.add?.("is-springing");
 
-    const finalRank = currentRank;
+    const now = getNow();
+    let finalRank = currentRank;
+
+    // 抬手防抖過濾：如果在前一個等級停留超過 60ms，且在抬手最後 40ms 內發生了 ±1 級的微小抖動，鎖定停留確認的等級
+    if (now - dwellStartTime < 40 && Math.abs(currentRank - confirmedRank) === 1) {
+      finalRank = confirmedRank;
+    } else if (now - dwellStartTime >= 60) {
+      finalRank = dwellRank;
+    }
+
     const targetPct = maxRank > 1 ? ((finalRank - 1) / (maxRank - 1)) * 100 : 0;
     updateSliderUI(finalRank, targetPct, 0);
-
-    const now = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
-    ignoreNativeEventsUntil = now + 120;
 
     if (typeof onCommit === "function") {
       onCommit(finalRank);
@@ -146,27 +184,35 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     }, 380);
   };
 
+  const handleKeyDown = (e) => {
+    const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"];
+    if (keys.includes(e?.key)) {
+      isKeyboardAction = true;
+    }
+  };
+
   const handleInput = (event) => {
-    const now = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
-    if (isDragging || now < ignoreNativeEventsUntil) return;
+    if (isDragging || !isKeyboardAction) return;
     const rank = Math.max(1, Math.min(maxRank, Number.parseInt(event.target?.value, 10) || 1));
     const pct = maxRank > 1 ? ((rank - 1) / (maxRank - 1)) * 100 : 0;
     updateSliderUI(rank, pct, 0);
+    isKeyboardAction = false;
   };
 
   const handleChange = (event) => {
-    const now = typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
-    if (isDragging || now < ignoreNativeEventsUntil) return;
+    if (isDragging || !isKeyboardAction) return;
     const rank = Math.max(1, Math.min(maxRank, Number.parseInt(event.target?.value, 10) || 1));
     if (typeof onCommit === "function") {
       onCommit(rank);
     }
+    isKeyboardAction = false;
   };
 
   sliderInput.addEventListener("pointerdown", handlePointerDown);
   sliderInput.addEventListener("pointermove", handlePointerMove);
   sliderInput.addEventListener("pointerup", handlePointerUp);
   sliderInput.addEventListener("pointercancel", handlePointerUp);
+  sliderInput.addEventListener("keydown", handleKeyDown);
   sliderInput.addEventListener("input", handleInput);
   if (typeof onCommit === "function") {
     sliderInput.addEventListener("change", handleChange);
@@ -181,6 +227,7 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     sliderInput.removeEventListener("pointermove", handlePointerMove);
     sliderInput.removeEventListener("pointerup", handlePointerUp);
     sliderInput.removeEventListener("pointercancel", handlePointerUp);
+    sliderInput.removeEventListener("keydown", handleKeyDown);
     sliderInput.removeEventListener("input", handleInput);
     if (typeof onCommit === "function") {
       sliderInput.removeEventListener("change", handleChange);

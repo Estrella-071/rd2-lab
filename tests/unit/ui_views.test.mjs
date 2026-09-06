@@ -976,6 +976,56 @@ test("attachElasticSlider: Locks drag value on pointerup without jumping and com
   assert.equal(slider.listenerCount("change"), 0);
 });
 
+test("attachElasticSlider: Suppresses lift-off jitter and isolates native events to keyboard only", async () => {
+  const slider = createMockElement("input");
+  slider.value = "1";
+  slider.style.setProperty = () => {};
+  slider.setPointerCapture = () => {};
+  slider.releasePointerCapture = () => {};
+  slider.focus = () => {};
+  slider.getBoundingClientRect = () => ({ left: 100, width: 200, top: 0, height: 10 });
+
+  let updatedRank = null;
+  let committedRank = null;
+  const dispose = attachElasticSlider(slider, {
+    maxRank: 50,
+    thumbRadius: 10,
+    onUpdate: (rank) => { updatedRank = rank; },
+    onCommit: (rank) => { committedRank = rank; }
+  });
+
+  // 1. 拖曳至 17/50 (progress 16/49 = 0.3265 -> offset = 10 + 0.3265 * 180 = 68.77 -> clientX = 168.77)
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 110, pointerId: 1, preventDefault: () => {} });
+  slider.dispatchEvent("pointermove", { clientX: 168.8, pointerId: 1 });
+  assert.equal(updatedRank, 17, "Target rank while dragging must be 17");
+
+  // 停頓 70ms 讓 dwell 確立
+  await new Promise((resolve) => setTimeout(resolve, 70));
+
+  // 2. 模擬抬手時手指微抖動 3px，使得坐標瞬間跳到 16 的區間 (clientX 164)
+  slider.dispatchEvent("pointermove", { clientX: 164, pointerId: 1 });
+  // 在放開瞬間 (pointerup)
+  slider.dispatchEvent("pointerup", { clientX: 164, pointerId: 1 });
+
+  // 抬手防抖機制生效：必須鎖定停頓確認的 17，絕不隨抬手抖動跳到 16！
+  assert.equal(slider.value, "17", "Lift-off jitter must be suppressed and locked to 17");
+  assert.equal(committedRank, 17, "Committed rank must remain 17");
+
+  // 3. 測試原生非鍵盤事件被阻斷
+  slider.value = "40";
+  slider.dispatchEvent("input", { target: { value: "40" } });
+  assert.equal(updatedRank, 17, "Non-keyboard native input must be ignored");
+
+  // 4. 測試鍵盤事件正常放行
+  slider.dispatchEvent("keydown", { key: "ArrowRight" });
+  slider.value = "18";
+  slider.dispatchEvent("input", { target: { value: "18" } });
+  assert.equal(updatedRank, 18, "Keyboard-driven input must update rank to 18");
+
+  dispose();
+  assert.equal(slider.listenerCount("keydown"), 0);
+});
+
 test("MorphingWidgets: Toggles filter and disclaimer expanded states", () => {
   const filterEl = createMockElement("div");
   const filterToggle = createMockElement("button");
