@@ -1736,11 +1736,21 @@ export class CanvasTreeRenderer {
       button.setAttribute("aria-label", String(node.name_zh || node.name || id));
       button.title = String(node.name_zh || node.name || id);
       button.dataset.unlockLabel = getUnlockConditionLabel(node);
-      const hitBox = manifestNode.hitBox || { x: manifestNode.x - 60, y: manifestNode.y - 60, width: 120, height: 120 };
-      button.style.left = `${hitBox.x}px`;
-      button.style.top = `${hitBox.y}px`;
-      button.style.width = `${hitBox.width}px`;
-      button.style.height = `${hitBox.height}px`;
+      const nodeType = getNodeType(node);
+      let radius = 36;
+      if (nodeType === "DICE") radius = 52;
+      else if (nodeType === "PERK" || node?.is_big) radius = 48;
+      const fallbackBox = manifestNode.hitBox || { x: manifestNode.x - 60, y: manifestNode.y - 60, width: 120, height: 120 };
+      const centerX = Number.isFinite(Number(manifestNode.x))
+        ? Number(manifestNode.x)
+        : Number(fallbackBox.x + fallbackBox.width / 2);
+      const centerY = Number.isFinite(Number(manifestNode.y))
+        ? Number(manifestNode.y)
+        : Number(fallbackBox.y + fallbackBox.height / 2);
+      button.style.left = `${centerX - radius}px`;
+      button.style.top = `${centerY - radius}px`;
+      button.style.width = `${radius * 2}px`;
+      button.style.height = `${radius * 2}px`;
       button.addEventListener("pointerdown", (event) => {
         if (event.button !== undefined && event.button !== 0) return;
         button.classList.add("is-pressing");

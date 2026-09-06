@@ -101,7 +101,7 @@ function createMockElement(tagName = "div", attrs = {}) {
       });
     },
     closest: (selector) => {
-      if (selector.includes("tree-node") && element.classList.has("tree-node")) return element;
+      if ((selector.includes("tree-node") || selector.includes("tree-node-semantic")) && (element.classList.has("tree-node") || element.classList.has("tree-node-semantic"))) return element;
       if (selector.includes("filter-toggle-btn") && element.classList.has("filter-toggle-btn")) return element;
       return null;
     },
@@ -1036,3 +1036,77 @@ test("MorphingWidgets: init/destroy is reversible for toggle, widget, and docume
     else globalThis.document = previousDocument;
   }
 });
+
+test("TreeView: geometric nearest-node disambiguation resolves closely spaced nodes correctly", () => {
+  const store = new AppStore();
+  const selectNodeUseCase = new SelectNodeUseCase({ store });
+  const navigateViewportUseCase = new NavigateViewportUseCase({ store, viewportController: { pan(){}, zoom(){}, centerOn(){} } });
+
+  const container = createMockElement("div");
+  container.getBoundingClientRect = () => ({ left: 0, top: 0, width: 1000, height: 800 });
+  const scene = createMockElement("div");
+  scene.classList.add("map-scene");
+  container.appendChild(scene);
+
+  const btn5207 = createMockElement("button", { id: "node-5207" });
+  btn5207.classList.add("tree-node-semantic");
+  btn5207.dataset.nodeId = "5207";
+
+  const btn5307 = createMockElement("button", { id: "node-5307" });
+  btn5307.classList.add("tree-node-semantic");
+  btn5307.dataset.nodeId = "5307";
+
+  const btn5407 = createMockElement("button", { id: "node-5407" });
+  btn5407.classList.add("tree-node-semantic");
+  btn5407.dataset.nodeId = "5407";
+
+  container.appendChild(btn5207);
+  container.appendChild(btn5307);
+  container.appendChild(btn5407);
+
+  store.dispatch({
+    type: "SET_GAME_DATA",
+    payload: {
+      nodes: [
+        { id: "5207", name: "吞噬增幅", node_type: "DICE_RUNE" },
+        { id: "5307", name: "連鎖吞噬", node_type: "DICE_RUNE" },
+        { id: "5407", name: "吞噬弱者", node_type: "DICE_RUNE" }
+      ],
+      edges: []
+    }
+  });
+  store.dispatch({ type: "UPDATE_VIEWPORT", payload: { x: 0, y: 0, scale: 1 } });
+
+  const treeView = new TreeView({
+    store,
+    selectNodeUseCase,
+    navigateViewportUseCase,
+    container,
+    mapScene: scene
+  });
+  treeView.setNodePositions(new Map([
+    ["5207", { x: 2480, y: 1520 }],
+    ["5307", { x: 2420, y: 1580 }],
+    ["5407", { x: 2540, y: 1580 }]
+  ]));
+  treeView.init();
+
+  // Test 1: Click close to 5207 center biased toward 5307. Even if DOM hit-tests 5307, geometry disambiguates to 5207
+  container.dispatchEvent("click", { target: btn5307, clientX: 2465, clientY: 1535 });
+  assert.equal(store.getState().selectedNodeId, "5207", "Click near 5207 must select 5207 instead of overlapping 5307");
+
+  // Test 2: Click close to 5207 center biased toward 5407. Even if DOM hit-tests 5407, geometry disambiguates to 5207
+  container.dispatchEvent("click", { target: btn5407, clientX: 2495, clientY: 1535 });
+  assert.equal(store.getState().selectedNodeId, "5207", "Click near 5207 must select 5207 instead of overlapping 5407");
+
+  // Test 3: Click clearly on 5307 center
+  container.dispatchEvent("click", { target: btn5307, clientX: 2420, clientY: 1580 });
+  assert.equal(store.getState().selectedNodeId, "5307", "Click on 5307 center must select 5307");
+
+  // Test 4: Keyboard activation (clientX = 0, clientY = 0) honors semantic button target directly
+  container.dispatchEvent("click", { target: btn5407, clientX: 0, clientY: 0 });
+  assert.equal(store.getState().selectedNodeId, "5407", "Keyboard activation on 5407 button must select 5407");
+
+  treeView.destroy();
+});
+

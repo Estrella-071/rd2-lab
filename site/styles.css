@@ -784,7 +784,6 @@ body.is-navigating .tree-state-label-canvas {
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 0;
   background: transparent;
   color: transparent;
   cursor: pointer;
@@ -793,6 +792,11 @@ body.is-navigating .tree-state-label-canvas {
   appearance: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+}
+
+.tree-node-semantic {
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
 }
 
 .tree-node-semantic:focus-visible,
@@ -807,6 +811,7 @@ body.is-navigating .tree-state-label-canvas {
 }
 
 .tree-center-compendium-semantic {
+  border-radius: 32px;
   z-index: 5;
 }
 
