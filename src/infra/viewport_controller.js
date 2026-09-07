@@ -478,19 +478,10 @@ export class ViewportController extends ViewportPort {
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
     const cx = (points[0].x + points[1].x) / 2;
     const cy = (points[0].y + points[1].y) / 2;
-    const offset = this._getContainerOffset();
-    const pivotX = cx - offset.left;
-    const pivotY = cy - offset.top;
-    const initialScale = this._state.scale || 1.0;
-    const worldAnchorX = (pivotX - this._state.x) / initialScale;
-    const worldAnchorY = (pivotY - this._state.y) / initialScale;
     return {
-      initialDist: Math.max(dist, 10),
-      initialScale,
-      cx,
-      cy,
-      worldAnchorX,
-      worldAnchorY
+      lastDist: Math.max(dist, 10),
+      lastCx: cx,
+      lastCy: cy
     };
   }
 
@@ -522,26 +513,39 @@ export class ViewportController extends ViewportPort {
     const currentCx = (points[0].x + points[1].x) / 2;
     const currentCy = (points[0].y + points[1].y) / 2;
 
-    const rawRatio = dist / state.pinchStart.initialDist;
-    const isMobile = (this._cachedWidth || this.container?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 1000)) <= 768;
-    const ratio = isMobile
-      ? (rawRatio > 1 ? Math.pow(rawRatio, 1.18) : Math.pow(rawRatio, 1.12))
-      : rawRatio;
+    const prevDist = state.pinchStart.lastDist || dist;
+    const prevCx = state.pinchStart.lastCx ?? currentCx;
+    const prevCy = state.pinchStart.lastCy ?? currentCy;
 
-    let targetScale = state.pinchStart.initialScale * ratio;
-    targetScale = Math.max(this._state.minScale, Math.min(this._state.maxScale, targetScale));
+    // 幀間增量縮放比例（防止除以零）
+    const scaleFactor = prevDist > 0 ? (dist / prevDist) : 1;
+    const currentScale = this._state.scale || 1.0;
+    const targetScale = Math.max(this._state.minScale, Math.min(this._state.maxScale, currentScale * scaleFactor));
+    const effectiveFactor = currentScale > 0 ? (targetScale / currentScale) : 1;
 
+    // 當前樞紐相對於視口容器之座標
     const offset = this._getContainerOffset();
-    const currentPivotX = currentCx - offset.left;
-    const currentPivotY = currentCy - offset.top;
+    const pivotX = currentCx - offset.left;
+    const pivotY = currentCy - offset.top;
 
-    const targetX = currentPivotX - targetScale * state.pinchStart.worldAnchorX;
-    const targetY = currentPivotY - targetScale * state.pinchStart.worldAnchorY;
+    // 手指中心之增量位移
+    const deltaPanX = currentCx - prevCx;
+    const deltaPanY = currentCy - prevCy;
+
+    // 以當前指尖樞紐點為基準執行縮放與平移整合變換
+    const targetX = pivotX - (pivotX - (this._state.x + deltaPanX)) * effectiveFactor;
+    const targetY = pivotY - (pivotY - (this._state.y + deltaPanY)) * effectiveFactor;
 
     const resisted = this._applyPanResistance(targetX, targetY, targetScale);
     this._state.scale = targetScale;
     this._state.x = resisted.x;
     this._state.y = resisted.y;
+
+    // 更新基準點供下一幀使用
+    state.pinchStart.lastDist = Math.max(dist, 10);
+    state.pinchStart.lastCx = currentCx;
+    state.pinchStart.lastCy = currentCy;
+
     this.requestRender();
 
     event.preventDefault?.();

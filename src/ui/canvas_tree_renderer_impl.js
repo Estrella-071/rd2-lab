@@ -1765,7 +1765,9 @@ export class CanvasTreeRenderer {
         if (document.body?.classList?.contains("is-zooming") || document.body?.classList?.contains("is-dragging")) return;
         button.classList.add("is-pressing");
         this.setPressedNode(id, true);
-        try { button.setPointerCapture?.(event.pointerId); } catch { /* Optional on old WebKit. */ }
+        if (event.pointerType !== "touch") {
+          try { button.setPointerCapture?.(event.pointerId); } catch { /* Optional on old WebKit. */ }
+        }
       });
       const endPress = () => {
         button.classList.remove("is-pressing");
