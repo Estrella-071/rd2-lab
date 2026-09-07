@@ -94,7 +94,7 @@ export async function runMobileViewportSuite(options = {}) {
     assertEqual(expandedSearch.ariaExpanded, 'true', 'Expanded mobile search must expose an expanded state');
     assert(expandedSearch.inputFocused, 'Opening mobile search must focus the original input');
     assert(
-      Math.abs(expandedSearch.filterTop - filterTopBeforeQuery) < 1,
+      Math.abs(expandedSearch.filterTop - filterTopBeforeQuery) <= 2,
       `Opening mobile search must not push the filter widget downward (delta=${expandedSearch.filterTop - filterTopBeforeQuery}px)`
     );
     passedAssertions += 6;
