@@ -298,11 +298,11 @@ export class ViewportController extends ViewportPort {
       pointers: new Map(),
       dragStart: null,
       pinchStart: null,
+      pinchActive: false,
       dragHistory: [],
       dragEventDispatched: false,
       zoomingTimer: null,
-      navigatingCooldownTimer: null,
-      lastKeepAlive: 0
+      navigatingCooldownTimer: null
     };
     this._setNavigating = this._setNavigatingState.bind(this);
     this._domTimerCleanup = this._cleanupGestureTimers.bind(this);
@@ -455,15 +455,22 @@ export class ViewportController extends ViewportPort {
     state.dragHistory = [{ x: event.clientX, y: event.clientY, t: this._eventTimestamp() }];
 
     if (state.pointers.size >= 2) {
+      if (state.dragStart && !state.pinchActive) {
+        // 重置首指在雙指微小落差內產生的微幅偏移，確保起始世界錨點精準純淨
+        this._state.x = state.dragStart.initialX;
+        this._state.y = state.dragStart.initialY;
+      }
       state.dragStart = null;
+      state.dragHistory = [];
+      state.pinchActive = true;
       state.pinchStart = this._createPinchStart(state.pointers);
-      state.lastKeepAlive = this._eventTimestamp();
       this._setZoomingState(true);
       this._setNavigatingState(true, false, true);
       event.preventDefault?.();
       return;
     }
     if (state.pointers.size === 1) {
+      state.pinchActive = false;
       state.dragStart = {
         startX: event.clientX,
         startY: event.clientY,
@@ -507,17 +514,15 @@ export class ViewportController extends ViewportPort {
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (state.pointers.size >= 2 && state.pinchStart) {
-      const now = this._eventTimestamp();
-      if (!state.lastKeepAlive || now - state.lastKeepAlive >= 32) {
-        state.lastKeepAlive = now;
-        this._setZoomingState(true);
-        this._setNavigatingState(true, false, true);
-      }
+      this._setZoomingState(true);
+      this._setNavigatingState(true, false, true);
       if (!state.dragEventDispatched) {
         state.dragEventDispatched = true;
         this._dispatchViewportDrag();
       }
       this._applyPinchStep(state);
+      // 同步寫入樣式變換消除微幀延遲，並排程 RAF 狀態通知
+      this._applySceneTransform();
       this.requestRender();
       event.preventDefault?.();
       return;
@@ -556,6 +561,7 @@ export class ViewportController extends ViewportPort {
   _updatePinchGesture(state, event) {
     if (event?.preventDefault) event.preventDefault();
     this._applyPinchStep(state);
+    this._applySceneTransform();
     this.requestRender();
   }
 
@@ -566,6 +572,7 @@ export class ViewportController extends ViewportPort {
 
     if (!state.dragStart.hasMoved && moveDist >= 4) {
       state.dragStart.hasMoved = true;
+      this._state.isPanning = true;
       this._setNavigatingState(true, false, true);
       this.container?.classList?.add("is-dragging");
       state.dragEventDispatched = true;
@@ -591,7 +598,7 @@ export class ViewportController extends ViewportPort {
 
     if (state.pointers.size === 1) {
       state.pinchStart = null;
-      state.lastKeepAlive = 0;
+      state.pinchActive = false;
       const remainingPos = state.pointers.values().next().value;
       if (remainingPos) {
         state.dragStart = {
@@ -599,23 +606,24 @@ export class ViewportController extends ViewportPort {
           startY: remainingPos.y,
           initialX: this._state.x,
           initialY: this._state.y,
-          hasMoved: true
+          hasMoved: false
         };
-        state.dragHistory = [{ x: remainingPos.x, y: remainingPos.y, t: this._eventTimestamp() }];
-        this._state.isPanning = true;
+        // 清空歷史速度記錄，防止將雙指縮放或抬手微顫抖誤認為單指拖曳慣性
+        state.dragHistory = [];
+        this._state.isPanning = false;
       }
       return;
     }
 
     if (state.pointers.size === 0) {
       state.pinchStart = null;
-      state.lastKeepAlive = 0;
+      state.pinchActive = false;
       this._finishPointerGesture(state);
     }
   }
 
-  _finishPointerGesture(state) {
-    const velocity = this._getDragVelocity(state.dragHistory);
+  _finishPointerGesture(state, isPinchEnd = false) {
+    const velocity = isPinchEnd ? null : this._getDragVelocity(state.dragHistory);
     state.dragHistory = [];
     state.dragStart = null;
     this._state.isPanning = false;

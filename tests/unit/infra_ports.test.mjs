@@ -510,6 +510,101 @@ test("ViewportController: pinch zoom maintains 100% rigid world tracking without
   controller.destroy();
 });
 
+test("ViewportController: pinch zoom suppresses fling momentum and single-finger drag takeover on finger lift-off", () => {
+  const eventListeners = new Map();
+  const mockContainer = {
+    clientWidth: 390,
+    clientHeight: 844,
+    addEventListener: (type, handler) => {
+      if (!eventListeners.has(type)) eventListeners.set(type, []);
+      eventListeners.get(type).push(handler);
+    },
+    removeEventListener: (type, handler) => {
+      if (!eventListeners.has(type)) return;
+      const list = eventListeners.get(type).filter((h) => h !== handler);
+      eventListeners.set(type, list);
+    },
+    dispatchEvent: (type, event) => {
+      const list = eventListeners.get(type) || [];
+      list.forEach((h) => h(event));
+    },
+    getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 })
+  };
+
+  const mockSvg = { style: {} };
+  const controller = new ViewportController({ mapWidth: 4000, mapHeight: 3400 });
+  controller.init(mockContainer, mockSvg, { initialScale: 0.5, initialX: 0, initialY: 0 });
+
+  // 1. 雙指按下
+  mockContainer.dispatchEvent("pointerdown", {
+    pointerId: 1,
+    pointerType: "touch",
+    clientX: 100,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+  mockContainer.dispatchEvent("pointerdown", {
+    pointerId: 2,
+    pointerType: "touch",
+    clientX: 200,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+
+  // 2. 雙指縮放移動
+  mockContainer.dispatchEvent("pointermove", {
+    pointerId: 1,
+    clientX: 120,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+  mockContainer.dispatchEvent("pointermove", {
+    pointerId: 2,
+    clientX: 220,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+
+  const stateBeforeUp = controller.getState();
+
+  // 3. 第一隻手指抬起（模擬異步抬手過渡期）
+  mockContainer.dispatchEvent("pointerup", {
+    pointerId: 1,
+    preventDefault: () => {}
+  });
+
+  // 驗證過渡期初始狀態未啟動單指拖曳（isPanning 為 false）
+  assert.equal(controller.getState().isPanning, false);
+
+  // 殘留手指產生 < 4px 微小顫抖時（220 -> 222），不應觸發單指位移
+  mockContainer.dispatchEvent("pointermove", {
+    pointerId: 2,
+    clientX: 222,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+  assert.equal(controller.getState().x, stateBeforeUp.x);
+  assert.equal(controller.getState().isPanning, false);
+
+  // 殘留手指若進行意圖明確的主動拖曳（222 -> 260，位移 > 4px），平滑接管單指平移
+  mockContainer.dispatchEvent("pointermove", {
+    pointerId: 2,
+    clientX: 260,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+  assert.ok(controller.getState().x > stateBeforeUp.x);
+  assert.equal(controller.getState().isPanning, true);
+
+  // 4. 第二隻手指抬起
+  mockContainer.dispatchEvent("pointerup", {
+    pointerId: 2,
+    preventDefault: () => {}
+  });
+
+  controller.destroy();
+});
+
 test("LocalStorageAdapter: Key-value persistence with memory fallback", () => {
   const adapter = new LocalStorageAdapter("test_rd2_");
   adapter.clear();
