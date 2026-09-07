@@ -1,5 +1,14 @@
 
 /* Feature controls */
+.hud-toggle-group,
+.hud-toggle-group *,
+.hud-feature-btn,
+.hud-feature-btn *,
+.filter-widget,
+.filter-widget * {
+  touch-action: none;
+}
+
 .hud-toggle-group {
   position: absolute;
   right: 16px;

@@ -1762,10 +1762,12 @@ export class CanvasTreeRenderer {
       button.style.height = `${radius * 2}px`;
       button.addEventListener("pointerdown", (event) => {
         if (event.button !== undefined && event.button !== 0) return;
-        if (document.body?.classList?.contains("is-zooming") || document.body?.classList?.contains("is-dragging")) return;
+        if (document.body?.classList?.contains("is-zooming")
+          || document.body?.classList?.contains("is-dragging")
+          || document.body?.classList?.contains("is-navigating")) return;
         button.classList.add("is-pressing");
-        this.setPressedNode(id, true);
         if (event.pointerType !== "touch") {
+          this.setPressedNode(id, true);
           try { button.setPointerCapture?.(event.pointerId); } catch { /* Optional on old WebKit. */ }
         }
       });
@@ -1794,10 +1796,14 @@ export class CanvasTreeRenderer {
     centerButton.style.top = "1630px";
     centerButton.style.width = "220px";
     centerButton.style.height = "150px";
-    centerButton.addEventListener("pointerdown", () => {
-      if (document.body?.classList?.contains("is-zooming") || document.body?.classList?.contains("is-dragging")) return;
+    centerButton.addEventListener("pointerdown", (event) => {
+      if (document.body?.classList?.contains("is-zooming")
+        || document.body?.classList?.contains("is-dragging")
+        || document.body?.classList?.contains("is-navigating")) return;
       centerButton.classList.add("is-pressing");
-      this.setPressedCenter(true);
+      if (event?.pointerType !== "touch") {
+        this.setPressedCenter(true);
+      }
     });
     const endCenterPress = () => {
       centerButton.classList.remove("is-pressing");

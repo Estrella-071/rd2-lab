@@ -489,6 +489,21 @@ input:focus-visible,
 /* ==========================================================================
    Map
    ========================================================================== */
+html,
+body,
+.app-shell,
+.topbar,
+.search-block,
+.search-widget,
+.search-widget *,
+.minimap-panel,
+.minimap-panel *,
+.disclaimer-widget,
+.disclaimer-widget *,
+.changelog-widget,
+.changelog-widget *,
+.locale-widget,
+.locale-widget *,
 .map-viewport,
 .map-scene,
 .tree-render-root,
@@ -816,6 +831,11 @@ body.is-navigating .tree-state-label-canvas {
 
 .tree-node-semantic.is-dimmed {
   pointer-events: auto;
+}
+
+body.is-zooming .tree-node-semantic,
+body.is-navigating .tree-node-semantic {
+  pointer-events: none;
 }
 
 .tree-center-compendium-semantic {

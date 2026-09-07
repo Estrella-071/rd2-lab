@@ -545,8 +545,7 @@ export class ViewportController extends ViewportPort {
         this._dispatchViewportDrag();
       }
       this._applyPinchStep(state);
-      // 同步寫入樣式變換消除微幀延遲，並排程 RAF 狀態通知
-      this._applySceneTransform();
+      // DOM 樣式變換統整至 RAF 執行，避免高採樣率觸控每秒觸發數百次 DOM 重排
       this.requestRender();
       event.preventDefault?.();
       return;
@@ -585,7 +584,6 @@ export class ViewportController extends ViewportPort {
   _updatePinchGesture(state, event) {
     if (event?.preventDefault) event.preventDefault();
     this._applyPinchStep(state);
-    this._applySceneTransform();
     this.requestRender();
   }
 
