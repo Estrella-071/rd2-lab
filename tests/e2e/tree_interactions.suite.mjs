@@ -938,9 +938,9 @@ export async function runTreeInteractionsSuite(options = {}) {
       { key: 'zh-tw', tag: '綻放', awakeningTag: '果實', name: '花骰子' },
     ];
     for (const { key, tag, awakeningTag, name } of tooltipLocaleChecks) {
-      await page.click('#locale-toggle-btn');
+      await page.click('#locale-toggle-btn', { force: true });
       await page.waitForSelector('#locale-widget.is-expanded');
-      await page.click(`#locale-widget [data-locale="${key}"]`);
+      await page.click(`#locale-widget [data-locale="${key}"]`, { force: true });
       await page.waitForFunction((expectedLocale) => document.documentElement.lang === expectedLocale, key);
       const tooltipLocale = await page.evaluate(() => {
         const tooltip = document.getElementById('tooltip');

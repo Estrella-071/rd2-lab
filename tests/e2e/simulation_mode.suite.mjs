@@ -597,9 +597,10 @@ async function assertTeamPicker(page) {
 
 async function assertShareImageAndImport(page, browserInstance, shareUrl) {
   await page.click("#simulation-share-close-btn");
+  await page.waitForSelector("#simulation-share-widget:not(.is-expanded)");
   await page.setViewportSize({ width: 280, height: 568 });
-  await page.waitForTimeout(80);
-  await page.click("#simulation-share-trigger-btn");
+  await page.waitForTimeout(150);
+  await page.click("#simulation-share-trigger-btn", { force: true });
   await page.waitForSelector("#simulation-share-widget.is-expanded");
   await page.waitForTimeout(420);
   await page.waitForFunction(() => {

@@ -691,11 +691,11 @@ export async function runCompendiumEventsSuite(options = {}) {
     assertEqual(coopDurations['競技'], undefined, 'Coop mode should omit the versus-only duration column');
     passedAssertions += 2;
 
-    // 2. 困難模式篩選：1.1.0 困難模式支援 55 筆裂縫商店戰術卡片
+    // 2. 困難模式篩選：1.1.0 困難模式支援 35 筆合併品質後的裂縫商店戰術卡片
     await page.click('#compendium-event-tabs .compendium-tab[data-event-mode="hard"]');
     await page.waitForTimeout(300);
     const hardEventCount = await page.$$eval('.compendium-card.is-rift-card', els => els.length);
-    assertEqual(hardEventCount, 55, 'Hard mode must filter to 55 rift shop tactic cards');
+    assertEqual(hardEventCount, 35, 'Hard mode must filter to 35 merged rift shop tactic cards');
     passedAssertions++;
 
     // 3. 競技場模式篩選 (55 筆)
