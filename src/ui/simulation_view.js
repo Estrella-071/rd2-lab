@@ -758,6 +758,13 @@ export class SimulationView {
   /* -------------------------------------------------------------
    * Quick Unlock Modal Logic
    * ------------------------------------------------------------- */
+  /**
+   * Open quick unlock modal publicly.
+   */
+  openQuickUnlockModal() {
+    this._openQuickUnlockModal();
+  }
+
   _openQuickUnlockModal() {
     const modal = document.getElementById("simulation-quick-unlock-modal");
     if (!modal) return;

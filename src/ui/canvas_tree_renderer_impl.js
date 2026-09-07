@@ -1537,6 +1537,12 @@ export class CanvasTreeRenderer {
     this.render(initialState, pending?.action || null);
     await this._sceneFramePromise;
     if (this._destroyed || token !== this._initializationToken) return this;
+    if (this.scene.dataset.canvasReady !== "true") {
+      for (let i = 0; i < 20 && this.scene.dataset.canvasReady !== "true"; i += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        if (this._destroyed || token !== this._initializationToken) return this;
+      }
+    }
     if (this.scene.dataset.canvasReady !== "true") throw new Error("Canvas map initial frame was not committed.");
     this.onReady?.(this);
     return this;

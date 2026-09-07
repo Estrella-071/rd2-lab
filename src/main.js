@@ -849,6 +849,9 @@ export class Application {
       return;
     }
     this.simulationPlanUseCase.enter();
+    if (!route?.share) {
+      this.views.simulationView?.openQuickUnlockModal();
+    }
   }
 
   _openInitialRoute(route, centerOnNodeForTooltip) {
@@ -994,8 +997,8 @@ export class Application {
     if (generation !== this._lifecycleGeneration) return;
     console.error("Application bootstrap failed:", error);
     this._cleanupBootstrap();
-    const isCanvasFailure = /canvas|raster|render manifest|map render/i.test(String(error?.message || ""));
-    const failureMessage = isCanvasFailure
+    const isCanvasSupported = Boolean(typeof document !== "undefined" && document.createElement("canvas")?.getContext?.("2d"));
+    const failureMessage = !isCanvasSupported
       ? this._t("loader.canvasSupport", {}, "The map requires Canvas support. Check the browser and try again.")
       : this._t("loader.failed", {}, "Data loading failed. Reload to try again.");
     finishLoaderProgress(failureMessage);

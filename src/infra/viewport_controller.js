@@ -321,13 +321,20 @@ export class ViewportController extends ViewportPort {
     const pointermove = this._handlePointerMove.bind(this);
     const pointerup = this._handlePointerUp.bind(this);
     const wheel = this._handleWheel.bind(this);
+    const touchGuard = (e) => {
+      if (e.touches && e.touches.length >= 2) {
+        e.preventDefault?.();
+      }
+    };
     this._domHandlers = {
-      container: { pointerdown, wheel },
+      container: { pointerdown, wheel, touchstart: touchGuard, touchmove: touchGuard },
       window: { pointermove, pointerup, pointercancel: pointerup }
     };
 
     this.container.addEventListener("pointerdown", pointerdown, { passive: false });
     this.container.addEventListener("wheel", wheel, { passive: false });
+    this.container.addEventListener("touchstart", touchGuard, { passive: false });
+    this.container.addEventListener("touchmove", touchGuard, { passive: false });
 
     const win = typeof window !== "undefined" ? window : null;
     if (win && typeof win.addEventListener === "function") {
@@ -469,9 +476,11 @@ export class ViewportController extends ViewportPort {
     if (state.pointers.size >= 2) {
       for (const pId of state.pointers.keys()) {
         try {
-          this.container?.setPointerCapture?.(pId);
+          if (this.container?.hasPointerCapture?.(pId)) {
+            this.container.releasePointerCapture(pId);
+          }
         } catch {
-          // 容錯防禦：忽略部分合成環境中 setPointerCapture 失敗的邊界情況
+          // 容錯防禦：忽略釋放指針失敗邊界情況
         }
       }
       if (state.dragStart && !state.pinchActive) {
@@ -534,7 +543,7 @@ export class ViewportController extends ViewportPort {
         this._dispatchViewportDrag();
       }
       this._applyPinchStep(state);
-      // DOM 樣式變換統整至 RAF 執行，避免高採樣率觸控每秒觸發數百次 DOM 重排
+      this._applySceneTransform();
       this.requestRender();
       event.preventDefault?.();
       return;
