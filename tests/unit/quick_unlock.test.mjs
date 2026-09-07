@@ -264,5 +264,3 @@ test("Quick unlock: slider popover dismissal hides all open popovers and reports
   const result2 = closePopovers(popovers);
   assert.equal(result2, false);
 });
-
-

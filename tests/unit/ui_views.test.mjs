@@ -1220,4 +1220,3 @@ test("TreeView: geometric nearest-node disambiguation resolves closely spaced no
 
   treeView.destroy();
 });
-

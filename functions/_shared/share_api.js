@@ -263,4 +263,3 @@ export async function handleSimulationShareRequest({ request, params, env, local
 
   return response;
 }
-

@@ -188,4 +188,3 @@ export function mergeRiftShopItems(items) {
 
   return result;
 }
-

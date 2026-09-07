@@ -277,4 +277,3 @@ test("Pages share Functions: supports multi-locale thumbnail persistence and res
   });
   assert.equal(jaImgRes.status, 200);
 });
-

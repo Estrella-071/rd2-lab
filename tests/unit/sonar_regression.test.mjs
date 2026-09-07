@@ -631,4 +631,3 @@ test("expense capsules scale width dynamically based on number value length", as
   // 大金幣膠囊更寬，因此其左側的 core 膠囊被推向更左側（X 座標更小）
   assert.ok(largeCoreCall[2] < smallCoreCall[2], "Larger gold capsule should occupy more width and push predecessor further left");
 });
-

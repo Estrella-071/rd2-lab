@@ -241,4 +241,3 @@ test("game_text: GT-10 resolveGameText 純文字搜尋版本解析", () => {
   assert.ok(!plainText.includes("<"));
   assert.ok(!plainText.includes(">"));
 });
-

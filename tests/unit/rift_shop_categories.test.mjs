@@ -76,4 +76,3 @@ test("rift_shop_categories - mergeRiftShopItems 將 55 筆裂縫項目精準合�
   assert.equal(swap.isMerged, false);
   assert.equal(swap.getMergedDescription("zh-tw"), "最高與最低骰點骰子的骰點互換");
 });
-
