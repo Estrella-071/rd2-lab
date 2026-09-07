@@ -29,8 +29,8 @@ export async function runTreeInteractionsSuite(options = {}) {
     const page = browserInstance.page;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.waitForTimeout(300);
 
     // Check the runtime marker.

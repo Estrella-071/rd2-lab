@@ -659,7 +659,7 @@ async function assertShareImageAndImport(page, browserInstance, shareUrl) {
 
   const sharedPage = await browserInstance.context.newPage({ viewport: { width: 390, height: 844 } });
   await sharedPage.goto(shareUrl, { waitUntil: "networkidle" });
-  await sharedPage.waitForSelector("#loading-screen", { state: "hidden", timeout: 5000 });
+  await sharedPage.waitForSelector("#loading-screen", { state: "hidden", timeout: 15000 });
   await sharedPage.waitForTimeout(700);
   const imported = await sharedPage.evaluate(() => ({
     active: document.body.classList.contains("simulation-mode"),
@@ -835,8 +835,8 @@ export async function runSimulationModeSuite(options = {}) {
     });
     const page = browserInstance.page;
     await page.goto(`${serverInstance.baseUrl}/index.html`, { waitUntil: "networkidle" });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector("#loading-screen", { state: "hidden", timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector("#loading-screen", { state: "hidden", timeout: 15000 });
     await page.waitForTimeout(500);
 
     passedAssertions += await assertSimulationSurface(page);

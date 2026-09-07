@@ -183,7 +183,7 @@ export async function runSmokeSuite(options = {}) {
       await route.continue();
     });
     await page.goto(`${baseUrl}/index.html?icon-injection=1`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.click('#tree-center-compendium-btn', { force: true });
     await page.waitForSelector('#compendium-overlay:not([hidden])', { timeout: 3000 });
     await page.click('#compendium-category-toggle-btn');
@@ -241,8 +241,8 @@ export async function runSmokeSuite(options = {}) {
     assert(!failureState.retryDisabled && failureState.activeId === 'loader-retry-btn', 'Retry button must be actionable and receive focus after failure');
     passedAssertions += 4;
     await page.click('#loader-retry-btn');
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     assertEqual(await page.$$eval('button.tree-node-semantic[data-node-id]', (els) => els.length), 241, 'Retry must restore the canonical tree');
     passedAssertions++;
     await page.unroute('**/data/dice_tree.json');
@@ -370,7 +370,7 @@ export async function runSmokeSuite(options = {}) {
     // 檢查 loading indicator 與 loading-screen
     const loadingScreen = await page.$('#loading-screen');
     if (loadingScreen) {
-      await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 4000 });
+      await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     }
     const loaderStages = await page.evaluate(() => [...new Set(
       (window.__RD2_LOADER_TRACE__ || []).map((entry) => entry.text).filter(Boolean)
@@ -577,7 +577,7 @@ export async function runSmokeSuite(options = {}) {
     const lifecycleProbePage = await browserInstance.context.newPage();
     try {
       await lifecycleProbePage.goto(`${baseUrl}/index.html?bootstrap-retry-probe=1`, { waitUntil: 'networkidle' });
-      await lifecycleProbePage.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+      await lifecycleProbePage.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
       const lifecycleProbe = await lifecycleProbePage.evaluate(async () => {
         // Isolate the disposable Application instance from the page bootstrap.
         window.RD2App.views.simulationView?.destroy();

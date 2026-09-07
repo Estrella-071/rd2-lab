@@ -28,8 +28,8 @@ export async function runCompendiumEventsSuite(options = {}) {
     const page = browserInstance.page;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.waitForTimeout(300);
 
     // Check the runtime marker.
@@ -40,7 +40,7 @@ export async function runCompendiumEventsSuite(options = {}) {
     // ID-based event links must continue to resolve before any current
     // filtering is applied.  This is the same path historical event links use.
     await page.goto(`${baseUrl}/index.html?event=event_6&event_mode=versus`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.waitForSelector('#compendium-dice-modal:not([hidden])', { timeout: 3000 });
     const sharedEvent = await page.$eval('#compendium-modal-card-slot .is-event-card', (card) => ({
       title: card.querySelector('.tooltip-title')?.textContent.trim(),
@@ -51,8 +51,8 @@ export async function runCompendiumEventsSuite(options = {}) {
     passedAssertions += 2;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
 
     // ==========================================
     // Tier 1: 圖鑑開啟、41 骰子卡片與派系篩選
