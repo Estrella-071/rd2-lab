@@ -301,7 +301,8 @@ export class ViewportController extends ViewportPort {
       dragHistory: [],
       dragEventDispatched: false,
       zoomingTimer: null,
-      navigatingCooldownTimer: null
+      navigatingCooldownTimer: null,
+      lastKeepAlive: 0
     };
     this._setNavigating = this._setNavigatingState.bind(this);
     this._domTimerCleanup = this._cleanupGestureTimers.bind(this);
@@ -456,6 +457,7 @@ export class ViewportController extends ViewportPort {
     if (state.pointers.size >= 2) {
       state.dragStart = null;
       state.pinchStart = this._createPinchStart(state.pointers);
+      state.lastKeepAlive = this._eventTimestamp();
       this._setZoomingState(true);
       this._setNavigatingState(true, false, true);
       event.preventDefault?.();
@@ -505,8 +507,12 @@ export class ViewportController extends ViewportPort {
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (state.pointers.size >= 2 && state.pinchStart) {
-      this._setZoomingState(true);
-      this._setNavigatingState(true, false, true);
+      const now = this._eventTimestamp();
+      if (!state.lastKeepAlive || now - state.lastKeepAlive >= 32) {
+        state.lastKeepAlive = now;
+        this._setZoomingState(true);
+        this._setNavigatingState(true, false, true);
+      }
       if (!state.dragEventDispatched) {
         state.dragEventDispatched = true;
         this._dispatchViewportDrag();
@@ -537,14 +543,14 @@ export class ViewportController extends ViewportPort {
     const currentPivotX = currentCx - offset.left;
     const currentPivotY = currentCy - offset.top;
 
-    // 閉式解析幾何公式：世界樞紐點在縮放後精確吸附在當前兩指中心，消除累積誤差與阻尼複利
+    // 閉式解析幾何公式：世界樞紐點在縮放後精確吸附在當前兩指中心，消除累積誤差與阻尼複利。
+    // 手勢進行中維持 100% 絕對幾何錨定，避免平移阻尼撕裂指尖座標；若手勢放開後越界，交由 _settlePointerPosition 260ms 平滑回彈。
     const targetX = currentPivotX - targetScale * pinch.worldAnchorX;
     const targetY = currentPivotY - targetScale * pinch.worldAnchorY;
 
-    const resisted = this._applyPanResistance(targetX, targetY, targetScale);
     this._state.scale = targetScale;
-    this._state.x = resisted.x;
-    this._state.y = resisted.y;
+    this._state.x = targetX;
+    this._state.y = targetY;
   }
 
   _updatePinchGesture(state, event) {
@@ -585,6 +591,7 @@ export class ViewportController extends ViewportPort {
 
     if (state.pointers.size === 1) {
       state.pinchStart = null;
+      state.lastKeepAlive = 0;
       const remainingPos = state.pointers.values().next().value;
       if (remainingPos) {
         state.dragStart = {
@@ -602,6 +609,7 @@ export class ViewportController extends ViewportPort {
 
     if (state.pointers.size === 0) {
       state.pinchStart = null;
+      state.lastKeepAlive = 0;
       this._finishPointerGesture(state);
     }
   }

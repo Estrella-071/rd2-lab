@@ -443,6 +443,73 @@ test("ViewportController: pinch zoom reuses the cached container offset", () => 
   controller.destroy();
 });
 
+test("ViewportController: pinch zoom maintains 100% rigid world tracking without mid-gesture pan resistance", () => {
+  const eventListeners = new Map();
+  const mockContainer = {
+    clientWidth: 390,
+    clientHeight: 844,
+    addEventListener: (type, handler) => {
+      if (!eventListeners.has(type)) eventListeners.set(type, []);
+      eventListeners.get(type).push(handler);
+    },
+    removeEventListener: (type, handler) => {
+      if (!eventListeners.has(type)) return;
+      const list = eventListeners.get(type).filter((h) => h !== handler);
+      eventListeners.set(type, list);
+    },
+    dispatchEvent: (type, event) => {
+      const list = eventListeners.get(type) || [];
+      list.forEach((h) => h(event));
+    },
+    getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 })
+  };
+
+  const mockSvg = { style: {} };
+  const controller = new ViewportController({ mapWidth: 4000, mapHeight: 3400 });
+  controller.init(mockContainer, mockSvg, { initialScale: 0.5, initialX: 0, initialY: 0 });
+
+  mockContainer.dispatchEvent("pointerdown", {
+    pointerId: 1,
+    pointerType: "touch",
+    clientX: 100,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+
+  mockContainer.dispatchEvent("pointerdown", {
+    pointerId: 2,
+    pointerType: "touch",
+    clientX: 200,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+
+  const state = controller.getState();
+  const initialAnchorX = (150 - state.x) / state.scale;
+
+  mockContainer.dispatchEvent("pointermove", {
+    pointerId: 1,
+    clientX: 25,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+  mockContainer.dispatchEvent("pointermove", {
+    pointerId: 2,
+    clientX: 75,
+    clientY: 200,
+    preventDefault: () => {}
+  });
+
+  const pinchState = controller.getState();
+  const expectedScale = 0.25;
+  assert.equal(pinchState.scale, expectedScale);
+
+  const expectedX = 50 - expectedScale * initialAnchorX;
+  assert.equal(pinchState.x, expectedX);
+
+  controller.destroy();
+});
+
 test("LocalStorageAdapter: Key-value persistence with memory fallback", () => {
   const adapter = new LocalStorageAdapter("test_rd2_");
   adapter.clear();
