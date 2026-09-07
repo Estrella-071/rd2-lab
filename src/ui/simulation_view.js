@@ -1748,6 +1748,7 @@ export class SimulationView {
     if (!widget) return;
 
     this._closeExitWidget();
+    this.store?.dispatch?.({ type: "SELECT_NODE", payload: { nodeId: null } });
     widget.classList.add("is-expanded");
     if (triggerBtn) triggerBtn.setAttribute("aria-expanded", "true");
     if (card) card.setAttribute("aria-hidden", "false");

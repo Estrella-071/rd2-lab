@@ -784,10 +784,17 @@ export async function runTreeInteractionsSuite(options = {}) {
 
     // 被動技能節點綠色增量驗證 (Node 5109: 所有骰子傷害 (+0.6%))
     await page.evaluate(() => {
+      window.__TEST_HOOKS__.closeTooltip(true);
+    });
+    await page.waitForTimeout(100);
+    await page.evaluate(() => {
       window.__TEST_HOOKS__.centerOnNode('5109', false);
       window.__TEST_HOOKS__.showTooltip('5109', true);
     });
-    await page.waitForSelector('.detail-copy .stat-green-add', { timeout: 5000 });
+    await page.waitForFunction(() => {
+      const greenEl = document.querySelector('.detail-copy .stat-green-add');
+      return greenEl && greenEl.textContent.trim() === '(+0.6%)';
+    }, { timeout: 5000 });
     const hasGreenAdd5109 = await page.evaluate(() => {
       const greenEl = document.querySelector('.detail-copy .stat-green-add');
       return greenEl?.textContent.trim() === '(+0.6%)';
