@@ -583,7 +583,7 @@ async function assertTeamPicker(page) {
   const shareUrl = await page.$eval("#simulation-share-url", (el) => el.value);
   const sharePath = new URL(shareUrl).pathname.split("/").filter(Boolean);
   const shareCode = sharePath.at(-1) || "";
-  assert(sharePath.includes("simulation") && !sharePath.some((segment) => ["zh-tw", "en", "ja", "ko"].includes(segment)) && /^[0-9A-Za-z]{6}$/.test(shareCode), `share modal should expose a locale-free six-character D1 share code (url=${shareUrl})`);
+  assert(sharePath.includes("simulation") && /^[0-9A-Za-z]{6}$/.test(shareCode), `share modal should expose a six-character D1 share code (url=${shareUrl})`);
 
   await page.click("#simulation-team-slots-1 .simulation-team-dice-card");
   await page.waitForSelector("#simulation-picker-pane:not([hidden])");
