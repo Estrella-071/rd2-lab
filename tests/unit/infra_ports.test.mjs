@@ -443,7 +443,7 @@ test("ViewportController: pinch zoom reuses the cached container offset", () => 
   controller.destroy();
 });
 
-test("ViewportController: pinch zoom maintains 100% rigid world tracking without mid-gesture pan resistance", () => {
+test("ViewportController: pinch zoom maintains center-anchored scaling without mid-gesture drift", () => {
   const eventListeners = new Map();
   const mockContainer = {
     clientWidth: 390,
@@ -485,7 +485,8 @@ test("ViewportController: pinch zoom maintains 100% rigid world tracking without
   });
 
   const state = controller.getState();
-  const initialAnchorX = (150 - state.x) / state.scale;
+  const cx = 390 / 2;
+  const initialCenterWorldX = (cx - state.x) / state.scale;
 
   mockContainer.dispatchEvent("pointermove", {
     pointerId: 1,
@@ -504,7 +505,7 @@ test("ViewportController: pinch zoom maintains 100% rigid world tracking without
   const expectedScale = 0.25;
   assert.equal(pinchState.scale, expectedScale);
 
-  const expectedX = 50 - expectedScale * initialAnchorX;
+  const expectedX = cx - expectedScale * initialCenterWorldX;
   assert.equal(pinchState.x, expectedX);
 
   controller.destroy();

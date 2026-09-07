@@ -475,11 +475,8 @@ export class ViewportController extends ViewportPort {
         }
       }
       if (state.dragStart && !state.pinchActive) {
-        // 重置首指在雙指微小落差內產生的微幅偏移，確保起始世界錨點精準純淨
-        this._state.x = state.dragStart.initialX;
-        this._state.y = state.dragStart.initialY;
+        state.dragStart = null;
       }
-      state.dragStart = null;
       state.dragHistory = [];
       state.pinchActive = true;
       state.pinchStart = this._createPinchStart(state.pointers);
@@ -506,26 +503,18 @@ export class ViewportController extends ViewportPort {
   _createPinchStart(pointers) {
     const points = Array.from(pointers.values());
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
-    const cx = (points[0].x + points[1].x) / 2;
-    const cy = (points[0].y + points[1].y) / 2;
-    const offset = this._getContainerOffset();
-    const pivotX = cx - offset.left;
-    const pivotY = cy - offset.top;
+    const { width, height } = this.viewportSize();
+    const cx = width / 2;
+    const cy = height / 2;
     const initialScale = this._state.scale || 1.0;
-    const worldAnchorX = (pivotX - this._state.x) / initialScale;
-    const worldAnchorY = (pivotY - this._state.y) / initialScale;
+    const worldAnchorCenterX = (cx - this._state.x) / initialScale;
+    const worldAnchorCenterY = (cy - this._state.y) / initialScale;
     return {
       initialDist: Math.max(dist, 10),
       initialScale,
-      initialX: this._state.x,
-      initialY: this._state.y,
-      initialCx: cx,
-      initialCy: cy,
-      worldAnchorX,
-      worldAnchorY,
-      lastDist: Math.max(dist, 10),
-      lastCx: cx,
-      lastCy: cy
+      worldAnchorCenterX,
+      worldAnchorCenterY,
+      lastDist: Math.max(dist, 10)
     };
   }
 
@@ -560,25 +549,19 @@ export class ViewportController extends ViewportPort {
     if (points.length < 2 || !state.pinchStart) return;
 
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
-    const currentCx = (points[0].x + points[1].x) / 2;
-    const currentCy = (points[0].y + points[1].y) / 2;
-
     const pinch = state.pinchStart;
     const rawRatio = dist / pinch.initialDist;
     const targetScale = Math.max(this._state.minScale, Math.min(this._state.maxScale, pinch.initialScale * rawRatio));
 
-    const offset = this._getContainerOffset();
-    const currentPivotX = currentCx - offset.left;
-    const currentPivotY = currentCy - offset.top;
+    const { width, height } = this.viewportSize();
+    const cx = width / 2;
+    const cy = height / 2;
 
-    // 閉式解析幾何公式：世界樞紐點在縮放後精確吸附在當前兩指中心，消除累積誤差與阻尼複利。
-    // 手勢進行中維持 100% 絕對幾何錨定，避免平移阻尼撕裂指尖座標；若手勢放開後越界，交由 _settlePointerPosition 260ms 平滑回彈。
-    const targetX = currentPivotX - targetScale * pinch.worldAnchorX;
-    const targetY = currentPivotY - targetScale * pinch.worldAnchorY;
-
+    // 視口中心基準縮放：畫面中心的世界座標在縮放過程中維持不變，徹底消除亂晃與中心跑走，手感與電腦滾輪完全一致
     this._state.scale = targetScale;
-    this._state.x = targetX;
-    this._state.y = targetY;
+    this._state.x = cx - pinch.worldAnchorCenterX * targetScale;
+    this._state.y = cy - pinch.worldAnchorCenterY * targetScale;
+    this.clampPosition();
   }
 
   _updatePinchGesture(state, event) {
