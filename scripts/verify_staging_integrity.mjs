@@ -13,7 +13,7 @@ const errors = [];
 
 // 1. Check index.html script tag
 const indexHtml = fs.readFileSync(path.join(pagesDir, 'index.html'), 'utf8');
-const hasModuleScript = /<script type="module" src="src\/main\.js\?v=[a-f0-9]{16}"><\/script>/.test(indexHtml);
+const hasModuleScript = /<script type="module" src="\/?src\/main\.js\?v=[a-f0-9]{16}"><\/script>/.test(indexHtml);
 const escapeRegExp = value => value.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 const hasVersionedStylesheets = [
   'styles.css',
