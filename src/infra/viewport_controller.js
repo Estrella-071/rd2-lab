@@ -478,7 +478,21 @@ export class ViewportController extends ViewportPort {
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
     const cx = (points[0].x + points[1].x) / 2;
     const cy = (points[0].y + points[1].y) / 2;
+    const offset = this._getContainerOffset();
+    const pivotX = cx - offset.left;
+    const pivotY = cy - offset.top;
+    const initialScale = this._state.scale || 1.0;
+    const worldAnchorX = (pivotX - this._state.x) / initialScale;
+    const worldAnchorY = (pivotY - this._state.y) / initialScale;
     return {
+      initialDist: Math.max(dist, 10),
+      initialScale,
+      initialX: this._state.x,
+      initialY: this._state.y,
+      initialCx: cx,
+      initialCy: cy,
+      worldAnchorX,
+      worldAnchorY,
       lastDist: Math.max(dist, 10),
       lastCx: cx,
       lastCy: cy
@@ -491,7 +505,15 @@ export class ViewportController extends ViewportPort {
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (state.pointers.size >= 2 && state.pinchStart) {
-      this._updatePinchGesture(state, event);
+      if (!state.dragEventDispatched) {
+        state.dragEventDispatched = true;
+        this._dispatchViewportDrag();
+        this._setZoomingState(true);
+        this._setNavigatingState(true, false, true);
+      }
+      this._applyPinchStep(state);
+      this.requestRender();
+      event.preventDefault?.();
       return;
     }
     if (state.pointers.size === 1 && state.dragStart) {
@@ -499,56 +521,36 @@ export class ViewportController extends ViewportPort {
     }
   }
 
-  _updatePinchGesture(state, event) {
-    this._setZoomingState(true);
-    this._setNavigatingState(true, false, true);
-    if (!state.dragEventDispatched) {
-      state.dragEventDispatched = true;
-      this._dispatchViewportDrag();
-    }
+  _applyPinchStep(state) {
     const points = Array.from(state.pointers.values());
-    if (points.length < 2) return;
+    if (points.length < 2 || !state.pinchStart) return;
 
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
     const currentCx = (points[0].x + points[1].x) / 2;
     const currentCy = (points[0].y + points[1].y) / 2;
 
-    const prevDist = state.pinchStart.lastDist || dist;
-    const prevCx = state.pinchStart.lastCx ?? currentCx;
-    const prevCy = state.pinchStart.lastCy ?? currentCy;
+    const pinch = state.pinchStart;
+    const rawRatio = dist / pinch.initialDist;
+    const targetScale = Math.max(this._state.minScale, Math.min(this._state.maxScale, pinch.initialScale * rawRatio));
 
-    // 幀間增量縮放比例（防止除以零）
-    const scaleFactor = prevDist > 0 ? (dist / prevDist) : 1;
-    const currentScale = this._state.scale || 1.0;
-    const targetScale = Math.max(this._state.minScale, Math.min(this._state.maxScale, currentScale * scaleFactor));
-    const effectiveFactor = currentScale > 0 ? (targetScale / currentScale) : 1;
-
-    // 當前樞紐相對於視口容器之座標
     const offset = this._getContainerOffset();
-    const pivotX = currentCx - offset.left;
-    const pivotY = currentCy - offset.top;
+    const currentPivotX = currentCx - offset.left;
+    const currentPivotY = currentCy - offset.top;
 
-    // 手指中心之增量位移
-    const deltaPanX = currentCx - prevCx;
-    const deltaPanY = currentCy - prevCy;
-
-    // 以當前指尖樞紐點為基準執行縮放與平移整合變換
-    const targetX = pivotX - (pivotX - (this._state.x + deltaPanX)) * effectiveFactor;
-    const targetY = pivotY - (pivotY - (this._state.y + deltaPanY)) * effectiveFactor;
+    // 閉式解析幾何公式：世界樞紐點在縮放後精確吸附在當前兩指中心，消除累積誤差與阻尼複利
+    const targetX = currentPivotX - targetScale * pinch.worldAnchorX;
+    const targetY = currentPivotY - targetScale * pinch.worldAnchorY;
 
     const resisted = this._applyPanResistance(targetX, targetY, targetScale);
     this._state.scale = targetScale;
     this._state.x = resisted.x;
     this._state.y = resisted.y;
+  }
 
-    // 更新基準點供下一幀使用
-    state.pinchStart.lastDist = Math.max(dist, 10);
-    state.pinchStart.lastCx = currentCx;
-    state.pinchStart.lastCy = currentCy;
-
+  _updatePinchGesture(state, event) {
+    if (event?.preventDefault) event.preventDefault();
+    this._applyPinchStep(state);
     this.requestRender();
-
-    event.preventDefault?.();
   }
 
   _updateDragGesture(state, event) {
@@ -1287,6 +1289,9 @@ export class ViewportController extends ViewportPort {
   _applyRender() {
     this._needsRender = false;
     if (this._isDestroyed) return;
+    if (this._gestureState?.pinchStart && this._gestureState.pointers?.size >= 2) {
+      this._applyPinchStep(this._gestureState);
+    }
     this._applySceneTransform();
     this._notifyRenderListeners(this.getState());
     this._dispatchSettledIfIdle();
