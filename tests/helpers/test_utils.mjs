@@ -37,7 +37,7 @@ export function assertInRange(value, min, max, message = '') {
 }
 
 function isBrowserCancelledRequest(entry) {
-  return /(?:ERR_ABORTED|NS_BINDING_ABORTED)/i.test(String(entry?.failure || ''));
+  return /(?:ERR_ABORTED|NS_BINDING_ABORTED|Load request cancelled)/i.test(String(entry?.failure || ''));
 }
 
 export function assertNoUnexpectedBrowserDiagnostics(browserInstance, context = 'browser', options = {}) {

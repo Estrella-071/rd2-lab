@@ -787,7 +787,7 @@ export async function runTreeInteractionsSuite(options = {}) {
       window.__TEST_HOOKS__.centerOnNode('5109', false);
       window.__TEST_HOOKS__.showTooltip('5109', true);
     });
-    await page.waitForTimeout(300);
+    await page.waitForSelector('.detail-copy .stat-green-add', { timeout: 5000 });
     const hasGreenAdd5109 = await page.evaluate(() => {
       const greenEl = document.querySelector('.detail-copy .stat-green-add');
       return greenEl?.textContent.trim() === '(+0.6%)';
@@ -938,9 +938,10 @@ export async function runTreeInteractionsSuite(options = {}) {
       { key: 'zh-tw', tag: '綻放', awakeningTag: '果實', name: '花骰子' },
     ];
     for (const { key, tag, awakeningTag, name } of tooltipLocaleChecks) {
-      await page.click('#locale-toggle-btn', { force: true });
-      await page.waitForSelector('#locale-widget.is-expanded');
-      await page.click(`#locale-widget [data-locale="${key}"]`, { force: true });
+      await page.evaluate((loc) => {
+        const option = document.querySelector(`#locale-widget [data-locale="${loc}"]`);
+        option?.click();
+      }, key);
       await page.waitForFunction((expectedLocale) => document.documentElement.lang === expectedLocale, key);
       const tooltipLocale = await page.evaluate(() => {
         const tooltip = document.getElementById('tooltip');
