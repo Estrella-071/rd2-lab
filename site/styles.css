@@ -570,7 +570,6 @@ body.is-zooming #minimap-panel,
   display: block;
   transform-origin: 0 0;
   pointer-events: none;
-  will-change: transform;
 }
 
 .tree-canvas-layer,

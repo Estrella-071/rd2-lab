@@ -505,11 +505,11 @@ export class ViewportController extends ViewportPort {
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (state.pointers.size >= 2 && state.pinchStart) {
+      this._setZoomingState(true);
+      this._setNavigatingState(true, false, true);
       if (!state.dragEventDispatched) {
         state.dragEventDispatched = true;
         this._dispatchViewportDrag();
-        this._setZoomingState(true);
-        this._setNavigatingState(true, false, true);
       }
       this._applyPinchStep(state);
       this.requestRender();
@@ -1350,6 +1350,16 @@ export class ViewportController extends ViewportPort {
   }
 
   _dispatchSettledIfIdle() {
+    const hasActiveGesture = Boolean(
+      this._gestureState?.pinchStart
+      || (this._gestureState?.pointers && this._gestureState.pointers.size > 0)
+      || this._state.isPanning
+      || this._animState
+      || this._inertiaRafId
+      || this._wheelZoomRafId
+    );
+    if (hasActiveGesture) return;
+
     const body = typeof document !== "undefined" ? document.body : null;
     if (body && !body.classList.contains("is-navigating") && !body.classList.contains("is-zooming")) {
       this._dispatchViewportSettled();
