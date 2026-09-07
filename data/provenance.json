@@ -5,7 +5,7 @@
   "publishedData": {
     "json": {
       "path": "site/data/dice_tree.json",
-      "sha256": "EA517BB662302DE84E1E87316047C567A55860A5A780DE51DE1850BF951E86A3"
+      "sha256": "A901053ACBDD328BAFBE6BD7F02E9B68BF436DC7CF78458FDB980715722627A9"
     },
     "svg": {
       "path": "site/data/dice_tree.svg",
@@ -13,7 +13,7 @@
     },
     "compendium": {
       "path": "site/boss_event_data.json",
-      "sha256": "D6B1897253151F57B5C9FEB0BD0C7B343C683765BABBE0BFDCC74699433D48A9"
+      "sha256": "D77075F3B9B1710DCDEDF199A501868C3D3C03F9AE9382B2BB9A727F7CAD5A74"
     },
     "metadata": {
       "path": "site/data/game_data_metadata.json",
@@ -25,7 +25,7 @@
     },
     "officialNotices": {
       "path": "site/data/official_update_notices.json",
-      "sha256": "EA0FF4A2F7281E1DEB04288430B948D7571E956CD3D35FD316D2975C3F824FE1"
+      "sha256": "59E20DCEE66184E0FC2256A4519A4981F803D4655494599797591CEE75E089B9"
     },
     "monsterPosters": {
       "path": "site/monster_posters.json",

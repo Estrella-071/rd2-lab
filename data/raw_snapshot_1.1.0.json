@@ -148,7 +148,7 @@
     },
     "official_notice": {
       "path": "site/data/official_update_notices.json",
-      "sha256": "EA0FF4A2F7281E1DEB04288430B948D7571E956CD3D35FD316D2975C3F824FE1",
+      "sha256": "59E20DCEE66184E0FC2256A4519A4981F803D4655494599797591CEE75E089B9",
       "notice_id": "",
       "version": "1.1.0",
       "category": "client_tables",

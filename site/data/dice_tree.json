@@ -25805,7 +25805,7 @@
     "unlock_supplement_sha256": "86529C9B4D9BC00ED14EEFA8D6C7B04BE1384AB1B7619BC81BA78816061D0372",
     "unlock_supplement_count": 4,
     "topology_correction_count": 2,
-    "official_notice_sha256": "EA0FF4A2F7281E1DEB04288430B948D7571E956CD3D35FD316D2975C3F824FE1",
+    "official_notice_sha256": "59E20DCEE66184E0FC2256A4519A4981F803D4655494599797591CEE75E089B9",
     "official_coop_override_count": 0,
     "path": "data/raw_snapshot_1.1.0.json"
   }
