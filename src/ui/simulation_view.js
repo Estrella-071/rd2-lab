@@ -420,6 +420,22 @@ export class SimulationView {
     return false;
   }
 
+  _handleBackdropExit(clickedEl) {
+    const exitWidget = document.getElementById("simulation-exit-widget");
+    if (exitWidget?.classList.contains("is-expanded")) {
+      const inModal = clickedEl.closest?.("#simulation-confirm-modal, #simulation-save-modal, #simulation-quick-unlock-modal");
+      if (inModal) return false;
+      const exitCard = document.getElementById("simulation-exit-card");
+      const toggleBtn = document.getElementById("simulation-toggle-btn");
+      if (exitCard && !exitCard.contains(clickedEl) && !toggleBtn?.contains(clickedEl)) {
+        this._closeExitWidget();
+        const isButton = Boolean(clickedEl.closest?.("button, [data-simulation-close], .simulation-picker-card"));
+        return !isButton;
+      }
+    }
+    return false;
+  }
+
   _handleBackdropClick(event) {
     const clickedEl = event.target;
     if (!clickedEl) return false;
@@ -429,7 +445,8 @@ export class SimulationView {
       this._handleBackdropConfirm(clickedEl) ||
       this._handleBackdropSave(clickedEl) ||
       this._handleBackdropQuickUnlock(clickedEl) ||
-      this._handleBackdropShare(clickedEl)
+      this._handleBackdropShare(clickedEl) ||
+      this._handleBackdropExit(clickedEl)
     );
   }
 
@@ -533,7 +550,7 @@ export class SimulationView {
       this.simulationUseCase.toggle();
       return true;
     }
-    if (id === "simulation-exit-cancel-btn" || target.dataset.simulationClose === "exit-widget") {
+    if (id === "simulation-exit-cancel-btn" || id === "simulation-exit-close-btn" || target.dataset.simulationClose === "exit-widget") {
       this._closeExitWidget();
       return true;
     }

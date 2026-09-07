@@ -791,7 +791,7 @@ body.is-navigating .tree-state-label-canvas {
   pointer-events: auto;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  touch-action: none;
 }
 
 .tree-node-semantic {

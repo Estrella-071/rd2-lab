@@ -342,6 +342,7 @@ export class ViewportController extends ViewportPort {
       if (state.zoomingTimer) clearTimeout(state.zoomingTimer);
       state.zoomingTimer = setTimeout(() => {
         if (this._gestureState !== state) return;
+        if (state.pointers?.size >= 2) return;
         document.body.classList.remove("is-zooming");
         state.zoomingTimer = null;
         if (!document.body.classList.contains("is-navigating")) {
@@ -389,6 +390,7 @@ export class ViewportController extends ViewportPort {
     }
     state.navigatingCooldownTimer = setTimeout(() => {
       if (this._gestureState !== state) return;
+      if (state.pointers?.size > 0) return;
       document.body.classList.remove("is-navigating", "is-manual-navigating");
       state.navigatingCooldownTimer = null;
       if (!document.body.classList.contains("is-zooming")) {
@@ -451,7 +453,7 @@ export class ViewportController extends ViewportPort {
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     state.dragHistory = [{ x: event.clientX, y: event.clientY, t: this._eventTimestamp() }];
 
-    if (state.pointers.size === 2) {
+    if (state.pointers.size >= 2) {
       state.dragStart = null;
       state.pinchStart = this._createPinchStart(state.pointers);
       this._setZoomingState(true);
@@ -474,11 +476,21 @@ export class ViewportController extends ViewportPort {
   _createPinchStart(pointers) {
     const points = Array.from(pointers.values());
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+    const cx = (points[0].x + points[1].x) / 2;
+    const cy = (points[0].y + points[1].y) / 2;
+    const offset = this._getContainerOffset();
+    const pivotX = cx - offset.left;
+    const pivotY = cy - offset.top;
+    const initialScale = this._state.scale || 1.0;
+    const worldAnchorX = (pivotX - this._state.x) / initialScale;
+    const worldAnchorY = (pivotY - this._state.y) / initialScale;
     return {
       initialDist: Math.max(dist, 10),
-      initialScale: this._state.scale,
-      cx: (points[0].x + points[1].x) / 2,
-      cy: (points[0].y + points[1].y) / 2
+      initialScale,
+      cx,
+      cy,
+      worldAnchorX,
+      worldAnchorY
     };
   }
 
@@ -487,7 +499,7 @@ export class ViewportController extends ViewportPort {
     if (!state?.pointers.has(event.pointerId)) return;
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
-    if (state.pointers.size === 2 && state.pinchStart) {
+    if (state.pointers.size >= 2 && state.pinchStart) {
       this._updatePinchGesture(state, event);
       return;
     }
@@ -504,11 +516,34 @@ export class ViewportController extends ViewportPort {
       this._dispatchViewportDrag();
     }
     const points = Array.from(state.pointers.values());
+    if (points.length < 2) return;
+
     const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
-    const ratio = dist / state.pinchStart.initialDist;
-    const targetScale = state.pinchStart.initialScale * ratio;
-    const scaleFactor = targetScale / (this._state.scale || 1.0);
-    this.zoom(scaleFactor, state.pinchStart.cx, state.pinchStart.cy);
+    const currentCx = (points[0].x + points[1].x) / 2;
+    const currentCy = (points[0].y + points[1].y) / 2;
+
+    const rawRatio = dist / state.pinchStart.initialDist;
+    const isMobile = (this._cachedWidth || this.container?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 1000)) <= 768;
+    const ratio = isMobile
+      ? (rawRatio > 1 ? Math.pow(rawRatio, 1.18) : Math.pow(rawRatio, 1.12))
+      : rawRatio;
+
+    let targetScale = state.pinchStart.initialScale * ratio;
+    targetScale = Math.max(this._state.minScale, Math.min(this._state.maxScale, targetScale));
+
+    const offset = this._getContainerOffset();
+    const currentPivotX = currentCx - offset.left;
+    const currentPivotY = currentCy - offset.top;
+
+    const targetX = currentPivotX - targetScale * state.pinchStart.worldAnchorX;
+    const targetY = currentPivotY - targetScale * state.pinchStart.worldAnchorY;
+
+    const resisted = this._applyPanResistance(targetX, targetY, targetScale);
+    this._state.scale = targetScale;
+    this._state.x = resisted.x;
+    this._state.y = resisted.y;
+    this.requestRender();
+
     event.preventDefault?.();
   }
 
@@ -541,8 +576,28 @@ export class ViewportController extends ViewportPort {
     const state = this._gestureState;
     if (!state) return;
     state.pointers.delete(event.pointerId);
-    if (state.pointers.size < 2) state.pinchStart = null;
-    if (state.pointers.size === 0) this._finishPointerGesture(state);
+
+    if (state.pointers.size === 1) {
+      state.pinchStart = null;
+      const remainingPos = state.pointers.values().next().value;
+      if (remainingPos) {
+        state.dragStart = {
+          startX: remainingPos.x,
+          startY: remainingPos.y,
+          initialX: this._state.x,
+          initialY: this._state.y,
+          hasMoved: true
+        };
+        state.dragHistory = [{ x: remainingPos.x, y: remainingPos.y, t: this._eventTimestamp() }];
+        this._state.isPanning = true;
+      }
+      return;
+    }
+
+    if (state.pointers.size === 0) {
+      state.pinchStart = null;
+      this._finishPointerGesture(state);
+    }
   }
 
   _finishPointerGesture(state) {

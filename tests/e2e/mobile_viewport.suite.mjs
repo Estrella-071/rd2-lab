@@ -573,6 +573,58 @@ export async function runMobileViewportSuite(options = {}) {
     await page.click('#disclaimer-close-btn');
     await page.waitForTimeout(200);
 
+    // -------------------------------------------------------------
+    // 手機端雙指 Pinch-to-Zoom 與中心點聯動測試
+    // -------------------------------------------------------------
+    console.log('--- Tier 3/4: Mobile Pinch-to-Zoom & Center Anchor ---');
+    const initialCam = await page.evaluate(() => window.RD2App?.viewportController?.getState());
+    assert(initialCam && initialCam.scale > 0, 'Initial camera scale should be available');
+    passedAssertions++;
+
+    const pinchResult = await page.evaluate(async () => {
+      const viewport = document.getElementById('viewport');
+      if (!viewport) return null;
+      const PointerEventCtor = window.PointerEvent || window.MouseEvent;
+
+      // 雙指落下：P1(100, 400), P2(200, 400)，初始距離 100px，中心點 (150, 400)
+      viewport.dispatchEvent(new PointerEventCtor('pointerdown', { bubbles: true, cancelable: true, pointerId: 10, clientX: 100, clientY: 400, pointerType: 'touch' }));
+      viewport.dispatchEvent(new PointerEventCtor('pointerdown', { bubbles: true, cancelable: true, pointerId: 11, clientX: 200, clientY: 400, pointerType: 'touch' }));
+
+      // 兩指擴張並平移：P1(60, 410), P2(300, 430)，距離 240.8px，中心點 (180, 420)
+      window.dispatchEvent(new PointerEventCtor('pointermove', { bubbles: true, cancelable: true, pointerId: 10, clientX: 60, clientY: 410, pointerType: 'touch' }));
+      window.dispatchEvent(new PointerEventCtor('pointermove', { bubbles: true, cancelable: true, pointerId: 11, clientX: 300, clientY: 430, pointerType: 'touch' }));
+
+      const midGestureCam = window.RD2App?.viewportController?.getState();
+      const isZooming = document.body.classList.contains('is-zooming');
+      const isNavigating = document.body.classList.contains('is-navigating');
+
+      // 抬起第一隻手指（指針 10），剩下一隻手指（指針 11）在 (300, 430)
+      window.dispatchEvent(new PointerEventCtor('pointerup', { bubbles: true, cancelable: true, pointerId: 10, pointerType: 'touch' }));
+
+      // 剩下單指移動：(300, 430) -> (260, 430)（向左拖動 40px）
+      window.dispatchEvent(new PointerEventCtor('pointermove', { bubbles: true, cancelable: true, pointerId: 11, clientX: 260, clientY: 430, pointerType: 'touch' }));
+
+      const afterSingleFingerDragCam = window.RD2App?.viewportController?.getState();
+
+      // 抬起最後一隻手指
+      window.dispatchEvent(new PointerEventCtor('pointerup', { bubbles: true, cancelable: true, pointerId: 11, pointerType: 'touch' }));
+
+      return {
+        initialScale: window.RD2App?.viewportController?.getState()?.baseScale,
+        midGestureScale: midGestureCam?.scale,
+        midGestureX: midGestureCam?.x,
+        afterSingleFingerDragX: afterSingleFingerDragCam?.x,
+        isZooming,
+        isNavigating
+      };
+    });
+
+    assert(pinchResult.midGestureScale > initialCam.scale, `Pinch-zoom out should increase scale (got ${pinchResult.midGestureScale} > ${initialCam.scale})`);
+    assert(pinchResult.isZooming, 'is-zooming should remain active during pinch gesture');
+    assert(pinchResult.isNavigating, 'is-navigating should remain active during pinch gesture');
+    assert(pinchResult.afterSingleFingerDragX < pinchResult.midGestureX, 'Single-finger drag following pinch should smoothly continue panning');
+    passedAssertions += 4;
+
     assertNoUnexpectedBrowserDiagnostics(browserInstance, 'mobile suite');
     const durationMs = Date.now() - startTime;
     console.log(`\n🎉 Mobile Viewport Suite Passed! (${passedAssertions} assertions in ${(durationMs / 1000).toFixed(2)}s)`);

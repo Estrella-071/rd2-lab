@@ -814,11 +814,31 @@ async function assertSimulationLifecycle(page) {
   const lifecycleTeamAfter = await page.evaluate(() => JSON.stringify(window.__TEST_HOOKS__.getSimulationPlan().team));
   assertEqual(lifecycleTeamAfter, lifecycleTeamBefore, "destroy/init must discard unsaved team drafts before sharing");
   await page.click("#simulation-share-close-btn");
+  await page.waitForTimeout(180);
+
+  // 1. 打開 exit widget 並驗證右上角關閉按鈕可收合
   await page.click("#simulation-toggle-btn");
   await page.waitForSelector("#simulation-exit-widget.is-expanded");
+  await page.waitForTimeout(260);
+  await page.click("#simulation-exit-close-btn");
+  await page.waitForSelector("#simulation-exit-widget:not(.is-expanded)");
+  assert(await page.$eval("#simulation-exit-widget", (el) => !el.classList.contains("is-expanded")), "close button should collapse the exit widget");
+
+  // 2. 再次打開 exit widget 並驗證點擊地圖畫布空白處（Backdrop）可收合
+  await page.click("#simulation-toggle-btn");
+  await page.waitForSelector("#simulation-exit-widget.is-expanded");
+  await page.waitForTimeout(260);
+  await page.mouse.click(200, 400);
+  await page.waitForSelector("#simulation-exit-widget:not(.is-expanded)");
+  assert(await page.$eval("#simulation-exit-widget", (el) => !el.classList.contains("is-expanded")), "clicking backdrop outside exit widget should collapse it");
+
+  // 3. 再次打開 exit widget 並點擊結束按鈕
+  await page.click("#simulation-toggle-btn");
+  await page.waitForSelector("#simulation-exit-widget.is-expanded");
+  await page.waitForTimeout(260);
   await page.click("#simulation-pause-btn");
   await page.waitForSelector("#simulation-exit-widget:not(.is-expanded)");
-  return 4;
+  return 6;
 }
 
 export async function runSimulationModeSuite(options = {}) {

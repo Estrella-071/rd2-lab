@@ -1459,6 +1459,14 @@ export class CanvasTreeRenderer {
       // Pause detached background work while active gesture has priority.
       this.pauseBackgroundRenders({ pauseWarmups: true });
     };
+    this._boundViewportDrag = () => {
+      if (this._pressedNodeId) {
+        this.setPressedNode(null, false);
+      }
+      if (this._isCenterPressed) {
+        this.setPressedCenter(false);
+      }
+    };
     this._boundViewportSettled = () => {
       if (!this._isCameraMotionActive() && this._sceneFrameCoverage) {
         this._updateOverviewCutout(this._sceneFrameCoverage);
@@ -1481,6 +1489,7 @@ export class CanvasTreeRenderer {
     }
     if (typeof document !== "undefined") {
       document.addEventListener("rd2:viewport-interaction-start", this._boundViewportInteractionStart);
+      document.addEventListener("rd2:viewport-drag", this._boundViewportDrag);
       document.addEventListener("rd2:viewport-settled", this._boundViewportSettled);
     }
     this._readyPromise = this._initialize(token);
@@ -1753,6 +1762,7 @@ export class CanvasTreeRenderer {
       button.style.height = `${radius * 2}px`;
       button.addEventListener("pointerdown", (event) => {
         if (event.button !== undefined && event.button !== 0) return;
+        if (document.body?.classList?.contains("is-zooming") || document.body?.classList?.contains("is-dragging")) return;
         button.classList.add("is-pressing");
         this.setPressedNode(id, true);
         try { button.setPointerCapture?.(event.pointerId); } catch { /* Optional on old WebKit. */ }
@@ -1783,6 +1793,7 @@ export class CanvasTreeRenderer {
     centerButton.style.width = "220px";
     centerButton.style.height = "150px";
     centerButton.addEventListener("pointerdown", () => {
+      if (document.body?.classList?.contains("is-zooming") || document.body?.classList?.contains("is-dragging")) return;
       centerButton.classList.add("is-pressing");
       this.setPressedCenter(true);
     });
@@ -4599,6 +4610,7 @@ export class CanvasTreeRenderer {
     this._cancelAtlasTrim();
     if (typeof document !== "undefined") {
       document.removeEventListener("rd2:viewport-interaction-start", this._boundViewportInteractionStart);
+      document.removeEventListener("rd2:viewport-drag", this._boundViewportDrag);
       document.removeEventListener("rd2:viewport-settled", this._boundViewportSettled);
     }
     if (this._coverageWarmupHandle !== null) clearTimeout(this._coverageWarmupHandle);
