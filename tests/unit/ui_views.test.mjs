@@ -976,7 +976,7 @@ test("attachElasticSlider: Locks drag value on pointerup without jumping and com
   assert.equal(slider.listenerCount("change"), 0);
 });
 
-test("attachElasticSlider: Suppresses lift-off jitter, isolates native events to keyboard only, and ensures extreme ends precision", async () => {
+test("attachElasticSlider: Suppresses lift-off jitter, suppresses immediate native change override, and ensures extreme ends precision", async () => {
   const slider = createMockElement("input");
   slider.value = "1";
   slider.style.setProperty = () => {};
@@ -1011,16 +1011,21 @@ test("attachElasticSlider: Suppresses lift-off jitter, isolates native events to
   assert.equal(slider.value, "17", "Lift-off jitter must be suppressed and locked to 17");
   assert.equal(committedRank, 17, "Committed rank must remain 17");
 
-  // 3. 測試原生非鍵盤事件被阻斷
+  // 3. 測試在 pointerup 之後緊接著的原生 change 事件被壓制，不覆蓋 committedRank
+  slider.value = "16";
+  slider.dispatchEvent("change", { target: { value: "16" } });
+  assert.equal(slider.value, "17", "Native change immediately following pointerup must be suppressed");
+  assert.equal(committedRank, 17, "Committed rank must remain 17");
+
+  // 等待 suppress 視窗 (60ms) 過後
+  await new Promise((resolve) => setTimeout(resolve, 70));
+
+  // 4. 測試標準程式化 / 輔助技術 input 與 change 事件正常放行
   slider.value = "40";
   slider.dispatchEvent("input", { target: { value: "40" } });
-  assert.equal(updatedRank, 17, "Non-keyboard native input must be ignored");
-
-  // 4. 測試鍵盤事件正常放行
-  slider.dispatchEvent("keydown", { key: "ArrowRight" });
-  slider.value = "18";
-  slider.dispatchEvent("input", { target: { value: "18" } });
-  assert.equal(updatedRank, 18, "Keyboard-driven input must update rank to 18");
+  assert.equal(updatedRank, 40, "Standard input must update rank to 40");
+  slider.dispatchEvent("change", { target: { value: "40" } });
+  assert.equal(committedRank, 40, "Standard change must commit rank 40");
 
   // 5. 測試靠近 min 端的精確性 (例如 Rank 3)
   // progress = 2 / 49 = 0.0408 -> offset = 10 + 0.0408 * 180 = 17.34 -> clientX = 117.34
@@ -1037,7 +1042,7 @@ test("attachElasticSlider: Suppresses lift-off jitter, isolates native events to
   assert.equal(slider.value, "48", "Releasing near max must lock to 48 without drifting to 50");
 
   dispose();
-  assert.equal(slider.listenerCount("keydown"), 0);
+  assert.equal(slider.listenerCount("input"), 0);
 });
 
 test("MorphingWidgets: Toggles filter and disclaimer expanded states", () => {

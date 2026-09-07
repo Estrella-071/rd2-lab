@@ -33,7 +33,6 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
   let activePointerId = null;
   let springTimer = null;
   let currentRank = Math.max(1, Math.min(maxRank, Number.parseInt(sliderInput.value, 10) || 1));
-  let isKeyboardAction = false;
   let dwellRank = currentRank;
   let confirmedRank = currentRank;
   let dwellStartTime = 0;
@@ -145,6 +144,8 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     handlePointerMove(e);
   };
 
+  let suppressNextNativeChange = false;
+
   const handlePointerUp = (e) => {
     if (!isDragging || (activePointerId !== null && e.pointerId !== activePointerId)) return;
     isDragging = false;
@@ -171,9 +172,14 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     const targetPct = maxRank > 1 ? ((finalRank - 1) / (maxRank - 1)) * 100 : 0;
     updateSliderUI(finalRank, targetPct, 0);
 
+    suppressNextNativeChange = true;
     if (typeof onCommit === "function") {
       onCommit(finalRank);
     }
+
+    setTimeout(() => {
+      suppressNextNativeChange = false;
+    }, 60);
 
     if (springTimer) clearTimeout(springTimer);
     springTimer = setTimeout(() => {
@@ -182,35 +188,32 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     }, 380);
   };
 
-  const handleKeyDown = (e) => {
-    const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"];
-    if (keys.includes(e?.key)) {
-      isKeyboardAction = true;
-    }
-  };
-
   const handleInput = (event) => {
-    if (isDragging || !isKeyboardAction) return;
+    if (isDragging) return;
     const rank = Math.max(1, Math.min(maxRank, Number.parseInt(event.target?.value, 10) || 1));
     const pct = maxRank > 1 ? ((rank - 1) / (maxRank - 1)) * 100 : 0;
     updateSliderUI(rank, pct, 0);
-    isKeyboardAction = false;
   };
 
   const handleChange = (event) => {
-    if (isDragging || !isKeyboardAction) return;
+    if (isDragging) return;
+    if (suppressNextNativeChange) {
+      suppressNextNativeChange = false;
+      sliderInput.value = String(currentRank);
+      return;
+    }
     const rank = Math.max(1, Math.min(maxRank, Number.parseInt(event.target?.value, 10) || 1));
+    const pct = maxRank > 1 ? ((rank - 1) / (maxRank - 1)) * 100 : 0;
+    updateSliderUI(rank, pct, 0);
     if (typeof onCommit === "function") {
       onCommit(rank);
     }
-    isKeyboardAction = false;
   };
 
   sliderInput.addEventListener("pointerdown", handlePointerDown);
   sliderInput.addEventListener("pointermove", handlePointerMove);
   sliderInput.addEventListener("pointerup", handlePointerUp);
   sliderInput.addEventListener("pointercancel", handlePointerUp);
-  sliderInput.addEventListener("keydown", handleKeyDown);
   sliderInput.addEventListener("input", handleInput);
   if (typeof onCommit === "function") {
     sliderInput.addEventListener("change", handleChange);
@@ -221,11 +224,11 @@ export function attachElasticSlider(sliderInput, { maxRank = 50, onUpdate, onCom
     springTimer = null;
     isDragging = false;
     activePointerId = null;
+    suppressNextNativeChange = false;
     sliderInput.removeEventListener("pointerdown", handlePointerDown);
     sliderInput.removeEventListener("pointermove", handlePointerMove);
     sliderInput.removeEventListener("pointerup", handlePointerUp);
     sliderInput.removeEventListener("pointercancel", handlePointerUp);
-    sliderInput.removeEventListener("keydown", handleKeyDown);
     sliderInput.removeEventListener("input", handleInput);
     if (typeof onCommit === "function") {
       sliderInput.removeEventListener("change", handleChange);

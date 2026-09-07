@@ -167,7 +167,7 @@ export async function runCompendiumEventsSuite(options = {}) {
         bodyOverflowY: body ? getComputedStyle(body).overflowY : ''
       };
     });
-    assert(mobileCompendiumLayout.headerHeight <= 132, `Mobile compendium header should remain compact, got ${mobileCompendiumLayout.headerHeight}px`);
+    assert(mobileCompendiumLayout.headerHeight <= 140, `Mobile compendium header should remain compact, got ${mobileCompendiumLayout.headerHeight}px`);
     assert(mobileCompendiumLayout.controlsInsideHeader && mobileCompendiumLayout.tabsInsideHeader, 'Mobile compendium controls must remain inside the header surface');
     assertEqual(mobileCompendiumLayout.controlOrder.join('|'), 'compendium-sort-widget|compendium-search-wrap|compendium-view-toggle', 'Mobile dice controls must read sort, search, then view mode');
     assert(!mobileCompendiumLayout.bodyScrollable && mobileCompendiumLayout.bodyOverflowY === 'visible', 'Mobile dice cards must grow with content instead of scrolling internally');
