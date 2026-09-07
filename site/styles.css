@@ -489,13 +489,21 @@ input:focus-visible,
 /* ==========================================================================
    Map
    ========================================================================== */
+.map-viewport,
+.map-scene,
+.tree-render-root,
+.tree-canvas-layer,
+.tree-canvas-layer canvas,
+.tree-semantic-layer {
+  touch-action: none;
+}
+
 .map-viewport {
   position: absolute;
   inset: 0;
   z-index: 1;
   overflow: hidden;
   cursor: grab;
-  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   background: transparent;

@@ -281,6 +281,15 @@ export class ViewportController extends ViewportPort {
       this.resetToCenter(true);
     }
 
+    if (this.container?.style) {
+      this.container.style.touchAction = "none";
+      this.container.style.userSelect = "none";
+      this.container.style.webkitUserSelect = "none";
+    }
+    if (this.sceneElement?.style) {
+      this.sceneElement.style.touchAction = "none";
+    }
+
     this._setupEventListeners();
     if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
       window.addEventListener("resize", this._handleResize);
@@ -299,6 +308,7 @@ export class ViewportController extends ViewportPort {
       dragStart: null,
       pinchStart: null,
       pinchActive: false,
+      isZoomingActive: false,
       dragHistory: [],
       dragEventDispatched: false,
       zoomingTimer: null,
@@ -316,7 +326,7 @@ export class ViewportController extends ViewportPort {
       window: { pointermove, pointerup, pointercancel: pointerup }
     };
 
-    this.container.addEventListener("pointerdown", pointerdown);
+    this.container.addEventListener("pointerdown", pointerdown, { passive: false });
     this.container.addEventListener("wheel", wheel, { passive: false });
 
     const win = typeof window !== "undefined" ? window : null;
@@ -409,6 +419,7 @@ export class ViewportController extends ViewportPort {
     if (state) {
       state.zoomingTimer = null;
       state.navigatingCooldownTimer = null;
+      state.isZoomingActive = false;
     }
     this._setNavigating = null;
     if (typeof document !== "undefined" && document.body) {
@@ -446,6 +457,7 @@ export class ViewportController extends ViewportPort {
 
     const state = this._gestureState;
     if (!state) return;
+
     this._dispatchViewportInteractionStart();
     this._stopAnimation();
     this._stopSmoothWheelZoom();
@@ -455,6 +467,13 @@ export class ViewportController extends ViewportPort {
     state.dragHistory = [{ x: event.clientX, y: event.clientY, t: this._eventTimestamp() }];
 
     if (state.pointers.size >= 2) {
+      for (const pId of state.pointers.keys()) {
+        try {
+          this.container?.setPointerCapture?.(pId);
+        } catch {
+          // 容錯防禦：忽略部分合成環境中 setPointerCapture 失敗的邊界情況
+        }
+      }
       if (state.dragStart && !state.pinchActive) {
         // 重置首指在雙指微小落差內產生的微幅偏移，確保起始世界錨點精準純淨
         this._state.x = state.dragStart.initialX;
@@ -464,6 +483,7 @@ export class ViewportController extends ViewportPort {
       state.dragHistory = [];
       state.pinchActive = true;
       state.pinchStart = this._createPinchStart(state.pointers);
+      state.isZoomingActive = true;
       this._setZoomingState(true);
       this._setNavigatingState(true, false, true);
       event.preventDefault?.();
@@ -471,6 +491,7 @@ export class ViewportController extends ViewportPort {
     }
     if (state.pointers.size === 1) {
       state.pinchActive = false;
+      state.isZoomingActive = false;
       state.dragStart = {
         startX: event.clientX,
         startY: event.clientY,
@@ -514,8 +535,11 @@ export class ViewportController extends ViewportPort {
     state.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (state.pointers.size >= 2 && state.pinchStart) {
-      this._setZoomingState(true);
-      this._setNavigatingState(true, false, true);
+      if (!state.isZoomingActive) {
+        state.isZoomingActive = true;
+        this._setZoomingState(true);
+        this._setNavigatingState(true, false, true);
+      }
       if (!state.dragEventDispatched) {
         state.dragEventDispatched = true;
         this._dispatchViewportDrag();
@@ -577,6 +601,11 @@ export class ViewportController extends ViewportPort {
       this.container?.classList?.add("is-dragging");
       state.dragEventDispatched = true;
       this._dispatchViewportDrag();
+      try {
+        this.container?.setPointerCapture?.(event.pointerId);
+      } catch {
+        // 容錯防禦：忽略捕獲失敗
+      }
     }
     if (!state.dragStart.hasMoved) return;
 
@@ -594,11 +623,21 @@ export class ViewportController extends ViewportPort {
   _handlePointerUp(event) {
     const state = this._gestureState;
     if (!state) return;
+
+    try {
+      if (this.container?.hasPointerCapture?.(event.pointerId)) {
+        this.container.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      // 容錯防禦：忽略釋放失敗邊界情況
+    }
+
     state.pointers.delete(event.pointerId);
 
     if (state.pointers.size === 1) {
       state.pinchStart = null;
       state.pinchActive = false;
+      state.isZoomingActive = false;
       const remainingPos = state.pointers.values().next().value;
       if (remainingPos) {
         state.dragStart = {
@@ -618,6 +657,7 @@ export class ViewportController extends ViewportPort {
     if (state.pointers.size === 0) {
       state.pinchStart = null;
       state.pinchActive = false;
+      state.isZoomingActive = false;
       this._finishPointerGesture(state);
     }
   }
@@ -627,6 +667,7 @@ export class ViewportController extends ViewportPort {
     state.dragHistory = [];
     state.dragStart = null;
     this._state.isPanning = false;
+    state.isZoomingActive = false;
     this.container?.classList?.remove("is-dragging");
 
     if (velocity) {
@@ -1327,7 +1368,9 @@ export class ViewportController extends ViewportPort {
       targetEl.style.transform = cameraTransform;
       return;
     }
-    targetEl.style.transform = "none";
+    if (targetEl.style.transform !== "none") {
+      targetEl.style.transform = "none";
+    }
     for (const layer of this._resolveCanvasTransformTargets(targetEl)) {
       if (layer?.style) layer.style.transform = cameraTransform;
     }
