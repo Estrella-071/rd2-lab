@@ -171,7 +171,9 @@ test("UseCases: SimulationPlanUseCase orchestrates planning, sharing, and image 
   });
   const remoteShare = await remoteUseCase.createShareLink({ serialized, origin: "https://example.test" });
   assert.equal(remoteShare.remote, true);
-  assert.equal(remoteShare.url, "https://example.test/simulation/Ab1234");
+  assert.equal(remoteShare.url, "https://example.test/zh-tw/simulation/Ab1234");
+  const remoteShareEn = await remoteUseCase.createShareLink({ serialized, origin: "https://example.test", locale: "en" });
+  assert.equal(remoteShareEn.url, "https://example.test/en/simulation/Ab1234");
   assert.deepEqual(await remoteUseCase.loadShareCode("Ab1234"), { ok: true, code: "Ab1234" });
   const image = await remoteUseCase.generateShareImage({ format: "png" });
   assert.equal(image.ok, true);

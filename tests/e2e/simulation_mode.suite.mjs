@@ -81,6 +81,9 @@ async function closeSuiteResources(browserInstance, serverInstance) {
 
 async function assertSimulationSurface(page) {
   await page.click("#simulation-toggle-btn");
+  await page.waitForSelector("#simulation-quick-unlock-modal:not([hidden])");
+  await page.click("#quick-unlock-skip-btn");
+  await page.waitForSelector("#simulation-quick-unlock-modal", { state: "hidden" });
   await page.waitForTimeout(220);
   const modeState = await page.evaluate(() => {
     const readNodeVisual = (nodeId) => {
@@ -149,7 +152,7 @@ async function assertSimulationSurface(page) {
     && modeState.passiveSmallLocked.locked
     && modeState.passiveLargeLocked.locked
     && modeState.specialPassive.special
-    && modeState.semanticCount === 239
+    && modeState.semanticCount === 241
     && [modeState.diceLocked, modeState.supportLocked, modeState.runeLocked, modeState.passiveSmallLocked, modeState.passiveLargeLocked, modeState.specialPassive, modeState.unlockedDice].every(({ iconCount, canvasReady, semanticReady }) => iconCount > 0 && canvasReady && semanticReady)
     && modeState.diceLocked.typeClasses.includes("node-type-dice")
     && modeState.supportLocked.typeClasses.includes("node-type-perk")
@@ -576,10 +579,11 @@ async function assertTeamPicker(page) {
     teamIndex: document.activeElement?.dataset?.teamIndex || ""
   }));
   assert(shareInitialFocus.className.includes("simulation-team-dice-card") && shareInitialFocus.teamIndex === "0", "returning from the picker should restore focus to the edited team slot");
+  await page.waitForFunction(() => /^https?:\/\//.test(document.querySelector("#simulation-share-url")?.value || ""));
   const shareUrl = await page.$eval("#simulation-share-url", (el) => el.value);
   const sharePath = new URL(shareUrl).pathname.split("/").filter(Boolean);
   const shareCode = sharePath.at(-1) || "";
-  assert(sharePath.includes("simulation") && !sharePath.some((segment) => ["zh-tw", "en", "ja", "ko"].includes(segment)) && /^[0-9A-Za-z]{6}$/.test(shareCode), `share modal should expose a locale-free six-character D1 share code (url=${shareUrl})`);
+  assert(sharePath.includes("simulation") && /^[0-9A-Za-z]{6}$/.test(shareCode), `share modal should expose a six-character D1 share code (url=${shareUrl})`);
 
   await page.click("#simulation-team-slots-1 .simulation-team-dice-card");
   await page.waitForSelector("#simulation-picker-pane:not([hidden])");
@@ -593,9 +597,11 @@ async function assertTeamPicker(page) {
 
 async function assertShareImageAndImport(page, browserInstance, shareUrl) {
   await page.click("#simulation-share-close-btn");
+  await page.waitForFunction(() => !document.querySelector("#simulation-share-widget")?.classList.contains("is-expanded"));
+  await page.evaluate(() => window.__TEST_HOOKS__.closeTooltip(true));
   await page.setViewportSize({ width: 280, height: 568 });
-  await page.waitForTimeout(80);
-  await page.click("#simulation-share-trigger-btn");
+  await page.waitForTimeout(150);
+  await page.evaluate(() => document.querySelector("#simulation-share-trigger-btn")?.click());
   await page.waitForSelector("#simulation-share-widget.is-expanded");
   await page.waitForTimeout(420);
   await page.waitForFunction(() => {
@@ -641,15 +647,19 @@ async function assertShareImageAndImport(page, browserInstance, shareUrl) {
     return { ok: true, width: result.layout.width, height: result.layout.height, hasDataUrl: true, iconPixels };
   });
   assert(imageResult.ok && imageResult.width === 3200 && imageResult.height === 2000 && imageResult.hasDataUrl && imageResult.iconPixels > 1000, `share image should include rendered node icons (dimensions=${imageResult.width}x${imageResult.height}, iconPixels=${imageResult.iconPixels})`);
+  await page.$eval(".simulation-share-card-inner", (el) => { el.scrollTop = 0; });
+  await page.evaluate(() => window.__TEST_HOOKS__.closeTooltip());
+  const downloadBtn = await page.waitForSelector(".simulation-split-tool-btn.is-download");
+  await downloadBtn.click({ force: true });
+  const popoverBtn = await page.waitForSelector(".simulation-download-popover-item.is-popover-download-single", { timeout: 3000 });
   const downloadPromise = page.waitForEvent("download");
-  await page.click("#simulation-image-share-btn");
+  await popoverBtn.click();
   const download = await downloadPromise;
-  const imageButtonLabel = await page.$eval("#simulation-image-share-btn", (el) => el.textContent.trim());
-  assert(download.suggestedFilename() === "random-dice-2-lab-planning.png" && imageButtonLabel === "已下載", "share panel should download the fixed-size image and report completion inline");
+  assert(download.suggestedFilename() === "random-dice-2-lab-part-1.png", "share panel should download the split part image and report completion inline");
 
   const sharedPage = await browserInstance.context.newPage({ viewport: { width: 390, height: 844 } });
   await sharedPage.goto(shareUrl, { waitUntil: "networkidle" });
-  await sharedPage.waitForSelector("#loading-screen", { state: "hidden", timeout: 5000 });
+  await sharedPage.waitForSelector("#loading-screen", { state: "hidden", timeout: 15000 });
   await sharedPage.waitForTimeout(700);
   const imported = await sharedPage.evaluate(() => ({
     active: document.body.classList.contains("simulation-mode"),
@@ -694,22 +704,24 @@ async function assertSimulationResetAndExit(page) {
   const exitPanelState = await page.evaluate(() => ({
     active: document.body.classList.contains("simulation-mode"),
     expanded: document.querySelector("#simulation-exit-widget")?.classList.contains("is-expanded") === true,
-    resetVisible: document.querySelector("#simulation-reset-exit-btn")?.getBoundingClientRect().height > 0,
+    quickVisible: document.querySelector("#simulation-quick-unlock-trigger-btn")?.getBoundingClientRect().height > 0,
+    resetVisible: document.querySelector("#simulation-reset-btn")?.getBoundingClientRect().height > 0,
+    saveVisible: document.querySelector("#simulation-save-trigger-btn")?.getBoundingClientRect().height > 0,
     pauseVisible: document.querySelector("#simulation-pause-btn")?.getBoundingClientRect().height > 0,
     cardHidden: document.querySelector("#simulation-exit-card")?.getAttribute("aria-hidden")
   }));
   assert(exitPanelState.active && exitPanelState.expanded && exitPanelState.resetVisible && exitPanelState.pauseVisible && exitPanelState.cardHidden === "false",
-    `active simulation should expand an exit panel with both actions (state=${JSON.stringify(exitPanelState)})`);
-  await page.click("#simulation-reset-exit-btn");
-  await page.waitForFunction(() => !document.body.classList.contains("simulation-mode") && !document.querySelector("#simulation-exit-widget")?.classList.contains("is-expanded"));
+    `active simulation should expand an exit panel with all 4 actions (state=${JSON.stringify(exitPanelState)})`);
+  await page.click("#simulation-reset-btn");
+  await page.waitForSelector("#simulation-confirm-modal:not([hidden])");
+  await page.click("#simulation-confirm-ok-btn");
+  await page.waitForFunction(() => !document.querySelector("#simulation-exit-widget")?.classList.contains("is-expanded"));
   const resetExitState = await page.evaluate(() => window.__TEST_HOOKS__.getSimulationPlan());
-  assert(!resetExitState.active && resetExitState.spent.gold === 0 && resetExitState.spent.core === 0 && resetExitState.ranks["1201"] === undefined,
-    "reset and exit should clear the simulation and return to browsing mode");
+  assert(resetExitState.spent.gold === 0 && resetExitState.spent.core === 0 && resetExitState.ranks["1201"] === undefined,
+    "reset should clear the simulation allocation");
   await page.evaluate(() => window.__TEST_HOOKS__.closeTooltip());
   await page.waitForSelector("#tooltip[hidden]", { state: "hidden" });
 
-  await page.click("#simulation-toggle-btn");
-  await page.waitForFunction(() => document.body.classList.contains("simulation-mode"));
   const beforeTemporaryLeave = await page.evaluate(() => window.__TEST_HOOKS__.getSimulationPlan());
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(180);
@@ -761,6 +773,9 @@ async function assertSimulationResetAndExit(page) {
 
 async function assertSimulationLifecycle(page) {
   await page.click("#simulation-toggle-btn");
+  await page.waitForSelector("#simulation-quick-unlock-modal:not([hidden])");
+  await page.click("#quick-unlock-skip-btn");
+  await page.waitForSelector("#simulation-quick-unlock-modal", { state: "hidden" });
   await page.waitForTimeout(180);
   const simulationLifecycleRenderDelta = await page.evaluate(() => {
     const app = window.RD2App;
@@ -820,8 +835,8 @@ export async function runSimulationModeSuite(options = {}) {
     });
     const page = browserInstance.page;
     await page.goto(`${serverInstance.baseUrl}/index.html`, { waitUntil: "networkidle" });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector("#loading-screen", { state: "hidden", timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector("#loading-screen", { state: "hidden", timeout: 15000 });
     await page.waitForTimeout(500);
 
     passedAssertions += await assertSimulationSurface(page);

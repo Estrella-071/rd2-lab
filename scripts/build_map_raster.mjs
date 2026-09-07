@@ -496,7 +496,12 @@ function isLargePassive(node) {
 
 function geometryForNode(node) {
   const type = nodeType(node);
-  if (type === "DICE") return { width: 164, height: 190, shape: "dice" };
+  if (type === "DICE") {
+    if (String(node?.id) === "1501" || node?.dice_type === "Solar" || node?.cost_resource === "CORE_SOLAR" || node?.shape === "mythic-dice") {
+      return { width: 156, height: 180, shape: "mythic-dice" };
+    }
+    return { width: 164, height: 190, shape: "dice" };
+  }
   if (type === "PERK") return { width: 164, height: 112, shape: "perk" };
   if (type === "DICE_RUNE") return { width: 118, height: 128, shape: "rune" };
   if (isLargePassive(node)) return { width: 154, height: 154, shape: "large-passive" };
@@ -813,7 +818,7 @@ function loadRasterSource(siteDir) {
   const groups = extractNodeGroups(sourceSvg);
   const groupMap = new Map(groups.map((group) => [String(group.id), group]));
   const nodes = Array.isArray(treeData.nodes) ? treeData.nodes : [];
-  if (groups.length !== nodes.length || groups.length !== 239) {
+  if (groups.length !== nodes.length || groups.length !== Number(treeData.summary?.node_count)) {
     throw new Error(`Raster source node count mismatch: SVG=${groups.length}, JSON=${nodes.length}.`);
   }
   const positions = new Map();
@@ -956,7 +961,7 @@ function generateCenterAssets(svgWithImages, stagingDir) {
 
 function collectRasterEdges(treeData, sourceSvg, positions) {
   const edges = collectEdgePaths(sourceSvg, positions);
-  const expectedEdges = treeData.summary?.edge_count || 246;
+  const expectedEdges = treeData.summary?.edge_count;
   if (edges.length !== Number(expectedEdges)) {
     throw new Error(`Raster source edge count mismatch: SVG=${edges.length}, expected=${expectedEdges}.`);
   }

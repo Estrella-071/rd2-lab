@@ -124,14 +124,15 @@ function buildLocalePrefix(locale, includeLocale) {
   return includeLocale ? `/${routeSegment(normalizeUrlLocale(locale))}` : "";
 }
 
-export function isLocaleFreeShareRoute(route = {}) {
-  return route.kind === URL_ROUTE_KINDS.SIMULATION && Boolean(route.share);
+export function isLocaleFreeShareRoute(_route = {}) {
+  return false;
 }
 
-export function buildSimulationSharePath({ share = "", shareKind = "code" } = {}) {
-  if (!share) return "/simulation/";
+export function buildSimulationSharePath({ share = "", shareKind = "code", locale = null } = {}) {
+  const prefix = locale ? `/${routeSegment(normalizeUrlLocale(locale))}` : "";
+  if (!share) return `${prefix}/simulation/`;
   const marker = shareKind === "state" ? "/state" : "";
-  return `/simulation${marker}/${routeSegment(share)}`;
+  return `${prefix}/simulation${marker}/${routeSegment(share)}`;
 }
 
 export function buildLocalePath({ locale = "zh-tw", includeLocale = true, kind = URL_ROUTE_KINDS.HOME, category = "", id = "", share = "", shareKind = "code" } = {}) {
@@ -144,11 +145,11 @@ export function buildLocalePath({ locale = "zh-tw", includeLocale = true, kind =
     return `${localePrefix}/compendium/${routeSegment(category)}`;
   }
   if (kind === URL_ROUTE_KINDS.SIMULATION && share) {
-    return includeLocale
-      ? `${localePrefix}${buildSimulationSharePath({ share, shareKind })}`
-      : buildSimulationSharePath({ share, shareKind });
+    return buildSimulationSharePath({ share, shareKind, locale: includeLocale ? locale : null });
   }
-  if (kind === URL_ROUTE_KINDS.SIMULATION) return `${localePrefix}/simulation/`;
+  if (kind === URL_ROUTE_KINDS.SIMULATION) {
+    return buildSimulationSharePath({ locale: includeLocale ? locale : null });
+  }
   return `${localePrefix}/`;
 }
 
@@ -180,7 +181,7 @@ export function buildAlternateLocaleUrl(input, locale) {
     id: parsed.id,
     share: parsed.share,
     shareKind: parsed.shareKind,
-    includeLocale: !isLocaleFreeShareRoute(parsed),
+    includeLocale: true,
     eventMode: parsed.eventMode
   });
 }
@@ -194,7 +195,7 @@ export function buildUrlStatePath(input, locale) {
     id: parsed.id,
     share: parsed.share,
     shareKind: parsed.shareKind,
-    includeLocale: !isLocaleFreeShareRoute(parsed),
+    includeLocale: true,
     eventMode: parsed.eventMode
   });
 }

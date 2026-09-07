@@ -97,26 +97,46 @@ export class SimulationPlanUseCase {
     return this.state.simulation.team;
   }
 
-  serialize({ origin } = {}) {
+  serialize({ origin, locale = null } = {}) {
     const state = this.state;
     return serializeSimulationState({
       simulation: state.simulation,
       treeData: state.treeData,
       dataVersion: state.dataMetadata?.canonical?.game_version || state.simulation?.dataVersion,
-      origin
+      origin,
+      locale
     });
   }
 
-  async createShareLink({ origin, serialized = null } = {}) {
-    const local = serialized || this.serialize({ origin });
+  async createShareLink({ origin, serialized = null, thumbnail = null, locale = null } = {}) {
+    const currentLocale = locale || this.store?.getState()?.locale || "zh-tw";
+    const local = serialized || this.serialize({ origin, locale: currentLocale });
     if (!this.shareRepository || typeof this.shareRepository.createShare !== "function") return local;
-    const remote = await this.shareRepository.createShare(local.encoded);
+    let shareThumbnail = thumbnail;
+    if (!shareThumbnail && this.shareImageExporter && typeof this.shareImageExporter.generate === "function") {
+      try {
+        const thumbResult = await this.generateShareImage({
+          width: 1200,
+          height: 675,
+          scale: 1,
+          format: "image/jpeg",
+          quality: 0.75,
+          locale: currentLocale
+        });
+        if (thumbResult?.dataUrl) {
+          shareThumbnail = thumbResult.dataUrl;
+        }
+      } catch {
+        // Fallback without failing share link generation
+      }
+    }
+    const remote = await this.shareRepository.createShare(local.encoded, { thumbnail: shareThumbnail, locale: currentLocale });
     if (!remote?.ok) return { ...local, remote: false, remoteError: remote?.error || "share-api-unavailable" };
     return {
       ...local,
       remote: true,
       code: remote.code,
-      url: buildSimulationShareCodeUrl({ code: remote.code, origin })
+      url: buildSimulationShareCodeUrl({ code: remote.code, origin, locale: currentLocale })
     };
   }
 
@@ -149,6 +169,30 @@ export class SimulationPlanUseCase {
     }
     const state = this.state;
     return this.shareImageExporter.generate({
+      ...options,
+      simulation: state.simulation,
+      treeData: state.treeData
+    });
+  }
+
+  async generateSplitShareImages(options = {}) {
+    if (!this.shareImageExporter || typeof this.shareImageExporter.generateSplit !== "function") {
+      return { ok: false, error: "image-exporter-unavailable" };
+    }
+    const state = this.state;
+    return this.shareImageExporter.generateSplit({
+      ...options,
+      simulation: state.simulation,
+      treeData: state.treeData
+    });
+  }
+
+  async generateDetailsCardImage(options = {}) {
+    if (!this.shareImageExporter || typeof this.shareImageExporter.generateDetails !== "function") {
+      return { ok: false, error: "image-exporter-unavailable" };
+    }
+    const state = this.state;
+    return this.shareImageExporter.generateDetails({
       ...options,
       simulation: state.simulation,
       treeData: state.treeData

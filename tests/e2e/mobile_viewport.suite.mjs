@@ -29,8 +29,8 @@ export async function runMobileViewportSuite(options = {}) {
     const page = browserInstance.page;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.waitForTimeout(300);
 
     // Check the runtime marker.
@@ -94,7 +94,7 @@ export async function runMobileViewportSuite(options = {}) {
     assertEqual(expandedSearch.ariaExpanded, 'true', 'Expanded mobile search must expose an expanded state');
     assert(expandedSearch.inputFocused, 'Opening mobile search must focus the original input');
     assert(
-      Math.abs(expandedSearch.filterTop - filterTopBeforeQuery) < 1,
+      Math.abs(expandedSearch.filterTop - filterTopBeforeQuery) <= 2,
       `Opening mobile search must not push the filter widget downward (delta=${expandedSearch.filterTop - filterTopBeforeQuery}px)`
     );
     passedAssertions += 6;

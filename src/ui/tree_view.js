@@ -85,9 +85,52 @@ export class TreeView {
       || event?.target?.id === "scene"
       || this.sceneRoot?.contains?.(event?.target);
     if (!clickedMapSurface) return;
+    if (this._resolveTargetNodeId(event, null)) return;
     this._suppressNextClick = true;
     this._suppressClickReason = "blank-dismiss";
     this._dismissSelection();
+  }
+
+  _getEventWorldPoint(event) {
+    if (!event || typeof event.clientX !== "number" || typeof event.clientY !== "number") return null;
+    if (event.clientX === 0 && event.clientY === 0) return null;
+    const rect = this.container?.getBoundingClientRect?.();
+    if (!rect || rect.width <= 0 || rect.height <= 0) return null;
+    const viewport = this.store?.getState?.()?.viewport;
+    const scale = Number(viewport?.scale) || 1;
+    const panX = Number(viewport?.x) || 0;
+    const panY = Number(viewport?.y) || 0;
+    return {
+      x: (event.clientX - rect.left - panX) / scale,
+      y: (event.clientY - rect.top - panY) / scale
+    };
+  }
+
+  _findNearestNodeId(worldPt, maxDistance = 46) {
+    if (!worldPt || !this.nodePositions?.size) return null;
+    let closestId = null;
+    let minDistanceSq = maxDistance * maxDistance;
+    for (const [id, pos] of this.nodePositions) {
+      if (!pos || typeof pos.x !== "number" || typeof pos.y !== "number") continue;
+      const dx = worldPt.x - pos.x;
+      const dy = worldPt.y - pos.y;
+      const distSq = dx * dx + dy * dy;
+      if (distSq < minDistanceSq) {
+        minDistanceSq = distSq;
+        closestId = String(id);
+      }
+    }
+    return closestId;
+  }
+
+  _resolveTargetNodeId(event, nodeButton) {
+    const worldPt = this._getEventWorldPoint(event);
+    if (worldPt && this.nodePositions?.size) {
+      const searchRadius = nodeButton ? 64 : 42;
+      const nearestId = this._findNearestNodeId(worldPt, searchRadius);
+      if (nearestId) return nearestId;
+    }
+    return nodeButton?.dataset?.nodeId ? String(nodeButton.dataset.nodeId) : null;
   }
 
   _handlePointerUp() {
@@ -119,25 +162,30 @@ export class TreeView {
       this._suppressClickReason = null;
       return;
     }
+    const tooltip = typeof document !== "undefined" ? document.getElementById("tooltip") : null;
+    if (tooltip?.contains?.(event?.target)) return;
+
     const nodeButton = event?.target?.closest?.("button.tree-node-semantic[data-node-id], .tree-node-semantic[data-node-id]");
-    if (nodeButton) {
+    const targetNodeId = this._resolveTargetNodeId(event, nodeButton);
+
+    if (targetNodeId) {
       const selectedNodeId = this.store?.getState?.()?.selectedNodeId;
       const isCompact = typeof window !== "undefined" && window.innerWidth <= 768;
-      if (isCompact && selectedNodeId && String(selectedNodeId) === String(nodeButton.dataset.nodeId)) {
+      if (isCompact && selectedNodeId && String(selectedNodeId) === String(targetNodeId)) {
         // On touch screens a second tap on the anchored node is the explicit
         // close gesture. Keep prerequisite mode until the following blank tap.
         this._dismissSelection();
         return;
       }
-      this._selectNode(nodeButton.dataset.nodeId);
+      this._selectNode(targetNodeId);
       return;
     }
-    const tooltip = typeof document !== "undefined" ? document.getElementById("tooltip") : null;
+
     const clickedMapSurface = event?.target === this.container
       || event?.target?.id === "viewport"
       || event?.target?.id === "scene"
       || this.sceneRoot?.contains?.(event?.target);
-    if (clickedMapSurface && !tooltip?.contains?.(event?.target)) {
+    if (clickedMapSurface) {
       this._dismissSelection();
     }
   }

@@ -6,7 +6,14 @@ import { buildTreeRenderModel, resolveNodeFrame } from "../../src/domain/tree_re
 import { getNodeMap } from "../../src/domain/simulation_plan.js";
 import { HttpDataRepository, assertSafeDiceTreeSvg } from "../../src/infra/http_data_repository.js";
 import { MapTileRepository } from "../../src/infra/map_tile_repository.js";
-import { generateSimulationShareImage } from "../../src/infra/share_image_exporter.js";
+import {
+  generateSimulationShareImage,
+  generateSimulationDetailsCardImage,
+  stripDiceSuffix,
+  resolveTeamTitle,
+  TEAM_LABELS_BY_LOCALE,
+  renderShareTeams
+} from "../../src/infra/share_image_exporter.js";
 
 const MANIFEST_VARIANTS = ["normal", "dice-locked", "rune-locked", "passive-locked"];
 const MANIFEST_SCALES = [1, 2, 3];
@@ -122,10 +129,15 @@ function makeCanvasContext() {
   const calls = [];
   const context = {
     calls,
+    save: () => calls.push("save"),
+    restore: () => calls.push("restore"),
+    clip: () => calls.push("clip"),
     beginPath: () => calls.push("beginPath"),
     moveTo: (...args) => calls.push(["moveTo", ...args]),
+    lineTo: (...args) => calls.push(["lineTo", ...args]),
     arcTo: (...args) => calls.push(["arcTo", ...args]),
     arc: (...args) => calls.push(["arc", ...args]),
+    bezierCurveTo: (...args) => calls.push(["bezierCurveTo", ...args]),
     closePath: () => calls.push("closePath"),
     fill: () => calls.push("fill"),
     stroke: () => calls.push("stroke"),
@@ -133,7 +145,8 @@ function makeCanvasContext() {
     fillText: (...args) => calls.push(["fillText", ...args]),
     strokeText: (...args) => calls.push(["strokeText", ...args]),
     drawImage: (...args) => calls.push(["drawImage", ...args]),
-    setTransform: (...args) => calls.push(["setTransform", ...args])
+    setTransform: (...args) => calls.push(["setTransform", ...args]),
+    measureText: (text) => ({ width: String(text || "").length * 8 })
   };
   return context;
 }
@@ -446,4 +459,175 @@ test("Share image renderer produces a high-DPI PNG result and fails closed", asy
   assert.equal(failedRenderer.error, "renderer failed");
   const noCanvas = await generateSimulationShareImage({ simulation, treeData: { nodes, edges: [] } });
   assert.equal(noCanvas.error, "canvas-unavailable");
+});
+
+test("Details card image renderer produces a high-DPI result with full build (dice, support, passives)", async () => {
+  const context = makeCanvasContext();
+  const canvas = makeCanvas(context);
+  const nodes = [
+    { id: "1001", node_type: "DICE", dice_type: "Fire", name_zh: "火骰子", branch: 1 },
+    { id: "1002", node_type: "DICE_RUNE", name_zh: "火符文1", branch: 1, max_rank: 5, incoming: ["1001"] },
+    { id: "1003", node_type: "DICE_RUNE", name_zh: "火符文2", branch: 1, max_rank: 1, incoming: ["1001"], costs: [{ gold: 1000 }] },
+    { id: "1110", node_type: "PERK", name_zh: "自然支援", branch: 1, icon_file: "icons/supp.png", description_zh: "自然支援效果說明" },
+    { id: "1115", node_type: "PLAYER_PASSIVE", name_zh: "自然支援專屬", branch: 1, max_rank: 1, passive_value: 10, description_zh: "專屬說明" },
+    { id: "1010", node_type: "PLAYER_PASSIVE", name_zh: "火之被動", branch: 1, max_rank: 10, passive_value: 5, passive_rank_add: 1, description_zh: "增加攻擊力 {0}%" }
+  ];
+  const simulation = {
+    spent: { gold: 50000, core: 10, solar: 2 },
+    ranks: { "1001": 3, "1002": 2, "1003": 1, "1110": 1, "1115": 1, "1010": 4 },
+    team: {
+      dice: [{ id: "1001" }],
+      support: { id: "1110" }
+    }
+  };
+  const rendered = await generateSimulationDetailsCardImage({
+    simulation,
+    treeData: { nodes },
+    canvas,
+    width: 560,
+    height: 480,
+    scale: 2
+  });
+  assert.equal(rendered.ok, true, `Render should succeed without errors, got: ${rendered.error}`);
+  assert.equal(rendered.layout.width, 1120);
+  assert.equal(rendered.layout.height, 960);
+  assert.equal(canvas.width, 1120);
+  assert.equal(canvas.height, 960);
+  assert.equal(rendered.blob.type, "image/png");
+
+  const noCanvas = await generateSimulationDetailsCardImage({ simulation, treeData: { nodes } });
+  assert.equal(noCanvas.error, "canvas-unavailable");
+});
+
+test("stripDiceSuffix removes language-specific dice suffixes cleanly", () => {
+  // 繁中「骰子」
+  assert.equal(stripDiceSuffix("火骰子"), "火");
+  assert.equal(stripDiceSuffix("太陽骰子"), "太陽");
+  assert.equal(stripDiceSuffix("  暗黑骰子  "), "暗黑");
+
+  // 英文「Dice」
+  assert.equal(stripDiceSuffix("Fire Dice"), "Fire");
+  assert.equal(stripDiceSuffix("Solar dice"), "Solar");
+  assert.equal(stripDiceSuffix("WindDice"), "Wind");
+
+  // 日文「ダイス」「のダイス」
+  assert.equal(stripDiceSuffix("火のダイス"), "火");
+  assert.equal(stripDiceSuffix("太陽ダイス"), "太陽");
+  assert.equal(stripDiceSuffix("風 のダイス"), "風");
+
+  // 韓文「주사위」
+  assert.equal(stripDiceSuffix("불 주사위"), "불");
+  assert.equal(stripDiceSuffix("태양주사위"), "태양");
+
+  // 邊界條件
+  assert.equal(stripDiceSuffix(""), "");
+  assert.equal(stripDiceSuffix(null), "");
+  assert.equal(stripDiceSuffix(undefined), "");
+  assert.equal(stripDiceSuffix("CustomHero"), "CustomHero");
+});
+
+test("resolveTeamTitle and renderShareTeams handle localization correctly", async () => {
+  // 驗證字典與 fallback
+  assert.equal(resolveTeamTitle({}, "zh-tw"), "隊伍");
+  assert.equal(resolveTeamTitle({}, "en"), "Team");
+  assert.equal(resolveTeamTitle({}, "ja"), "チーム");
+  assert.equal(resolveTeamTitle({}, "ko"), "팀");
+  assert.equal(resolveTeamTitle({}, "zh-cn"), "队伍");
+  assert.equal(resolveTeamTitle({}, "unknown"), "隊伍");
+
+  // 驗證自定義 teamLabels 優先
+  assert.equal(resolveTeamTitle({ team1: "自訂隊伍A" }, "en"), "自訂隊伍A");
+  assert.equal(resolveTeamTitle({ team: "自訂隊伍B" }, "ja"), "自訂隊伍B");
+
+  // 驗證 renderShareTeams 在不同語系下的渲染
+  const context = makeCanvasContext();
+  const nodes = [{ id: "101", node_type: "DICE", name_zh: "火骰子" }];
+  const nodesMap = new Map([["101", nodes[0]]]);
+  await renderShareTeams(context, nodesMap, [{ id: "101" }], 1000, {}, "ja");
+
+  // 檢查隊伍標籤「チーム」有被繪製
+  const teamTitleCall = context.calls.find((call) => Array.isArray(call) && call[0] === "fillText" && call[1] === "チーム");
+  assert.ok(teamTitleCall, "Should render Japanese team title");
+
+  // 檢查骰子名稱去掉「骰子」後綴，且繪製在圖示上方 (startY + 11 = (1000 - 94) + 11 = 917)
+  const expectedStartY = 1000 - 94;
+  const diceNameCall = context.calls.find((call) => Array.isArray(call) && call[0] === "fillText" && call[1] === "火");
+  assert.ok(diceNameCall, "Should render clean dice name without suffix");
+  assert.equal(diceNameCall[3], expectedStartY + 11, "Dice name Y should be placed above slot icon");
+});
+
+test("generateSimulationShareImage dynamically sizes expense capsules and positions dice names above icons", async () => {
+  const context = makeCanvasContext();
+  const canvas = makeCanvas(context);
+  const nodes = [
+    { id: "1", node_type: "DICE", name_zh: "太陽骰子" },
+    { id: "2", node_type: "DICE", name_zh: "Fire Dice" }
+  ];
+  const simulation = {
+    spent: { gold: 12500000, core: 350 },
+    team: { dice: [{ id: "1" }, { id: "2" }] }
+  };
+
+  let fontDuringMeasure = "";
+  const origMeasure = context.measureText;
+  context.measureText = (text) => {
+    fontDuringMeasure = context.font;
+    return origMeasure(text);
+  };
+
+  const rendered = await generateSimulationShareImage({
+    simulation,
+    treeData: { nodes, edges: [] },
+    canvas,
+    locale: "en",
+    renderTree: async () => true
+  });
+
+  assert.equal(rendered.ok, true);
+
+  // 驗證呼叫 measureText 時 context.font 設定包含 16px 與 850
+  assert.ok(fontDuringMeasure.includes("16px") && fontDuringMeasure.includes("850"), "Font should be set for accurate measureText before drawing capsule");
+
+  // 驗證英文隊伍標籤
+  const teamCall = context.calls.find((call) => Array.isArray(call) && call[0] === "fillText" && call[1] === "Team");
+  assert.ok(teamCall, "Should render English team title 'Team'");
+
+  // 驗證骰子名稱去掉 Dice / 骰子，且位於圖示上方
+  const solarNameCall = context.calls.find((call) => Array.isArray(call) && call[0] === "fillText" && call[1] === "太陽");
+  const fireNameCall = context.calls.find((call) => Array.isArray(call) && call[0] === "fillText" && call[1] === "Fire");
+  assert.ok(solarNameCall, "Solar dice should have suffix stripped");
+  assert.ok(fireNameCall, "Fire dice should have suffix stripped");
+});
+
+test("expense capsules scale width dynamically based on number value length", async () => {
+  // 小數字 (2 位數)
+  const contextSmall = makeCanvasContext();
+  await generateSimulationShareImage({
+    simulation: { spent: { gold: 10 } },
+    treeData: { nodes: [] },
+    canvas: makeCanvas(contextSmall),
+    renderTree: async () => true
+  });
+
+  // 大數字 (10 位數)
+  const contextLarge = makeCanvasContext();
+  await generateSimulationShareImage({
+    simulation: { spent: { gold: 1000000000 } },
+    treeData: { nodes: [] },
+    canvas: makeCanvas(contextLarge),
+    renderTree: async () => true
+  });
+
+  // 從 context.calls 找到繪製金幣數值的 fillText
+  const smallTextCall = contextSmall.calls.find((c) => Array.isArray(c) && c[0] === "fillText" && c[1] === "10");
+  const largeTextCall = contextLarge.calls.find((c) => Array.isArray(c) && c[0] === "fillText" && c[1] === "1,000,000,000");
+  assert.ok(smallTextCall, "Small gold text should be rendered");
+  assert.ok(largeTextCall, "Large gold text should be rendered");
+
+  // 大數字膠囊的文字起點 (right aligned X) 與小數字一致，但較長文字推移前一個膠囊 (core) 更偏左
+  const smallCoreCall = contextSmall.calls.find((c) => Array.isArray(c) && c[0] === "fillText" && c[1] === "0");
+  const largeCoreCall = contextLarge.calls.find((c) => Array.isArray(c) && c[0] === "fillText" && c[1] === "0");
+  assert.ok(smallCoreCall && largeCoreCall);
+  // 大金幣膠囊更寬，因此其左側的 core 膠囊被推向更左側（X 座標更小）
+  assert.ok(largeCoreCall[2] < smallCoreCall[2], "Larger gold capsule should occupy more width and push predecessor further left");
 });

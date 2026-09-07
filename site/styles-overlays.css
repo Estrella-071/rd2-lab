@@ -742,6 +742,44 @@
   background-color: #4D4460;
 }
 
+@media (max-width: 768px) {
+  .simulation-action-btn-styled {
+    height: 38px;
+    min-height: 38px;
+    padding: 3px 10px;
+    border-radius: 7px;
+  }
+
+  .simulation-action-btn-styled::before {
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    border-radius: 4px;
+  }
+
+  .simulation-action-btn-styled .sim-btn-cost {
+    font-size: 18px;
+    gap: 5px;
+  }
+
+  .simulation-action-btn-styled .sim-btn-cost .currency-icon-svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .simulation-action-btn-styled .sim-btn-text {
+    font-size: 15px;
+  }
+
+  .simulation-badge-slanted {
+    top: -6px;
+    right: -6px;
+    padding: 2px 7px;
+    font-size: 10px;
+  }
+}
+
 /* Detailed stats */
 @keyframes detailedStatsCardPop {
   0% {

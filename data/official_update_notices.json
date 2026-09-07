@@ -18,35 +18,45 @@
           {
             "category": "nodes",
             "table": "DiceTreeNodeTable",
-            "ids": ["4307"],
+            "ids": [
+              "4307"
+            ],
             "label": "排序疊加強化",
             "summary_zh": "節點價格：2,000 金幣 → 50,000 金幣 + 10 個骰子核心"
           },
           {
             "category": "nodes",
             "table": "DiceTreeNodeTable",
-            "ids": ["4407"],
+            "ids": [
+              "4407"
+            ],
             "label": "排序菁英特效",
             "summary_zh": "節點價格：2,000 金幣 → 100,000 金幣 + 20 個骰子核心"
           },
           {
             "category": "nodes",
             "table": "DiceTreeNodeTable",
-            "ids": ["5403"],
+            "ids": [
+              "5403"
+            ],
             "label": "蔑視弱者",
             "summary_zh": "節點價格：100,000 金幣 + 10 個骰子核心 → 100,000 金幣 + 20 個骰子核心"
           },
           {
             "category": "nodes",
             "table": "DiceTreeNodeTable",
-            "ids": ["5304"],
+            "ids": [
+              "5304"
+            ],
             "label": "收穫",
             "summary_zh": "節點價格：50,000 金幣 → 50,000 金幣 + 10 個骰子核心"
           },
           {
             "category": "nodes",
             "table": "DiceTreeNodeTable",
-            "ids": ["5404"],
+            "ids": [
+              "5404"
+            ],
             "label": "逃避命運",
             "summary_zh": "節點價格：2,000 金幣 → 50,000 金幣 + 20 個骰子核心"
           },
@@ -62,7 +72,13 @@
           {
             "category": "nodes",
             "table": "DiceTreeNodeTable",
-            "ids": ["4307", "4407", "5403", "5304", "5404"],
+            "ids": [
+              "4307",
+              "4407",
+              "5403",
+              "5304",
+              "5404"
+            ],
             "summary_zh": "對象節點更新後重置；先前消耗的貨幣全額返還，並補發變更後差額的金幣與骰子核心。"
           },
           {
@@ -159,7 +175,11 @@
           {
             "category": "events",
             "entity": "tactics_effects",
-            "ids": ["勢力戰", "頂樓", "和平主義者"],
+            "ids": [
+              "勢力戰",
+              "頂樓",
+              "和平主義者"
+            ],
             "summary_zh": "合作戰戰術效果調整／移除：勢力戰轉換為 2 種、頂樓改為上方第 1 排、和平主義者鎖定 3 個隨機骰子。"
           }
         ],
@@ -180,6 +200,50 @@
       "notes": [
         "公告的套用時間是各平台商店依序發布的起始時間，不代表所有玩家同時完成更新。",
         "其他錯誤修正包括合成召喚重複產生、競技場撲克時間顯示、SP 怪物雙倍 SP，以及召喚骰子合成加成未套用。"
+      ]
+    },
+    {
+      "id": "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD",
+      "locale": "zh-tw",
+      "published_at": "2026-09-04T17:37:18.656Z",
+      "version": "1.1.0",
+      "effective_at": "2026-09-05T11:00:00+08:00",
+      "title_zh": "(新增) v1.1.0更新公告",
+      "summary_zh": "新增困難合作、裂縫商店、火骰子超越為太陽骰子與14日任務，並調整便利性。",
+      "categories": {
+        "added": [
+          {
+            "category": "features",
+            "entity": "hard_coop",
+            "summary_zh": "新增困難合作與強化首領，遊玩有機率獲得太陽核心。"
+          },
+          {
+            "category": "features",
+            "entity": "rift_shop",
+            "summary_zh": "以擊殺SP魔像與首領取得的討伐硬幣購買能力。"
+          },
+          {
+            "category": "dice",
+            "entity": "solar",
+            "ids": [
+              "1501"
+            ],
+            "summary_zh": "火骰子可超越為太陽骰子；需兩個指定能力及子彈傷害符文50級。"
+          }
+        ],
+        "modified": [
+          {
+            "category": "features",
+            "entity": "convenience",
+            "summary_zh": "新增x1/x5/x10升級、伺服器選擇，快閃商店常駐；提高對戰體力。"
+          }
+        ],
+        "removed": [],
+        "schema_changes": [],
+        "important_values": []
+      },
+      "notes": [
+        "官方公告來源：https://notice.111percent.net/contents/prod/html/2026-09-04/9xAKnW90HyrZhX6mx9HQp.html"
       ]
     }
   ]

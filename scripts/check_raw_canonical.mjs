@@ -23,7 +23,7 @@ import {
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const canonicalPath = path.join(rootDir, "site", "data", "dice_tree.json");
 const compendiumPath = path.join(rootDir, "site", "boss_event_data.json");
-const lineagePath = path.join(rootDir, "data", "raw_snapshot_1.0.3.json");
+const lineagePath = path.join(rootDir, "data", "raw_snapshot_1.1.0.json");
 const errors = [];
 
 function fail(message) {
@@ -120,7 +120,7 @@ function compareFrozenExpectation(current, lineage) {
   }
   const currentNodes = new Map((current.nodes || []).map((node) => [String(node.id), node]));
   const ids = Object.keys(expectationEntries);
-  if (ids.length !== 239) fail(`raw lineage canonical_expectations has ${ids.length} nodes instead of 239`);
+  if (ids.length !== 241) fail(`raw lineage canonical_expectations has ${ids.length} nodes instead of 241`);
   for (const id of ids) {
     const actual = currentNodes.get(String(id));
     if (!actual) {
@@ -152,7 +152,7 @@ function compareFrozenCompendiumExpectation(current, lineage) {
 
 function validateBasicLineage(lineage) {
   if (lineage.schema_version !== 1) fail(`raw lineage schema_version=${lineage.schema_version} is unsupported`);
-  if (lineage.snapshot_id !== "random-dice-2-1.0.3") fail(`raw lineage snapshot_id=${lineage.snapshot_id} is not 1.0.3`);
+  if (lineage.snapshot_id !== "random-dice-2-1.1.0") fail(`raw lineage snapshot_id=${lineage.snapshot_id} is not 1.1.0`);
 }
 
 function compareStableStrings(left, right) {
@@ -268,7 +268,7 @@ function validateSourceShape(lineage) {
   if (!lineage.source || !/^[A-Fa-f0-9]{64}$/.test(String(lineage.source.source_identity_sha256 || ""))) {
     fail("raw lineage source identity digest is invalid");
   }
-  if (lineage.source.version !== "1.0.3") fail(`raw lineage source version=${lineage.source.version}`);
+  if (lineage.source.version !== "1.1.0") fail(`raw lineage source version=${lineage.source.version}`);
   if (lineage.source.source_count !== RAW_SOURCE_COUNT || lineage.source.text_asset_count !== RAW_TEXT_ASSET_COUNT || lineage.source.csv_table_count !== RAW_CSV_TABLE_COUNT) {
     fail("raw lineage source inventory counts are not the expected snapshot");
   }
@@ -302,11 +302,11 @@ function validateSourceShape(lineage) {
 
 function validateNoticeShape(lineage) {
   const officialNotice = lineage.source?.official_notice;
-  if (officialNotice?.version !== "1.0.3"
-    || officialNotice?.category !== "events.tactics_effects"
+  if (officialNotice?.version !== "1.1.0"
+    || officialNotice?.category !== "client_tables"
     || !/^[A-Fa-f0-9]{64}$/.test(String(officialNotice?.sha256 || ""))
-    || !Array.isArray(officialNotice?.entries) || officialNotice?.entries?.length !== 3) {
-    fail("raw lineage official 1.0.3 co-op tactic override evidence is incomplete");
+    || !Array.isArray(officialNotice?.entries) || officialNotice?.entries?.length !== 0) {
+    fail("raw lineage official 1.1.0 co-op tactic override evidence is incomplete");
   }
   if ((officialNotice?.entries || []).some((entry) => entry?.applied_mode !== "coop_disabled" || !entry?.tactics_kind)) {
     fail("raw lineage official co-op tactic override contains an invalid mapping");
@@ -320,8 +320,8 @@ function validateProjectionShape(lineage) {
     if (!Array.isArray(table.records) || table.records.length !== RAW_TABLE_COUNTS[name]) fail(`raw lineage table ${name} has an unexpected record count`);
     if (!/^[A-Fa-f0-9]{64}$/.test(String(table.sha256 || ""))) fail(`raw lineage table ${name} has no valid SHA-256`);
   }
-  if (!lineage.projection?.tree || lineage.projection.tree.nodes?.length !== 239 || lineage.projection.tree.edges?.length !== 248) {
-    fail("raw lineage tree projection is not 239 nodes / 248 edges");
+  if (!lineage.projection?.tree || lineage.projection.tree.nodes?.length !== 241 || lineage.projection.tree.edges?.length !== 251) {
+    fail("raw lineage tree projection is not 241 nodes / 251 edges");
   }
   const localization = lineage.projection?.localization;
   if (!localization || !/^[A-Fa-f0-9]{64}$/.test(String(localization.sha256 || ""))
@@ -333,7 +333,7 @@ function validateProjectionShape(lineage) {
 
 function validateCompendiumShape(lineage) {
   const compendium = lineage.compendium_expectations;
-  if (!compendium || compendium.monster_types?.length !== 17 || compendium.monsters?.length !== 15
+  if (!compendium || compendium.monster_types?.length !== 28 || compendium.monsters?.length !== 26
     || compendium.modes?.coop?.waves?.length !== 80 || compendium.modes?.hunt?.rewards?.length !== 30
     || compendium.modes?.versus?.trophy_base_hp?.length !== 20 || compendium.modes?.versus?.wave_profiles?.length !== 11
     || compendium.events?.length !== 55) {
@@ -376,7 +376,7 @@ function main() {
     return;
   }
   const mode = canReadRaw ? "local raw source" : "frozen raw lineage projection (raw files unavailable)";
-  console.log(`Raw canonical check passed against ${mode}: 239 nodes, 246 effective edges (248 raw edges), and deterministic labeled special-stat mappings.`);
+  console.log(`Raw canonical check passed against ${mode}: 241 nodes, 249 effective edges (251 raw edges), and deterministic labeled special-stat mappings.`);
 }
 
 try {

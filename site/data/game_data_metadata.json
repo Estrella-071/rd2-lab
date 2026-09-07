@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
   "canonical": {
-    "game_version": "1.0.3",
-    "snapshot_id": "random-dice-2-1.0.3",
+    "game_version": "1.1.0",
+    "snapshot_id": "random-dice-2-1.1.0",
     "public_schema_versions": {
       "dice_tree": 1,
       "boss_event_data": 4,
@@ -18,17 +18,16 @@
     "provenance_path": "data/provenance.json"
   },
   "source": {
-    "snapshot_id": "random-dice-2-1.0.3",
+    "snapshot_id": "random-dice-2-1.1.0",
     "official_notice_ids": [
-      "WEBVIEW_NOTICE_F7bzEtRKyYGxA1BYb3IGK",
-      "WEBVIEW_NOTICE_GM1DuyxliHVN_EKqomJoo"
+      "WEBVIEW_NOTICE_OVbvVlEB-hBSVbcFQysdD"
     ],
-    "tree_node_count": 239,
-    "tree_edge_count": 246,
-    "raw_tree_edge_count": 248,
+    "tree_node_count": 241,
+    "tree_edge_count": 249,
+    "raw_tree_edge_count": 251,
     "topology_correction_count": 2,
-    "verified_at": "2026-08-23",
-    "evidence_boundary_zh": "頁面資料以版本快照與公開公告為範圍；樹的公開有效拓樸為 246 條邊，另保留解包原始 248 條邊及 2 條獎勵根節點修正證據；即時平衡、活動與執行期公式以遊戲內顯示為準。"
+    "verified_at": "2026-09-05",
+    "evidence_boundary_zh": "1.1.0 客戶端資料快照；251 條原始連線、249 條有效連線。即時平衡與執行期公式以遊戲內顯示為準。"
   },
   "versions": [
     {
@@ -63,6 +62,17 @@
       "node_count": 239,
       "edge_count": 248,
       "completeness_zh": "公開資料涵蓋天賦樹、事件、怪物圖鑑與版本公告所需的欄位。"
+    },
+    {
+      "version": "1.1.0",
+      "snapshot_id": "random-dice-2-1.1.0",
+      "date": "2026-09-05T11:00:00+08:00",
+      "text_asset_count": 157,
+      "table_count": 54,
+      "localization_rows": 2506,
+      "node_count": 241,
+      "edge_count": 251,
+      "completeness_zh": "涵蓋太陽骰子、困難首領、裂縫商店及四語系資料。"
     }
   ]
 }

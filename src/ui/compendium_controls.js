@@ -191,10 +191,28 @@ export function bindCompendiumControls(compendium) {
       });
       tab.classList.add("is-active");
       tab.setAttribute("aria-selected", "true");
-      compendium.eventMode = tab.dataset.eventMode || "all";
+      compendium.eventMode = tab.dataset.eventMode || "normal";
       compendium._syncTabsIndicator(eventTabsContainer, tab, true);
+      syncCategoryTabs(compendium);
       compendium.render();
       compendium._navigateCollection?.();
+    });
+  });
+
+  // 4b. Rift Shop Grouping Tabs (Type vs Grade)
+  const riftGroupTabsContainer = document.getElementById("compendium-rift-group-tabs");
+  const riftGroupTabs = document.querySelectorAll("#compendium-rift-group-tabs .compendium-tab");
+  riftGroupTabs.forEach((tab) => {
+    compendium._listen(tab, "click", () => {
+      riftGroupTabs.forEach((t) => {
+        t.classList.remove("is-active");
+        t.setAttribute("aria-selected", "false");
+      });
+      tab.classList.add("is-active");
+      tab.setAttribute("aria-selected", "true");
+      compendium.riftGroupMode = tab.dataset.riftGroup || "type";
+      compendium._syncTabsIndicator(riftGroupTabsContainer, tab, true);
+      compendium.render();
     });
   });
 
@@ -343,12 +361,25 @@ export function syncCategoryTabs(compendium) {
   const categoryLabel = document.getElementById("compendium-category-current-label");
   const diceTabs = document.getElementById("compendium-tabs");
   const eventTabs = document.getElementById("compendium-event-tabs");
+  const riftGroupTabs = document.getElementById("compendium-rift-group-tabs");
   const monsterTabs = document.getElementById("compendium-monster-tabs");
   const sortWidget = document.getElementById("compendium-sort-widget");
   const viewToggle = document.querySelector(".compendium-view-toggle");
 
   if (diceTabs) diceTabs.hidden = compendium.category !== "dice";
   if (eventTabs) eventTabs.hidden = compendium.category !== "event";
+  const isRiftShop = compendium.category === "event" && compendium.eventMode === "hard";
+  if (riftGroupTabs) {
+    riftGroupTabs.hidden = !isRiftShop;
+    if (isRiftShop) {
+      const currentGroup = compendium.riftGroupMode || "type";
+      riftGroupTabs.querySelectorAll(".compendium-tab[data-rift-group]").forEach((tab) => {
+        const active = (tab.dataset.riftGroup || "type") === currentGroup;
+        tab.classList.toggle("is-active", active);
+        tab.setAttribute("aria-selected", String(active));
+      });
+    }
+  }
   if (monsterTabs) monsterTabs.hidden = compendium.category !== "monster";
   if (sortWidget) sortWidget.hidden = compendium.category !== "dice";
   if (viewToggle) viewToggle.hidden = false;
@@ -364,7 +395,9 @@ export function syncCategoryTabs(compendium) {
 
   if (eventTabs) {
     eventTabs.querySelectorAll(".compendium-tab[data-event-mode]").forEach((tab) => {
-      const active = (tab.dataset.eventMode || "all") === (compendium.eventMode || "all");
+      const tabMode = tab.dataset.eventMode || "normal";
+      const currentMode = (compendium.eventMode === "coop" ? "normal" : compendium.eventMode) || "normal";
+      const active = tabMode === currentMode;
       tab.classList.toggle("is-active", active);
       tab.setAttribute("aria-selected", String(active));
     });
@@ -374,6 +407,7 @@ export function syncCategoryTabs(compendium) {
     requestAnimationFrame(() => {
       if (compendium.category === "dice" && diceTabs) compendium._syncTabsIndicator(diceTabs, null, false);
       if (compendium.category === "event" && eventTabs) compendium._syncTabsIndicator(eventTabs, null, false);
+      if (isRiftShop && riftGroupTabs) compendium._syncTabsIndicator(riftGroupTabs, null, false);
       if (compendium.category === "monster" && monsterTabs) compendium._syncTabsIndicator(monsterTabs, null, false);
     });
   }

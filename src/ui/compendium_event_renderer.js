@@ -17,9 +17,12 @@ export function renderEvents(compendium) {
 
   const q = compendium.search.trim().toLowerCase();
   const eventMode = compendium.eventMode;
+  if (eventMode === "hard") {
+    return;
+  }
 
   let filtered = events.filter((ev) => {
-    if (eventMode === "coop" && ev.mode_flags?.coop === false) return false;
+    if ((eventMode === "normal" || eventMode === "coop") && ev.mode_flags?.coop === false) return false;
     if (eventMode === "versus" && ev.mode_flags?.versus === false) return false;
     if (!q) return true;
     return (ev.name_zh || "").toLowerCase().includes(q) ||
@@ -225,7 +228,7 @@ export function createEventCard(compendium, event, index = 0, eventMode = "all")
   body.className = "tooltip-body";
 
   let descText = event.desc_zh || event.desc_en || translate(compendium, "event.fallback", {}, "Tactic effect");
-  if (eventMode === "coop" && event.mode_desc_coop_zh) {
+  if ((eventMode === "normal" || eventMode === "coop") && event.mode_desc_coop_zh) {
     descText = event.mode_desc_coop_zh;
   } else if (eventMode === "versus" && event.mode_desc_versus_zh) {
     descText = event.mode_desc_versus_zh;
@@ -268,7 +271,7 @@ export function createEventCard(compendium, event, index = 0, eventMode = "all")
     </div>
   `;
 
-  if (eventMode === "coop") {
+  if (eventMode === "normal" || eventMode === "coop") {
     grid.innerHTML = coopStatHtml;
   } else if (eventMode === "versus") {
     grid.innerHTML = versusStatHtml;

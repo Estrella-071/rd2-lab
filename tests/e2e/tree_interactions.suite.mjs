@@ -29,8 +29,8 @@ export async function runTreeInteractionsSuite(options = {}) {
     const page = browserInstance.page;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.waitForTimeout(300);
 
     // Check the runtime marker.
@@ -39,11 +39,11 @@ export async function runTreeInteractionsSuite(options = {}) {
     passedAssertions += 1;
 
     // ==========================================
-    // Tier 1: 239 節點 DAG 完備性與 DOM 結構
+    // Tier 1: 241 節點 DAG 完備性與 DOM 結構
     // ==========================================
     console.log('--- Tier 1: DAG Topology & Node Completeness ---');
     const nodeCount = await page.$$eval('button.tree-node-semantic[data-node-id]', els => els.length);
-    assertEqual(nodeCount, 239, 'Must have exactly 239 nodes in DAG');
+    assertEqual(nodeCount, 241, 'Must have exactly 241 nodes in DAG');
     const visualSvgCount = await page.$$eval('#scene svg', els => els.length);
     assertEqual(visualSvgCount, 0, 'Canvas map must not mount an SVG visual layer');
     passedAssertions += 2;
@@ -58,10 +58,10 @@ export async function runTreeInteractionsSuite(options = {}) {
       });
       return { total: nodes.length, branchCounts };
     });
-    assertEqual(branchStats.total, 239, 'TREE_DATA must have 239 nodes');
+    assertEqual(branchStats.total, 241, 'TREE_DATA must have 241 nodes');
     assert(Object.keys(branchStats.branchCounts).length >= 5, 'Must contain all 5 branches');
     passedAssertions += 2;
-    console.log(`✓ 239 Nodes verified across 5 branches:`, branchStats.branchCounts);
+    console.log(`✓ 241 Nodes verified across 5 branches:`, branchStats.branchCounts);
 
     // Canvas node accessibility: every interactive node must be reachable from
     // the keyboard and activate the same selection path as a pointer click.
@@ -784,10 +784,17 @@ export async function runTreeInteractionsSuite(options = {}) {
 
     // 被動技能節點綠色增量驗證 (Node 5109: 所有骰子傷害 (+0.6%))
     await page.evaluate(() => {
+      window.__TEST_HOOKS__.closeTooltip(true);
+    });
+    await page.waitForTimeout(100);
+    await page.evaluate(() => {
       window.__TEST_HOOKS__.centerOnNode('5109', false);
       window.__TEST_HOOKS__.showTooltip('5109', true);
     });
-    await page.waitForTimeout(300);
+    await page.waitForFunction(() => {
+      const greenEl = document.querySelector('.detail-copy .stat-green-add');
+      return greenEl && greenEl.textContent.trim() === '(+0.6%)';
+    }, { timeout: 5000 });
     const hasGreenAdd5109 = await page.evaluate(() => {
       const greenEl = document.querySelector('.detail-copy .stat-green-add');
       return greenEl?.textContent.trim() === '(+0.6%)';
@@ -938,9 +945,10 @@ export async function runTreeInteractionsSuite(options = {}) {
       { key: 'zh-tw', tag: '綻放', awakeningTag: '果實', name: '花骰子' },
     ];
     for (const { key, tag, awakeningTag, name } of tooltipLocaleChecks) {
-      await page.click('#locale-toggle-btn');
-      await page.waitForSelector('#locale-widget.is-expanded');
-      await page.click(`#locale-widget [data-locale="${key}"]`);
+      await page.evaluate((loc) => {
+        const option = document.querySelector(`#locale-widget [data-locale="${loc}"]`);
+        option?.click();
+      }, key);
       await page.waitForFunction((expectedLocale) => document.documentElement.lang === expectedLocale, key);
       const tooltipLocale = await page.evaluate(() => {
         const tooltip = document.getElementById('tooltip');

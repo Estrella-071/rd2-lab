@@ -175,7 +175,7 @@ test("dice_bonus: DB-13 canonical 骰子資料保留強化修正並由公式處�
   const attackingDice = dice.filter((node) => Number(node.dice_attack_interval) > 0);
   const nonAttackingDice = dice.filter((node) => Number(node.dice_attack_interval) <= 0);
   assert.equal(attackingDice.length, 36);
-  assert.equal(nonAttackingDice.length, 5);
+  assert.equal(nonAttackingDice.length, 6);
   assert.equal(
     attackingDice.every((node) => calculateFullDiceBonus(node, 0, 1).intervalBonus.dotBonus.startsWith("-")),
     true

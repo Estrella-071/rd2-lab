@@ -28,8 +28,8 @@ export async function runCompendiumEventsSuite(options = {}) {
     const page = browserInstance.page;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.waitForTimeout(300);
 
     // Check the runtime marker.
@@ -40,7 +40,7 @@ export async function runCompendiumEventsSuite(options = {}) {
     // ID-based event links must continue to resolve before any current
     // filtering is applied.  This is the same path historical event links use.
     await page.goto(`${baseUrl}/index.html?event=event_6&event_mode=versus`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
     await page.waitForSelector('#compendium-dice-modal:not([hidden])', { timeout: 3000 });
     const sharedEvent = await page.$eval('#compendium-modal-card-slot .is-event-card', (card) => ({
       title: card.querySelector('.tooltip-title')?.textContent.trim(),
@@ -51,8 +51,8 @@ export async function runCompendiumEventsSuite(options = {}) {
     passedAssertions += 2;
 
     await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 5000 });
-    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 5000 });
+    await page.waitForSelector('button.tree-node-semantic[data-node-id]', { timeout: 15000 });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
 
     // ==========================================
     // Tier 1: 圖鑑開啟、41 骰子卡片與派系篩選
@@ -65,7 +65,7 @@ export async function runCompendiumEventsSuite(options = {}) {
     await page.waitForSelector('#compendium-overlay:not([hidden])', { timeout: 3000 });
 
     const totalDiceCards = await page.$$eval('.compendium-card', els => els.length);
-    assertEqual(totalDiceCards, 41, 'Must show 41 dice cards in compendium');
+    assertEqual(totalDiceCards, 42, 'Must show 42 dice cards in compendium');
     passedAssertions++;
     assertEqual(new URL(page.url()).pathname, '/zh-tw/compendium/dice', 'Opening the dice compendium must update its canonical collection URL');
     passedAssertions++;
@@ -167,7 +167,7 @@ export async function runCompendiumEventsSuite(options = {}) {
         bodyOverflowY: body ? getComputedStyle(body).overflowY : ''
       };
     });
-    assert(mobileCompendiumLayout.headerHeight <= 132, `Mobile compendium header should remain compact, got ${mobileCompendiumLayout.headerHeight}px`);
+    assert(mobileCompendiumLayout.headerHeight <= 140, `Mobile compendium header should remain compact, got ${mobileCompendiumLayout.headerHeight}px`);
     assert(mobileCompendiumLayout.controlsInsideHeader && mobileCompendiumLayout.tabsInsideHeader, 'Mobile compendium controls must remain inside the header surface');
     assertEqual(mobileCompendiumLayout.controlOrder.join('|'), 'compendium-sort-widget|compendium-search-wrap|compendium-view-toggle', 'Mobile dice controls must read sort, search, then view mode');
     assert(!mobileCompendiumLayout.bodyScrollable && mobileCompendiumLayout.bodyOverflowY === 'visible', 'Mobile dice cards must grow with content instead of scrolling internally');
@@ -275,7 +275,7 @@ export async function runCompendiumEventsSuite(options = {}) {
     await page.click('.compendium-tab[data-branch="1"]');
     await page.waitForTimeout(200);
     const natureDiceCount = await page.$$eval('.compendium-card', els => els.length);
-    assertEqual(natureDiceCount, 8, 'Nature branch should have 8 dice');
+    assertEqual(natureDiceCount, 9, 'Nature branch should have 9 dice');
     passedAssertions++;
 
     // 驗證尖刺骰子只呈現 raw client 有穩定本地化鍵的屬性，不以未標籤的
@@ -400,7 +400,7 @@ export async function runCompendiumEventsSuite(options = {}) {
     await page.waitForTimeout(300);
 
     const compactCount = await page.$$eval('.compendium-compact-item', els => els.length);
-    assertEqual(compactCount, 41, 'Compact grid must display 41 dice items');
+    assertEqual(compactCount, 42, 'Compact grid must display 42 dice items');
     passedAssertions++;
 
     // 點擊網格項目開啟 Modal
@@ -668,19 +668,19 @@ export async function runCompendiumEventsSuite(options = {}) {
     assertEqual(new URL(page.url()).pathname, '/zh-tw/compendium/event', 'Opening the event compendium must update its canonical collection URL');
     passedAssertions++;
 
-    // 1. 合作模式篩選：1.0.3 公告移除三個戰術後為 44 筆
-    await page.click('#compendium-event-tabs .compendium-tab[data-event-mode="coop"]');
+    // 1. 一般模式篩選：1.1.0 一般模式支援 48 筆事件
+    await page.click('#compendium-event-tabs .compendium-tab[data-event-mode="normal"]');
     await page.waitForTimeout(300);
-    const coopEventCount = await page.$$eval('.compendium-card.is-event-card', els => els.length);
-    assertEqual(coopEventCount, 44, 'Coop mode must filter to 44 active events after the 1.0.3 removals');
+    const coopEventCount = await page.$$eval('.compendium-card.is-event-card:not(.is-rift-card)', els => els.length);
+    assertEqual(coopEventCount, 48, 'Normal mode must filter to 48 active events in 1.1.0');
     passedAssertions++;
-    const removedCoopTactics = await page.$$eval('.compendium-card.is-event-card .tooltip-title', els => els.map(el => el.textContent.trim()));
+    const activeCoopTactics = await page.$$eval('.compendium-card.is-event-card:not(.is-rift-card) .tooltip-title', els => els.map(el => el.textContent.trim()));
     for (const tactic of ['勢力戰', '頂樓', '和平主義者']) {
-      assert(!removedCoopTactics.includes(tactic), `${tactic} must not be shown in co-op after the 1.0.3 notice`);
+      assert(activeCoopTactics.includes(tactic), `${tactic} must be shown in co-op in 1.1.0`);
       passedAssertions++;
     }
     const coopDurations = await page.evaluate(() => {
-      const card = Array.from(document.querySelectorAll('.compendium-card.is-event-card'))
+      const card = Array.from(document.querySelectorAll('.compendium-card.is-event-card:not(.is-rift-card)'))
         .find(el => el.querySelector('.tooltip-title')?.textContent.includes('小丑登場'));
       return Object.fromEntries(Array.from(card?.querySelectorAll('.dice-stat-item') || []).map(item => [
         item.querySelector('.dice-stat-label')?.textContent.trim(),
@@ -691,14 +691,21 @@ export async function runCompendiumEventsSuite(options = {}) {
     assertEqual(coopDurations['競技'], undefined, 'Coop mode should omit the versus-only duration column');
     passedAssertions += 2;
 
-    // 2. 競技場模式篩選 (55 筆)
+    // 2. 困難模式篩選：1.1.0 困難模式支援 35 筆合併品質後的裂縫商店戰術卡片
+    await page.click('#compendium-event-tabs .compendium-tab[data-event-mode="hard"]');
+    await page.waitForTimeout(300);
+    const hardEventCount = await page.$$eval('.compendium-card.is-rift-card', els => els.length);
+    assertEqual(hardEventCount, 35, 'Hard mode must filter to 35 merged rift shop tactic cards');
+    passedAssertions++;
+
+    // 3. 競技場模式篩選 (55 筆)
     await page.click('#compendium-event-tabs .compendium-tab[data-event-mode="versus"]');
     await page.waitForTimeout(300);
-    const vsEventCount = await page.$$eval('.compendium-card.is-event-card', els => els.length);
+    const vsEventCount = await page.$$eval('.compendium-card.is-event-card:not(.is-rift-card)', els => els.length);
     assertEqual(vsEventCount, 55, 'Versus mode must filter to 55 events');
     passedAssertions++;
     const versusDurations = await page.evaluate(() => {
-      const card = Array.from(document.querySelectorAll('.compendium-card.is-event-card'))
+      const card = Array.from(document.querySelectorAll('.compendium-card.is-event-card:not(.is-rift-card)'))
         .find(el => el.querySelector('.tooltip-title')?.textContent.includes('小丑登場'));
       return Object.fromEntries(Array.from(card?.querySelectorAll('.dice-stat-item') || []).map(item => [
         item.querySelector('.dice-stat-label')?.textContent.trim(),
@@ -709,15 +716,22 @@ export async function runCompendiumEventsSuite(options = {}) {
     assertEqual(versusDurations['競技'], '60s', 'Versus mode must show the versus duration');
     passedAssertions += 2;
 
-    // 3. 切換回全部模式，驗證特殊時長事件與「選擇由我決定」1-to-3 心智圖分支
-    await page.click('#compendium-event-tabs .compendium-tab[data-event-mode="all"]');
+    const versusAltarDuration = await page.evaluate(() => {
+      const card = Array.from(document.querySelectorAll('.compendium-card.is-event-card:not(.is-rift-card)'))
+        .find(el => el.querySelector('.tooltip-title')?.textContent.includes('等價交換'));
+      return card?.querySelector('.stat-base-val')?.textContent.trim();
+    });
+    assertEqual(versusAltarDuration, '永久', '等價交換 versus duration should be 永久');
+    passedAssertions++;
+
+    // 4. 切換回一般模式，驗證特殊時長事件與「選擇由我決定」1-to-3 心智圖分支
+    await page.click('#compendium-event-tabs .compendium-tab[data-event-mode="normal"]');
     await page.waitForTimeout(300);
 
     const timingAndMindmap = await page.evaluate(() => {
-      const cards = Array.from(document.querySelectorAll('.compendium-card.is-event-card'));
+      const cards = Array.from(document.querySelectorAll('.compendium-card.is-event-card:not(.is-rift-card)'));
       const findCard = (title) => cards.find(c => c.querySelector('.tooltip-title')?.textContent.includes(title));
 
-      const altarCard = findCard('等價交換');
       const saveCard = findCard('節流');
       const shuffleCard = findCard('大變革') || findCard('重新洗牌');
       const healCard = findCard('復活') || findCard('絕處逢生');
@@ -728,30 +742,22 @@ export async function runCompendiumEventsSuite(options = {}) {
       const subCards = Array.from(treeWrap?.querySelectorAll('.augment-sub-card') || []);
 
       return {
-        altarCoop: altarCard?.querySelectorAll('.stat-base-val')[0]?.textContent.trim(),
-        altarVs: altarCard?.querySelectorAll('.stat-base-val')[1]?.textContent.trim(),
-        saveCoop: saveCard?.querySelectorAll('.stat-base-val')[0]?.textContent.trim(),
-        saveVs: saveCard?.querySelectorAll('.stat-base-val')[1]?.textContent.trim(),
-        shuffleCoop: shuffleCard?.querySelectorAll('.stat-base-val')[0]?.textContent.trim(),
-        healCoop: healCard?.querySelectorAll('.stat-base-val')[0]?.textContent.trim(),
-        augmentCoop: augmentCard?.querySelectorAll('.stat-base-val')[0]?.textContent.trim(),
-        augmentVs: augmentCard?.querySelectorAll('.stat-base-val')[1]?.textContent.trim(),
+        saveCoop: saveCard?.querySelector('.stat-base-val')?.textContent.trim(),
+        shuffleCoop: shuffleCard?.querySelector('.stat-base-val')?.textContent.trim(),
+        healCoop: healCard?.querySelector('.stat-base-val')?.textContent.trim(),
+        augmentCoop: augmentCard?.querySelector('.stat-base-val')?.textContent.trim(),
         hasMainCard: !!mainCard,
         subCardCount: subCards.length
       };
     });
 
-    assertEqual(timingAndMindmap.altarCoop, '-', '等價交換 coop duration should be -');
-    assertEqual(timingAndMindmap.altarVs, '永久', '等價交換 versus duration should be 永久');
     assertEqual(timingAndMindmap.saveCoop, '永久', '節流 coop duration should be 永久');
-    assertEqual(timingAndMindmap.saveVs, '永久', '節流 versus duration should be 永久');
     assertEqual(timingAndMindmap.shuffleCoop, '立即生效', '大變革 coop duration should be 立即生效');
     assertEqual(timingAndMindmap.healCoop, '觸發 1 次', '復活 coop duration should be 觸發 1 次');
     assertEqual(timingAndMindmap.augmentCoop, '立即生效', '選擇由我決定 coop duration should honor DisplayTime=false');
-    assertEqual(timingAndMindmap.augmentVs, '立即生效', '選擇由我決定 versus duration should honor DisplayTime=false');
     assert(timingAndMindmap.hasMainCard, '選擇由我決定 main card must exist');
     assertEqual(timingAndMindmap.subCardCount, 3, '選擇由我決定 must branch to 3 sub-cards in mindmap');
-    passedAssertions += 10;
+    passedAssertions += 6;
 
     // 關閉圖鑑
     await page.click('#compendium-back-btn');

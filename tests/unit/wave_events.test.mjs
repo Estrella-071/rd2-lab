@@ -94,11 +94,9 @@ test("wave_events: WE-08 真實 55 筆事件資料完整性與模式過濾", () 
 
   const coopEvents = filterWaveEvents(events, "coop");
   const versusEvents = filterWaveEvents(events, "versus");
-  assert.equal(coopEvents.length, 44, "1.0.3 合作模式應有 44 筆支援事件");
+  assert.equal(coopEvents.length, 48, "1.1.0 合作模式應有 48 筆支援事件");
   assert.equal(versusEvents.length, 55, "競技模式應有 55 筆支援事件");
-  for (const name of ["勢力戰", "頂樓", "和平主義者"]) {
-    assert.equal(coopEvents.some((event) => event.name_zh === name), false, `${name} 不應套用於合作模式`);
-  }
+  for (const event of events) assert.equal(coopEvents.includes(event), event.mode_flags.coop !== false);
 });
 
 test("wave_events: WE-09 & WE-10 階段與關鍵字過濾", () => {

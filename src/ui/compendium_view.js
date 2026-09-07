@@ -1,3 +1,4 @@
+import { renderRiftShop } from "./compendium_rift_renderer.js";
 export { resolveNode3Icon } from "../domain/dice_icon.js";
 import {
   getModalFocusable,
@@ -91,13 +92,14 @@ export class CompendiumView {
 
     this.category = "dice";
     this.branch = "all";
-    this.eventMode = "all";
+    this.eventMode = "normal";
     this.monsterDifficulty = "normal";
     const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
     this.viewMode = isMobile ? "grid" : "cards";
     this._userChangedViewMode = false;
     this.sort = "default";
     this.search = "";
+    this.riftGroupMode = "type";
 
     this._unsubscribe = null;
     this._searchTimer = null;
@@ -335,14 +337,15 @@ export class CompendiumView {
     return result;
   }
 
-  openCategory(category = "dice", eventMode = "all") {
+  openCategory(category = "dice", eventMode = "normal") {
     const normalizedCategory = ["dice", "monster", "event"].includes(String(category).toLowerCase())
       ? String(category).toLowerCase()
       : "dice";
     this.category = normalizedCategory;
-    this.eventMode = normalizedCategory === "event" && ["all", "coop", "versus"].includes(String(eventMode))
-      ? String(eventMode)
-      : "all";
+    const validModes = ["normal", "hard", "versus", "coop", "all"];
+    let mode = validModes.includes(String(eventMode)) ? String(eventMode) : "normal";
+    if (mode === "coop") mode = "normal";
+    this.eventMode = normalizedCategory === "event" ? mode : "normal";
     return this.open(null, { updateUrl: false });
   }
 
@@ -419,7 +422,14 @@ export class CompendiumView {
   }
 
   _renderEvents(...args) {
-    return renderEvents(this, ...args);
+    if (this.eventMode === "hard") {
+      renderRiftShop(this);
+    } else if (this.eventMode === "all") {
+      renderEvents(this, ...args);
+      renderRiftShop(this);
+    } else {
+      renderEvents(this, ...args);
+    }
   }
 
   _renderHistoricalEvents(...args) {

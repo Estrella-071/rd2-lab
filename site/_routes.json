@@ -1,7 +1,12 @@
 {
   "version": 1,
   "include": [
-    "/api/*"
+    "/api/*",
+    "/simulation/*",
+    "/zh-tw/simulation/*",
+    "/en/simulation/*",
+    "/ja/simulation/*",
+    "/ko/simulation/*"
   ],
   "exclude": []
 }

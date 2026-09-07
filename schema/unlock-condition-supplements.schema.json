@@ -6,7 +6,7 @@
   "required": ["schema_version", "snapshot_id", "purpose", "resource_free_nodes", "entries", "topology_corrections"],
   "properties": {
     "schema_version": { "const": 1 },
-    "snapshot_id": { "const": "random-dice-2-1.0.3" },
+    "snapshot_id": { "const": "random-dice-2-1.1.0" },
     "purpose": { "type": "string", "minLength": 1 },
     "resource_free_nodes": {
       "type": "array",

@@ -108,8 +108,8 @@ function assertManifestRoot(data, url, expectedScales) {
   assertManifest(Number.isInteger(tile.rows) && tile.rows >= 1, url);
   assertManifest(tile.columns === Math.ceil(Number(viewBox.width) / tile.logicalSize), url);
   assertManifest(tile.rows === Math.ceil(Number(viewBox.height) / tile.logicalSize), url);
-  assertManifest(Array.isArray(data.nodes) && data.nodes.length === 239, url);
-  assertManifest(Array.isArray(data.edges) && data.edges.length === 246, url);
+  assertManifest(Array.isArray(data.nodes) && data.nodes.length > 0 && data.nodes.length <= 10000, url);
+  assertManifest(Array.isArray(data.edges) && data.edges.length <= 50000, url);
   assertManifest(Array.isArray(data.centerLinks) && data.centerLinks.length === 5, url);
   assertManifest(/^[a-f0-9]{16}$/.test(String(data.assetVersion || "")), url);
 }

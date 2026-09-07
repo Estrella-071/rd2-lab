@@ -8,7 +8,7 @@ import { buildTreeRenderModel } from "../../src/domain/tree_render_model.js";
 import { createSimulationState, getNodeMap } from "../../src/domain/simulation_plan.js";
 import { assertMapRenderManifestShape } from "../../src/infra/http_data_repository.js";
 import { LruCache, MapTileRepository } from "../../src/infra/map_tile_repository.js";
-import { buildCurrencyLabelLayout, getNodeOcclusionGeometry, getSimulationRankBadgeText } from "../../src/ui/canvas_tree_renderer.js";
+import { buildCurrencyLabelLayout, getNodeOcclusionGeometry, getSimulationRankBadgeText, CanvasTreeRenderer } from "../../src/ui/canvas_tree_renderer.js";
 import { extractCostBadgeAnchor, extractNodeArtworkBounds, extractRankBadgeAnchor, getNodeVariantCss } from "../../scripts/build_map_raster.mjs";
 
 const root = path.resolve(".");
@@ -191,8 +191,8 @@ test("Canvas tile repository returns the visible tile plus one prefetch ring", (
 test("Canvas render manifest validates node frames, tile boundaries, and safe generated paths", () => {
   const manifest = makeRenderManifest();
   assert.equal(assertMapRenderManifestShape(manifest), manifest);
-  assert.equal(manifest.nodes.length, 239);
-  assert.equal(manifest.edges.length, 246);
+  assert.equal(manifest.nodes.length, 241);
+  assert.equal(manifest.edges.length, 249);
   assert.equal(manifest.centerLinks.length, 5);
 
   const unsafe = structuredClone(manifest);
@@ -379,8 +379,8 @@ test("Canvas render model preserves topology, localization, and simulation lock 
     renderManifest: manifest,
     localization
   });
-  assert.equal(normal.nodes.length, 239);
-  assert.equal(normal.edges.length, 246);
+  assert.equal(normal.nodes.length, 241);
+  assert.equal(normal.edges.length, 249);
   assert.equal(normal.nodesById.get("1001").label, "Localized Fire");
   assert.equal(normal.nodesById.get("1001").x, manifest.nodes[0].x);
   assert.equal(normal.nodesById.get("1001").hitBox.width, 122);
@@ -502,4 +502,73 @@ test("Canvas render model keeps prerequisite dimming after tooltip close", () =>
   assert.equal(afterTooltipClose.nodesById.get("4").isDimmed, true);
   assert.equal(afterTooltipClose.edges.find((edge) => edge.key === "1->2").isDimmed, false);
   assert.equal(afterTooltipClose.edges.find((edge) => edge.key === "2->3").isDimmed, false);
+});
+
+test("Canvas render model does not highlight upstream path when filtering by node type", () => {
+  const fixture = {
+    nodes: [
+      { id: "1", name_zh: "電骰子", node_type: "DICE", branch: 3 },
+      { id: "2", name_zh: "所有骰子傷害", node_type: "PLAYER_PASSIVE", branch: 3 },
+      { id: "3", name_zh: "艾科", node_type: "PERK", branch: 3 },
+      { id: "4", name_zh: "伊安", node_type: "PERK", branch: 1 }
+    ],
+    edges: [
+      { from: "1", to: "2" },
+      { from: "2", to: "3" }
+    ]
+  };
+  const nodesMap = getNodeMap(fixture);
+  const typeFilterModel = buildTreeRenderModel({
+    treeData: fixture,
+    state: makeState({
+      nodesMap,
+      selectedNodeId: null,
+      activePrereqIds: new Set(),
+      activeEdgeIds: new Set(),
+      showPrereqMode: false,
+      filters: { search: "", factions: new Set(), nodeTypes: new Set(["PERK"]) },
+      matchingNodeIds: new Set(["3", "4"])
+    }),
+    renderManifest: { viewBox: { x: 0, y: 0, width: 4000, height: 3400 } }
+  });
+
+  // 1. 目標支援魔像節點應亮起
+  assert.equal(typeFilterModel.nodesById.get("3").isDimmed, false);
+  assert.equal(typeFilterModel.nodesById.get("4").isDimmed, false);
+  assert.equal(typeFilterModel.nodesById.get("3").isMatching, true);
+
+  // 2. 前置路徑上的骰子與被動節點應正確變暗
+  assert.equal(typeFilterModel.nodesById.get("1").isDimmed, true);
+  assert.equal(typeFilterModel.nodesById.get("2").isDimmed, true);
+  assert.equal(typeFilterModel.nodesById.get("1").isMatching, false);
+  assert.equal(typeFilterModel.nodesById.get("2").isMatching, false);
+  assert.deepEqual(
+    typeFilterModel.nodes.filter((node) => !node.isDimmed).map((node) => node.id).sort(),
+    ["3", "4"]
+  );
+
+  // 3. 路徑上的連線不應被標記為活躍連線
+  const edge1to2 = typeFilterModel.edges.find((e) => e.key === "1->2");
+  const edge2to3 = typeFilterModel.edges.find((e) => e.key === "2->3");
+  assert.equal(edge1to2.isFilterActive, false);
+  assert.equal(edge2to3.isFilterActive, false);
+  assert.equal(edge1to2.isActive, false);
+  assert.equal(edge2to3.isActive, false);
+});
+
+test("Canvas renderer preserves full map continuity for overview surfaces without clipPath cutout", () => {
+  const renderer = new CanvasTreeRenderer({
+    store: { getState: () => ({ viewport: { x: -500, y: -400, scale: 1 } }), subscribe: () => () => {} }
+  });
+  renderer.renderManifest = { viewBox: { x: 0, y: 0, width: 4000, height: 3400 }, nodes: [] };
+  const fakeCanvas = { style: { visibility: "hidden", clipPath: "polygon(...)" }, dataset: { canvasReady: "true" } };
+  renderer.overviewCanvas = fakeCanvas;
+  renderer.overviewEdgeCanvas = { style: { visibility: "hidden", clipPath: "" }, dataset: { canvasReady: "true" } };
+  renderer.overviewNodeArtCanvas = { style: { visibility: "hidden", clipPath: "" }, dataset: { canvasReady: "true" } };
+  renderer.overviewDynamicCanvas = { style: { visibility: "hidden", clipPath: "" }, dataset: { canvasReady: "true" } };
+  renderer._overviewCompatibility = "normal;";
+  renderer.model = { isSimulation: false, locale: "" };
+  renderer._setOverviewVisibility(renderer.model);
+  assert.equal(fakeCanvas.style.visibility, "visible");
+  assert.equal(fakeCanvas.style.clipPath, "");
 });

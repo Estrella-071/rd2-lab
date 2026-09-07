@@ -692,6 +692,18 @@
     "sprite-99": {
       "path": "site/icons/Runenode_Combo_0.png",
       "fit": "meet"
+    },
+    "version110-dice-solar2": {
+      "path": "site/icons/Dice_solar2.png",
+      "fit": "meet"
+    },
+    "version110-runenode-sun": {
+      "path": "site/icons/Runenode_Sun_0.png",
+      "fit": "meet"
+    },
+    "version110-solar-stone": {
+      "path": "site/icons/item_stone_solar.png",
+      "fit": "meet"
     }
   }
 }

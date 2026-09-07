@@ -10,15 +10,18 @@
  * @param {string|Object} [filterOrMode="all"]
  * @returns {Object[]}
  */
-export function filterWaveEvents(events, filterOrMode = "all") {
+export function filterWaveEvents(events, filterOrMode = "normal") {
   if (!Array.isArray(events)) return [];
 
   if (typeof filterOrMode === "string") {
-    if (filterOrMode === "coop") {
+    if (filterOrMode === "normal" || filterOrMode === "coop") {
       return events.filter((e) => e?.mode_flags?.coop !== false);
     }
     if (filterOrMode === "versus") {
       return events.filter((e) => e?.mode_flags?.versus !== false);
+    }
+    if (filterOrMode === "hard") {
+      return [];
     }
     return [...events];
   }
@@ -26,10 +29,13 @@ export function filterWaveEvents(events, filterOrMode = "all") {
   const { phase, eventMode, search } = filterOrMode || {};
   let result = [...events];
 
-  if (eventMode === "coop") {
+  const mode = eventMode || "normal";
+  if (mode === "normal" || mode === "coop") {
     result = result.filter((e) => e?.mode_flags?.coop !== false);
-  } else if (eventMode === "versus") {
+  } else if (mode === "versus") {
     result = result.filter((e) => e?.mode_flags?.versus !== false);
+  } else if (mode === "hard") {
+    result = [];
   }
 
   if (phase && phase !== "all") {
@@ -56,12 +62,12 @@ export function filterWaveEvents(events, filterOrMode = "all") {
  * 解析事件在指定模式下的描述文字
  *
  * @param {Object} event
- * @param {"coop"|"versus"} [mode="coop"]
+ * @param {"normal"|"coop"|"versus"} [mode="normal"]
  * @returns {string}
  */
-export function resolveEventDescription(event, mode = "coop") {
+export function resolveEventDescription(event, mode = "normal") {
   if (!event) return "戰術事件效果";
-  if (mode === "coop" && event.mode_desc_coop_zh) {
+  if ((mode === "normal" || mode === "coop") && event.mode_desc_coop_zh) {
     return event.mode_desc_coop_zh;
   }
   if (mode === "versus" && event.mode_desc_versus_zh) {
@@ -91,18 +97,18 @@ export function resolveEventDurations(event) {
  * 解析事件持續時間標籤 (純函式)
  *
  * @param {Object} event
- * @param {"coop"|"versus"} [mode="coop"]
+ * @param {"normal"|"coop"|"versus"} [mode="normal"]
  * @returns {string}
  */
-export function getEventDurationLabel(event, mode = "coop") {
+export function getEventDurationLabel(event, mode = "normal") {
   if (!event) return "-";
-  if (mode === "coop" && event.mode_flags?.coop === false) return "-";
+  if ((mode === "normal" || mode === "coop") && event.mode_flags?.coop === false) return "-";
   if (mode === "versus" && event.mode_flags?.versus === false) return "-";
 
   if (event.timing_type === "single_trigger") return "觸發 1 次";
   if (event.timing_type === "passive") return "永久";
 
-  if (mode === "coop" && event.coop_time) return event.coop_time;
+  if ((mode === "normal" || mode === "coop") && event.coop_time) return event.coop_time;
   if (mode === "versus" && event.versus_time) return event.versus_time;
 
   if (event.timing_type === "instant") return "立即生效";

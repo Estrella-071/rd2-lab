@@ -1,39 +1,39 @@
 {
   "schemaVersion": 2,
-  "snapshotId": "random-dice-2-1.0.3",
+  "snapshotId": "random-dice-2-1.1.0",
   "verifiedAt": "2026-08-23",
   "publishedData": {
     "json": {
       "path": "site/data/dice_tree.json",
-      "sha256": "33BDBB0CAD69995EA2E29F00E42FF6F4D68AFB40059F14A4D6727A4EF7BB6732"
+      "sha256": "A901053ACBDD328BAFBE6BD7F02E9B68BF436DC7CF78458FDB980715722627A9"
     },
     "svg": {
       "path": "site/data/dice_tree.svg",
-      "sha256": "4B26C5CBBCC36C3183BE488F3426FD77ABC084FEAC27905E262817D8CEB65991"
+      "sha256": "E21D353352BB09CFEB8AF9F1E581C1014B3FB0ADD3AB352E666E4BC2982DA0C6"
     },
     "compendium": {
       "path": "site/boss_event_data.json",
-      "sha256": "31DD9F73DE3DC6426C05D9495591AC62F001AE7ACB3181D49F438F7FD50F8259"
+      "sha256": "D77075F3B9B1710DCDEDF199A501868C3D3C03F9AE9382B2BB9A727F7CAD5A74"
     },
     "metadata": {
       "path": "site/data/game_data_metadata.json",
-      "sha256": "45494521D8CB201C6DDF0FA2B5E2AB4F8E6CA175493417D5253A55A0CF24F8ED"
+      "sha256": "5096AD1729B8CD85D39C7F31F6579802CD20964DC9582924A222179AB43885F8"
     },
     "changelog": {
       "path": "site/data/changelog.json",
-      "sha256": "CC9CE60DDDAE8E23E3FA63DC22C651167DFD84C870181BCBB7DBC611C2342538"
+      "sha256": "32D175CD0684502B3854A650CA3EF65D13ACD01ED600F0E3DFC8C392F585F9B6"
     },
     "officialNotices": {
       "path": "site/data/official_update_notices.json",
-      "sha256": "FDC6B69BB62C82EDA472C1E56572F541EFAF64C7CA1D0BFB1A21C6630C9350EC"
+      "sha256": "59E20DCEE66184E0FC2256A4519A4981F803D4655494599797591CEE75E089B9"
     },
     "monsterPosters": {
       "path": "site/monster_posters.json",
-      "sha256": "B50869A591C875FA501EA2AFEAF344C6CEE40B6DD1AB0DAD0CC30A235B16F0E8"
+      "sha256": "E2805733DA6BDC3CD0D1F1FE0B394DE047E7FE3082B976700D49DDDDF0A36CA0"
     },
-    "nodeCount": 239,
-    "edgeCount": 246,
-    "gameDataVersion": "1.0.3"
+    "nodeCount": 241,
+    "edgeCount": 249,
+    "gameDataVersion": "1.1.0"
   },
   "limitations": [
     "This is a version-specific data snapshot, not proof of current live balance.",

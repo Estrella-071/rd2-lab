@@ -1,41 +1,41 @@
 {
   "metadata_ref": "data/game_data_metadata.json",
   "summary": {
-    "node_count": 239,
-    "edge_count": 246,
+    "node_count": 241,
+    "edge_count": 249,
     "nodes_by_type": {
-      "DICE": 41,
-      "DICE_RUNE": 123,
+      "DICE": 42,
+      "DICE_RUNE": 124,
       "PLAYER_PASSIVE": 70,
       "PERK": 5
     },
     "nodes_by_branch": {
-      "1": 47,
+      "1": 49,
       "2": 51,
       "3": 43,
       "4": 47,
       "5": 51
     },
     "full_unlock_nodes_by_branch": {
-      "1": 47,
+      "1": 49,
       "2": 51,
       "3": 43,
       "4": 47,
       "5": 51
     },
-    "total_unlock_gold": 6906000,
-    "total_unlock_core": 1793,
-    "total_max_gold": 45570100,
-    "total_max_core": 7116,
-    "icon_matches": 239,
+    "total_unlock_gold": 7056000,
+    "total_unlock_core": 3893,
+    "total_max_gold": 56170100,
+    "total_max_core": 30116,
+    "icon_matches": 241,
     "icon_fallbacks": 0,
-    "note": "Derived from the Random Dice 2 1.0.3 client table snapshot; centre values count all fully unlocked DiceTreeNodeTable rows in each branch.",
-    "rune_catalog_count": 153,
-    "rune_catalog_tree_count": 123,
+    "note": "Derived from the Random Dice 2 1.1.0 client table snapshot; centre values count all fully unlocked DiceTreeNodeTable rows in each branch.",
+    "rune_catalog_count": 154,
+    "rune_catalog_tree_count": 124,
     "rune_catalog_supplemental_count": 30,
     "rune_catalog_icon_status": {
       "rune-sprite": 126,
-      "dice-fallback": 27
+      "dice-fallback": 28
     }
   },
   "nodes": [
@@ -149,6 +149,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "1001",
@@ -342,7 +344,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1003",
@@ -459,7 +463,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1004",
@@ -627,7 +633,9 @@
             "add": "-0.5"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1005",
@@ -683,6 +691,8 @@
         "interval_add": "",
         "special_stats": []
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "1005",
@@ -823,7 +833,9 @@
             "add": "+3"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1007",
@@ -991,6 +1003,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "1007",
@@ -1238,7 +1252,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1201",
@@ -1251,8 +1267,8 @@
       "name_zh": "子彈傷害%增加",
       "description_zh": "基本攻擊傷害增加{0}%<color=#00FF00>(+{1}%)</color>",
       "short_label": "子彈傷害%增加",
-      "x": -250,
-      "y": 600,
+      "x": -200,
+      "y": 400,
       "is_big": false,
       "is_base": false,
       "is_show": false,
@@ -1397,7 +1413,9 @@
           "icon": "fire_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1301",
@@ -1411,14 +1429,16 @@
       "description_zh": "範圍傷害套用範圍大幅增加",
       "short_label": "火焰射程增加",
       "x": -400,
-      "y": 450,
+      "y": 400,
       "is_big": false,
       "is_base": false,
       "is_show": false,
       "unlock_condition": "",
       "unlock_condition_zh": "前置節點",
       "unlock_condition_value": "",
-      "next_nodes": [],
+      "next_nodes": [
+        "1501"
+      ],
       "incoming": [
         "1201"
       ],
@@ -1457,7 +1477,9 @@
       ],
       "tags": [
         "AREA_DAMAGE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1401",
@@ -1471,14 +1493,16 @@
       "description_zh": "基本攻擊擊中時，賦予<tag>BURN</tag><br>7骰點為2倍的<tag>BURN</tag>傷害",
       "short_label": "獲得燙傷",
       "x": -400,
-      "y": 750,
+      "y": 600,
       "is_big": false,
       "is_base": false,
       "is_show": false,
       "unlock_condition": "",
       "unlock_condition_zh": "前置節點",
       "unlock_condition_value": "",
-      "next_nodes": [],
+      "next_nodes": [
+        "1501"
+      ],
       "incoming": [
         "1201"
       ],
@@ -1517,7 +1541,9 @@
       ],
       "tags": [
         "BURN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1202",
@@ -1688,7 +1714,9 @@
       ],
       "tags": [
         "THORN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1302",
@@ -1760,7 +1788,9 @@
         "BIGTHORN",
         "SUMMON",
         "THORN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1402",
@@ -1830,7 +1860,9 @@
       ],
       "tags": [
         "THORN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1203",
@@ -1985,7 +2017,9 @@
       "special_stats": [],
       "tags": [
         "BLOOM"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1303",
@@ -2039,7 +2073,9 @@
       "special_stats": [],
       "tags": [
         "BLOOM"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1403",
@@ -2093,7 +2129,9 @@
       "special_stats": [],
       "tags": [
         "BLOOM"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1204",
@@ -2262,7 +2300,9 @@
           "icon": "pillar_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1304",
@@ -2332,7 +2372,9 @@
       ],
       "tags": [
         "PILLAR"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1404",
@@ -2343,7 +2385,7 @@
       "node_type_zh": "骰子符文",
       "kind_id": 27,
       "name_zh": "巨石額外召喚",
-      "description_zh": "發動技能時，{0}%機率額外發動1次",
+      "description_zh": "召喚巨石骰子時，{0}%機率額外召喚1個巨石",
       "short_label": "巨石額外召喚",
       "x": -50,
       "y": 2950,
@@ -2400,7 +2442,9 @@
           "icon": "pillar_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1205",
@@ -2553,7 +2597,9 @@
       "dice_attack": "100",
       "dice_attack_interval": "0.45",
       "special_stats": [],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1305",
@@ -2605,7 +2651,9 @@
       "dice_attack": "100",
       "dice_attack_interval": "0.45",
       "special_stats": [],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1405",
@@ -2657,7 +2705,9 @@
       "dice_attack": "100",
       "dice_attack_interval": "0.45",
       "special_stats": [],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1206",
@@ -2818,7 +2868,9 @@
       ],
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1306",
@@ -2876,7 +2928,9 @@
           "icon": "lightboardeffect_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1406",
@@ -2934,7 +2988,9 @@
           "icon": "lightboardeffect_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1207",
@@ -3095,7 +3151,9 @@
       ],
       "tags": [
         "FROZEN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1307",
@@ -3155,7 +3213,9 @@
       ],
       "tags": [
         "FROZEN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1407",
@@ -3168,7 +3228,7 @@
       "name_zh": "產生冰凍",
       "description_zh": "自身骰盤召喚怪物時，賦予<tag>FROZEN</tag>{0}疊加",
       "short_label": "產生冰凍",
-      "x": 550,
+      "x": 850,
       "y": 750,
       "is_big": false,
       "is_base": false,
@@ -3216,7 +3276,9 @@
       "tags": [
         "FROZEN",
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1208",
@@ -3377,7 +3439,9 @@
       ],
       "tags": [
         "POISON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1308",
@@ -3437,7 +3501,9 @@
       ],
       "tags": [
         "POISON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1408",
@@ -3498,7 +3564,9 @@
       "tags": [
         "POISON",
         "MERGE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1101",
@@ -3572,7 +3640,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1102",
@@ -3717,7 +3787,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1103",
@@ -3793,7 +3865,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1104",
@@ -3878,7 +3952,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1105",
@@ -3942,7 +4018,9 @@
       "icon_name": "PassiveBigIcon_CriticalRate",
       "icon_file": "icons/PassiveBigIcon_CriticalRate.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1106",
@@ -3985,7 +4063,9 @@
       "icon_name": "PassiveBigIcon_Nature",
       "icon_file": "icons/PassiveBigIcon_Nature.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1107",
@@ -4026,7 +4106,9 @@
       "icon_name": "PassiveBigIcon_Nature",
       "icon_file": "icons/PassiveBigIcon_Nature.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1108",
@@ -4067,7 +4149,9 @@
       "icon_name": "PassiveBigIcon_Nature",
       "icon_file": "icons/PassiveBigIcon_Nature.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1109",
@@ -4312,7 +4396,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1110",
@@ -4397,7 +4483,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1111",
@@ -4482,7 +4570,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1112",
@@ -4525,7 +4615,9 @@
       "icon_name": "PassiveBigIcon_Spup",
       "icon_file": "icons/PassiveBigIcon_Spup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1113",
@@ -4568,7 +4660,9 @@
       "icon_name": "PassiveBigIcon_HPup",
       "icon_file": "icons/PassiveBigIcon_HPup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1114",
@@ -4611,7 +4705,9 @@
       "icon_status": "sprite",
       "tags": [
         "SP_GAIN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "1115",
@@ -4654,7 +4750,9 @@
       "icon_name": "PassiveBigIcon_Surport_N",
       "icon_file": "icons/PassiveBigIcon_Surport_N.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2001",
@@ -4692,7 +4790,7 @@
       "dice_group": "Engineering",
       "dice_attack": "150",
       "dice_attack_interval": "2",
-      "dice_awaken": "攻擊<tag>BOSS_MONSTER</tag>時，對周遭怪物造成100%範圍傷害",
+      "dice_awaken": "攻擊<tag>BOSS_MONSTER</tag>時，<br>對周遭怪物造成100%範圍傷害",
       "icon_name": "Dice_iron_2",
       "icon_file": "icons/Dice_iron_2.png",
       "icon_status": "sprite",
@@ -4711,8 +4809,8 @@
             "field": "PowerConstant",
             "label_key": "diceskill_IronInfo_name",
             "base": "200",
-            "powerup": "",
-            "dot": "50"
+            "powerup": "50",
+            "dot": ""
           }
         },
         {
@@ -4753,10 +4851,10 @@
               "field": "PowerConstant",
               "label_key": "diceskill_IronInfo_name",
               "base": "200",
-              "powerup": "",
-              "dot": "50"
+              "powerup": "50",
+              "dot": ""
             },
-            "add": ""
+            "add": "+50"
           },
           {
             "stat_id": "DefenderTable:Iron:BossAttackPer",
@@ -4795,10 +4893,10 @@
               "field": "PowerConstant",
               "label_key": "diceskill_IronInfo_name",
               "base": "200",
-              "powerup": "",
-              "dot": "50"
+              "powerup": "50",
+              "dot": ""
             },
-            "add": "+50"
+            "add": ""
           },
           {
             "stat_id": "DefenderTable:Iron:BossAttackPer",
@@ -4820,6 +4918,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "2001",
@@ -4958,7 +5058,9 @@
             "add": "-2"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2003",
@@ -5072,7 +5174,9 @@
             "add": "+50"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2004",
@@ -5242,7 +5346,9 @@
             "add": "-0.4"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2005",
@@ -5355,7 +5461,9 @@
             "add": "+200"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2006",
@@ -5472,7 +5580,9 @@
             "add": "+2500"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2007",
@@ -5640,7 +5750,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2008",
@@ -5808,7 +5920,9 @@
             "add": "-0.2"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2009",
@@ -5923,7 +6037,9 @@
             "add": "+150"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2201",
@@ -6084,7 +6200,9 @@
       ],
       "tags": [
         "BOSS_MONSTER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2301",
@@ -6144,7 +6262,9 @@
       ],
       "tags": [
         "BOSS_MONSTER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2401",
@@ -6205,7 +6325,9 @@
       "tags": [
         "BIG_MONSTER",
         "GOLEM_MONSTER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2202",
@@ -6364,7 +6486,9 @@
           "icon": "switchinfo_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2302",
@@ -6424,7 +6548,9 @@
       ],
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2402",
@@ -6482,7 +6608,9 @@
           "icon": "switchinfo_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2203",
@@ -6641,7 +6769,9 @@
           "icon": "gear_value_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2303",
@@ -6699,7 +6829,9 @@
           "icon": "gear_value_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2403",
@@ -6760,7 +6892,9 @@
       "tags": [
         "BUFF_ATKSPD",
         "CONNECT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2204",
@@ -6926,7 +7060,9 @@
       ],
       "tags": [
         "ELEMENT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2304",
@@ -6991,7 +7127,9 @@
       ],
       "tags": [
         "ELEMENT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2404",
@@ -7056,7 +7194,9 @@
       ],
       "tags": [
         "ELEMENT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2205",
@@ -7217,7 +7357,9 @@
       ],
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2305",
@@ -7275,7 +7417,9 @@
           "icon": "neon_value_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2405",
@@ -7333,7 +7477,9 @@
           "icon": "neon_value_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2206",
@@ -7494,7 +7640,9 @@
       ],
       "tags": [
         "SAW"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2306",
@@ -7554,7 +7702,9 @@
       ],
       "tags": [
         "SAW"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2406",
@@ -7565,7 +7715,7 @@
       "node_type_zh": "骰子符文",
       "kind_id": 48,
       "name_zh": "鋸齒額外召喚",
-      "description_zh": "發動技能時，{0}%機率額外發動1次",
+      "description_zh": "召喚鋸齒骰子時，{0}%機率額外召喚1個鋸齒",
       "short_label": "鋸齒額外召喚",
       "x": -200,
       "y": -1550,
@@ -7612,7 +7762,9 @@
           "icon": "sawblade_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2207",
@@ -7776,7 +7928,9 @@
           "icon": "minesp_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2307",
@@ -7839,7 +7993,9 @@
           "icon": "minesp_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2407",
@@ -7905,7 +8061,9 @@
       "tags": [
         "MERGE",
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2208",
@@ -8069,7 +8227,9 @@
           "icon": "attackspeed_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2308",
@@ -8132,7 +8292,9 @@
           "icon": "attackspeed_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2408",
@@ -8195,7 +8357,9 @@
           "icon": "attackspeed_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2209",
@@ -8357,7 +8521,9 @@
       "tags": [
         "BULLET",
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2309",
@@ -8417,7 +8583,9 @@
       ],
       "tags": [
         "LASER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2409",
@@ -8478,7 +8646,9 @@
       "tags": [
         "LASER",
         "AREA_DAMAGE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2101",
@@ -8563,7 +8733,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2102",
@@ -8709,7 +8881,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2103",
@@ -8784,7 +8958,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2104",
@@ -8870,7 +9046,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2105",
@@ -8933,7 +9111,9 @@
       "icon_name": "PassiveBigIcon_CriticalRate",
       "icon_file": "icons/PassiveBigIcon_CriticalRate.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2106",
@@ -8974,7 +9154,9 @@
       "icon_name": "PassiveBigIcon_Engineering",
       "icon_file": "icons/PassiveBigIcon_Engineering.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2107",
@@ -9015,7 +9197,9 @@
       "icon_name": "PassiveBigIcon_Engineering",
       "icon_file": "icons/PassiveBigIcon_Engineering.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2108",
@@ -9056,7 +9240,9 @@
       "icon_name": "PassiveBigIcon_Engineering",
       "icon_file": "icons/PassiveBigIcon_Engineering.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2109",
@@ -9301,7 +9487,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2110",
@@ -9376,7 +9564,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2111",
@@ -9463,7 +9653,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2112",
@@ -9506,7 +9698,9 @@
       "icon_name": "PassiveBigIcon_Spup",
       "icon_file": "icons/PassiveBigIcon_Spup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2113",
@@ -9549,7 +9743,9 @@
       "icon_name": "PassiveBigIcon_HPup",
       "icon_file": "icons/PassiveBigIcon_HPup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2114",
@@ -9592,7 +9788,9 @@
       "icon_name": "Perk_Change_Profile",
       "icon_file": "icons/Perk_Change_Profile.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "2115",
@@ -9635,7 +9833,9 @@
       "icon_name": "PassiveBigIcon_Surport_E",
       "icon_file": "icons/PassiveBigIcon_Surport_E.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3001",
@@ -9747,6 +9947,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "3001",
@@ -9887,7 +10089,9 @@
             "add": "+2"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3003",
@@ -10109,7 +10313,9 @@
             "add": "+1"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3004",
@@ -10169,7 +10375,9 @@
         "attack_add": "+25",
         "interval_add": "",
         "special_stats": []
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3005",
@@ -10284,7 +10492,9 @@
             "add": "+50"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3006",
@@ -10397,7 +10607,9 @@
             "add": "-0.5"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3007",
@@ -10514,7 +10726,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3201",
@@ -10673,7 +10887,9 @@
           "icon": "electric_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3301",
@@ -10733,7 +10949,9 @@
       ],
       "tags": [
         "CHAIN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3401",
@@ -10793,7 +11011,9 @@
       ],
       "tags": [
         "CHAIN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3202",
@@ -10804,7 +11024,7 @@
       "node_type_zh": "骰子符文",
       "kind_id": 142,
       "name_zh": "共鳴增幅",
-      "description_zh": "<tag>RESONANCE</tag>基本增益量增加{0}%",
+      "description_zh": "<tag>RESONANCE</tag>基本增益量增加{0}%<color=#00FF00>(+{1}%)</color>",
       "short_label": "共鳴增幅",
       "x": 2650,
       "y": -2600,
@@ -10954,7 +11174,9 @@
       ],
       "tags": [
         "RESONANCE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3302",
@@ -11016,7 +11238,9 @@
         "RESONANCE",
         "BUFF_ATKSPD",
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3402",
@@ -11027,7 +11251,7 @@
       "node_type_zh": "骰子符文",
       "kind_id": 144,
       "name_zh": "三重共鳴",
-      "description_zh": "存在3個以上相同骰點的共鳴骰子時，<br>額外獲得{0}%基本傷害增益",
+      "description_zh": "存在3個以上相同骰點的共鳴骰子時，<br>每個獲得{0}%基本傷害增益",
       "short_label": "三重共鳴",
       "x": 2500,
       "y": -2450,
@@ -11076,7 +11300,9 @@
       ],
       "tags": [
         "RESONANCE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3203",
@@ -11247,7 +11473,9 @@
       ],
       "tags": [
         "SHURIKEN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3303",
@@ -11319,7 +11547,9 @@
         "OVERSHURIKEN",
         "MERGE",
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3403",
@@ -11391,7 +11621,9 @@
         "MERGE",
         "SUMMON",
         "SHURIKEN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3204",
@@ -11544,7 +11776,9 @@
       "dice_attack": "50",
       "dice_attack_interval": "1.5",
       "special_stats": [],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3304",
@@ -11599,7 +11833,9 @@
       "tags": [
         "MERGE",
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3404",
@@ -11653,7 +11889,9 @@
       "special_stats": [],
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3205",
@@ -11814,7 +12052,9 @@
       ],
       "tags": [
         "COMBO"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3305",
@@ -11874,7 +12114,9 @@
       ],
       "tags": [
         "COMBO"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3405",
@@ -11935,7 +12177,9 @@
       "tags": [
         "COMBO",
         "MERGE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3206",
@@ -12094,7 +12338,9 @@
           "icon": "adjustinfo_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3306",
@@ -12154,7 +12400,9 @@
       ],
       "tags": [
         "MERGE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3406",
@@ -12212,7 +12460,9 @@
           "icon": "adjustinfo_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3207",
@@ -12378,7 +12628,9 @@
       ],
       "tags": [
         "POTION"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3307",
@@ -12443,7 +12695,9 @@
       ],
       "tags": [
         "POTION"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3407",
@@ -12508,7 +12762,9 @@
       ],
       "tags": [
         "POTION"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3101",
@@ -12653,7 +12909,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3102",
@@ -12738,7 +12996,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3103",
@@ -12823,7 +13083,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3104",
@@ -12898,7 +13160,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3105",
@@ -12962,7 +13226,9 @@
       "icon_name": "PassiveBigIcon_CriticalRate",
       "icon_file": "icons/PassiveBigIcon_CriticalRate.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3106",
@@ -13005,7 +13271,9 @@
       "icon_status": "sprite",
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3107",
@@ -13048,7 +13316,9 @@
       "icon_status": "sprite",
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3108",
@@ -13091,7 +13361,9 @@
       "icon_status": "sprite",
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3109",
@@ -13337,7 +13609,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3110",
@@ -13413,7 +13687,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3111",
@@ -13498,7 +13774,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3112",
@@ -13541,7 +13819,9 @@
       "icon_name": "PassiveBigIcon_Spup",
       "icon_file": "icons/PassiveBigIcon_Spup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3113",
@@ -13584,7 +13864,9 @@
       "icon_name": "PassiveBigIcon_HPup",
       "icon_file": "icons/PassiveBigIcon_HPup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3114",
@@ -13628,7 +13910,9 @@
       "tags": [
         "DEATH",
         "NORMAL_MONSTER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "3115",
@@ -13671,7 +13955,9 @@
       "icon_name": "PassiveBigIcon_Surport_M",
       "icon_file": "icons/PassiveBigIcon_Surport_M.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4001",
@@ -13731,7 +14017,9 @@
         "attack_add": "+60",
         "interval_add": "",
         "special_stats": []
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4002",
@@ -13901,7 +14189,9 @@
             "add": "+5"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4003",
@@ -13941,7 +14231,7 @@
       "dice_type": "Punch",
       "dice_group": "Guardian",
       "dice_attack": "25",
-      "dice_attack_interval": "1",
+      "dice_attack_interval": "0",
       "dice_awaken": "以滿能量攻擊時，對所有怪物發動審判，<br>造成各目標失去生命值20%的傷害",
       "icon_name": "Dice_Punch2",
       "icon_file": "icons/Dice_Punch2.png",
@@ -14069,7 +14359,9 @@
             "add": "+1"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4004",
@@ -14238,7 +14530,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4005",
@@ -14354,7 +14648,9 @@
             "add": "+200"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4006",
@@ -14415,7 +14711,9 @@
         "attack_add": "+50",
         "interval_add": "",
         "special_stats": []
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4007",
@@ -14532,7 +14830,9 @@
             "add": "+40"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4008",
@@ -14753,6 +15053,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "4008",
@@ -14854,7 +15156,9 @@
       ],
       "tags": [
         "BUBBLE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4301",
@@ -15017,7 +15321,9 @@
       ],
       "tags": [
         "BUBBLE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4401",
@@ -15082,7 +15388,9 @@
       ],
       "tags": [
         "BUBBLE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4202",
@@ -15095,7 +15403,7 @@
       "name_zh": "鎖定時間增加",
       "description_zh": "<tag>LOCK</tag>持續時間增加{0}秒<color=#00FF00>(+{1}秒)</color>",
       "short_label": "鎖定時間增加",
-      "x": -950,
+      "x": -1200,
       "y": 950,
       "is_big": false,
       "is_base": false,
@@ -15243,7 +15551,9 @@
       ],
       "tags": [
         "LOCK"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4302",
@@ -15256,8 +15566,8 @@
       "name_zh": "SP收穫",
       "description_zh": "擊殺<tag>LOCK</tag>狀態怪物時，獲得2倍SP",
       "short_label": "SP收穫",
-      "x": -800,
-      "y": 800,
+      "x": -1000,
+      "y": 950,
       "is_big": false,
       "is_base": false,
       "is_show": false,
@@ -15303,7 +15613,9 @@
       ],
       "tags": [
         "LOCK"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4402",
@@ -15316,8 +15628,8 @@
       "name_zh": "永久封印",
       "description_zh": "對<tag>NORMAL_MONSTER</tag>賦予<tag>LOCK</tag>時，以20%機率永久封印",
       "short_label": "永久封印",
-      "x": -1100,
-      "y": 1100,
+      "x": -1200,
+      "y": 1150,
       "is_big": false,
       "is_base": false,
       "is_show": false,
@@ -15364,7 +15676,9 @@
       "tags": [
         "NORMAL_MONSTER",
         "LOCK"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4203",
@@ -15533,7 +15847,9 @@
           "icon": "punch_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4303",
@@ -15607,7 +15923,9 @@
       ],
       "tags": [
         "CHARGE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4403",
@@ -15675,7 +15993,9 @@
           "icon": "punch_interval_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4204",
@@ -15841,7 +16161,9 @@
       ],
       "tags": [
         "GROWTH"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4304",
@@ -15906,7 +16228,9 @@
       ],
       "tags": [
         "GROWTH"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4404",
@@ -15971,7 +16295,9 @@
       ],
       "tags": [
         "GROWTH"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4205",
@@ -16137,7 +16463,9 @@
       ],
       "tags": [
         "EXECUTIONER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4305",
@@ -16202,7 +16530,9 @@
       ],
       "tags": [
         "EXECUTIONER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4405",
@@ -16267,7 +16597,9 @@
       ],
       "tags": [
         "EXECUTIONER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4206",
@@ -16422,7 +16754,9 @@
       "special_stats": [],
       "tags": [
         "BLESS"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4306",
@@ -16476,7 +16810,9 @@
       "special_stats": [],
       "tags": [
         "BLESS"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4406",
@@ -16532,7 +16868,9 @@
         "CHARGE",
         "MERGE",
         "BLESS"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4207",
@@ -16693,7 +17031,9 @@
       ],
       "tags": [
         "ALIGNMENT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4307",
@@ -16753,7 +17093,9 @@
       ],
       "tags": [
         "ALIGNMENT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4407",
@@ -16814,7 +17156,9 @@
       "tags": [
         "ALIGNMENT",
         "ELITE_MONSTER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4208",
@@ -16986,7 +17330,9 @@
       "tags": [
         "BUFF_ATKSPD",
         "TAEGEUK"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4308",
@@ -17154,7 +17500,9 @@
       ],
       "tags": [
         "TAEGEUK"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4408",
@@ -17322,7 +17670,9 @@
       ],
       "tags": [
         "HARMONY"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4101",
@@ -17467,7 +17817,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4102",
@@ -17554,7 +17906,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4103",
@@ -17641,7 +17995,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4104",
@@ -17716,7 +18072,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4105",
@@ -17780,7 +18138,9 @@
       "icon_name": "PassiveBigIcon_CriticalRate",
       "icon_file": "icons/PassiveBigIcon_CriticalRate.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4106",
@@ -17821,7 +18181,9 @@
       "icon_name": "PassiveBigIcon_Guardian",
       "icon_file": "icons/PassiveBigIcon_Guardian.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4107",
@@ -17862,7 +18224,9 @@
       "icon_name": "PassiveBigIcon_Guardian",
       "icon_file": "icons/PassiveBigIcon_Guardian.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4108",
@@ -17903,7 +18267,9 @@
       "icon_name": "PassiveBigIcon_Guardian",
       "icon_file": "icons/PassiveBigIcon_Guardian.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4109",
@@ -18149,7 +18515,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4110",
@@ -18224,7 +18592,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4111",
@@ -18310,7 +18680,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4112",
@@ -18353,7 +18725,9 @@
       "icon_name": "PassiveBigIcon_Spup",
       "icon_file": "icons/PassiveBigIcon_Spup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4113",
@@ -18396,7 +18770,9 @@
       "icon_name": "PassiveBigIcon_HPup",
       "icon_file": "icons/PassiveBigIcon_HPup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4114",
@@ -18437,7 +18813,9 @@
       "icon_name": "Perk_Cannon_Profile",
       "icon_file": "icons/Perk_Cannon_Profile.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "4115",
@@ -18480,7 +18858,9 @@
       "icon_name": "PassiveBigIcon_Surport_G",
       "icon_file": "icons/PassiveBigIcon_Surport_G.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5001",
@@ -18597,7 +18977,9 @@
             "add": "+250"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5002",
@@ -18818,6 +19200,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_condition_key": "unlock.coopKills",
       "unlock_condition_label_zh": "合作擊殺數",
       "unlock_condition_evidence": {
@@ -18997,7 +19381,9 @@
             "add": "-0.5"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5004",
@@ -19008,7 +19394,7 @@
       "node_type_zh": "骰子",
       "kind_id": 54,
       "name_zh": "破滅骰子",
-      "description_zh": "每隔一段時間發動<tag>DOOM</tag>後，骰點-1",
+      "description_zh": "每隔一段時間發動<tag>DOOM</tag>後，骰點減少1，並轉換骰子",
       "short_label": "破滅骰子",
       "x": 3700,
       "y": 1200,
@@ -19112,7 +19498,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5005",
@@ -19282,7 +19670,9 @@
             "add": ""
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5006",
@@ -19397,6 +19787,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "5006",
@@ -19598,7 +19990,9 @@
             "add": "+0.05"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5008",
@@ -19711,6 +20105,8 @@
           }
         ]
       },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": [],
       "unlock_cost_policy": {
         "policy": "resource_free",
         "node_id": "5008",
@@ -19858,7 +20254,9 @@
             "add": "+2"
           }
         ]
-      }
+      },
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5101",
@@ -20003,7 +20401,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5102",
@@ -20090,7 +20490,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5103",
@@ -20176,7 +20578,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5104",
@@ -20252,7 +20656,9 @@
       "icon_status": "sprite",
       "tags": [
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5105",
@@ -20315,7 +20721,9 @@
       "icon_name": "PassiveBigIcon_CriticalRate",
       "icon_file": "icons/PassiveBigIcon_CriticalRate.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5106",
@@ -20360,7 +20768,9 @@
       "icon_status": "sprite",
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5107",
@@ -20403,7 +20813,9 @@
       "icon_status": "sprite",
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5108",
@@ -20446,7 +20858,9 @@
       "icon_status": "sprite",
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5109",
@@ -20692,7 +21106,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5110",
@@ -20765,7 +21181,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5111",
@@ -20850,7 +21268,9 @@
       "icon_status": "sprite",
       "tags": [
         "BULLET"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5112",
@@ -20893,7 +21313,9 @@
       "icon_name": "PassiveBigIcon_Spup",
       "icon_file": "icons/PassiveBigIcon_Spup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5113",
@@ -20936,7 +21358,9 @@
       "icon_name": "PassiveBigIcon_HPup",
       "icon_file": "icons/PassiveBigIcon_HPup.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5114",
@@ -20979,7 +21403,9 @@
       "icon_status": "sprite",
       "tags": [
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5115",
@@ -21022,7 +21448,9 @@
       "icon_name": "PassiveBigIcon_Surport_I",
       "icon_file": "icons/PassiveBigIcon_Surport_I.png",
       "icon_status": "sprite",
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5201",
@@ -21181,7 +21609,9 @@
           "icon": "Solitude_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5301",
@@ -21241,7 +21671,9 @@
       ],
       "tags": [
         "ALONE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5401",
@@ -21252,7 +21684,7 @@
       "node_type_zh": "骰子符文",
       "kind_id": 135,
       "name_zh": "孤獨力量",
-      "description_zh": "每1個骰盤空格，使傷害增加{0}%",
+      "description_zh": "骰盤上每有1個空格，使傷害增加{0}%",
       "short_label": "孤獨力量",
       "x": 3450,
       "y": 400,
@@ -21299,7 +21731,9 @@
           "icon": "Solitude_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5202",
@@ -21455,7 +21889,9 @@
       "tags": [
         "BULLET",
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5302",
@@ -21509,7 +21945,9 @@
       "special_stats": [],
       "tags": [
         "STUN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5402",
@@ -21563,7 +22001,9 @@
       "special_stats": [],
       "tags": [
         "STUN"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5203",
@@ -21729,7 +22169,9 @@
       ],
       "tags": [
         "TYRANT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5303",
@@ -21794,7 +22236,9 @@
       ],
       "tags": [
         "TYRANT"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5403",
@@ -21857,7 +22301,9 @@
           "icon": "attackspeed_icon.png"
         }
       ],
-      "tags": []
+      "tags": [],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5204",
@@ -22024,7 +22470,9 @@
       "tags": [
         "DOOM",
         "ELITE_MONSTER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5304",
@@ -22089,7 +22537,9 @@
       ],
       "tags": [
         "DOOM"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5404",
@@ -22154,7 +22604,9 @@
       ],
       "tags": [
         "DOOM"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5205",
@@ -22320,7 +22772,9 @@
       ],
       "tags": [
         "MUTATION"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5305",
@@ -22386,7 +22840,9 @@
       "tags": [
         "FAILURE",
         "MUTATION"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5405",
@@ -22452,7 +22908,9 @@
       "tags": [
         "MUTATION",
         "FAILURE"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5206",
@@ -22613,7 +23071,9 @@
       ],
       "tags": [
         "TRANSFER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5306",
@@ -22673,7 +23133,9 @@
       ],
       "tags": [
         "TRANSFER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5406",
@@ -22735,7 +23197,9 @@
         "TRANSFER",
         "MERGE",
         "SUMMON"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5207",
@@ -22901,7 +23365,9 @@
       ],
       "tags": [
         "PREDATOR"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5307",
@@ -22912,7 +23378,7 @@
       "node_type_zh": "骰子符文",
       "kind_id": 140,
       "name_zh": "連鎖吞噬",
-      "description_zh": "獲得<tag>PREDATOR</tag>時，{0}%機率額外獲得{1}疊加",
+      "description_zh": "獲得<tag>PREDATOR</tag>時，{0}%機率額外獲得{2}疊加",
       "short_label": "連鎖吞噬",
       "x": 1050,
       "y": 300,
@@ -22966,7 +23432,9 @@
       ],
       "tags": [
         "PREDATOR"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5407",
@@ -23032,7 +23500,9 @@
       "tags": [
         "NORMAL_MONSTER",
         "PREDATOR"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5208",
@@ -23194,7 +23664,9 @@
       "tags": [
         "BULLET",
         "BUFF_ATKSPD"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5308",
@@ -23254,7 +23726,9 @@
       ],
       "tags": [
         "DEATH"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5408",
@@ -23315,7 +23789,9 @@
       "tags": [
         "SPEED_MONSTER",
         "BIG_MONSTER"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5209",
@@ -23476,7 +23952,9 @@
       ],
       "tags": [
         "DECAY"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5309",
@@ -23536,7 +24014,9 @@
       ],
       "tags": [
         "DECAY"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
     },
     {
       "id": "5409",
@@ -23597,7 +24077,284 @@
       "tags": [
         "BOSS_MONSTER",
         "DECAY"
-      ]
+      ],
+      "cost_resource": "NODE_STONE",
+      "rank_requirements": []
+    },
+    {
+      "id": "1501",
+      "index": 240,
+      "branch": 1,
+      "branch_zh": "自然",
+      "node_type": "DICE",
+      "node_type_zh": "骰子",
+      "kind_id": 56,
+      "name_zh": "太陽骰子",
+      "description_zh": "每攻擊相同怪物時，傷害增加，直到達到最大疊加<br>召喚3、5、7、9個「太陽骰子」時，變為【啟用】狀態，並造成範圍傷害",
+      "short_label": "太陽骰子",
+      "x": -700,
+      "y": 850,
+      "is_big": false,
+      "is_base": false,
+      "is_show": true,
+      "unlock_condition": "",
+      "unlock_condition_zh": "前置節點",
+      "unlock_condition_value": "",
+      "next_nodes": [
+        "1601"
+      ],
+      "incoming": [
+        "1301",
+        "1401"
+      ],
+      "gold_costs": [
+        100000
+      ],
+      "core_costs": [
+        2000
+      ],
+      "cost_resource": "CORE_SOLAR",
+      "rank_requirements": [
+        {
+          "node_id": "1201",
+          "rank": 50
+        },
+        {
+          "node_id": "1301",
+          "rank": 1
+        },
+        {
+          "node_id": "1401",
+          "rank": 1
+        }
+      ],
+      "max_rank": 1,
+      "unlock_gold": 100000,
+      "unlock_core": 2000,
+      "total_gold": 100000,
+      "total_core": 2000,
+      "dice_type": "Solar",
+      "dice_group": "Nature",
+      "dice_attack": "3000",
+      "dice_attack_interval": "1",
+      "dice_awaken": "無論骰子數量，總是啟用效果",
+      "icon_name": "Dice_solar2",
+      "icon_file": "icons/Dice_solar2.png",
+      "icon_status": "sprite",
+      "special_stats": [
+        {
+          "stat_id": "ProjectileAbilityTable:Solar:StackMax",
+          "label_key": "pa_Solar_value",
+          "label": "太陽之力階段",
+          "value": "10",
+          "unit": "",
+          "icon": "Attack_Icon.png",
+          "raw_source": {
+            "table": "ProjectileAbilityTable",
+            "key": "Solar",
+            "field": "StackMax",
+            "label_key": "pa_Solar_value",
+            "base": "10",
+            "powerup": "",
+            "dot": ""
+          }
+        }
+      ],
+      "powerup_data": {
+        "attack_add": "+2000",
+        "interval_add": "",
+        "special_stats": [
+          {
+            "stat_id": "ProjectileAbilityTable:Solar:StackMax",
+            "label_key": "pa_Solar_value",
+            "label": "太陽之力階段",
+            "value": "10",
+            "unit": "",
+            "icon": "Attack_Icon.png",
+            "raw_source": {
+              "table": "ProjectileAbilityTable",
+              "key": "Solar",
+              "field": "StackMax",
+              "label_key": "pa_Solar_value",
+              "base": "10",
+              "powerup": "",
+              "dot": ""
+            },
+            "add": ""
+          }
+        ]
+      },
+      "dot_data": {
+        "attack_add": "+9000",
+        "interval_add": "",
+        "special_stats": [
+          {
+            "stat_id": "ProjectileAbilityTable:Solar:StackMax",
+            "label_key": "pa_Solar_value",
+            "label": "太陽之力階段",
+            "value": "10",
+            "unit": "",
+            "icon": "Attack_Icon.png",
+            "raw_source": {
+              "table": "ProjectileAbilityTable",
+              "key": "Solar",
+              "field": "StackMax",
+              "label_key": "pa_Solar_value",
+              "base": "10",
+              "powerup": "",
+              "dot": ""
+            },
+            "add": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "1601",
+      "index": 241,
+      "branch": 1,
+      "branch_zh": "自然",
+      "node_type": "DICE_RUNE",
+      "node_type_zh": "骰子符文",
+      "kind_id": 154,
+      "name_zh": "太陽強化",
+      "description_zh": "<tag>SOLAR_POWER</tag>+{0}<color=#00FF00>(+{1})</color>階段增加",
+      "short_label": "太陽強化",
+      "x": -700,
+      "y": 600,
+      "is_big": false,
+      "is_base": false,
+      "is_show": false,
+      "unlock_condition": "",
+      "unlock_condition_zh": "前置節點",
+      "unlock_condition_value": "",
+      "next_nodes": [],
+      "incoming": [
+        "1501"
+      ],
+      "gold_costs": [
+        50000,
+        100000,
+        150000,
+        200000,
+        250000,
+        300000,
+        350000,
+        400000,
+        450000,
+        500000,
+        550000,
+        600000,
+        650000,
+        700000,
+        750000,
+        800000,
+        850000,
+        900000,
+        950000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000,
+        1000000
+      ],
+      "core_costs": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000,
+        1100,
+        1200,
+        1300,
+        1400,
+        1500,
+        1600,
+        1700,
+        1800,
+        1900,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000,
+        2000
+      ],
+      "cost_resource": "CORE_SOLAR",
+      "rank_requirements": [],
+      "max_rank": 20,
+      "unlock_gold": 50000,
+      "unlock_core": 100,
+      "total_gold": 10500000,
+      "total_core": 21000,
+      "rune_kind": "SolarMaxStackUp",
+      "rune_grade": "Common",
+      "rune_dice": "Solar",
+      "rune_value1": "2",
+      "rune_value1_rank_add": "2",
+      "rune_value2": "",
+      "rune_value2_rank_add": "",
+      "rune_duration": "",
+      "rune_duration_rank_add": "",
+      "icon_name": "Runenode_Sun_0",
+      "icon_file": "icons/Runenode_Sun_0.png",
+      "icon_status": "sprite"
     }
   ],
   "edges": [
@@ -23696,6 +24453,14 @@
     {
       "from": "1201",
       "to": "1401"
+    },
+    {
+      "from": "1301",
+      "to": "1501"
+    },
+    {
+      "from": "1401",
+      "to": "1501"
     },
     {
       "from": "1202",
@@ -24584,6 +25349,10 @@
     {
       "from": "5209",
       "to": "5409"
+    },
+    {
+      "from": "1501",
+      "to": "1601"
     }
   ],
   "tag_definitions": {
@@ -25020,17 +25789,24 @@
       "desc_zh": "持有大量SP的怪物，擊殺後可獲得SP",
       "color": "FFFFFF",
       "bg_color": "A0A7B8"
+    },
+    "SOLAR_POWER": {
+      "key": "SOLAR_POWER",
+      "name_zh": "太陽之力",
+      "desc_zh": "太陽之力每2階段，強化攻擊力。",
+      "color": "FFFFFF",
+      "bg_color": "FF8A3D"
     }
   },
   "raw_lineage": {
-    "snapshot_id": "random-dice-2-1.0.3",
+    "snapshot_id": "random-dice-2-1.1.0",
     "generator": "scripts/generate_canonical_from_raw.mjs",
-    "source_manifest_sha256": "81350202ED943D1021A300FAA85B90F39B5708FBEDB31CAE0E3D2A894D4FB449",
-    "unlock_supplement_sha256": "AAFFBC7414C6015EA61D2B101C2D2E81F772F5F19213A0D3B27F04F9B0EF01D2",
+    "source_manifest_sha256": "6C05B7FACA56F972F6F175F880916DF4CEB79DD589587591E6CFD4C683E2241D",
+    "unlock_supplement_sha256": "86529C9B4D9BC00ED14EEFA8D6C7B04BE1384AB1B7619BC81BA78816061D0372",
     "unlock_supplement_count": 4,
     "topology_correction_count": 2,
-    "official_notice_sha256": "FDC6B69BB62C82EDA472C1E56572F541EFAF64C7CA1D0BFB1A21C6630C9350EC",
-    "official_coop_override_count": 3,
-    "path": "data/raw_snapshot_1.0.3.json"
+    "official_notice_sha256": "59E20DCEE66184E0FC2256A4519A4981F803D4655494599797591CEE75E089B9",
+    "official_coop_override_count": 0,
+    "path": "data/raw_snapshot_1.1.0.json"
   }
 }

@@ -104,7 +104,7 @@ test("localization: all runtime entities resolve complete translated content", (
   assert.match(durationEvent.mode_desc_versus_zh, /60/);
   assert.doesNotMatch(durationEvent.mode_desc_coop_zh, /\{\d+\}/);
   assert.doesNotMatch(durationEvent.mode_desc_versus_zh, /\{\d+\}/);
-  assert.equal(localized.bossEvents.monsters.length, 15);
+  assert.equal(localized.bossEvents.monsters.length, 26);
 });
 
 test("localization: special unlock conditions and level thresholds use locale keys", () => {

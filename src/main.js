@@ -122,7 +122,9 @@ import {
   ViewportController,
   LocalStorageAdapter,
   HttpShareRepository,
-  generateSimulationShareImage
+  generateSimulationShareImage,
+  generateSplitShareImages,
+  generateSimulationDetailsCardImage
 } from "./infra/index.js";
 
 // State and actions
@@ -207,11 +209,12 @@ export function dismissLoader(isCurrent = () => true, viewportController = null,
     if (canContinue() && targetViewport) {
       targetViewport.updateCachedDimensions?.();
       const currentViewport = targetViewport.getState?.() || null;
+      const hasSelectedNode = Boolean(owner?.store?.getState?.()?.selectedNodeId);
       const unchanged = scheduledViewport && currentViewport
         && Math.abs(Number(currentViewport.x) - Number(scheduledViewport.x)) < 0.01
         && Math.abs(Number(currentViewport.y) - Number(scheduledViewport.y)) < 0.01
         && Math.abs(Number(currentViewport.scale) - Number(scheduledViewport.scale)) < 0.0001;
-      if (unchanged) targetViewport.resetToCenter(true);
+      if (unchanged && !hasSelectedNode) targetViewport.resetToCenter(true);
     }
   }, LOADER_HIDE_DELAY_MS);
 
@@ -332,13 +335,28 @@ export class Application {
           prepareRender: (params) => this.mapRenderer?.prepareShare?.(params),
           renderTree: (params) => this.mapRenderer?.renderToCanvas?.({
             ...params,
+            showNames: typeof params.showNames === "boolean" ? params.showNames : options.showNames,
             state: {
               ...this.store.getState(),
               simulation: options.simulation || this.store.getState().simulation,
               renderUnlockState: params.renderUnlockState || null
             }
           }) || false
-        })
+        }),
+        generateSplit: (options = {}) => generateSplitShareImages({
+          ...options,
+          prepareRender: (params) => this.mapRenderer?.prepareShare?.(params),
+          renderTree: (params) => this.mapRenderer?.renderToCanvas?.({
+            ...params,
+            showNames: typeof params.showNames === "boolean" ? params.showNames : options.showNames,
+            state: {
+              ...this.store.getState(),
+              simulation: options.simulation || this.store.getState().simulation,
+              renderUnlockState: params.renderUnlockState || null
+            }
+          }) || false
+        }),
+        generateDetails: (options = {}) => generateSimulationDetailsCardImage(options)
       },
       shareRepository: new HttpShareRepository()
     });
@@ -593,6 +611,7 @@ export class Application {
       container: document.body,
       tooltipElement: elements.tooltipEl,
       localization: this.localization,
+      storagePort: this.storage,
       onShareUrl: (url) => {
         const route = parseUrlState(url);
         if (route.kind === URL_ROUTE_KINDS.SIMULATION) this._navigateUrl(route);
@@ -793,27 +812,61 @@ export class Application {
     });
   }
 
+  _openTreeNodeRoute(route, centerOnNodeForTooltip) {
+    const node = this._resolveUrlEntity(route);
+    if (!node) return;
+    const point = this.nodePositions.get(String(route.id));
+    this.selectNodeUseCase.execute(route.id, { point, nodePositions: this.nodePositions });
+    centerOnNodeForTooltip(route.id, true);
+  }
+
+  _openCompendiumCardRoute(route) {
+    const opened = this.views.compendiumView.showCard(route.category, route.id, route.eventMode || "all");
+    if (!opened) this._navigateUrl({ kind: URL_ROUTE_KINDS.HOME });
+  }
+
+  _isSimulationCrashLoop(route) {
+    if (route.share || typeof sessionStorage === "undefined") return false;
+    const crashGuardKey = "rd2_sim_crash_guard";
+    const now = Date.now();
+    const lastEntry = Number(sessionStorage.getItem(crashGuardKey) || 0);
+    if (lastEntry && now - lastEntry < 4000) {
+      sessionStorage.removeItem(crashGuardKey);
+      console.warn("Detected potential crash recovery loop on simulation route. Resetting to home route.");
+      return true;
+    }
+    sessionStorage.setItem(crashGuardKey, String(now));
+    setTimeout(() => {
+      try { sessionStorage.removeItem(crashGuardKey); } catch {}
+    }, 4000);
+    return false;
+  }
+
+  _openSimulationRoute(route) {
+    if (this.store.getState().simulation?.active) return;
+    if (this._isSimulationCrashLoop(route)) {
+      this._navigateUrl({ kind: URL_ROUTE_KINDS.HOME });
+      return;
+    }
+    this.simulationPlanUseCase.enter();
+  }
+
   _openInitialRoute(route, centerOnNodeForTooltip) {
-    if (route.kind === URL_ROUTE_KINDS.TREE_NODE) {
-      const node = this._resolveUrlEntity(route);
-      if (node) {
-        const point = this.nodePositions.get(String(route.id));
-        this.selectNodeUseCase.execute(route.id, { point, nodePositions: this.nodePositions });
-        centerOnNodeForTooltip(route.id, true);
-      }
-      return;
-    }
-    if (route.kind === URL_ROUTE_KINDS.COMPENDIUM) {
-      this.views.compendiumView.openCategory(route.category, route.eventMode || "all");
-      return;
-    }
-    if (route.kind === URL_ROUTE_KINDS.COMPENDIUM_CARD) {
-      const opened = this.views.compendiumView.showCard(route.category, route.id, route.eventMode || "all");
-      if (!opened) this._navigateUrl({ kind: URL_ROUTE_KINDS.HOME });
-      return;
-    }
-    if (route.kind === URL_ROUTE_KINDS.SIMULATION && !this.store.getState().simulation?.active) {
-      this.simulationPlanUseCase.enter();
+    switch (route.kind) {
+      case URL_ROUTE_KINDS.TREE_NODE:
+        this._openTreeNodeRoute(route, centerOnNodeForTooltip);
+        break;
+      case URL_ROUTE_KINDS.COMPENDIUM:
+        this.views.compendiumView.openCategory(route.category, route.eventMode || "all");
+        break;
+      case URL_ROUTE_KINDS.COMPENDIUM_CARD:
+        this._openCompendiumCardRoute(route);
+        break;
+      case URL_ROUTE_KINDS.SIMULATION:
+        this._openSimulationRoute(route);
+        break;
+      default:
+        break;
     }
   }
 
@@ -916,13 +969,19 @@ export class Application {
   }
 
   async _finishBootstrap(generation, cleanNodes, warmups) {
-    this.viewportController.resetToCenter(true);
+    const selectedNodeId = this.store.getState()?.selectedNodeId;
+    if (!selectedNodeId) {
+      this.viewportController.resetToCenter(true);
+    }
     await warmups.rendererReady;
     // Font loading is allowed to finish in the background. Canvas labels are
     // redrawn by the renderer when the requested web font becomes available;
     // the network response must not hold the first interactive map hostage.
     void warmups.fontWarmup.catch(() => {});
     await setLoaderProgress(100, this._t("loader.complete", {}, "Ready"));
+    if (selectedNodeId && this._globalHooks?.center) {
+      this._globalHooks.center(selectedNodeId, true);
+    }
     if (this._loaderDismissTimer) clearTimeout(this._loaderDismissTimer);
     this._loaderDismissTimer = setTimeout(() => {
       this._loaderDismissTimer = null;

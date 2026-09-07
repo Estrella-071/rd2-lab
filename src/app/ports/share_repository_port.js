@@ -6,7 +6,7 @@
  * backed by Pages Functions, a local test server, or another HTTP service.
  */
 export class ShareRepositoryPort {
-  async createShare(_encoded) {
+  async createShare(_encoded, _options = {}) {
     throw new Error("ShareRepositoryPort.createShare must be implemented by an adapter.");
   }
 

@@ -1,3 +1,4 @@
+import { syncTreeSvg } from "./lib/sync_tree_svg.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -18,7 +19,7 @@ const canonicalPath = path.join(rootDir, "site", "data", "dice_tree.json");
 const svgPath = path.join(rootDir, "site", "data", "dice_tree.svg");
 const metadataPath = path.join(rootDir, "site", "data", "game_data_metadata.json");
 const compendiumPath = path.join(rootDir, "site", "boss_event_data.json");
-const lineagePath = path.join(rootDir, "data", "raw_snapshot_1.0.3.json");
+const lineagePath = path.join(rootDir, "data", "raw_snapshot_1.1.0.json");
 
 function hasFlag(flag) {
   return process.argv.includes(flag);
@@ -55,8 +56,12 @@ function applyTopologyCorrectionsToSvg(corrections) {
 function buildExpectedMetadata(current, canonical, raw) {
   return {
     ...current,
+    canonical: { ...current.canonical, game_version: raw.manifest.version, snapshot_id: raw.snapshotId },
     source: {
       ...current.source,
+      snapshot_id: raw.snapshotId,
+      verified_at: "2026-09-05",
+      evidence_boundary_zh: "1.1.0 客戶端資料快照；251 條原始連線、249 條有效連線。即時平衡與執行期公式以遊戲內顯示為準。",
       tree_node_count: canonical.summary.node_count,
       tree_edge_count: canonical.summary.edge_count,
       raw_tree_edge_count: raw.tree.edges.length,
@@ -81,6 +86,9 @@ function updateProvenance() {
     provenance.publishedData.metadata.sha256 = sha256File(metadataPath);
     provenance.publishedData.nodeCount = JSON.parse(fs.readFileSync(canonicalPath, "utf8")).summary.node_count;
     provenance.publishedData.edgeCount = JSON.parse(fs.readFileSync(canonicalPath, "utf8")).summary.edge_count;
+    for (const entry of Object.values(provenance.publishedData || {})) {
+      if (entry?.path && entry.sha256) entry.sha256 = sha256File(path.join(rootDir, entry.path));
+    }
     writeJson(filePath, provenance);
   }
   return { canonicalHash, compendiumHash };
@@ -156,7 +164,7 @@ function main() {
   }
 
   writeJson(canonicalPath, expected);
-  applyTopologyCorrectionsToSvg(raw.unlockSupplements?.topology_corrections);
+  syncTreeSvg(svgPath, raw, expected);
   writeJson(metadataPath, expectedMetadata);
   writeJson(compendiumPath, expectedCompendium);
   const lineage = buildLineage(raw, expected, expectedCompendium);

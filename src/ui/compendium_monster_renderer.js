@@ -32,7 +32,8 @@ export function renderMonsters(compendium) {
 
   const groups = [
     { key: "normal", color: "#4ecdc4", filter: (m) => m.subType !== "BOSS" && m.category !== "BOSS" },
-    { key: "boss", color: "#ff5277", filter: (m) => m.subType === "BOSS" || m.category === "BOSS" }
+    { key: "boss", color: "#ff5277", filter: (m) => (m.subType === "BOSS" || m.category === "BOSS") && m.difficulty !== "hard" }
+    , { key: "hard", color: "#ef8b54", filter: (m) => m.difficulty === "hard" }
   ];
 
   groups.forEach((g) => {

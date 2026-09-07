@@ -20,9 +20,8 @@ const NODE_ART_YIELD_BATCH = 8;
 const DYNAMIC_BOUNDS_PADDING = 128;
 const OVERVIEW_RESOLUTION = 1;
 const OVERVIEW_MIN_PIXEL_SCALE = 0.5;
-// Active paths are stateful but contain no image assets. Keep their continuity
-// overlay cheaper than the sprite overview so state changes can repaint the
-// whole map synchronously without retaining every 1x atlas page.
+// Active paths are stateful but contain no image assets. Render at full
+// resolution so zooming never introduces bilinear scaling blur or edge artifacts.
 const OVERVIEW_EDGE_PIXEL_SCALE = 0.25;
 // Dimming is a world-space state, not a viewport-space effect. Keep one fixed
 // low-density geometry surface for the complete map so panning never exposes
@@ -30,6 +29,7 @@ const OVERVIEW_EDGE_PIXEL_SCALE = 0.25;
 // at the active resolution, so the flat tint does not lower icon sharpness.
 const FULL_MAP_DIM_MASK_PIXEL_SCALE = 0.5;
 const FULL_MAP_DIM_MASK_ALPHA = 0.66;
+const DIMMED_NODE_FRAME_STROKE = "#3E3755";
 // Keep the line-dimming veil in one fixed world-space bitmap as well. The
 // mask is deliberately low density because it only contains a flat tint and
 // transparent holes; the active line itself remains in the resolution-sized
@@ -63,6 +63,7 @@ const COLORS = Object.freeze({
 });
 const NODE_VISUAL_SCALE = Object.freeze({
   dice: 0.72,
+  "mythic-dice": 0.72,
   perk: 0.72,
   rune: 0.56,
   "large-passive": 0.72,
@@ -70,6 +71,7 @@ const NODE_VISUAL_SCALE = Object.freeze({
 });
 const NODE_OCCLUSION_GEOMETRY = Object.freeze({
   dice: Object.freeze({ kind: "roundedRect", x: -48.24, y: -50.4, width: 96.48, height: 100.8, radius: 11.52 }),
+  "mythic-dice": Object.freeze({ kind: "hexagon", width: 130 * 0.72, height: 149 * 0.72, cornerH: 33 * 0.72, radius: 8.5 * 0.72 }),
   perk: Object.freeze({ kind: "roundedRect", x: -48.96, y: -27.36, width: 97.92, height: 54.72, radius: 10.08 }),
   rune: Object.freeze({ kind: "ellipse", x: 0, y: 4, radiusX: 27, radiusY: 30 }),
   "large-passive": Object.freeze({ kind: "rotatedRoundedRect", size: 68, radius: 14 }),
@@ -84,7 +86,8 @@ const CENTER_STATS = Object.freeze({
 });
 const CURRENCY_SPRITE_BOXES = Object.freeze({
   gold: Object.freeze({ x: -0.2605634, y: -0.2676056, width: 1.5211268, height: 1.6197183 }),
-  core: Object.freeze({ x: -0.2219731, y: -0.2690583, width: 1.4439462, height: 1.6233184 })
+  core: Object.freeze({ x: -0.2219731, y: -0.2690583, width: 1.4439462, height: 1.6233184 }),
+  solar: Object.freeze({ x: -0.1, y: -0.25, width: 1.2, height: 1.6 })
 });
 
 function yieldToNextFrame() {
@@ -155,6 +158,25 @@ function getCanvas2DContext(canvas) {
   }
 }
 
+export function releaseCanvas(canvas) {
+  if (!canvas) return;
+  try {
+    // WebKit / mobile browsers retain GPU surfaces for detached canvases until GC.
+    // Explicitly zeroing out width/height forces the engine to immediately release
+    // the underlying GPU backing store and avoid process memory termination.
+    canvas.width = 1;
+    canvas.height = 1;
+    const context = canvas.getContext?.("2d");
+    if (context) {
+      context.setTransform?.(1, 0, 0, 1, 0, 0);
+      context.clearRect?.(0, 0, 1, 1);
+    }
+  } catch {
+    // Ignore detached context errors
+  }
+  canvas.remove?.();
+}
+
 function estimateTextWidth(text, fontSize = 14.5) {
   let width = 0;
   for (const character of String(text || "")) {
@@ -178,14 +200,43 @@ function roundedRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
+function appendRoundedHexagonPath(ctx, cx, cy, width, height, cornerH, radius) {
+  const pts = [
+    { x: cx, y: cy - height / 2 },
+    { x: cx + width / 2, y: cy - height / 2 + cornerH },
+    { x: cx + width / 2, y: cy + height / 2 - cornerH },
+    { x: cx, y: cy + height / 2 },
+    { x: cx - width / 2, y: cy + height / 2 - cornerH },
+    { x: cx - width / 2, y: cy - height / 2 + cornerH }
+  ];
+  const r = Math.min(radius, cornerH, width / 4);
+  const startX = (pts[5].x + pts[0].x) / 2;
+  const startY = (pts[5].y + pts[0].y) / 2;
+  ctx.moveTo(startX, startY);
+  for (let i = 0; i < pts.length; i += 1) {
+    const next = pts[(i + 1) % pts.length];
+    ctx.arcTo(pts[i].x, pts[i].y, next.x, next.y, r);
+  }
+}
+
+function roundedHexagon(ctx, cx, cy, width, height, cornerH, radius) {
+  ctx.beginPath();
+  appendRoundedHexagonPath(ctx, cx, cy, width, height, cornerH, radius);
+  ctx.closePath();
+}
+
 function getNodeLabelTop(node) {
+  const isDice = node?.nodeType === "DICE" || node?.geometry?.shape === "dice";
   const offset = Number(node.labelAnchor?.offsetY);
-  if (Number.isFinite(offset)) return node.y + offset;
+  if (Number.isFinite(offset)) {
+    if (isDice) return Math.min(node.y + offset, node.y - 82);
+    return node.y + offset;
+  }
   let fallback = -60;
   if (node.isBig) fallback = -71;
   if (node.nodeType === "DICE_RUNE") fallback = -47;
   if (node.nodeType === "PERK") fallback = -90;
-  if (node.nodeType === "DICE") fallback = -78;
+  if (isDice) fallback = -82;
   return node.y + fallback;
 }
 
@@ -207,9 +258,10 @@ function getTextMetrics(ctx, text) {
 
 function getSelectionArtworkBounds(node) {
   const shape = node?.geometry?.shape;
+  if (shape === "dice") return null;
   const manifestBounds = node?.artworkBounds;
   const fallback = {
-    dice: { x: -45.878, y: -63.907, width: 91.757, height: 114.307 },
+    "mythic-dice": { x: -46.8, y: -53.64, width: 93.6, height: 107.28 },
     perk: { x: -44.64, y: -66.24, width: 89.28, height: 93.6 },
     rune: { x: -17.76, y: -20.56, width: 35.52, height: 41.12 },
     "large-passive": { x: -16.2, y: -18.18, width: 32.4, height: 35.64 },
@@ -252,6 +304,11 @@ function appendSelectionArtworkCutoutPath(ctx, node, bounds) {
       0,
       Math.PI * 2
     );
+    return;
+  }
+  if (shape === "mythic-dice") {
+    appendRoundedHexagonPath(ctx, (bounds.left + bounds.right) / 2, (bounds.top + bounds.bottom) / 2, width, height, 14);
+    ctx.closePath();
     return;
   }
   appendRoundedRectPath(ctx, bounds.left, bounds.top, width, height, radius);
@@ -308,7 +365,7 @@ function getCurrencyEntries(node, currencyImages) {
   const core = Number(Array.isArray(node.node?.core_costs) ? node.node.core_costs[0] : node.node?.unlock_core) || 0;
   return [
     gold > 0 ? { kind: "gold", image: currencyImages?.get?.("gold"), value: gold } : null,
-    core > 0 ? { kind: "core", image: currencyImages?.get?.("core"), value: core } : null
+    core > 0 ? { kind: node.node?.cost_resource === "CORE_SOLAR" ? "solar" : "core", image: currencyImages?.get?.(node.node?.cost_resource === "CORE_SOLAR" ? "solar" : "core"), value: core } : null
   ].filter(Boolean);
 }
 
@@ -390,23 +447,30 @@ function getRankBadgeAnchor(node) {
   };
 }
 
-function drawSimulationRankBadge(ctx, node, text) {
+function drawSimulationRankBadge(ctx, node, text, scaleMultiplier = 1) {
   if (!ctx || !node || !text) return;
   const anchor = getRankBadgeAnchor(node);
-  const left = node.x + Number(anchor.offsetX) - Number(anchor.width) / 2;
-  const top = node.y + Number(anchor.offsetY);
+  const textSize = Math.round(Number(anchor.textSize || 14) * scaleMultiplier);
   ctx.save();
-  roundedRect(ctx, left, top, Number(anchor.width), Number(anchor.height), Number(anchor.radius));
+  ctx.font = `800 ${textSize}px 'Noto Sans TC','Microsoft JhengHei UI','Segoe UI',sans-serif`;
+  const textMetrics = ctx.measureText(text);
+  const textWidth = textMetrics.width;
+  const padX = 12 * scaleMultiplier;
+  const width = Math.max(Number(anchor.width) * scaleMultiplier, textWidth + padX * 2);
+  const height = Math.max(Number(anchor.height) * scaleMultiplier, textSize + 8 * scaleMultiplier);
+  const radius = Math.min(height / 2, 6 * scaleMultiplier);
+  const left = node.x + Number(anchor.offsetX) - width / 2;
+  const top = node.y + Number(anchor.offsetY) - (scaleMultiplier > 1 ? (height - Number(anchor.height)) / 2 : 0);
+  roundedRect(ctx, left, top, width, height, radius);
   ctx.fillStyle = "#050509";
   ctx.fill();
-  ctx.lineWidth = Number(anchor.strokeWidth);
-  ctx.strokeStyle = "#171122";
+  ctx.lineWidth = Math.max(1.5, 2 * scaleMultiplier);
+  ctx.strokeStyle = "#3e3755";
   ctx.stroke();
-  ctx.font = `700 ${Number(anchor.textSize)}px 'Noto Sans TC','Microsoft JhengHei UI','Segoe UI',sans-serif`;
   ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
+  ctx.textBaseline = "middle";
   ctx.fillStyle = "#ffffff";
-  ctx.fillText(text, node.x + Number(anchor.textOffsetX), node.y + Number(anchor.textOffsetY));
+  ctx.fillText(text, left + width / 2, top + height / 2);
   ctx.restore();
 }
 
@@ -643,7 +707,13 @@ function drawNodeRing(ctx, node, color) {
   ctx.lineWidth = 3;
   ctx.shadowColor = color;
   ctx.shadowBlur = 7;
-  if (geometry.shape === "dice") {
+  if (geometry.shape === "mythic-dice") {
+    const width = 130 * visualScale + 4;
+    const height = 149 * visualScale + 4;
+    const cornerH = 33 * visualScale;
+    const radius = 8.5 * visualScale;
+    roundedHexagon(ctx, x, y, width, height, cornerH, radius);
+  } else if (geometry.shape === "dice") {
     roundedRect(ctx, x - 68 * visualScale, y - 71 * visualScale, 136 * visualScale, 142 * visualScale, 17 * visualScale);
   } else if (geometry.shape === "perk") {
     roundedRect(ctx, x - 69 * visualScale, y - 39 * visualScale, 138 * visualScale, 78 * visualScale, 15 * visualScale);
@@ -663,7 +733,10 @@ function drawNodeRing(ctx, node, color) {
 function appendNodeOcclusionPath(ctx, node) {
   const { x, y, geometry } = node;
   const mask = getNodeOcclusionGeometry(geometry.shape);
-  if (mask.kind === "roundedRect") {
+  if (mask.kind === "hexagon") {
+    appendRoundedHexagonPath(ctx, x, y, mask.width, mask.height, mask.cornerH, mask.radius);
+    ctx.closePath();
+  } else if (mask.kind === "roundedRect") {
     appendRoundedRectPath(ctx, x + mask.x, y + mask.y, mask.width, mask.height, mask.radius);
     ctx.closePath();
   } else if (mask.kind === "rotatedRoundedRect") {
@@ -696,9 +769,49 @@ function drawNodeOcclusion(ctx, node) {
   ctx.restore();
 }
 
+function drawDimmedNodeFrame(ctx, node) {
+  const { x, y, geometry } = node;
+  const shape = geometry?.shape || "small-passive";
+  if (shape === "mythic-dice" || String(node.id) === "1501") return;
+
+  const visualScale = NODE_VISUAL_SCALE[shape] || 1;
+  if (shape === "dice") {
+    roundedRect(ctx, x - 67 * visualScale, y - 70 * visualScale, 134 * visualScale, 140 * visualScale, 16 * visualScale);
+    ctx.stroke();
+  } else if (shape === "large-passive") {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(Math.PI / 4);
+    roundedRect(ctx, -50 * visualScale, -50 * visualScale, 100 * visualScale, 100 * visualScale, 21 * visualScale);
+    ctx.stroke();
+    ctx.restore();
+  } else if (shape === "perk") {
+    roundedRect(ctx, x - 69 * visualScale, y - 39 * visualScale, 138 * visualScale, 78 * visualScale, 15 * visualScale);
+    ctx.stroke();
+  } else {
+    ctx.beginPath();
+    const isRune = shape === "rune";
+    ctx.arc(x, y + (isRune ? 4 * visualScale : 0), (isRune ? 42.5 : 46.5) * visualScale, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
 function traceSelectionRing(ctx, node) {
   const { x, y, geometry } = node;
   const visualScale = NODE_VISUAL_SCALE[geometry.shape] || 1;
+  if (geometry.shape === "mythic-dice") {
+    const width = 130 * visualScale + 4;
+    const height = 149 * visualScale + 4;
+    const cornerH = 33 * visualScale;
+    const radius = 8.5 * visualScale;
+    roundedHexagon(ctx, x, y, width, height, cornerH, radius);
+    const slantLen = Math.hypot(width / 2, cornerH);
+    const vertLen = Math.max(0, height - 2 * cornerH);
+    const perimeter = 4 * slantLen + 2 * vertLen;
+    const dashLength = 58 * visualScale;
+    const dashGap = Math.max(1, perimeter / 2 - dashLength);
+    return { dash: [dashLength, dashGap, dashLength, dashGap], pathLength: perimeter, animated: true };
+  }
   if (geometry.shape === "dice") {
     const width = 136 * visualScale;
     const height = 142 * visualScale;
@@ -751,12 +864,133 @@ function drawSelectionRunner(ctx, node, colors, phase = 0) {
   ctx.restore();
 }
 
+function drawFactionStatMark(ctx, branch, cx, cy, size, color) {
+  if (!ctx || typeof ctx.beginPath !== "function") return;
+  const s = size / 64;
+  const ox = cx - 32 * s;
+  const oy = cy - 32 * s;
+  ctx.save();
+  ctx.globalAlpha = 0.28;
+  ctx.fillStyle = color;
+  ctx.strokeStyle = "#231b34";
+  ctx.lineWidth = 2 * s;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+
+  if (branch === 1) {
+    ctx.beginPath();
+    ctx.moveTo(ox + 32 * s, oy + 4 * s);
+    ctx.bezierCurveTo(ox + 48 * s, oy + 14 * s, ox + 58 * s, oy + 34 * s, ox + 49 * s, oy + 52 * s);
+    ctx.bezierCurveTo(ox + 41 * s, oy + 58 * s, ox + 30 * s, oy + 60 * s, ox + 21 * s, oy + 53 * s);
+    ctx.bezierCurveTo(ox + 12 * s, oy + 42 * s, ox + 14 * s, oy + 24 * s, ox + 32 * s, oy + 4 * s);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(ox + 32 * s, oy + 10 * s);
+    ctx.bezierCurveTo(ox + 32 * s, oy + 28 * s, ox + 27 * s, oy + 42 * s, ox + 21 * s, oy + 51 * s);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(ox + 28 * s, oy + 26 * s);
+    ctx.bezierCurveTo(ox + 33 * s, oy + 24 * s, ox + 38 * s, oy + 27 * s, ox + 42 * s, oy + 25 * s);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(ox + 26 * s, oy + 38 * s);
+    ctx.bezierCurveTo(ox + 31 * s, oy + 36 * s, ox + 36 * s, oy + 39 * s, ox + 41 * s, oy + 38 * s);
+    ctx.stroke();
+  } else if (branch === 2) {
+    const pts = [
+      [28, 6], [36, 6], [37.5, 14.5], [40, 15.5], [42.5, 17], [44.5, 19],
+      [52.5, 15.5], [57.5, 22.5], [51.5, 28], [52, 29.5], [52, 31], [52, 32.5],
+      [52, 34], [52, 35.5], [51.5, 37], [57.5, 42.5], [52.5, 49.5], [44.5, 46],
+      [42.5, 48], [40, 49.5], [37.5, 50.5], [36, 59], [28, 59], [26.5, 50.5],
+      [24, 49.5], [21.5, 48], [19.5, 46], [11.5, 49.5], [6.5, 42.5], [12.5, 37],
+      [12, 35.5], [12, 34], [12, 32.5], [12, 31], [12, 29.5], [12.5, 28],
+      [6.5, 22.5], [11.5, 15.5], [19.5, 19], [21.5, 17], [24, 15.5], [26.5, 14.5]
+    ];
+    ctx.beginPath();
+    ctx.moveTo(ox + pts[0][0] * s, oy + pts[0][1] * s);
+    for (let i = 1; i < pts.length; i += 1) {
+      ctx.lineTo(ox + pts[i][0] * s, oy + pts[i][1] * s);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(ox + 32 * s, oy + 32.5 * s, 9.5 * s, 0, Math.PI * 2);
+    ctx.fillStyle = "#231b34";
+    ctx.fill();
+  } else if (branch === 3) {
+    ctx.beginPath();
+    ctx.moveTo(ox + 32 * s, oy + 16 * s);
+    ctx.bezierCurveTo(ox + 23 * s, oy + 8 * s, ox + 10 * s, oy + 10 * s, ox + 4 * s, oy + 12 * s);
+    ctx.lineTo(ox + 4 * s, oy + 47 * s);
+    ctx.bezierCurveTo(ox + 12 * s, oy + 45 * s, ox + 23 * s, oy + 45 * s, ox + 32 * s, oy + 52 * s);
+    ctx.bezierCurveTo(ox + 41 * s, oy + 45 * s, ox + 52 * s, oy + 45 * s, ox + 60 * s, oy + 47 * s);
+    ctx.lineTo(ox + 60 * s, oy + 12 * s);
+    ctx.bezierCurveTo(ox + 54 * s, oy + 10 * s, ox + 41 * s, oy + 8 * s, ox + 32 * s, oy + 16 * s);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(ox + 32 * s, oy + 19 * s);
+    ctx.lineTo(ox + 32 * s, oy + 49 * s);
+    ctx.stroke();
+  } else if (branch === 4) {
+    ctx.beginPath();
+    ctx.moveTo(ox + 32 * s, oy + 8 * s);
+    ctx.lineTo(ox + 54 * s, oy + 16 * s);
+    ctx.bezierCurveTo(ox + 54 * s, oy + 38 * s, ox + 43 * s, oy + 53 * s, ox + 32 * s, oy + 59 * s);
+    ctx.bezierCurveTo(ox + 21 * s, oy + 53 * s, ox + 10 * s, oy + 38 * s, ox + 10 * s, oy + 16 * s);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(ox + 32 * s, oy + 16 * s);
+    ctx.lineTo(ox + 46 * s, oy + 22 * s);
+    ctx.bezierCurveTo(ox + 46 * s, oy + 37 * s, ox + 38 * s, oy + 47 * s, ox + 32 * s, oy + 52 * s);
+    ctx.bezierCurveTo(ox + 26 * s, oy + 47 * s, ox + 18 * s, oy + 37 * s, ox + 18 * s, oy + 22 * s);
+    ctx.closePath();
+    ctx.fillStyle = "#231b34";
+    ctx.fill();
+  } else if (branch === 5) {
+    const pts = [
+      [32, 4], [37.5, 22], [55, 13], [44.5, 29.5], [61, 36], [43.5, 41.5],
+      [51, 59], [34, 47.5], [27, 61], [24.5, 43.5], [7, 51], [16.5, 34.5],
+      [3, 27], [20.5, 22.5], [13, 5], [28, 17]
+    ];
+    ctx.beginPath();
+    ctx.moveTo(ox + pts[0][0] * s, oy + pts[0][1] * s);
+    for (let i = 1; i < pts.length; i += 1) {
+      ctx.lineTo(ox + pts[i][0] * s, oy + pts[i][1] * s);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawCenterStats(ctx, model, localization) {
   for (let branch = 1; branch <= 5; branch += 1) {
+    const centerLink = (model?.centerLinks || []).find((link) => Number(link.branch) === branch);
+    const isConnected = centerLink ? isActiveCenterLink(centerLink, model) : false;
+    if (model?.isShare && !isConnected) continue;
+
     const point = CENTER_STATS[branch];
     const color = COLORS[branch] || COLORS[1];
     const fallback = ["自然", "工學", "魔法", "秩序", "渾沌"][branch - 1];
     const name = localization?.t?.(`faction.${branch}`, {}, fallback) || fallback;
+
+    const markCenterY = (point.nameY + point.valueY) / 2;
+    drawFactionStatMark(ctx, branch, point.x, markCenterY, 68, color.base);
+
     ctx.font = "700 16px 'Noto Sans TC','Microsoft JhengHei UI','Segoe UI',sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
@@ -804,6 +1038,7 @@ function isActiveCenterLink(link, model) {
     link.isActive
     || (model.hasFilter && link.isFilterActive)
     || (model.hasPrereqHighlight && link.isPrereqActive)
+    || (model.isSimulation && link.isSimulationActive)
   ));
 }
 
@@ -816,7 +1051,7 @@ function hasActiveEdgeVisual(model) {
 
 function getActiveEdgeStyle(item, model, isCenterLink = false) {
   let color = "#fff";
-  if (!isCenterLink && item.isSimulationActive && model.isSimulation) color = "#d7b9ff";
+  if (item?.isSimulationActive && model?.isSimulation) color = "#d7b9ff";
   const width = model.hasFilter || model.hasPrereqHighlight ? 4 : 3.5;
   const alpha = item.isDimmed ? 0.18 : 0.96;
   return { color, width, alpha };
@@ -855,8 +1090,6 @@ function drawActiveEdgeGroup(ctx, { style, edges }) {
   ctx.strokeStyle = style.color;
   ctx.lineWidth = style.width;
   ctx.globalAlpha = style.alpha;
-  ctx.shadowColor = "rgba(205,164,255,.6)";
-  ctx.shadowBlur = 5;
   ctx.stroke();
 }
 
@@ -1014,6 +1247,94 @@ function drawEdgeComposite(
   }
 }
 
+
+
+function prepareShareState(state, isShare) {
+  if (!isShare) return state;
+  return {
+    ...state,
+    tree: {
+      ...state.tree,
+      selectedNodeId: null,
+      prerequisitePath: [],
+      activePathEdges: [],
+      hasVisualFocus: false
+    },
+    filter: {
+      ...state.filter,
+      filterPath: new Set(),
+      hasFilter: false,
+      hasTypeFilter: false
+    }
+  };
+}
+
+function computeShareLayout(rect, unlockedNodes) {
+  let minX = 1760;
+  let maxX = 2240;
+  let minY = 1460;
+  let maxY = 1940;
+  for (const node of unlockedNodes) {
+    minX = Math.min(minX, node.x);
+    maxX = Math.max(maxX, node.x);
+    minY = Math.min(minY, node.y);
+    maxY = Math.max(maxY, node.y);
+  }
+  const padding = 160;
+  const boundingWidth = Math.max(560, (maxX - minX) + padding * 2);
+  const boundingHeight = Math.max(440, (maxY - minY) + padding * 2);
+  const centerX = (minX + maxX) / 2;
+  const centerY = (minY + maxY) / 2;
+
+  const fit = Math.min(1.4, rect.width / boundingWidth, rect.height / boundingHeight);
+  const offsetX = rect.x + rect.width / 2 - centerX * fit;
+  const offsetY = rect.y + rect.height / 2 - centerY * fit;
+
+  const halfW = (rect.width / 2) / fit;
+  const halfH = (rect.height / 2) / fit;
+  return {
+    fit,
+    offsetX,
+    offsetY,
+    fullBounds: {
+      left: centerX - halfW,
+      top: centerY - halfH,
+      right: centerX + halfW,
+      bottom: centerY + halfH,
+      width: halfW * 2,
+      height: halfH * 2
+    }
+  };
+}
+
+const DEFAULT_CANVAS_VIEWBOX = Object.freeze({ x: 0, y: 0, width: 4000, height: 3400 });
+
+function computeDefaultCanvasLayout(rect, viewBox = DEFAULT_CANVAS_VIEWBOX) {
+  const fit = Math.min(rect.width / viewBox.width, rect.height / viewBox.height);
+  const offsetX = rect.x + (rect.width - viewBox.width * fit) / 2;
+  const offsetY = rect.y + (rect.height - viewBox.height * fit) / 2;
+  return {
+    fit,
+    offsetX,
+    offsetY,
+    fullBounds: {
+      left: viewBox.x,
+      top: viewBox.y,
+      right: viewBox.x + viewBox.width,
+      bottom: viewBox.y + viewBox.height,
+      width: viewBox.width,
+      height: viewBox.height
+    }
+  };
+}
+
+function computeRenderCanvasLayout(rect, unlockedNodes, viewBox, isShare) {
+  if (isShare && unlockedNodes.length > 0) {
+    return computeShareLayout(rect, unlockedNodes);
+  }
+  return computeDefaultCanvasLayout(rect, viewBox);
+}
+
 export class CanvasTreeRenderer {
   constructor({ store = null, tileRepository = null, devicePixelRatio = null, onReady = null, onError = null } = {}) {
     this.store = store;
@@ -1092,6 +1413,7 @@ export class CanvasTreeRenderer {
     this._selectionStartTimestamp = null;
     this._selectionAnimating = false;
     this._pressedNodeId = null;
+    this._isCenterPressed = false;
     this.currentResolution = 1;
     this.desiredResolution = 1;
     this._renderBounds = null;
@@ -1134,10 +1456,13 @@ export class CanvasTreeRenderer {
     this._warmSceneKeys = new Set();
     this._onSemanticPointerDown = new Map();
     this._boundViewportInteractionStart = () => {
-      // A real pointer/wheel sequence has priority over detached work. Keep
-      // the already committed frame on screen, but invalidate a candidate that
-      // could otherwise finish an atlas upload on the first gesture frame.
+      // Pause detached background work while active gesture has priority.
       this.pauseBackgroundRenders({ pauseWarmups: true });
+    };
+    this._boundViewportSettled = () => {
+      if (!this._isCameraMotionActive() && this._sceneFrameCoverage) {
+        this._updateOverviewCutout(this._sceneFrameCoverage);
+      }
     };
   }
 
@@ -1156,6 +1481,7 @@ export class CanvasTreeRenderer {
     }
     if (typeof document !== "undefined") {
       document.addEventListener("rd2:viewport-interaction-start", this._boundViewportInteractionStart);
+      document.addEventListener("rd2:viewport-settled", this._boundViewportSettled);
     }
     this._readyPromise = this._initialize(token);
     return this._readyPromise;
@@ -1410,11 +1736,21 @@ export class CanvasTreeRenderer {
       button.setAttribute("aria-label", String(node.name_zh || node.name || id));
       button.title = String(node.name_zh || node.name || id);
       button.dataset.unlockLabel = getUnlockConditionLabel(node);
-      const hitBox = manifestNode.hitBox || { x: manifestNode.x - 60, y: manifestNode.y - 60, width: 120, height: 120 };
-      button.style.left = `${hitBox.x}px`;
-      button.style.top = `${hitBox.y}px`;
-      button.style.width = `${hitBox.width}px`;
-      button.style.height = `${hitBox.height}px`;
+      const nodeType = getNodeType(node);
+      let radius = 36;
+      if (nodeType === "DICE") radius = 52;
+      else if (nodeType === "PERK" || node?.is_big) radius = 48;
+      const fallbackBox = manifestNode.hitBox || { x: manifestNode.x - 60, y: manifestNode.y - 60, width: 120, height: 120 };
+      const centerX = Number.isFinite(Number(manifestNode.x))
+        ? Number(manifestNode.x)
+        : Number(fallbackBox.x + fallbackBox.width / 2);
+      const centerY = Number.isFinite(Number(manifestNode.y))
+        ? Number(manifestNode.y)
+        : Number(fallbackBox.y + fallbackBox.height / 2);
+      button.style.left = `${centerX - radius}px`;
+      button.style.top = `${centerY - radius}px`;
+      button.style.width = `${radius * 2}px`;
+      button.style.height = `${radius * 2}px`;
       button.addEventListener("pointerdown", (event) => {
         if (event.button !== undefined && event.button !== 0) return;
         button.classList.add("is-pressing");
@@ -1446,6 +1782,17 @@ export class CanvasTreeRenderer {
     centerButton.style.top = "1630px";
     centerButton.style.width = "220px";
     centerButton.style.height = "150px";
+    centerButton.addEventListener("pointerdown", () => {
+      centerButton.classList.add("is-pressing");
+      this.setPressedCenter(true);
+    });
+    const endCenterPress = () => {
+      centerButton.classList.remove("is-pressing");
+      this.setPressedCenter(false);
+    };
+    centerButton.addEventListener("pointerup", endCenterPress);
+    centerButton.addEventListener("pointercancel", endCenterPress);
+    centerButton.addEventListener("lostpointercapture", endCenterPress);
     this.layers.semantic.appendChild(centerButton);
   }
 
@@ -1688,15 +2035,20 @@ export class CanvasTreeRenderer {
     if (!node || !bounds) return false;
     const halfWidth = Math.max(96, Number(node.geometry?.width || 0) / 2);
     const halfHeight = Math.max(96, Number(node.geometry?.height || 0) / 2);
-    return node.x + halfWidth >= bounds.left
-      && node.x - halfWidth <= bounds.right
-      && node.y + halfHeight >= bounds.top
-      && node.y - halfHeight <= bounds.bottom;
+    const left = bounds.left !== undefined ? bounds.left : (bounds.x || 0);
+    const top = bounds.top !== undefined ? bounds.top : (bounds.y || 0);
+    const right = bounds.right !== undefined ? bounds.right : (left + (bounds.width || 0));
+    const bottom = bounds.bottom !== undefined ? bounds.bottom : (top + (bounds.height || 0));
+    return node.x + halfWidth >= left
+      && node.x - halfWidth <= right
+      && node.y + halfHeight >= top
+      && node.y - halfHeight <= bottom;
   }
 
   _sceneOptions(model, mode = "live") {
     const isShare = mode === "share" || mode === "share-minimal";
     return {
+      mode,
       showNames: !isShare && typeof document !== "undefined" && document.body?.classList.contains("show-node-names"),
       showCurrency: !isShare && typeof document !== "undefined" && document.body?.classList.contains("show-currency-badges"),
       simulation: Boolean(model?.isSimulation),
@@ -1742,6 +2094,42 @@ export class CanvasTreeRenderer {
       : "hidden";
     for (const surface of overviewSurfaces) {
       if (surface.style.visibility !== visibility) surface.style.visibility = visibility;
+    }
+    if (!this._sceneFrameCoverage) {
+      this._updateOverviewCutout(null);
+    }
+  }
+
+  _computeOverviewCutoutClipPath(bounds) {
+    if (!bounds) return "";
+    const viewBox = this.renderManifest?.viewBox;
+    if (!viewBox) return "";
+    const x1 = Math.max(0, Math.round(bounds.left - viewBox.x));
+    const y1 = Math.max(0, Math.round(bounds.top - viewBox.y));
+    const x2 = Math.min(viewBox.width, Math.round(bounds.right - viewBox.x));
+    const y2 = Math.min(viewBox.height, Math.round(bounds.bottom - viewBox.y));
+    if (x2 <= x1 || y2 <= y1) return "";
+    const w = viewBox.width;
+    const h = viewBox.height;
+    return `polygon(0px 0px, ${w}px 0px, ${w}px ${h}px, 0px ${h}px, 0px ${y1}px, ${x1}px ${y1}px, ${x1}px ${y2}px, ${x2}px ${y2}px, ${x2}px ${y1}px, ${x1}px ${y1}px, 0px ${y1}px, 0px 0px)`;
+  }
+
+  _updateOverviewCutout(bounds = null) {
+    const overviewSurfaces = [
+      this.overviewCanvas,
+      this.overviewEdgeCanvas,
+      this.overviewNodeArtCanvas,
+      this.overviewDynamicCanvas
+    ].filter(Boolean);
+    if (overviewSurfaces.length === 0) return;
+    const clipPath = this._computeOverviewCutoutClipPath(bounds);
+    for (const surface of overviewSurfaces) {
+      if (surface.style.clipPath !== clipPath) {
+        surface.style.clipPath = clipPath;
+        if ("webkitClipPath" in surface.style) {
+          surface.style.webkitClipPath = clipPath;
+        }
+      }
     }
   }
 
@@ -1860,21 +2248,14 @@ export class CanvasTreeRenderer {
     const signature = this._makeFullMapDimMaskSignature(model);
     if (signature === this._fullMapDimMaskSignature && this._fullMapDimMaskModel === model) return true;
 
-    const { bounds, pixelScale, resized } = this._configureFullMapDimMaskCanvas(canvas, context);
-    const previousNodes = resized ? [] : this._fullMapDimMaskNodes;
+    const { bounds, pixelScale } = this._configureFullMapDimMaskCanvas(canvas, context);
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.setTransform(pixelScale, 0, 0, pixelScale, -bounds.left * pixelScale, -bounds.top * pixelScale);
+
     const dimmed = (model?.nodes || []).filter((node) => (
       node.isDimmed && !node.isSelected && !node.isLinkedSelected
     ));
-    if (previousNodes.length) {
-      context.save();
-      context.globalCompositeOperation = "destination-out";
-      context.globalAlpha = 1;
-      context.beginPath();
-      for (const node of previousNodes) appendNodeOcclusionPath(context, node);
-      context.fill();
-      context.restore();
-    }
     if (dimmed.length) {
       context.save();
       context.globalCompositeOperation = "source-over";
@@ -1886,6 +2267,21 @@ export class CanvasTreeRenderer {
       context.beginPath();
       for (const node of dimmed) appendNodeOcclusionPath(context, node);
       context.fill();
+      context.restore();
+
+      context.save();
+      context.globalCompositeOperation = "source-over";
+      context.globalAlpha = 1;
+      context.strokeStyle = DIMMED_NODE_FRAME_STROKE;
+      context.lineWidth = 3.2;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.filter = "none";
+      context.shadowColor = "transparent";
+      context.shadowBlur = 0;
+      for (const node of dimmed) {
+        drawDimmedNodeFrame(context, node);
+      }
       context.restore();
     }
     canvas.dataset.canvasReady = "true";
@@ -2261,6 +2657,9 @@ export class CanvasTreeRenderer {
       const next = overviewSurfaces[index].canvas;
       if (previous?.parentElement === frameHost) previous.replaceWith(next);
       else frameHost.insertBefore(next, frameHost.firstChild || null);
+      if (previous && previous !== next) {
+        releaseCanvas(previous);
+      }
     }
     this.overviewCanvas = canvas;
     this.overviewContext = context;
@@ -2424,13 +2823,21 @@ export class CanvasTreeRenderer {
   async _ensureCurrencyImages() {
     await Promise.all([
       ["gold", "icons/TreeShadow_sprite-185.png"],
-      ["core", "icons/TreeShadow_sprite-186.png"]
+      ["core", "icons/TreeShadow_sprite-186.png"],
+      ["solar", "icons/item_stone_solar.png"]
     ].map(async ([key, path]) => {
       if (!this.currencyImages.has(key)) this.currencyImages.set(key, await this.tileRepository.loadImage(path));
     }));
   }
 
   _drawCenter(ctx, model, resolution) {
+    const pressed = Boolean(this._isCenterPressed);
+    ctx.save();
+    if (pressed) {
+      ctx.translate(2000, 1700);
+      ctx.scale(0.94, 0.94);
+      ctx.translate(-2000, -1700);
+    }
     const variant = model.isSimulation ? "simulation" : "normal";
     const image = this.centerImages.get(`${variant}-${resolution}x`);
     const center = this.renderManifest?.center?.[variant]?.[`${resolution}x`];
@@ -2440,6 +2847,7 @@ export class CanvasTreeRenderer {
       ctx.drawImage(image, 2000 - width / 2, 1700 - height / 2, width, height);
     }
     drawCenterTitle(ctx, model, this.localization);
+    ctx.restore();
   }
 
   _drawStateLabel(ctx, node, model, options) {
@@ -2473,7 +2881,7 @@ export class CanvasTreeRenderer {
       }
     }
     const rankText = getSimulationRankBadgeText(node, Boolean(model.isSimulation));
-    if (rankText) drawSimulationRankBadge(ctx, node, rankText);
+    if (rankText) drawSimulationRankBadge(ctx, node, rankText, options?.badgeScale || 1);
   }
 
   _resolvePreferredNodeArt(node, model, resolution) {
@@ -2600,10 +3008,21 @@ export class CanvasTreeRenderer {
   _drawNode(ctx, node, model, resolution) {
     const dimmed = Boolean(node.isDimmed && !node.isSelected && !node.isLinkedSelected);
     if (dimmed) drawNodeOcclusion(ctx, node);
-    return this._drawNodeArt(ctx, node, model, resolution, {
+    const drawn = this._drawNodeArt(ctx, node, model, resolution, {
       includeOcclusion: !dimmed,
       alpha: dimmed ? 0.34 : 1
     });
+    if (dimmed && node.geometry?.shape !== "mythic-dice" && String(node.id) !== "1501") {
+      ctx.save();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = DIMMED_NODE_FRAME_STROKE;
+      ctx.lineWidth = 3.2;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      drawDimmedNodeFrame(ctx, node);
+      ctx.restore();
+    }
+    return drawn;
   }
 
   async _drawNodeArtLayerAsync(context, model, resolution, bounds, isCurrent = null) {
@@ -2663,7 +3082,11 @@ export class CanvasTreeRenderer {
   }
 
   _drawCompleteDynamicFrame(context, model, resolution, bounds, state, options, { animatedSelection = false, nodeArtCanvas = null } = {}) {
-    const renderable = (model.nodes || []).filter((node) => this._nodeIntersects(node, bounds));
+    const isShare = options.mode === "share" || options.mode === "share-minimal";
+    const renderable = (model.nodes || []).filter((node) => {
+      if (isShare && !node.simulationView?.isUnlocked) return false;
+      return this._nodeIntersects(node, bounds);
+    });
     const currencyLabelLayout = options.showCurrency
       ? buildCurrencyLabelLayout(context, model.nodes || [], this.localization, this.currencyImages)
       : null;
@@ -2676,8 +3099,10 @@ export class CanvasTreeRenderer {
     for (const node of renderable) {
       if (!nodeArtCanvas) this._drawNode(context, node, model, resolution);
     }
-    for (const node of renderable) this._drawSelectionWithArtwork(context, node, model, resolution, animatedSelection);
-    if (options.includeCenterStats) drawCenterStats(context, model, this.localization);
+    if (!isShare) {
+      for (const node of renderable) this._drawSelectionWithArtwork(context, node, model, resolution, animatedSelection);
+    }
+    if (options.includeCenterStats || isShare) drawCenterStats(context, model, this.localization);
     for (const node of renderable) this._drawStateLabel(context, node, model, frameOptions);
     return renderable.length;
   }
@@ -3170,7 +3595,7 @@ export class CanvasTreeRenderer {
     canvas.setAttribute("aria-hidden", "true");
     const context = getCanvas2DContext(canvas);
     if (!context) {
-      canvas.remove?.();
+      releaseCanvas(canvas);
       throw new Error(contextError);
     }
     return { canvas, context };
@@ -3318,7 +3743,9 @@ export class CanvasTreeRenderer {
       return false;
     } finally {
       if (!committed) {
-        for (const canvas of [frame.dynamicCanvas, frame.staticCanvas, frame.nodeArtCanvas, frame.activeEdgeCanvas]) canvas?.remove?.();
+        for (const canvas of [frame.dynamicCanvas, frame.staticCanvas, frame.nodeArtCanvas, frame.activeEdgeCanvas]) {
+          releaseCanvas(canvas);
+        }
       }
     }
   }
@@ -3356,7 +3783,7 @@ export class CanvasTreeRenderer {
       && this.activeEdgeCanvas !== this.staticCanvas;
     if (!hasActiveEdgeVisual(request.model)) {
       if (hasDedicatedSurface) {
-        this.activeEdgeCanvas.remove?.();
+        releaseCanvas(this.activeEdgeCanvas);
         this.activeEdgeCanvas = this.staticCanvas;
         this.activeEdgeContext = this.staticContext;
       }
@@ -3405,7 +3832,7 @@ export class CanvasTreeRenderer {
       && current !== this.staticCanvas;
 
     if (!hasActiveVisual) {
-      if (hasDedicatedSurface) current.remove?.();
+      if (hasDedicatedSurface) releaseCanvas(current);
       this.activeEdgeCanvas = this.staticCanvas;
       this.activeEdgeContext = this.staticContext;
       return true;
@@ -3425,7 +3852,7 @@ export class CanvasTreeRenderer {
       this.fullMapDimMaskCanvas,
       this.dynamicCanvas
     ].find((candidate) => candidate?.parentElement === frameHost);
-    if (reference) frameHost.insertBefore(canvas, reference);
+    if (reference) reference.before(canvas);
     else frameHost.appendChild(canvas);
     this.activeEdgeCanvas = canvas;
     this.activeEdgeContext = context;
@@ -3628,6 +4055,9 @@ export class CanvasTreeRenderer {
     else if (request.allEntries?.length) this._sceneFrameRenderEntries = [...request.allEntries];
     this._applyStaticLayerState(request.model);
     this._setOverviewVisibility(request.model);
+    if (!this._isCameraMotionActive()) {
+      this._updateOverviewCutout(request.bounds);
+    }
     // Viewport-only candidates keep the same semantic model and button state;
     // walking all 239 buttons during a resolution promotion only adds style
     // work at the boundary where the new canvas is being uploaded.
@@ -3651,7 +4081,12 @@ export class CanvasTreeRenderer {
   prepareViewport(state) {
     if (this._destroyed || !state?.viewport || !this._initialAssetsReady) return;
     this.lastState = state;
-    if (!this._isCameraMotionActive()) this._backgroundRendersPaused = false;
+    if (!this._isCameraMotionActive()) {
+      this._backgroundRendersPaused = false;
+      if (this._sceneFrameCoverage) {
+        this._updateOverviewCutout(this._sceneFrameCoverage);
+      }
+    }
     this._setOverviewVisibility(this.model);
     // A viewport update is a new scene generation even when the render model
     // is unchanged.  This prevents an older resolution candidate from being
@@ -3865,6 +4300,60 @@ export class CanvasTreeRenderer {
     }
   }
 
+  setPressedCenter(pressed = true) {
+    const nextPressed = Boolean(pressed);
+    if (this._isCenterPressed === nextPressed) return;
+    this._isCenterPressed = nextPressed;
+    this.pauseBackgroundRenders();
+    this._sceneRevision += 1;
+    if (this._redrawDynamicFrameInPlace()) {
+      this.scene?.setAttribute?.("data-pressed-center", nextPressed ? "true" : "");
+      this.scene && (this.scene.dataset.sceneRevision = String(this._sceneRevision));
+      return;
+    }
+    if (this.lastState && this._initialAssetsReady) {
+      this._scheduleSceneFrame(this.lastState, { force: true, reason: "press-center" }).catch((error) => this._setRenderError(error));
+    }
+  }
+
+  _redrawDynamicFrameInPlace() {
+    const model = this._sceneFrameModel;
+    const canvas = this.nodeArtCanvas;
+    const bounds = this._renderBounds;
+    const resolution = this._sceneFrameResolution;
+    const state = this._sceneFrameState || this.lastState;
+    const dynamicCanvas = this.dynamicCanvas;
+    const dynamicContext = this.dynamicContext;
+    if (!model || !canvas || !bounds || !resolution || !state || !dynamicCanvas || !dynamicContext || dynamicCanvas.dataset.canvasReady !== "true") return false;
+
+    const options = this._sceneFrameOptions || this._sceneOptions(model);
+    const pixelScale = Number(canvas.dataset.pixelScale || this._dynamicPixelScale(state, resolution));
+    const dynamicPixelScale = Number(dynamicCanvas.dataset.pixelScale || pixelScale);
+
+    dynamicContext.save();
+    dynamicContext.setTransform(1, 0, 0, 1, 0, 0);
+    dynamicContext.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height);
+    dynamicContext.setTransform(
+      dynamicPixelScale,
+      0,
+      0,
+      dynamicPixelScale,
+      -bounds.left * dynamicPixelScale,
+      -bounds.top * dynamicPixelScale
+    );
+    this._drawCompleteDynamicFrame(
+      dynamicContext,
+      model,
+      resolution,
+      bounds,
+      state,
+      options,
+      { nodeArtCanvas: canvas }
+    );
+    dynamicContext.restore();
+    return true;
+  }
+
   pauseBackgroundRenders({ preserveViewportCandidate = false, pauseWarmups = false } = {}) {
     // Resource promises remain useful, but a detached candidate must stop at
     // its next cooperative yield.  Otherwise a drag/selection can leave an
@@ -3917,7 +4406,7 @@ export class CanvasTreeRenderer {
       && !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches);
     if (!shouldAnimate) {
       this._stopSelectionAnimation();
-      this.selectionAnimationCanvas?.remove?.();
+      releaseCanvas(this.selectionAnimationCanvas);
       this.selectionAnimationCanvas = null;
       this.selectionAnimationContext = null;
       this._selectionAnimationBounds = null;
@@ -4024,18 +4513,7 @@ export class CanvasTreeRenderer {
     return { scale };
   }
 
-  renderToCanvas({ context, state = this.lastState, rect = { x: 0, y: 0, width: 1600, height: 780 }, pixelScale = 1, mode = "share" } = {}) {
-    if (!context || !state || !this.renderManifest) return false;
-    const model = this._buildModel(state);
-    const viewBox = this.renderManifest.viewBox;
-    const fit = Math.min(rect.width / viewBox.width, rect.height / viewBox.height);
-    const offsetX = rect.x + (rect.width - viewBox.width * fit) / 2;
-    const offsetY = rect.y + (rect.height - viewBox.height * fit) / 2;
-    const resolution = selectMapResolution({ scale: pixelScale, devicePixelRatio: 1 });
-    const options = this._sceneOptions(model, mode);
-    context.save();
-    context.translate(offsetX, offsetY);
-    context.scale(fit, fit);
+  _drawCanvasBaseEdges(context, model, resolution, fullBounds) {
     const tileSize = Number(this.renderManifest.tile?.logicalSize || 512);
     const tiles = this.renderManifest.tile?.tiles?.[`${resolution}x`]?.files || [];
     const loaded = new Map();
@@ -4044,17 +4522,55 @@ export class CanvasTreeRenderer {
       if (image) loaded.set(String(entry.path), image);
     }
     if (loaded.size === tiles.length) {
-      drawEdgeComposite(context, tiles, loaded, tileSize, viewBox, model);
-    } else {
-      context.fillStyle = SIMULATION_OCCLUSION_FILL;
-      context.fillRect(viewBox.x, viewBox.y, viewBox.width, viewBox.height);
-      for (const entry of tiles) {
-        const image = loaded.get(String(entry.path));
-        if (image) context.drawImage(image, entry.column * tileSize, entry.row * tileSize, Number(entry.width || tileSize), Number(entry.height || tileSize));
-      }
-      drawActiveEdges(context, model);
+      drawEdgeComposite(context, tiles, loaded, tileSize, fullBounds, model);
+      return;
     }
-    this._drawCompleteDynamicFrame(context, model, resolution, viewBox, state, options);
+    context.fillStyle = SIMULATION_OCCLUSION_FILL;
+    context.fillRect(fullBounds.left, fullBounds.top, fullBounds.width, fullBounds.height);
+    for (const entry of tiles) {
+      const image = loaded.get(String(entry.path));
+      if (image) {
+        context.drawImage(image, entry.column * tileSize, entry.row * tileSize, Number(entry.width || tileSize), Number(entry.height || tileSize));
+      }
+    }
+    drawActiveEdges(context, model);
+  }
+
+  renderToCanvas({ context, state = this.lastState, rect = { x: 0, y: 0, width: 1600, height: 780 }, pixelScale = 1, mode = "share", showNames = null } = {}) {
+    if (!context || !state || !this.renderManifest) return false;
+    const isShare = mode === "share" || mode === "share-minimal";
+    const shareState = prepareShareState(state, isShare);
+    const model = this._buildModel(shareState);
+    const unlockedNodes = isShare
+      ? (model.nodes || []).filter((node) => Boolean(node.simulationView?.isUnlocked))
+      : (model.nodes || []);
+
+    const { fit, offsetX, offsetY, fullBounds } = computeRenderCanvasLayout(
+      rect,
+      unlockedNodes,
+      this.renderManifest.viewBox || { x: 0, y: 0, width: 4000, height: 3400 },
+      isShare
+    );
+
+    const resolution = selectMapResolution({ scale: pixelScale, devicePixelRatio: 1 });
+    const badgeScale = isShare ? Math.min(3.8, Math.max(2.0, 1.15 / fit)) : 1;
+    const sceneOpts = this._sceneOptions(model, mode);
+    const options = {
+      ...sceneOpts,
+      showNames: typeof showNames === "boolean" ? showNames : sceneOpts.showNames,
+      badgeScale
+    };
+    context.save();
+    context.translate(offsetX, offsetY);
+    context.scale(fit, fit);
+
+    if (isShare) {
+      drawActiveEdges(context, model);
+    } else {
+      this._drawCanvasBaseEdges(context, model, resolution, fullBounds);
+    }
+
+    this._drawCompleteDynamicFrame(context, model, resolution, fullBounds, state, options);
     context.restore();
     return true;
   }
@@ -4083,11 +4599,13 @@ export class CanvasTreeRenderer {
     this._cancelAtlasTrim();
     if (typeof document !== "undefined") {
       document.removeEventListener("rd2:viewport-interaction-start", this._boundViewportInteractionStart);
+      document.removeEventListener("rd2:viewport-settled", this._boundViewportSettled);
     }
     if (this._coverageWarmupHandle !== null) clearTimeout(this._coverageWarmupHandle);
     this._coverageWarmupHandle = null;
     this._stopSelectionAnimation();
     this._selectionAnimationBounds = null;
+    releaseCanvas(this.selectionAnimationCanvas);
     this.selectionAnimationCanvas = null;
     this.selectionAnimationContext = null;
     this.semanticButtons.clear();
@@ -4105,39 +4623,51 @@ export class CanvasTreeRenderer {
     this.scene = null;
     this.model = null;
     this.lastState = null;
+    releaseCanvas(this.dynamicCanvas);
     this.dynamicCanvas = null;
     this.dynamicContext = null;
+    releaseCanvas(this.overviewCanvas);
     this.overviewCanvas = null;
     this.overviewContext = null;
+    releaseCanvas(this.overviewEdgeCanvas);
     this.overviewEdgeCanvas = null;
     this.overviewEdgeContext = null;
+    releaseCanvas(this.overviewNodeArtCanvas);
     this.overviewNodeArtCanvas = null;
     this.overviewNodeArtContext = null;
     this._overviewNodeArtModel = null;
     this._overviewNodeArtSignature = "";
     this._overviewNodeArtRefreshToken = 0;
     this._overviewNodeArtRefreshPromise = null;
+    releaseCanvas(this.overviewDynamicCanvas);
     this.overviewDynamicCanvas = null;
     this.overviewDynamicContext = null;
     this._overviewSignature = "";
     this._overviewCompatibility = "";
     this._overviewBuildPromise = null;
+    releaseCanvas(this.staticCanvas);
     this.staticCanvas = null;
     this.staticContext = null;
     this._sceneFrameRenderEntries = [];
     this._stateNodeArtRefreshToken = 0;
     this._stateNodeArtRefreshPromise = null;
     this._staticFrameKey = "";
+    releaseCanvas(this.nodeArtCanvas);
     this.nodeArtCanvas = null;
     this.nodeArtContext = null;
     this._nodeArtModel = null;
     this._nodeArtKey = "";
+    releaseCanvas(this.activeEdgeCanvas);
+    this.activeEdgeCanvas = null;
+    this.activeEdgeContext = null;
+    releaseCanvas(this.fullMapDimMaskCanvas);
     this.fullMapDimMaskCanvas = null;
     this.fullMapDimMaskContext = null;
     this._fullMapDimMaskModel = null;
     this._fullMapDimMaskSignature = "";
     this._fullMapDimMaskActive = false;
     this._fullMapDimMaskNodes = [];
+    releaseCanvas(this.fullMapEdgeDimMaskCanvas);
     this.fullMapEdgeDimMaskCanvas = null;
     this.fullMapEdgeDimMaskContext = null;
     this._fullMapEdgeDimMaskModel = null;

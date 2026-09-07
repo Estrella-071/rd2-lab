@@ -101,7 +101,7 @@ function createMockElement(tagName = "div", attrs = {}) {
       });
     },
     closest: (selector) => {
-      if (selector.includes("tree-node") && element.classList.has("tree-node")) return element;
+      if ((selector.includes("tree-node") || selector.includes("tree-node-semantic")) && (element.classList.has("tree-node") || element.classList.has("tree-node-semantic"))) return element;
       if (selector.includes("filter-toggle-btn") && element.classList.has("filter-toggle-btn")) return element;
       return null;
     },
@@ -322,7 +322,7 @@ test("TooltipView: Renders tooltip and smart avoidance class", () => {
   tooltipView.destroy();
 });
 
-test("TooltipView: anchors the pointer to a horizontally clamped node", () => {
+test("TooltipView: anchors the tooltip and pointer directly to the node without horizontal clamping", () => {
   const previousWindow = globalThis.window;
   const styleValues = {};
   const tooltipEl = {
@@ -353,8 +353,8 @@ test("TooltipView: anchors the pointer to a horizontally clamped node", () => {
       false
     );
 
-    assert.equal(tooltipEl.style.left, "78px");
-    assert.equal(styleValues["--tooltip-arrow-x"], "280px");
+    assert.equal(tooltipEl.style.left, "210px");
+    assert.equal(styleValues["--tooltip-arrow-x"], "148px");
   } finally {
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;
@@ -409,7 +409,7 @@ test("TooltipView: reuses measured dimensions during viewport motion", () => {
     assert.equal(widthReads, 1);
     assert.equal(heightReads, 1);
     assert.equal(styleReads, 1);
-    assert.equal(styleValues["--tooltip-arrow-x"], "280px");
+    assert.equal(styleValues["--tooltip-arrow-x"], "148px");
   } finally {
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;
@@ -545,7 +545,7 @@ test("TooltipView: keeps a closing tooltip anchored to its previous node", () =>
     else globalThis.window = previousWindow;
   }
 
-  assert.deepEqual(positionCalls, ["old"]);
+  assert.deepEqual(positionCalls, ["old", "old", "old"]);
   assert.equal(tooltipEl.style.left, "42px");
   assert.equal(tooltipEl.style.top, "84px");
 });
@@ -929,6 +929,122 @@ test("Compendium slider helper returns a reversible listener lifecycle", () => {
   assert.equal(slider.listenerCount("input"), 0);
 });
 
+test("attachElasticSlider: Locks drag value on pointerup without jumping and compensates thumb geometry", () => {
+  const slider = createMockElement("input");
+  slider.value = "1";
+  slider.style.setProperty = () => {};
+  slider.setPointerCapture = () => {};
+  slider.releasePointerCapture = () => {};
+  slider.focus = () => {};
+  slider.getBoundingClientRect = () => ({ left: 100, width: 200, top: 0, height: 10 });
+
+  let updatedRank = null;
+  let committedRank = null;
+  const dispose = attachElasticSlider(slider, {
+    maxRank: 50,
+    thumbRadius: 10,
+    onUpdate: (rank) => { updatedRank = rank; },
+    onCommit: (rank) => { committedRank = rank; }
+  });
+
+  // 1. 點擊最左側 thumb 中心 (left + 10px -> clientX = 110)
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 110, pointerId: 1, preventDefault: () => {} });
+  assert.equal(updatedRank, 1, "Clicking left thumb center must be Rank 1");
+
+  // 2. 拖曳到中間 (effectiveWidth = 180, 50% offset = 90 -> clientX = 100 + 10 + 90 = 200)
+  // progress = 90 / 180 = 0.5 -> rank = 1 + 0.5 * 49 = 25.5 -> 26
+  slider.dispatchEvent("pointermove", { clientX: 200, pointerId: 1 });
+  assert.equal(updatedRank, 26, "Moving to 50% must compute Rank 26");
+
+  // 3. 模擬瀏覽器原生 input 事件試圖篡改 DOM 數值（例如設為 24）
+  slider.value = "24";
+
+  // 4. 使用者放開指針 (pointerup)
+  slider.dispatchEvent("pointerup", { clientX: 200, pointerId: 1 });
+  // 放開後必須鎖定為拖曳確認的 26，絕不可跳變成篡改後的 24！
+  assert.equal(slider.value, "26", "Slider value must remain locked at 26 on pointerup");
+  assert.equal(updatedRank, 26, "Updated rank must remain 26 on pointerup");
+  assert.equal(committedRank, 26, "Committed rank must be 26 on pointerup");
+
+  // 5. 點擊最右側 thumb 中心 (left + width - 10px = 290)
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 290, pointerId: 2, preventDefault: () => {} });
+  assert.equal(updatedRank, 50, "Clicking right thumb center must be Rank 50");
+  slider.dispatchEvent("pointerup", { clientX: 290, pointerId: 2 });
+  assert.equal(slider.value, "50", "Slider value must be 50 on release");
+
+  dispose();
+  assert.equal(slider.listenerCount("change"), 0);
+});
+
+test("attachElasticSlider: Suppresses lift-off jitter, suppresses immediate native change override, and ensures extreme ends precision", async () => {
+  const slider = createMockElement("input");
+  slider.value = "1";
+  slider.style.setProperty = () => {};
+  slider.setPointerCapture = () => {};
+  slider.releasePointerCapture = () => {};
+  slider.focus = () => {};
+  slider.getBoundingClientRect = () => ({ left: 100, width: 200, top: 0, height: 10 });
+
+  let updatedRank = null;
+  let committedRank = null;
+  const dispose = attachElasticSlider(slider, {
+    maxRank: 50,
+    thumbRadius: 10,
+    onUpdate: (rank) => { updatedRank = rank; },
+    onCommit: (rank) => { committedRank = rank; }
+  });
+
+  // 1. 拖曳至 17/50 (progress 16/49 = 0.3265 -> offset = 10 + 0.3265 * 180 = 68.77 -> clientX = 168.77)
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 110, pointerId: 1, preventDefault: () => {} });
+  slider.dispatchEvent("pointermove", { clientX: 168.8, pointerId: 1 });
+  assert.equal(updatedRank, 17, "Target rank while dragging must be 17");
+
+  // 停頓 70ms 讓 dwell 確立
+  await new Promise((resolve) => setTimeout(resolve, 70));
+
+  // 2. 模擬抬手時手指微抖動 3px，使得坐標瞬間跳到 16 的區間 (clientX 164)
+  slider.dispatchEvent("pointermove", { clientX: 164, pointerId: 1 });
+  // 在放開瞬間 (pointerup)
+  slider.dispatchEvent("pointerup", { clientX: 164, pointerId: 1 });
+
+  // 抬手防抖機制生效：必須鎖定停頓確認的 17，絕不隨抬手抖動跳到 16！
+  assert.equal(slider.value, "17", "Lift-off jitter must be suppressed and locked to 17");
+  assert.equal(committedRank, 17, "Committed rank must remain 17");
+
+  // 3. 測試在 pointerup 之後緊接著的原生 change 事件被壓制，不覆蓋 committedRank
+  slider.value = "16";
+  slider.dispatchEvent("change", { target: { value: "16" } });
+  assert.equal(slider.value, "17", "Native change immediately following pointerup must be suppressed");
+  assert.equal(committedRank, 17, "Committed rank must remain 17");
+
+  // 等待 suppress 視窗 (60ms) 過後
+  await new Promise((resolve) => setTimeout(resolve, 70));
+
+  // 4. 測試標準程式化 / 輔助技術 input 與 change 事件正常放行
+  slider.value = "40";
+  slider.dispatchEvent("input", { target: { value: "40" } });
+  assert.equal(updatedRank, 40, "Standard input must update rank to 40");
+  slider.dispatchEvent("change", { target: { value: "40" } });
+  assert.equal(committedRank, 40, "Standard change must commit rank 40");
+
+  // 5. 測試靠近 min 端的精確性 (例如 Rank 3)
+  // progress = 2 / 49 = 0.0408 -> offset = 10 + 0.0408 * 180 = 17.34 -> clientX = 117.34
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 117.34, pointerId: 2, preventDefault: () => {} });
+  assert.equal(updatedRank, 3, "Rank near min should be exactly 3");
+  slider.dispatchEvent("pointerup", { clientX: 117.34, pointerId: 2 });
+  assert.equal(slider.value, "3", "Releasing near min must lock to 3 without drifting to 1");
+
+  // 6. 測試靠近 max 端的精確性 (例如 Rank 48)
+  // progress = 47 / 49 = 0.9592 -> offset = 10 + 0.9592 * 180 = 182.65 -> clientX = 282.65
+  slider.dispatchEvent("pointerdown", { button: 0, clientX: 282.65, pointerId: 3, preventDefault: () => {} });
+  assert.equal(updatedRank, 48, "Rank near max should be exactly 48");
+  slider.dispatchEvent("pointerup", { clientX: 282.65, pointerId: 3 });
+  assert.equal(slider.value, "48", "Releasing near max must lock to 48 without drifting to 50");
+
+  dispose();
+  assert.equal(slider.listenerCount("input"), 0);
+});
+
 test("MorphingWidgets: Toggles filter and disclaimer expanded states", () => {
   const filterEl = createMockElement("div");
   const filterToggle = createMockElement("button");
@@ -1035,4 +1151,77 @@ test("MorphingWidgets: init/destroy is reversible for toggle, widget, and docume
     if (previousDocument === undefined) delete globalThis.document;
     else globalThis.document = previousDocument;
   }
+});
+
+test("TreeView: geometric nearest-node disambiguation resolves closely spaced nodes correctly", () => {
+  const store = new AppStore();
+  const selectNodeUseCase = new SelectNodeUseCase({ store });
+  const navigateViewportUseCase = new NavigateViewportUseCase({ store, viewportController: { pan(){}, zoom(){}, centerOn(){} } });
+
+  const container = createMockElement("div");
+  container.getBoundingClientRect = () => ({ left: 0, top: 0, width: 1000, height: 800 });
+  const scene = createMockElement("div");
+  scene.classList.add("map-scene");
+  container.appendChild(scene);
+
+  const btn5207 = createMockElement("button", { id: "node-5207" });
+  btn5207.classList.add("tree-node-semantic");
+  btn5207.dataset.nodeId = "5207";
+
+  const btn5307 = createMockElement("button", { id: "node-5307" });
+  btn5307.classList.add("tree-node-semantic");
+  btn5307.dataset.nodeId = "5307";
+
+  const btn5407 = createMockElement("button", { id: "node-5407" });
+  btn5407.classList.add("tree-node-semantic");
+  btn5407.dataset.nodeId = "5407";
+
+  container.appendChild(btn5207);
+  container.appendChild(btn5307);
+  container.appendChild(btn5407);
+
+  store.dispatch({
+    type: "SET_GAME_DATA",
+    payload: {
+      nodes: [
+        { id: "5207", name: "吞噬增幅", node_type: "DICE_RUNE" },
+        { id: "5307", name: "連鎖吞噬", node_type: "DICE_RUNE" },
+        { id: "5407", name: "吞噬弱者", node_type: "DICE_RUNE" }
+      ],
+      edges: []
+    }
+  });
+  store.dispatch({ type: "UPDATE_VIEWPORT", payload: { x: 0, y: 0, scale: 1 } });
+
+  const treeView = new TreeView({
+    store,
+    selectNodeUseCase,
+    navigateViewportUseCase,
+    container,
+    mapScene: scene
+  });
+  treeView.setNodePositions(new Map([
+    ["5207", { x: 2480, y: 1520 }],
+    ["5307", { x: 2420, y: 1580 }],
+    ["5407", { x: 2540, y: 1580 }]
+  ]));
+  treeView.init();
+
+  // Test 1: Click close to 5207 center biased toward 5307. Even if DOM hit-tests 5307, geometry disambiguates to 5207
+  container.dispatchEvent("click", { target: btn5307, clientX: 2465, clientY: 1535 });
+  assert.equal(store.getState().selectedNodeId, "5207", "Click near 5207 must select 5207 instead of overlapping 5307");
+
+  // Test 2: Click close to 5207 center biased toward 5407. Even if DOM hit-tests 5407, geometry disambiguates to 5207
+  container.dispatchEvent("click", { target: btn5407, clientX: 2495, clientY: 1535 });
+  assert.equal(store.getState().selectedNodeId, "5207", "Click near 5207 must select 5207 instead of overlapping 5407");
+
+  // Test 3: Click clearly on 5307 center
+  container.dispatchEvent("click", { target: btn5307, clientX: 2420, clientY: 1580 });
+  assert.equal(store.getState().selectedNodeId, "5307", "Click on 5307 center must select 5307");
+
+  // Test 4: Keyboard activation (clientX = 0, clientY = 0) honors semantic button target directly
+  container.dispatchEvent("click", { target: btn5407, clientX: 0, clientY: 0 });
+  assert.equal(store.getState().selectedNodeId, "5407", "Keyboard activation on 5407 button must select 5407");
+
+  treeView.destroy();
 });

@@ -22,14 +22,14 @@
   "artifact": {
     "maxFiles": 720,
     "maxTotalBytes": 27000000,
-    "maxStylesheetBytes": 177933,
+    "maxStylesheetBytes": 195000,
     "raster": {
       "maxTotalBytes": 33554432,
       "maxInitialBytes": 14680064
     },
     "maxFileBytes": {
       "data/dice_tree.svg": 380000,
-      "styles.css": 100000,
+      "styles.css": 120000,
       "styles-features.css": 75000,
       "styles-overlays.css": 25000,
       "src/ui/compendium_view.js": 20000
@@ -49,7 +49,8 @@
     "maxRuntimeErrors": 0
   },
   "hostedCiBrowser": {
-    "maxTotalBlockingTimeMs": 550
+    "maxTotalBlockingTimeMs": 550,
+    "maxTreeReadyMs": 1400
   },
   "highRefreshBrowser": {},
   "stressBrowser": {

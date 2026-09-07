@@ -3,10 +3,10 @@
   "generatedBy": "scripts/check_assets.mjs",
   "sourceRoot": "site/",
   "runtimeAllowlist": "site/runtime-allowlist.json",
-  "fileCount": 563,
-  "deployedFileCount": 563,
+  "fileCount": 628,
+  "deployedFileCount": 628,
   "quarantinedFileCount": 0,
-  "duplicateBlobCount": 1,
+  "duplicateBlobCount": 9,
   "files": [
     {
       "path": "site/favicon.png",
@@ -17,8 +17,36 @@
     },
     {
       "path": "site/icons/AddtionalSpawn.png",
-      "bytes": 27413,
-      "sha256": "528f0aa53719314a23815fcf35304e890cd11a91d0c05936ba0e65001024dac5",
+      "bytes": 27229,
+      "sha256": "27d64d6cc571e8397cd40120ea4f563ceec2f1150f22f68d140a77700cf5f9d5",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/AmplifyDamageByNAtTenHP.png",
+      "bytes": 9433,
+      "sha256": "d457b2ae074354bb4113991a5f825ca611d88af4e4f71c6d69e1baa05abd5288",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/AmplifyDamageByNPerEmptySpace.png",
+      "bytes": 10766,
+      "sha256": "028ad79c6e153d85e58822b1b0b336ccc08b80fbd045123d3bb720c120567ef7",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/AmplifySevenPipDamageByN.png",
+      "bytes": 10670,
+      "sha256": "9ead8c5a470f575813750f3ce30aeaba6a74e005189b7652b0df9e81d04f994a",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/AttackUpByMWhenSevenPipsNOrMore.png",
+      "bytes": 13354,
+      "sha256": "5cd9b3b02b19a6c10ca02182461ad3aabfd50e63f1e716dd1b2dd6aff6c416cf",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -52,8 +80,8 @@
     },
     {
       "path": "site/icons/AugmentSystem.png",
-      "bytes": 43032,
-      "sha256": "b5f1327eb5010563c41b2fb0bc79fe698aac218c9c9973029a592af5866f1315",
+      "bytes": 43017,
+      "sha256": "13954a63a57045a648f67a25ede44c470cc54567d3d4eb6ef79556f46523e0ec",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -66,50 +94,50 @@
     },
     {
       "path": "site/icons/BigMonsterWithBoss.png",
-      "bytes": 22687,
-      "sha256": "e55db295d20316c8f6d7c44c14e63293ee1e66756bd2e1a03eb6c5f7235e43e0",
+      "bytes": 22619,
+      "sha256": "8e5efdd4d7f880e234b9dc1dfebddf729eb9c9ac40559b7d7c6d450f289a6d86",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Big_minion.png",
-      "bytes": 43216,
-      "sha256": "b1c5c401215f795afcc306cc87d3ad2fd1937dc9f55e244f0ca412298b824c56",
+      "bytes": 45557,
+      "sha256": "f74c66124d1a550aa7c84722f492f2da41f342735f04324a8062fbf9748392ca",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BoardFirstColumnBestHandAtkUp.png",
-      "bytes": 19412,
-      "sha256": "275735e2f65affe724f5cf587f04074d2599c19184e02a34942af98b58789828",
+      "bytes": 19345,
+      "sha256": "32f953bca390aea905a19a2f02a3cdd1432e1c66eae68126ab28e234fe2c02ef",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BoardLeftAtkUp.png",
-      "bytes": 8645,
-      "sha256": "b6d154047b4344b903b9f48c6d0c5bd265553677ec582314c23a4a8ce7d2c5a7",
+      "bytes": 8571,
+      "sha256": "3d532c1bfbbb546818283e43e98ccfd06388f27513f558fb3ff4840c0706b5c2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BoardMidCtrBuff.png",
-      "bytes": 24376,
-      "sha256": "545a8f02ddc8e2437ae875f7c88f893bcc1ae868b8c4b127d8454aea10294b5d",
+      "bytes": 24302,
+      "sha256": "194a1547f947061d9522bd0f9df3c153969566aafaa8acbcb293acc9da5e68e5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BoardMoreEmptySlotsSPGain.png",
-      "bytes": 14700,
-      "sha256": "36cc5d32db074b8bdbdee5f6f012b072af8c78870f20a25a60c049375ace719d",
+      "bytes": 14637,
+      "sha256": "7b044b0f046b6aff2aacd9f60791be600fe4961d233e91df90c871684dbc6180",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BoardSummonButtonBuffMove.png",
-      "bytes": 34739,
-      "sha256": "93660be86434022ad8fd450809f2bbcb190673dd4d62a45c0e49af8da0170a96",
+      "bytes": 34609,
+      "sha256": "7b7c98f515698cc0a59850da362fdd4ddbb99d1ed908524353e64de1b3e74403",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -122,36 +150,71 @@
     },
     {
       "path": "site/icons/BombDiceKillAllMinions.png",
-      "bytes": 16718,
-      "sha256": "58d5a410638abda89dc18528e91072b8186ddac4b7ef3fa860220f09bf559e34",
+      "bytes": 16657,
+      "sha256": "d616831db433bf985fd92a08887c76407a733417ff90dfb0fad01edafd22defe",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/BossDamageUpLow.png",
+      "bytes": 13095,
+      "sha256": "9cf4ed70662ccf3c4be5e9e10fd6bd41c8c7d49d598921d5f0e46cf50962597d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BossKillDiceDestroy.png",
-      "bytes": 18064,
-      "sha256": "edda0f5c3182316ad6afd3e7310a7f30783d244ee914c5e21107d957448f34f6",
+      "bytes": 17976,
+      "sha256": "a108afa10e5701526c98489ed033616a73533b8108c6562ce4e648515b2f3c2c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BossWaveDoubleSpawn.png",
-      "bytes": 22724,
-      "sha256": "e5175d65717d1ab1c129c9373b847b815167dbebcc64977a3f9c2eea7ffb545f",
+      "bytes": 22608,
+      "sha256": "c4c2a1009b075934daba386ed5eb19b63b9839619015f760420d8ab9c03d6fa0",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/BossWaveMergeSpawnHeal.png",
-      "bytes": 27322,
-      "sha256": "77c25ce38f85c6ce2ec7cd2620aad5ebda064abfcf873ae48673a373505056bc",
+      "bytes": 27223,
+      "sha256": "64a61a3992d69463ede23bc1b928e1f663b14515b0cd12e6c75fc310fbd84434",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/ChangeTopNRowsToSameDice1.png",
+      "bytes": 6161,
+      "sha256": "68f5bb7747c006ed14a5e656258ad2de32a1e900e3e74e48ea52bd79af1f5b6d",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/ChangeTopNRowsToSameDice2.png",
+      "bytes": 6114,
+      "sha256": "4b4419d1586654f04845794a5fb7cf07c2d314a9ccf51abd38faf7bf96625b74",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/ChangeTopNRowsToSameDice3.png",
+      "bytes": 6175,
+      "sha256": "c5d38698e78e1b9144442bbe4abccb7d5cd3c6a5d6686f1fd8cac1f232c46f46",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/CornerGuardian.png",
-      "bytes": 11676,
-      "sha256": "71a8287290e433985419f0f6f67b650dad61a084a2e706b96dab4175b38e8f8b",
+      "bytes": 11588,
+      "sha256": "b74bd6cd5c52f52386e26bc95ee3fb6c859736ffb27ba9684785d40cea014739",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/CritDamageUpLow.png",
+      "bytes": 10548,
+      "sha256": "6c7afc42b77db8fc897408f179d1cae6b6dbda68ccedbcb18d0a78026ab3038d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -164,22 +227,29 @@
     },
     {
       "path": "site/icons/DefenderEyeSPGain.png",
-      "bytes": 18334,
-      "sha256": "8f3fc8a22254ae02bc922d5379cf0d1a5aad33f37456b9f2dc37c28b36a34aad",
+      "bytes": 18213,
+      "sha256": "14d388bd43194a7b85ae33dc4489e2d0391837c87cb6f1da9f2d02378c0d8278",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/DiceShuffle.png",
-      "bytes": 17239,
-      "sha256": "5613e3a1ce04ef4fe067d35d6540394f9f6121d3cfb788285cbd8f92912f122a",
+      "bytes": 17142,
+      "sha256": "1e5e10dc4a098c2f26a7b2317c280b987213fd6d8ff939b701127b48475032e1",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/DiceTree_Transcendence_on.png",
+      "bytes": 14766,
+      "sha256": "f3ee235efe32618b15933522b8bf1eae6b84357fe866589ad6ddef16c0ca9f99",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Adjust2.png",
-      "bytes": 33969,
-      "sha256": "3d256c106bb78cd8d06916d6efe6cd4684b636739ebe5d0bd2c1e8ef5cb55ae5",
+      "bytes": 32382,
+      "sha256": "310c7171e4418013457b94835c74841b9a89c634eb2f498e1f05162ce56688e8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -192,22 +262,22 @@
     },
     {
       "path": "site/icons/Dice_Alignment2.png",
-      "bytes": 32902,
-      "sha256": "71ad8ccac47c2fcf548b0ac1fa2407bc6033638350125653d512f6ae10ded849",
+      "bytes": 33667,
+      "sha256": "444a66c72558e8f6c7d343434c2e1ef00fdbff3154a6c9fa845d5ce1aa2bd151",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Alignment3.png",
-      "bytes": 145678,
-      "sha256": "3209a19a7440d2e2b71b840399b492a0c317495cacb53dee9f57938931421a3b",
+      "bytes": 161964,
+      "sha256": "70bec7fcf7414b3b991065863d8103f56cbd45246ada23e136d3a44065c31970",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_BINGO2.png",
-      "bytes": 28745,
-      "sha256": "cad8a53718380bea67d570bea9c9fa84eaa4ce82c00726a4ebe29272f430c2dc",
+      "bytes": 28880,
+      "sha256": "2dbd0c1658fe04501f410c84aab4f069da3c7c43688effa946ef5cc31bb935cb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -220,8 +290,8 @@
     },
     {
       "path": "site/icons/Dice_BUBBLE2.png",
-      "bytes": 36808,
-      "sha256": "134e015f97a618fd26d385d16bdb9c9f7415362cf4d867cbb66e3fba592aa763",
+      "bytes": 35256,
+      "sha256": "409fb669a9c1260e2b7dab524538be896d9c8fb06003aa399d45aa4da83005a8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -234,8 +304,8 @@
     },
     {
       "path": "site/icons/Dice_Blessing2.png",
-      "bytes": 32900,
-      "sha256": "184ce5400c3251196ca17175e03af216868a457d19bd7ebd887f986b567252f0",
+      "bytes": 33030,
+      "sha256": "1877a2337822e31215ad5875d7b38fe8cbe48c0f9e817cf34ecf084da3a28e38",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -248,8 +318,8 @@
     },
     {
       "path": "site/icons/Dice_BrokenGrowth2.png",
-      "bytes": 26680,
-      "sha256": "6a221113822ea734a9055b99083693965e2af439dab45fd078dd0150566e374c",
+      "bytes": 26643,
+      "sha256": "903ff1881575dbd9c3567400ee28e8d307a6481ebc21e4dc2662c669a1f47067",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -262,8 +332,8 @@
     },
     {
       "path": "site/icons/Dice_Combo2.png",
-      "bytes": 33306,
-      "sha256": "d001b405a6e07a57432925eb3798f428d14f1e9e920edfcda18ee2ee16a1c59c",
+      "bytes": 34508,
+      "sha256": "3ccef2295cfc7d48510f1cf90b637acda36c0169a2b3fa7df42e3f9041085bcb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -276,22 +346,22 @@
     },
     {
       "path": "site/icons/Dice_Crack2.png",
-      "bytes": 27791,
-      "sha256": "831843f0767abcff370e5286cbf9234ee09c64115e055fed45c406bafdd66be6",
+      "bytes": 28106,
+      "sha256": "01e59c7cc28104ef4909df3ea2e7f6836781c34a421f0c4f11811aa43863be5a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Crack3.png",
-      "bytes": 116111,
-      "sha256": "5e342c6fabe2a877967ae070f10e53cf94dd33ebdd44e6bdc3467eb7ade65aa7",
+      "bytes": 116072,
+      "sha256": "2c34102b12bbf00977eed779dd1cd95f91e2020bbd6fc74c959cf7620f5cd443",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Doom2.png",
-      "bytes": 37081,
-      "sha256": "af14b42f795532281ef564c86a3ddb8715a52c669f6b852b4d71121bfb89336f",
+      "bytes": 37710,
+      "sha256": "1dadf54266d4047b32939b11817cf69554f6d9feac4198439bb44c6744bf746e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -304,8 +374,8 @@
     },
     {
       "path": "site/icons/Dice_Electric2.png",
-      "bytes": 28917,
-      "sha256": "bcdb973bf02b2645742bdc59d6c0386b9137ed9d91819ba51bf882009fb1d301",
+      "bytes": 28350,
+      "sha256": "4e69143148dc239d5c9c19df4bce8c2bbf87f07f9bf13112315f40fe42139e2d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -318,8 +388,8 @@
     },
     {
       "path": "site/icons/Dice_Element2.png",
-      "bytes": 25724,
-      "sha256": "88a449d3df6923a1ac6bfeee376804f25f0910757c41065670cfa40898388b32",
+      "bytes": 27331,
+      "sha256": "1bc2fe09f3227be4811917aca796831749a0495f084faa8ba8f8208fc241225f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -332,8 +402,8 @@
     },
     {
       "path": "site/icons/Dice_Executioner2.png",
-      "bytes": 38268,
-      "sha256": "f82336a74e060d962798df3bca622a1a2ff6c1412fc479d3b4a12a7e05013cd0",
+      "bytes": 39746,
+      "sha256": "62f98b57bca4e929a8f1f7a544bf37e1e2ddc3450ade959d84e0f0587d83def7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -346,8 +416,8 @@
     },
     {
       "path": "site/icons/Dice_Flower2.png",
-      "bytes": 33196,
-      "sha256": "cf7ad30be69e94d61244de8cafc4010f3cdf7fc3597f9231f03a49ac3f904282",
+      "bytes": 33207,
+      "sha256": "e7a1890eab3879540dff083de1a59a08b7a2e9129376a6d8092e498f75db8a2d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -360,8 +430,8 @@
     },
     {
       "path": "site/icons/Dice_Gear2.png",
-      "bytes": 27805,
-      "sha256": "8c13f06020323f2e833f6bf56b31c41bc9f70ca48e50dfd5c034858dd3963209",
+      "bytes": 27809,
+      "sha256": "98a059fce0ab05e0601540ccef6be7e16893f46fd3f0274e11039e4b336176aa",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -374,8 +444,8 @@
     },
     {
       "path": "site/icons/Dice_ICE2.png",
-      "bytes": 26602,
-      "sha256": "44068f5f048b8601c5c79f95967689ea5213282f2d23797ce73eac084a3ab5e7",
+      "bytes": 26394,
+      "sha256": "1ef873933e517e2a2137db7146573bde58afed6e19021911af7950176b645578",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -388,8 +458,8 @@
     },
     {
       "path": "site/icons/Dice_Light2.png",
-      "bytes": 25234,
-      "sha256": "0e030d4ba260fbf28ee13341e8d020ebbd3223e02f15f29fc7b8da45708cb132",
+      "bytes": 25402,
+      "sha256": "42b80ab9429f09d1876faf6734f7be9ccfcc90a69acb28090f27a2b3f82924af",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -402,8 +472,8 @@
     },
     {
       "path": "site/icons/Dice_Lock2.png",
-      "bytes": 27699,
-      "sha256": "f04caff2fe122fe3911d0637940114514afb2122f841459261ef111b2cb757b8",
+      "bytes": 27506,
+      "sha256": "1cbcde89feb7b9a4f4da2930e3f2aeb568249299e66429246fe99dc7d0a7306e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -416,8 +486,8 @@
     },
     {
       "path": "site/icons/Dice_Mine2.png",
-      "bytes": 23350,
-      "sha256": "f0d92cb3c1f7f1f9ddd4eb86d26d462a643b48accd31d6ec0b351f9acbbb5c46",
+      "bytes": 22798,
+      "sha256": "2ee4dfed58ec243b3e1a39c2c07504d9f407c3817b50eba5480ffa2b18256d36",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -430,8 +500,8 @@
     },
     {
       "path": "site/icons/Dice_Mutation2.png",
-      "bytes": 33016,
-      "sha256": "a784fdc08ce0c264a391c8f76c5fb02cc61fafd17a163251bf278814610979d6",
+      "bytes": 31752,
+      "sha256": "1fbbc0096b465e763fc4f2b3828496155141f77f65ed84d810eb0b6f3d6e1dee",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -444,8 +514,8 @@
     },
     {
       "path": "site/icons/Dice_Neon2.png",
-      "bytes": 31596,
-      "sha256": "3343ba00f00ffdb0f3f04da3f6870800ab1979dc92f2576298bf1c097d99ba05",
+      "bytes": 31267,
+      "sha256": "a8a372ace4152c81c484e43df126919fdaed27bcc03fd5c4e6ed6c10291ac079",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -458,22 +528,22 @@
     },
     {
       "path": "site/icons/Dice_Pillar2.png",
-      "bytes": 31110,
-      "sha256": "3ec2118272c6db450b0a5ce8ba4b15ff746dfd8e007140dfe4a5cc57e213d185",
+      "bytes": 32496,
+      "sha256": "46711a209d07c1d8a2824fa67c505cc3c51756faf63dcfadbcf07ca8c158fb02",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Pillar3.png",
-      "bytes": 144226,
-      "sha256": "c9ba17be528d7499cd861069b63585bd74024d2353c51f3fcce0efe811023c99",
+      "bytes": 134813,
+      "sha256": "05e87d6742087c83b1e6f9f8a8b804389a3f265ba525ebb35ed89e94f3a61fd6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Poison2.png",
-      "bytes": 31933,
-      "sha256": "37dbeeb6c87e85631ffb310ac039979c34a4332f04aa8819391fa58c937868c3",
+      "bytes": 32476,
+      "sha256": "df70a901eace16e10acf18db2254aafcf688c106600abc8483214ad15a54ec7d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -486,8 +556,8 @@
     },
     {
       "path": "site/icons/Dice_Potion2.png",
-      "bytes": 28966,
-      "sha256": "49e09309ff518fb96e56c07e37fe6c4ff236a9a6931129bc12c62f197064036c",
+      "bytes": 29860,
+      "sha256": "c8f849040f15bee9aa8fb50e6e0ca9efc67e294c7c77959c62c3527f81f1cd92",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -500,8 +570,8 @@
     },
     {
       "path": "site/icons/Dice_Predator2.png",
-      "bytes": 34084,
-      "sha256": "44c043bc3435809d18be2f7450841ba1efa36419b6153ca1ee580665a0c9e586",
+      "bytes": 33241,
+      "sha256": "bbcfc32e19e49e6f3e19566330c0c53077b0c61973911b29a7fe635dc6877269",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -514,22 +584,22 @@
     },
     {
       "path": "site/icons/Dice_Punch2.png",
-      "bytes": 31592,
-      "sha256": "bd81e32a053c8771703b83b999724b63abecd71ea5b37d5dbcfa79825335f264",
+      "bytes": 32489,
+      "sha256": "087c958b7b6ecce371ff5846d006a17e1c4882fdc3135867894601c152bfd04e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Punch3.png",
-      "bytes": 134372,
-      "sha256": "11ad5687eda66580c98f78be64f77d97bfcd658f2a0bb713ca811061d53aef17",
+      "bytes": 156266,
+      "sha256": "fdf66b8d72ddb16672e6d94f0d508a66f5768148439b8d1c34b27ee792dac698",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Dice_Ray2.png",
-      "bytes": 28009,
-      "sha256": "418b3823d74523eff5a84b481f52c864664deb305b550b4d7a3108a8eb97e7ec",
+      "bytes": 26570,
+      "sha256": "56dc1e3836a18fb3fe89608309e191cd72e6c3b64e3bace18fe43054f50dcda2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -542,8 +612,8 @@
     },
     {
       "path": "site/icons/Dice_Resonance2.png",
-      "bytes": 31448,
-      "sha256": "b6044a2a3921e6ac7fc353ca3a963b44f34ac2f73ce7a71f636090cf605100f9",
+      "bytes": 30700,
+      "sha256": "07ac8c9ccb5fc18eee64bf7e7b58b917ae40ea5c4be997e11e29bb5206ca7f06",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -556,8 +626,8 @@
     },
     {
       "path": "site/icons/Dice_SPEEDGUN2.png",
-      "bytes": 32779,
-      "sha256": "0ab9682467f8ce19cef6256baf4810d56d5bbe7646b7cae239c888830dff6b2c",
+      "bytes": 34036,
+      "sha256": "9f96512f97c8c04b68124670d604583f4e2a59da50155f54c0fad0c52f8037ac",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -570,8 +640,8 @@
     },
     {
       "path": "site/icons/Dice_SawBlade2.png",
-      "bytes": 28758,
-      "sha256": "e07fbf14e35910c4b73d3c19c440bef2599a7c057bec7c046127ab0d24df186c",
+      "bytes": 28785,
+      "sha256": "0ed9571f1227b4fa57aad2e713d18a8a1ce635a070579f045c7f367e4458c911",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -584,8 +654,8 @@
     },
     {
       "path": "site/icons/Dice_Slow2.png",
-      "bytes": 34041,
-      "sha256": "f1793d13aa5b395bf5e68fa0a02826613f2bb3976c97988e7375b191b3f7a673",
+      "bytes": 35824,
+      "sha256": "9aa8096dc25ea597577e3c76585f5707ef317005586bfcbc079f26e99b653cdc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -598,8 +668,8 @@
     },
     {
       "path": "site/icons/Dice_Sniper2.png",
-      "bytes": 32059,
-      "sha256": "a8f9ee8ca18150c89ecf6ca02b5e777766e10c84fee159c8f618779c945e145d",
+      "bytes": 32915,
+      "sha256": "9b5c76e5a0c03aab10307d56d27510b8612182721f1529187c13314ed4593cf7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -612,8 +682,8 @@
     },
     {
       "path": "site/icons/Dice_Solitude_2.png",
-      "bytes": 38252,
-      "sha256": "9df4b9c859087c78ba217d27ea7cd7265284f7cadfa1c95bc18cf9a50a734888",
+      "bytes": 38607,
+      "sha256": "676b10c90610f4d915dbae232a9e1081c279d216fe36fe31e53b856487303c36",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -626,8 +696,8 @@
     },
     {
       "path": "site/icons/Dice_Switch2.png",
-      "bytes": 27474,
-      "sha256": "fc781acc4496dc656cb2f6f1175d91ab74a4ecf015096f8e0bef327a11888984",
+      "bytes": 26754,
+      "sha256": "dcbcb883e59ba6e69cd20ec0b0adc8c396235b66bd5dfe18452f15b90809096d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -640,8 +710,8 @@
     },
     {
       "path": "site/icons/Dice_TRANSFER2.png",
-      "bytes": 34354,
-      "sha256": "28ab231450881eb7f7e1f4619932a2d33f47084e4e406bb383031eeb21f48329",
+      "bytes": 33689,
+      "sha256": "5040bd5ee6232ea50bf4543e7da7d99cdf4fbbe86693a690efcbd9792a5bd8c8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -654,8 +724,8 @@
     },
     {
       "path": "site/icons/Dice_Thorn2.png",
-      "bytes": 33801,
-      "sha256": "129ae6588d1a03d0f5f63443a6d5c59f9b1ca4bf8031ff7677339155ecc523b2",
+      "bytes": 34129,
+      "sha256": "af29e0cb18ce9d70f103757b5a3b04821b2df757981bc29247fc5150cd790032",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -668,8 +738,8 @@
     },
     {
       "path": "site/icons/Dice_Tyrant2.png",
-      "bytes": 38481,
-      "sha256": "d7493717221e940e6f421917d99866d8e933fca7931f99197af932820879219d",
+      "bytes": 38910,
+      "sha256": "050fb0d55f2127664e29843827b757c0625e494e76a6f5cd87ea0b15656a3c43",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -682,8 +752,8 @@
     },
     {
       "path": "site/icons/Dice_Wind2.png",
-      "bytes": 30707,
-      "sha256": "5744ec131aaea11110f4f112bd39f8604e06f8decb45cb7b53e1951237d53346",
+      "bytes": 30451,
+      "sha256": "f81a097ae8e9c03fdf099d0ed630553b254bf28b3d852c2ee4dda42bdfcb5c65",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -696,8 +766,8 @@
     },
     {
       "path": "site/icons/Dice_fire2.png",
-      "bytes": 23790,
-      "sha256": "070ad95221493b244564de43f288e5d735343a96d94feb31df08736eeda44817",
+      "bytes": 23458,
+      "sha256": "cc9cd74213bd34357b6a49aba169f452ce44278e90f5fbe67adb3f796a4396c9",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -710,8 +780,8 @@
     },
     {
       "path": "site/icons/Dice_iron_2.png",
-      "bytes": 23672,
-      "sha256": "200c1b5661a0d0bf9176a1ac3b8b8a2e37f6b01927cfd98bd78f6818b772b212",
+      "bytes": 23387,
+      "sha256": "4a5c5c0c8b656ae38b161ece070ba7de315a7d113d3946d3dfafe27e4df9c013",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -724,8 +794,8 @@
     },
     {
       "path": "site/icons/Dice_shuriken2.png",
-      "bytes": 23979,
-      "sha256": "b3880bf2d1ca51a8df79d6bfa331d0723d0fae50ba01ec0a33689a5375291247",
+      "bytes": 24108,
+      "sha256": "c1285d2cf9dee6a1b10dda77b91afa59e02cd1f803c0c1fd94ba26552f448f6d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -737,9 +807,23 @@
       "status": "runtime-allowlisted"
     },
     {
+      "path": "site/icons/Dice_solar2.png",
+      "bytes": 44769,
+      "sha256": "c316ac31c340bc183b8b8c3721b4cfb6d7a381b823039c18f38e048bd5013b77",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Dice_solar3.png",
+      "bytes": 159240,
+      "sha256": "ce496cd7a12097439acf0ddb8e1430c46cc94adfa927cadc4a930b9866b6bc7d",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
       "path": "site/icons/Dice_summon2.png",
-      "bytes": 32244,
-      "sha256": "1b19e7c4d6f1ec6ce07c96840954548007f7662cfdcda428ab5b49cd995c3514",
+      "bytes": 32216,
+      "sha256": "1dd5114e33bc7939ed8fc1f4c37cf88b4f78f12426dd6882b3d71e11c680e741",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -772,16 +856,37 @@
       "status": "runtime-allowlisted"
     },
     {
+      "path": "site/icons/FieldAttackUpLow.png",
+      "bytes": 7998,
+      "sha256": "1c614aebff0db931b0efd578d51bb6ec6477f0db79a3ac34a85944f9244bf544",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
       "path": "site/icons/FieldDiceCountSPUp.png",
-      "bytes": 8879,
-      "sha256": "7b819b19e0e6aad8efced2c84ee6152f1805119f7db5695ea753f23dc94a072f",
+      "bytes": 8813,
+      "sha256": "8a4404d4de8325691e905dcaec64986154165b0f4869aa06ea2ce162a5dcb9c3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/FirstPurchase_box1.png",
-      "bytes": 21722,
-      "sha256": "33df3d9860ed7c1f0b7d7ce0dd336a679f14ba098d831afac9644e9a8a7fbde4",
+      "bytes": 22296,
+      "sha256": "abee2294c3b3cdc1fa1c2e6d04e30f11b6c2323078153c200fede81dae2c608b",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/FixNextNSummonsToJoker.png",
+      "bytes": 19919,
+      "sha256": "42abc161c92f163e9c7f07ad49b549ba4d2f396aae041d3b71020f8f9fc99b16",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/GainNSpLow.png",
+      "bytes": 7239,
+      "sha256": "c1b5e9e0ac79548ef3cc6ba62c562796806d86e344f74483c10dd0f90a97a2d2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -794,36 +899,64 @@
     },
     {
       "path": "site/icons/GameMinionSpeedDoubleHpHalf.png",
-      "bytes": 15797,
-      "sha256": "a209dbe3e67563053ea1a2d5b702b44ee4fc41bc1b952f065926b178d509dab5",
+      "bytes": 15699,
+      "sha256": "8b66c28fa9d1e1c7e6a93b501332afd23d338a5a078ec8e7ed3b5d2c0fcac161",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/GolemDamageUpLow.png",
+      "bytes": 10229,
+      "sha256": "1345387e7ae2afe3acf11a36ee6e01fdbdae979029563cd4913f387c3a4fbce2",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/GolemEscapeSpGain.png",
+      "bytes": 12874,
+      "sha256": "b6338b45348d8152ecdf6e8f0fc0626d46b34b95f27fd0c5ba0b20c24484d1db",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/GolemHitSpGain.png",
+      "bytes": 15408,
+      "sha256": "8a09de772cd1f6097638db32619e9fb6f348c42ca3c2c4e96b54605920b735cf",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/GolemKillSpUpLow.png",
+      "bytes": 7163,
+      "sha256": "47685658ea45bb8c478f2378792e2ac8842cbe4ae99a21eb795e42c66e4cab16",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/HPBelow50OneTimeHeal.png",
-      "bytes": 46123,
-      "sha256": "d9e9112cdcdb577cdf73ab63e3282d894f82cd67a2fd65428817bc175cd9eec9",
+      "bytes": 46009,
+      "sha256": "ca0109d153f7585f84d676c60f8733b641276d20f4186a58a242cb0c2dc5b2d2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/HPConsumeForSP.png",
-      "bytes": 15616,
-      "sha256": "30de469a00538acafa909ee5b99f0bb7f72b2d4e2f5877898018c7ad93be143e",
+      "bytes": 15509,
+      "sha256": "bcadc5c285e8235fef609cf9dc82369ae7a66a9097bd276c96238426c2f1117b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/HighestLowestEyeSwap.png",
-      "bytes": 22675,
-      "sha256": "6ad9f92aafca18f4d91186461290ad1c29fc0def1bcc0ec1ea57c5dcf24f522a",
+      "bytes": 22602,
+      "sha256": "540a1ae07f690e12377b7877728a584753a9fa92499b58f94329280fbb5e515b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Hunt01.png",
-      "bytes": 126351,
-      "sha256": "526161d474e307026cb549b4fbfc4a86cf72e2e7652e72f734c8133f9f2adc8e",
+      "bytes": 91763,
+      "sha256": "35aca8b0448c2e41be0bbc8a820bcb0b2fb1227d8eb9752454de6a0ad470dd0b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -843,8 +976,15 @@
     },
     {
       "path": "site/icons/Icon_Bubble.png",
-      "bytes": 10611,
-      "sha256": "de5de2a581e127c84784e77f0768ee052e0d335ac75e27e050b6dd8b6c6bee7e",
+      "bytes": 10644,
+      "sha256": "7ea17fe33f420aa6b24c6d635923605164145c9592b69af422082f9f541f59b1",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Bubble_Hard.png",
+      "bytes": 10644,
+      "sha256": "7ea17fe33f420aa6b24c6d635923605164145c9592b69af422082f9f541f59b1",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -857,71 +997,141 @@
     },
     {
       "path": "site/icons/Icon_Hacking.png",
-      "bytes": 8487,
-      "sha256": "faf6ba79462321ff5e2ce6c8d99b5097b3b91aa5bf44a83dae1814e72acb41c1",
+      "bytes": 8614,
+      "sha256": "2dbb967f8c5f6ead80961c8269100202524f69c416cccd8ed3ec5109075e2970",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Hacking_Hard.png",
+      "bytes": 8614,
+      "sha256": "2dbb967f8c5f6ead80961c8269100202524f69c416cccd8ed3ec5109075e2970",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Joker.png",
-      "bytes": 10779,
-      "sha256": "7a0b8418c9b89a5de11a0a7fc93200ec828254049bdd50cbb23135bf2bb0bd12",
+      "bytes": 10827,
+      "sha256": "07d2f14a3bddcb8fa1ddeae12e6bf41d89a527850bb207cfd07356212eb5cf93",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Joker_Hard.png",
+      "bytes": 10827,
+      "sha256": "07d2f14a3bddcb8fa1ddeae12e6bf41d89a527850bb207cfd07356212eb5cf93",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Leon_Hard.png",
+      "bytes": 12791,
+      "sha256": "f2a05b0fa98c6b7836aed4a2680253bb15a4be78bbe27b4a633007781fa88446",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Meteor.png",
-      "bytes": 7550,
-      "sha256": "9c77f29b6083baa9dbd2777c01c9bfee35bad47e7001bc9a31a8b213ee57f9f9",
+      "bytes": 7645,
+      "sha256": "58eb68809470ef85f8c317ef946536322b860b17e39b00d838713da49bc8a248",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Meteor_Hard.png",
+      "bytes": 7645,
+      "sha256": "58eb68809470ef85f8c317ef946536322b860b17e39b00d838713da49bc8a248",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Quick.png",
-      "bytes": 10579,
-      "sha256": "659a220c76fabc47daf096c87ba92913ba1293d790f216a0006ee060064c9018",
+      "bytes": 10599,
+      "sha256": "2aad792d90693196d1aa9626ff1326ac656bb96c3980649ccc9144dd17c56a72",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Quick_Hard.png",
+      "bytes": 12910,
+      "sha256": "bce4f9aa55206a7c45dfcbd3fd7e6e1bccf9b311b91176de60d7dac30ac2bad4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Recovery.png",
-      "bytes": 9395,
-      "sha256": "984e862e0d74a925cd3e5e7583ab200c14a2de0293a9e0efe601e96aedf178de",
+      "bytes": 9497,
+      "sha256": "048c41a3afb8df20bbb8baf5f511959c15af4c68c39355b31ae780928eb2a6ae",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Recovery_Hard.png",
+      "bytes": 9497,
+      "sha256": "048c41a3afb8df20bbb8baf5f511959c15af4c68c39355b31ae780928eb2a6ae",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Royal.png",
-      "bytes": 12492,
-      "sha256": "8b4b9b19808d04dfabb113ed322a4c86e2c0475227fc80b8693469475b213766",
+      "bytes": 12534,
+      "sha256": "a693f52771f59e76688131839ce8a056607805a370e0ca729daa49737e846ddc",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Royal_Hard.png",
+      "bytes": 12534,
+      "sha256": "a693f52771f59e76688131839ce8a056607805a370e0ca729daa49737e846ddc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Slime.png",
-      "bytes": 8126,
-      "sha256": "be219a06994f7f05fb195c36981b111741488fce5da3ccaa986e57e24e6073f0",
+      "bytes": 8130,
+      "sha256": "45614eea41ad1f169ac97806266cfe5e72582892aa8851e1d168681ac6cf38ab",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Slime_Hard.png",
+      "bytes": 7357,
+      "sha256": "47ed568540609d88c11d28c34a4fee784b933c801383d26a0eaa327da4e253fc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Snake.png",
-      "bytes": 8901,
-      "sha256": "ff18fb8ac7b6b79119dc7387fef6a6ac3acded9d3bb9a4d3c1a0e0136ec1553d",
+      "bytes": 9010,
+      "sha256": "fcb0dc6491b2258a99355a14a32ff8430dbfa14b4c3d3ffbbf86151208bd6270",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Snake_Hard.png",
+      "bytes": 9010,
+      "sha256": "fcb0dc6491b2258a99355a14a32ff8430dbfa14b4c3d3ffbbf86151208bd6270",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_SpeedUp.png",
-      "bytes": 2032,
-      "sha256": "c7edfd0bf1490703048aeccea6713c64dd92250fbb209a43de6eef97e0c605d3",
+      "bytes": 2031,
+      "sha256": "cb521c20fcc82a648e1ed33272c7e81719ea10d3d058670942c73cb05027ea08",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Icon_Thief.png",
-      "bytes": 9438,
-      "sha256": "bd08e34139d6dc1c394c695068ff674e3b503b5ebf12891b631937b683716b6a",
+      "bytes": 9494,
+      "sha256": "f7fe56308e678835af98146417cd14d86f3897ac1319b5366f285dccd2c18e65",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Icon_Thief_Hard.png",
+      "bytes": 9494,
+      "sha256": "f7fe56308e678835af98146417cd14d86f3897ac1319b5366f285dccd2c18e65",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -941,15 +1151,15 @@
     },
     {
       "path": "site/icons/InitialSP10000ThenReset.png",
-      "bytes": 22157,
-      "sha256": "de48f3e0885be9789798f397c6571072c9a41b622ef1748b9f6154206aa6fc57",
+      "bytes": 22046,
+      "sha256": "43b28d035b6307323c700e0c53b84fecd34b5e43005e77b5ac8ed96b370aa58e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/InitialSpawnDice.png",
-      "bytes": 27483,
-      "sha256": "c279f316ea955fa4b8708f54c7b5eeea94eecc8987e5ab5ea9331cd659da17cc",
+      "bytes": 27425,
+      "sha256": "d7b7fe4781c1385823b48c1f14c51ac53c4d1d2805e2c76d9549ec00f9c13174",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -961,16 +1171,30 @@
       "status": "runtime-allowlisted"
     },
     {
+      "path": "site/icons/KillMinionsExceptBoss.png",
+      "bytes": 11126,
+      "sha256": "18528f37d571356419bd9aa663b783cf6eba89915e3909197337dec8580d835a",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/KillSpUpLow.png",
+      "bytes": 15531,
+      "sha256": "2962f67b7ceada5e772c33d94ba58600ad1845d296ea95a57ba583cc75bbe227",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
       "path": "site/icons/LastEmptySlotAdjacentLevelUp.png",
-      "bytes": 10309,
-      "sha256": "794c01996d4ccf7652bfd82836f690a77a60198ad9832123e4db27035c40cc20",
+      "bytes": 10223,
+      "sha256": "4111ae9cf73eb6010084cb3c0ff55c50f731d2476a525803ab10191a4f547737",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/LastStand.png",
-      "bytes": 16848,
-      "sha256": "765ca6dbe6e420e1bba30d6731c8e51475c88965b88845b1c3406a70d2b5b406",
+      "bytes": 16752,
+      "sha256": "09516fefb3f5b7b7a130657b4d3326a8731935be7ff7f8a971a584f3e97ddb03",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -990,8 +1214,8 @@
     },
     {
       "path": "site/icons/LuckyMerge.png",
-      "bytes": 35298,
-      "sha256": "417df6a5e5117fcc17de969dac4c2bb170e745d6b9aaa5350799f342babddc4b",
+      "bytes": 35196,
+      "sha256": "2e3c8530673b61a8b8a1da98c222a286937604223754d911f8e149c7b32ee4b4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -1004,22 +1228,22 @@
     },
     {
       "path": "site/icons/MergeAssassinate.png",
-      "bytes": 14676,
-      "sha256": "e62846cb7a1c1501c1707585e839309311364e22059a1dc92201e4ff69b564e6",
+      "bytes": 14584,
+      "sha256": "fe415473a1ae0f5f67c52c76671833792cccf74781696fd6305de0f0644f4884",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/MergeAtkSpeedUp.png",
-      "bytes": 31602,
-      "sha256": "c97922197a960954d4f956cf743237e963f1cc72e80d670b350d86e526cf2c8b",
+      "bytes": 31493,
+      "sha256": "18c2f8a8921d809c12acc8b454fe5470c459dc2813f8053cc0b149362e4e5e86",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/MergeBigMonsterOpp.png",
-      "bytes": 14259,
-      "sha256": "d12e43f7ffefbf84e7695c1a3c085a5e08ff4c7e6083520223d5859b7681902d",
+      "bytes": 14146,
+      "sha256": "e26edb486bb7d2a0c14c85e10695212a13997a4cdce4dad756f01ec6220bc89d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -1032,8 +1256,15 @@
     },
     {
       "path": "site/icons/MergeStunAllMinions.png",
-      "bytes": 13778,
-      "sha256": "7e5dd1eb7e85afd1450966f4854f5ebc04572d5fea84c6366153db300ab587ca",
+      "bytes": 13693,
+      "sha256": "87f1ab5cc47b2ec8f72e559c793af17303af9c10b211b4836e0aeb72fcafa3c9",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/MinionSpeedDownLow.png",
+      "bytes": 13958,
+      "sha256": "a01fe3ea0b804825a3e83b670221e5b9701f16cbd07a042b8ab483132e7c4caf",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -1046,8 +1277,8 @@
     },
     {
       "path": "site/icons/MostDiceLevelUp.png",
-      "bytes": 15481,
-      "sha256": "88c101681d269a84577cdb3186f92bed8d631a9a11145332cc8430a47e374ef4",
+      "bytes": 15394,
+      "sha256": "65f30e83079c53154500e456120864c34a94f82a32439d673524801efaf7dfb8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -1074,113 +1305,113 @@
     },
     {
       "path": "site/icons/OneEyeSummonPowerUp.png",
-      "bytes": 21469,
-      "sha256": "0fc3df7775bf66de81d0f0a5b7e048828309a763ef281c14fca1433c6978a318",
+      "bytes": 21377,
+      "sha256": "b9860e74702385cd8f83a070433ce9e11d0aa6b77b5121ff82c394599f3ac77f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_AttackSpeed.png",
-      "bytes": 6116,
-      "sha256": "c0aa3ce830292c517440e752d25f8a6e6ff4d47acd0bcb0c785aed42440e703a",
+      "bytes": 6416,
+      "sha256": "186c9548a2dc68e21c8d10184500193735d32987986f6da2adc819739347ca79",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_BulletDMG.png",
-      "bytes": 4475,
-      "sha256": "2919c2bf046aaf34d2e8344d117b7e522e3f047119c87856dac77c329a48a728",
+      "bytes": 4975,
+      "sha256": "593566f627ae86cb89ac9298f382ce66191cd11731819ddadd13e02594c30efe",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_CriticalRate.png",
-      "bytes": 6732,
-      "sha256": "341407672d3e64a6ebcc0e117fbc76462abbd46997f80f1abcc632a8906eff7b",
+      "bytes": 7361,
+      "sha256": "ed9e7c165b5f820432b810386b9718f6aaca3e2ec38f6644f08d38641419b8a3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Engineering.png",
-      "bytes": 5873,
-      "sha256": "a81e95f8201ad382dc436f9763b45578e38f55a70f1e2f0dfc467276cc45a162",
+      "bytes": 6694,
+      "sha256": "1c9595c2a76c311e7d4cdf326469afdf4a01c5bbc35676138ad2a56c9a4c428e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Guardian.png",
-      "bytes": 3962,
-      "sha256": "a20ad00b24e88a318cb81a76a0781ea6a5e2b4f76308470ebb2e0da6167da2fe",
+      "bytes": 4638,
+      "sha256": "1eedb6e295012f29a11a1a2181b1b041e86529bf2a3da65e2eb087c875bccffa",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_HPup.png",
-      "bytes": 4949,
-      "sha256": "70cc0ab5d8b37b9210888d7152dc3f59faa0be5f09315b5bf8f6c293c1fc7330",
+      "bytes": 5341,
+      "sha256": "b2670931e947ec58fbd18fa08657a063b15a6c962eda215ce9cc4b4c4f8f6020",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Invasion.png",
-      "bytes": 5717,
-      "sha256": "13f976f4b343e259dcc3e32458bf48ddb0c61742e89388ddf6c1f0a892ce931b",
+      "bytes": 5833,
+      "sha256": "9dccdd36cd8822e4e914773c4179680c59d8550e3c6025340dcfe90b630c48da",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Magic.png",
-      "bytes": 4003,
-      "sha256": "0faa7630d963928da8ab11a89dbcc6cd0dabe16dfba5095a38244a4ecb6e621f",
+      "bytes": 4454,
+      "sha256": "d3167c7ab67945a868d52985ef4d9d5d451f2b2d39ff5c77473225ffcf9b43ab",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Nature.png",
-      "bytes": 4802,
-      "sha256": "cb2d0da565cdcfed697089bd9f16d1c1540159936ddbce88cf55b80c74252cdc",
+      "bytes": 4756,
+      "sha256": "14b1411bb02e991416bc9e3b7e8543947b3e3b161b1af2b9db04cdea2ad2924a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Spup.png",
-      "bytes": 5039,
-      "sha256": "b32d93baa18caa15e313661917440b76c9db0263d81cc3275f34ba4deee7e206",
+      "bytes": 5577,
+      "sha256": "a0126d106d22d5bb5e653fa7cb7104868765b028af66f4e30a77ffca96b70c90",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Surport_E.png",
-      "bytes": 9482,
-      "sha256": "5f11dfbc1721cfc33ad800d2365a68316638ae336f66091cff66053c01af9d38",
+      "bytes": 9810,
+      "sha256": "ca00d2c63a13953e18f567f043db32a03e8388a760e5a8520312bf125684de83",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Surport_G.png",
-      "bytes": 7605,
-      "sha256": "81756ed829e06be47ec0ab2ee07bb1fbe56f29aa404416139941a7ac305938bc",
+      "bytes": 8243,
+      "sha256": "faa8ff289d3e0625af74c77cf42562ba208a7debb407907173a645e2022aa4e0",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Surport_I.png",
-      "bytes": 7560,
-      "sha256": "dbb5e1f4a767453fef65b95c1cd4d0410cc9c8266c12564cb2cffdebb8f87cb5",
+      "bytes": 8569,
+      "sha256": "95339c99f57028418cc14f1aaf197f9e5772676bae4904ca39f1dbac3bd22a75",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Surport_M.png",
-      "bytes": 6318,
-      "sha256": "fef0db2bf8a438c1b6b93e05fc727dceb40a331ec2a2965e32f0131bf3b2537e",
+      "bytes": 6952,
+      "sha256": "7f20fdab785f1a02ff6089c95cbfd3ad257b451b466a0bdd87237104fd741fbf",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/PassiveBigIcon_Surport_N.png",
-      "bytes": 6681,
-      "sha256": "bc80e85b2b8c065e8bcad3f2e82598ccf759f7d6670f531800adf41641bfe7d2",
+      "bytes": 7086,
+      "sha256": "1cffe98618d898cff9b656dd1091c7416d313407c85a5c44ee48485ea90f1d3f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -1241,16 +1472,30 @@
       "status": "runtime-allowlisted"
     },
     {
+      "path": "site/icons/QueensSeatBuff.png",
+      "bytes": 16223,
+      "sha256": "f6da8a4f9025cca96fddf381b0ec3bf048c1ecb01b2f818df350ab17dcfb5c10",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
       "path": "site/icons/RandomDiceNoAttack.png",
-      "bytes": 24089,
-      "sha256": "9ab4e3da1c588b0934be7e04047e47f7d8e8b0d9fee46a4887913303359a70bd",
+      "bytes": 24003,
+      "sha256": "3e1d5bd4341ca326c5318c06e50eaf39d3e5c5c9e0bbf0dc10d6935bb865a456",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/RandomDicePowerUp.png",
+      "bytes": 11184,
+      "sha256": "86a276a9e3ededd84616bd5614462f78688e8d57284476a47be1017bd0537b1b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/RandomEyeDownAfterWave.png",
-      "bytes": 15749,
-      "sha256": "8f138fe7e53be108adff8ea2522824d9cdba57fd445cedb735cfedd6737eaa2e",
+      "bytes": 15674,
+      "sha256": "87b78d8738c35cc39939db37732c0d4bc1b2889a88ff46fd03849527974a879f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -1263,869 +1508,883 @@
     },
     {
       "path": "site/icons/RandomTypeChange.png",
-      "bytes": 21191,
-      "sha256": "266945bc031f9fbc53b303b57ee7879ed7bef26d0e9e1369b14c83e883dc6236",
+      "bytes": 21119,
+      "sha256": "b157505668df64f68901143d854319b6412731df4f52fbb80a3108907fc2d718",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/ResetSupporterCooldown.png",
+      "bytes": 16688,
+      "sha256": "b3cdd2a2b0b743ca8b2c3c5482036167c658c7c7052b9351b6632dfeacd8026f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Adjust_0.png",
-      "bytes": 16518,
-      "sha256": "a441b6e248eb647ea8a27232be940e2705da6927509edbc247d5dbd6f44456c4",
+      "bytes": 17853,
+      "sha256": "fc28e188e532c8844d261a20ef47a1e6311911e7556b8a611630b46fa3d3f2a7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Adjust_1.png",
-      "bytes": 15214,
-      "sha256": "781c9e6f0d9531cdaf7696ee8f68d3e9df56afef6d384f594b44f0f3f165097c",
+      "bytes": 16926,
+      "sha256": "0774015699708d91db7ac90e3b0732c102ee21ee373fb6b2672f261940d9a6c2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Adjust_2.png",
-      "bytes": 14631,
-      "sha256": "b84d67d5a3a28331c56ff2502526b0533454e4d3fdfb29fc4dc41658db8e3332",
+      "bytes": 16224,
+      "sha256": "566c004c22f8dd4181c44df1b2bfb1cc4cece923dc0616eedf65ce8840668b79",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Align_0.png",
-      "bytes": 14534,
-      "sha256": "f95a3cec3b14e6322f23614992d4f5e45d30a9a9117f560771faf388d8267924",
+      "bytes": 16026,
+      "sha256": "7956b0e0dafc4c762f5536352328f58d9f0bb3374900d0986597964fe5e132a7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Align_1.png",
-      "bytes": 16543,
-      "sha256": "c9dfc641d7ec4e85bd42d1226bd5624cc0cdce46782edce2fb52248235ac4c59",
+      "bytes": 17060,
+      "sha256": "5f470f85105b07d253f9596967e4c19c0d6ca581355e0cb9dce96031ece553e3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Align_2.png",
-      "bytes": 14048,
-      "sha256": "f1bb1706cf17f21528d80eab9bd8f7ad64f37d967d8d208d497a3d98f590fd0b",
+      "bytes": 15284,
+      "sha256": "7f22cd882732cb486fca87894cb0010b92d961dcb8c9f6c3d4fe3ea7ec03e2d4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Atom_0.png",
-      "bytes": 15915,
-      "sha256": "dd5f85a9258a44d2807d8fd76d1b72b3ca3dded4f3ff80090e86fdf41c036f28",
+      "bytes": 17889,
+      "sha256": "decd1ad5082ceaf67b18b01fc0e18c90e16493164625c66b0e8a1e98931f21aa",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Atom_1.png",
-      "bytes": 16142,
-      "sha256": "d68bf6c2c797366534071b4f68967126b318626378437ad9d5d43158233f0833",
+      "bytes": 17150,
+      "sha256": "f704739800e19150a73d312981ae69276fa165d4bc518bd9a90175f22083ce1f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Atom_2.png",
-      "bytes": 17554,
-      "sha256": "81689951af5ed25f2b055b07a25b3934fee66496d0a224a44da1bc0ee03a9ba1",
+      "bytes": 18987,
+      "sha256": "50d7c7996b3f4e7b975fe5bfde3532e1962605b068daa5e4f661d149a581040a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bingo_0.png",
-      "bytes": 12790,
-      "sha256": "39632c95abadd0d421bb8c28854547a792ffd0102f0fdf309affc8f6f36f5035",
+      "bytes": 14867,
+      "sha256": "bc3f5d72a3ac554cc70ac074ead65e62273adbe21d0a302caa25018007f69b5a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bingo_1.png",
-      "bytes": 13699,
-      "sha256": "3448acbdc895ea757c94ca9c67b531cce6843a1484a563fe180df49bccd5dc0e",
+      "bytes": 14841,
+      "sha256": "a0656ebf387b02756eadd5c0a312ec3941f1169d5a4513ff6c76c94b27397265",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bingo_2.png",
-      "bytes": 17145,
-      "sha256": "ea245a26039ae9570f5443fe7a258621c5cf7208cdaaaed359434d2bff152107",
+      "bytes": 17850,
+      "sha256": "9583a37ce4f6813a6e02d1d821e43e62c6fcad778cac95aa80b0e806a14ef9b6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Blessing_0.png",
-      "bytes": 16040,
-      "sha256": "e2b094761f53e568aa6211e8c98cdb3d5a3e2c88221911bc4e45dc896d6749b2",
+      "bytes": 18211,
+      "sha256": "5959d27f4722fc4631514b82f05293142deb524ae62144ddb103d136d66cdb7f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Blessing_1.png",
-      "bytes": 14832,
-      "sha256": "d491f204476efe08b7aa701ecba7df6e0b7d1e7715ca8dd4999640e21cab074f",
+      "bytes": 16307,
+      "sha256": "f46512fc771ed1007c6415c83131e7df1627e16a76db0cf963340d8771277116",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Blessing_2.png",
-      "bytes": 16428,
-      "sha256": "d3e01a974dd18433bae4375e3aa477a68297d3267bbf815c5bcb0ce3709bdc3a",
+      "bytes": 17977,
+      "sha256": "3cf1ed16eb60745d5dcc8a35f98d6cb49279a5a254b861ccaa62d8cc38f90ebe",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Box_0.png",
-      "bytes": 15802,
-      "sha256": "d99bb39b93f2be7b37cae692ba69d108f6ee84045407c766064bf8ccd11897eb",
+      "bytes": 17690,
+      "sha256": "65edb145da17444b02ad3292bef1dedd3e95b11b63eb2f43c439e249dd6eee9f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Box_1.png",
-      "bytes": 13109,
-      "sha256": "95a03c53ef04e711aa93a8b10f350b0aee2836d03d8a210cdb8fd2ffcedd06a5",
+      "bytes": 14639,
+      "sha256": "53751b61fe881b22b87100902f74d04201aab838ea15db1010fdb2a4db46f590",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Box_2.png",
-      "bytes": 18041,
-      "sha256": "36e9792c5a27cd997c7821da19136b7fc847577ee17c4a9cd55c49e080bbcec2",
+      "bytes": 19017,
+      "sha256": "60f62beb8be6c74950d4aca8c9376971bcc4e4612c0efd9c79f7de3e6587512a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bubble_0.png",
-      "bytes": 15747,
-      "sha256": "73bc8330f5aa37e7f48f6b66cdec52f5378dce15602de8b7e10983e57c47ff28",
+      "bytes": 17184,
+      "sha256": "128946bd804eda3430f85c83f9a4d6570bf64923c2cf4429a4e645cb689ae51e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bubble_1.png",
-      "bytes": 13686,
-      "sha256": "143d1818a0b82cc94817d4c623a86db595663b8f517b06dc60bb36c531a80c71",
+      "bytes": 14650,
+      "sha256": "93b4cf22fdfc7e7e6daea7628b11099cb8a477d1b3d00004b0bb4b0401027d6c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bubble_2.png",
-      "bytes": 15248,
-      "sha256": "8d855ee8e3ec5bb61bffcc66e70fecd6df4c846f7290a12079399b7b34878b23",
+      "bytes": 17632,
+      "sha256": "7a4543dfdf15faff61f80ae98c8fbc4bffd56f55bb6d6f562aab67353b5312fc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bullet_0.png",
-      "bytes": 15645,
-      "sha256": "912f3e4d910ab380d2ba941b52b307e87d98e1f6e5ef4530b260adece16bdb95",
+      "bytes": 17270,
+      "sha256": "93d1bcd29e069ac8cd0194586c0d6e6216766c3075a4b93920f386e8e97f7337",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bullet_1.png",
-      "bytes": 15088,
-      "sha256": "9eb98698dbd6673dfafadfe9d37e5a76821a32f47b10f2083284beba7db276e6",
+      "bytes": 16538,
+      "sha256": "4f96aac9a4e8aa5b718fdbae32ef0ef72fde38f1f6157dee335c405859c82595",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Bullet_2.png",
-      "bytes": 15050,
-      "sha256": "89cf14449433089af853a40fd6f1799d83531ea6b16b5e09d5d1c594009e3116",
+      "bytes": 16300,
+      "sha256": "4d4f1d1b3440291d0e1c71ce418884fe4e33772d3a214b3d574497b715c76579",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Combo_0.png",
-      "bytes": 15691,
-      "sha256": "d63785e5b5bebf2aea281966618c401b16666e35ee684c914e3c029a5b79ba12",
+      "bytes": 17052,
+      "sha256": "149fbee9e71d148cb4f2e3a07738797c409959a2c2d97ebc2da3adaada659de5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Combo_1.png",
-      "bytes": 15547,
-      "sha256": "defd02a45ea586e281fe579eca258476e3abe745b492570544c2a9966023dafa",
+      "bytes": 18106,
+      "sha256": "660be79e8baf81c05f9c118a33df5cfdacc7686aac0231d168154920562da9c5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Combo_2.png",
-      "bytes": 16787,
-      "sha256": "fecf8549102b22a4a3512346219b001226853a3c381c60458ade00307b514958",
+      "bytes": 18785,
+      "sha256": "2121fef14a94747936014fa69ea9c7bf2b6e2880d30129238a9fb0985319cebd",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Death_0.png",
-      "bytes": 15378,
-      "sha256": "83aceb6c9e1651d2142ae90b61d7563b3a246a9a5f8953168dbf203498902169",
+      "bytes": 17723,
+      "sha256": "48f316e7a07cbf5bc48790f3b29ad383e95c29bd4a899a9a1f8183ee4b55cc7d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Death_1.png",
-      "bytes": 16787,
-      "sha256": "78bb9e9128d7cf250802c7cae37aa7518334bfaa31874f6099084b8c3b4c020c",
+      "bytes": 18630,
+      "sha256": "e7df11f62290afe5be459f410b9b4dc909681d917b0a3f278945d6591c9cb81d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Death_2.png",
-      "bytes": 16075,
-      "sha256": "2413916413bfa8c7bfa9036816d84ab8521876b7566e8e82e15343c62ead0865",
+      "bytes": 17545,
+      "sha256": "f87021e2e5c882d0197bd37e356b67263b25133c16c8c52eaafaf73ee5476761",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Decay_0.png",
-      "bytes": 14467,
-      "sha256": "c2e7ca108b6837019eba3737bf58f2b03a712be1545d85b03aee507c6c10724a",
+      "bytes": 16512,
+      "sha256": "2554630ac75a3f87a22d6ac7243304c714c2a37ae8877993039e11cf93c3fa7c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Decay_1.png",
-      "bytes": 15917,
-      "sha256": "40f8c092bf9c10b7096984c6340906ac8a563c5154b9e48ae49d5fb296832635",
+      "bytes": 17143,
+      "sha256": "363e33c094852267a0564e700114f6c24152d01bc732108fe49171da9aa5450d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Decay_2.png",
-      "bytes": 14510,
-      "sha256": "8188cbdeabe720b31f322419b27f660272fb8a717c7e6832ee1beb1717fa6455",
+      "bytes": 16152,
+      "sha256": "835a1771afe67fb63533fb114300f4b46b19a0177c0f426a9e4390bda41ef8c9",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Doom_0.png",
-      "bytes": 13476,
-      "sha256": "17c031d9f8068e81cbb19e7fbad2d395c88c971be919023a9a7128f5386ae6a9",
+      "bytes": 15053,
+      "sha256": "5563e01d491639a8cf97d97ff4633ee90be298ed65471106abe77a74984b4e41",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Doom_1.png",
-      "bytes": 16723,
-      "sha256": "a09b39194eeea278b1dfca62964f0de1242a319a152a5e815da2a77ce6bf5980",
+      "bytes": 17732,
+      "sha256": "468078fb11b787abaf4e8bc4343fbe75f00a7d22bda7179a172db8da1ad43e80",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Doom_2.png",
-      "bytes": 16394,
-      "sha256": "ce8340262d9520845628b575b54e0878dee6528b12c540b28971e4a5b2b9871f",
+      "bytes": 17505,
+      "sha256": "f475f457022e1c1270567652cdf03a41ec198e7e671d07e88ca06a10203f9dea",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Electricity_0.png",
-      "bytes": 15169,
-      "sha256": "76832bc35f533535486031d9342a149719feeac0bc121b928a8958c65fdecc19",
+      "bytes": 16577,
+      "sha256": "90b77e960cb910a43021cad911f82cde59790e419f6a9ab7764f4cb1d4e1c399",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Electricity_1.png",
-      "bytes": 16100,
-      "sha256": "bdd75634ad337182e0e7841244fe130db73c08809bbf1f9a081999bd65e7017a",
+      "bytes": 17161,
+      "sha256": "200e38bf432eaebe1d1e04ec460c93d16570fff7cb1d05221f95c704c4003812",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Electricity_2.png",
-      "bytes": 17252,
-      "sha256": "50e28434b58571d1c95bc1d1c6f6bdb9235b8fd0a8ce1515ec4f72ac361453f9",
+      "bytes": 18204,
+      "sha256": "893d681dfa19fe614e4ce8ddb8681a18e68ba2be73c06f02bfb62d9269cfae92",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Execution_0.png",
-      "bytes": 14115,
-      "sha256": "7da952416da1d3526b82b2385106eee1ccd9f5535c4648d76765eb975def701a",
+      "bytes": 16000,
+      "sha256": "16668052e171319475f528b42f04d6a64ad8c140003c6e688aed17f42173d1a3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Execution_1.png",
-      "bytes": 14039,
-      "sha256": "6de49adf295f618e5ae8823199d01263a7b713eb22d8685d695eec4c694c2979",
+      "bytes": 15392,
+      "sha256": "064ad4919f3a41913dadd4ca0f04c372b58a0e6db04c149f955bd2fcc4793040",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Execution_2.png",
-      "bytes": 16672,
-      "sha256": "77c24d75c73539dd89a1137a5e1c8c9276730efcd145d9ff3f33062c20539d50",
+      "bytes": 18511,
+      "sha256": "5aedbf0ebce3803b20ae57203ad57e56601dc09ee62be51be3f015d21c512515",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Fear_0.png",
-      "bytes": 15091,
-      "sha256": "c251b08ac80f1b9535e9630bcced2a854d5cf657cbeec9296b33acf5ace60104",
+      "bytes": 17562,
+      "sha256": "cd330a28f0546eb85739b9bf86a250c73b02170f99ee7f29773ddff5c7c41269",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Fear_1.png",
-      "bytes": 13151,
-      "sha256": "afc308ecd95ee782e5d55c47329ddee555a39fdb250a669ff976b268eccca4cf",
+      "bytes": 15137,
+      "sha256": "2cc8234667801269da0d4271bf3a906418b7987ed4f588d45cf0d90ef8a9fae2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Fear_2.png",
-      "bytes": 16598,
-      "sha256": "969c5cba707fd554bbff2f8d0bff884969f7ccfd567470a9b312bca2b6b77121",
+      "bytes": 17953,
+      "sha256": "79b1b28ebf325adf8b4f5ac73de4faded2eec80f9cac203a1a84d4e0cde63430",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Fire_0.png",
-      "bytes": 15012,
-      "sha256": "c74b8d733824a78bf4eea100889775d0cd5f5e5ac85c5fb887013d2f8a1bdb78",
+      "bytes": 15017,
+      "sha256": "8c64a83f294df0ecf24eaf0086f42d158770b1d0e380d1c1ef48a11e664932ec",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Fire_1.png",
-      "bytes": 13862,
-      "sha256": "1c047313f7adc24e362e358b2102330c94963cb0144b577b46352e49162a0bc7",
+      "bytes": 15008,
+      "sha256": "4fe2bf479952f94212b91066b2d986580f3018693a38d3e5822963b9e5990c56",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Fire_2.png",
-      "bytes": 14597,
-      "sha256": "a8427bd112b705bce1281e87c3f277fffedf753ef6732f705852df62cf0d38aa",
+      "bytes": 16486,
+      "sha256": "fc9f02e462be2c4c8b9fc998f1467217d7b0e4145f3d83f8a0e22a67ff6a8e65",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Flower_0.png",
-      "bytes": 14440,
-      "sha256": "8cf940d419bb270500e931771ab6dd68d35c9d408d623bc3db2449e4d49f509c",
+      "bytes": 16296,
+      "sha256": "d3506b9617821ddea2d7f1c36d9255721bf4e0a8921a0f301e474e0873f63400",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Flower_1.png",
-      "bytes": 15709,
-      "sha256": "e4605cd6f1e4d774a96faae17153bf70b764ed03ca7fa08fe288240b77853049",
+      "bytes": 16173,
+      "sha256": "a924dbc4cf665ef3f752bef64b0d2ba7602a05089423064e83bf11097c4c93b9",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Flower_2.png",
-      "bytes": 14573,
-      "sha256": "7319b33254a29c162c778f1fb5ed4a97460565af945539d2d23e9007b1586580",
+      "bytes": 16026,
+      "sha256": "a154a9c6cbbc1fcd5f726ee735260c2705981c2a79e058eed5a183357f596f5c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Gear_0.png",
-      "bytes": 14336,
-      "sha256": "c4a18380bd719b7432f27de604b96e5193ad3919a3a15ca334cbd1d0f6014784",
+      "bytes": 16603,
+      "sha256": "e0b278db8bcf3be715a156d101b13e62165e17cd7c5d3001fdb4e025a6369ffb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Gear_1.png",
-      "bytes": 16551,
-      "sha256": "9221d25cf6ae6dca5efbe08b2ec72f878ce1f37831974b3fe6602267ddd0b8db",
+      "bytes": 17345,
+      "sha256": "04cd686a43c762644d3f01c42e58fcfb96ae05d9d5eb82e92a396f9853c6c7a4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Gear_2.png",
-      "bytes": 18661,
-      "sha256": "a37bba8f539eccc82efdd49f4c34b287f67ed0231278f22edb85cb7068e3568f",
+      "bytes": 19950,
+      "sha256": "13db13d8963b0d8bf6cf709a8b17bdf4975a10444a94f4c396aa483724a0d5f6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Grow_0.png",
-      "bytes": 13850,
-      "sha256": "70ec19a7515f64c54f88b7bf21ca348add0bf180ec1695b036a55cb71bbd760e",
+      "bytes": 15512,
+      "sha256": "e858cd0ef14add383843436352333c42ce315d912ceace242b46f83fa2322d3a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Grow_1.png",
-      "bytes": 15401,
-      "sha256": "e64989bd68a982dc348badc0a839bb181b0ff9d1c2f843ad02b64528f8e9687f",
+      "bytes": 16888,
+      "sha256": "c245629341f9227ee15075c058105650d6c843ad83173e484f20b7bbcd693b91",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Grow_2.png",
-      "bytes": 14171,
-      "sha256": "d6448b5579353d7641141c31e9c4fd05942b4cdf6c167c212c0a70b8f30730fe",
+      "bytes": 16060,
+      "sha256": "c43f3b6c6f8d7e85eb98cd70747db8e53896b691deaf5315f29f6c8e8fdf2485",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Ice_0.png",
-      "bytes": 15644,
-      "sha256": "ac5dcbf44bb6bc6004c4a230050f75d08295095f5e95f52d16fe44e427c5ff16",
+      "bytes": 17311,
+      "sha256": "b92b7fe5d6f978fd9a1c9d2e4270b87c47db909125590dcc7ca91228e1146a12",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Ice_1.png",
-      "bytes": 17067,
-      "sha256": "7ff2bb8868d00628dcfe60f8a2708f9774eef1d3583dde980bbb06e34973b8a3",
+      "bytes": 18854,
+      "sha256": "5c3dca71cda16d9ac811a412afe5efd6fd78f66656b2ca8805ca475208f6b3c2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Ice_2.png",
-      "bytes": 16903,
-      "sha256": "37ee5e05e7f68072d682e002654aa2b75bddb4ab2c31809f422278f41b8cba4f",
+      "bytes": 18231,
+      "sha256": "19a01571468cbba4e65e5ac7340e413de10092399240cb95079f234913de8b1c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Iron_0.png",
-      "bytes": 15264,
-      "sha256": "9ede5208bb8053b65493efa873cc86b681f81672c0ec6947d16e53ee41ff7b3c",
+      "bytes": 16140,
+      "sha256": "add786891592e9318762bbaa87d9004e7af8dcdd952a8b154a1e23e81712c10f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Iron_1.png",
-      "bytes": 15215,
-      "sha256": "4368655b6f509b46230a91fdbd34e53c88e9a1b58e57b9985ca6c32d86385c29",
+      "bytes": 16297,
+      "sha256": "1401869acc08710420ce79c61b1475bc9e5e9ca68bde1add0ee46e975c44c8d8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Iron_2.png",
-      "bytes": 14564,
-      "sha256": "0d71857d2dd8de76890dfe04484cbe49209da4cb2089cc13486a025d7b99e7bf",
+      "bytes": 15611,
+      "sha256": "c675102adffdb9f6e9d3a203895bef328159fa2dbc7bca2f1eac45684e7d7cf9",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Judgement_0.png",
-      "bytes": 16094,
-      "sha256": "2024d06b91fd76a15b3da4eff7a66c61b38edbebce83dc35e13afca0654bf164",
+      "bytes": 17539,
+      "sha256": "f2fd377303c7b859d339f8163a9a1d89a2b4ada55616265ecaf3433a752d6f80",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Judgement_1.png",
-      "bytes": 18137,
-      "sha256": "942126dd66122fa8aa555ceaa4f2cf5e331e68f559e59f08031524b1dd3959d2",
+      "bytes": 18719,
+      "sha256": "c16d269bfe70372ea9720820e36873d47a8a7359b3f9558b46461cf03a51f3e2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Judgement_2.png",
-      "bytes": 15896,
-      "sha256": "f2b5a33cc6faee781ae86b177d2ee10ad88766795369c90301d2831cbc833b3e",
+      "bytes": 17855,
+      "sha256": "cf04a2dfa32f552c216a448cf9dc40ca605d6c0f6b084bfca3c51f49620cd0c2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Light_0.png",
-      "bytes": 13877,
-      "sha256": "404b7392f402aa943b39b399fb2464cd73f61149ac438f2f7103852da011c948",
+      "bytes": 15845,
+      "sha256": "9868838e36e03eea513254ea09e788124551e3a3c0bb3caca66d1e4c28c95b30",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Light_1.png",
-      "bytes": 13521,
-      "sha256": "0bdd60794c56c99a89aa892460b49bda4fa61bbb85039f02667f387be913401b",
+      "bytes": 14910,
+      "sha256": "d2b40f55e522abebbd0a97c0eb595410781c5857f286955405fc34496e64a492",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Light_2.png",
-      "bytes": 16405,
-      "sha256": "0f8cca727ae929fb8e94e21728630463871cddfb9258d747dfa86955352d0152",
+      "bytes": 17290,
+      "sha256": "2011a31d72dc1061b6b190ebf4bdfef5be71b5e76ba4fa0839177576893953e1",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Lock_0.png",
-      "bytes": 14446,
-      "sha256": "e09a5fdd4e4c064a5c51369a0bf06413a83887e2387e6873d119f5cf8b054cfb",
+      "bytes": 16418,
+      "sha256": "c66c0b7ceb07bd78d23262922b367181e56cdba5b6841e9ce67a32a1a9514e5f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Lock_1.png",
-      "bytes": 15045,
-      "sha256": "98a4f190f7eb7b21bca012ac94491fef6bd76ce457c03617932ef483d9c8b5e8",
+      "bytes": 16394,
+      "sha256": "212bae4467f327d652d68839e2d3791c4381443f1c942674f0de1d439fb1bd9f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Lock_2.png",
-      "bytes": 13878,
-      "sha256": "9a1feab39c17c699ca26f4ee06aca338ed716377a50eea3ca0f4a606f9261add",
+      "bytes": 15719,
+      "sha256": "fe807d4a96a260a4ba39ab4c8a85c1e249f29a1d4232f6570952e6ac1694301f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Mine_0.png",
-      "bytes": 13784,
-      "sha256": "02d4fadcf0b470c75ca35f228dff7a3b621bcebd85dfa22795ba4a6cb1d60904",
+      "bytes": 15757,
+      "sha256": "869b9d17c0386365a774820e0752e251270da7d30c0e160f16bb8da1171ea978",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Mine_1.png",
-      "bytes": 13967,
-      "sha256": "6c6418590af3611c030f9653bc7d0440448e7249740ffa8792355f0932b09451",
+      "bytes": 15494,
+      "sha256": "14b7eda73695e3b2b582c2e60e8233fbf7abf11f9920e144450aab477c7c2ec5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Mine_2.png",
-      "bytes": 15134,
-      "sha256": "1b24dffe4cfc100ac208c5f095e0d75541f8740e3fb4fff99f549622641b0ae0",
+      "bytes": 16240,
+      "sha256": "7cd3a65027f1297c0f05df82b0635eff04874ae14eaf5dfbc7482ce4f590089d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Mutation_0.png",
-      "bytes": 18998,
-      "sha256": "e2830da92063c819e3c1e5bd85d9e07120117d39ae8523cc0c7c7f87ba0b3761",
+      "bytes": 19543,
+      "sha256": "41e2e8d38593985a3fb255752e5fe35bad1722d4a516710c8a1877d5969cb38e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Mutation_1.png",
-      "bytes": 16083,
-      "sha256": "c598848f24ed482e313967dde4cd15033e48d172ee5df9bb6e1287e47a767248",
+      "bytes": 17982,
+      "sha256": "316af8c93f3a83f1eaff8d231db3a8d270675aaa2f5380298db63aa6671bf1ff",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Mutation_2.png",
-      "bytes": 15208,
-      "sha256": "8c40b2fc2c47e7f79000931fff03c82f227dd469426d2603f712c0dcf178b545",
+      "bytes": 16902,
+      "sha256": "c4e1e0150f10ca4f41d62dedb012608d0eabbe9d5837c25f5e6ac164638236d5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Neon_0.png",
-      "bytes": 16148,
-      "sha256": "9e6752d59307d605a075d47dd4a529d5e1bfd86905ea3f908b21447ae82282b9",
+      "bytes": 17498,
+      "sha256": "56424dd4dbcdccbbb4ab5a508357e7383f8c7f0d261055f5ba81b83b3febd502",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Neon_1.png",
-      "bytes": 13072,
-      "sha256": "8e80de39998f59eb94434027aac5466a2532ecc7ae2453ab5b42d8f927ff3606",
+      "bytes": 14856,
+      "sha256": "65466cef589394664debaedd3dcdd3f1ed16e06f0b9654af28f4748db8110080",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Neon_2.png",
-      "bytes": 14204,
-      "sha256": "1484be6d5926fe29151f1c981f4e37fa624a767e5ee7af095429cb6a306dc7bc",
+      "bytes": 15692,
+      "sha256": "e6c553cb5b426bfdd977b2a919fdaa3291d4c0e282e4c1edab5881ddeef492e0",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Poison_0.png",
-      "bytes": 15207,
-      "sha256": "08dda8ad4aaa75ce48dcec8903c5b34f21d2d47414e2331401264b3db9ac39d5",
+      "bytes": 17142,
+      "sha256": "3bb4b7fc53f0c2e12a9681776f22db27b5b28c5819f8239c6e2ceb6b476688a8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Poison_1.png",
-      "bytes": 16392,
-      "sha256": "ba0a5d66fef4c76bf9165274e910db8b9c4dc35c409a6582f9a548af565cf867",
+      "bytes": 17841,
+      "sha256": "db71e5d494a2dd27b735ef5fb58adf59635eee50afbcdb84110503dae368769c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Poison_2.png",
-      "bytes": 16098,
-      "sha256": "b171952fe2ed5b7cf554aaf91fa05ec25d2bb7ddaee35422946fa54347cde340",
+      "bytes": 17583,
+      "sha256": "af3cdaa5900f1d17295c5195d70bd3e4c2e4512d6c6493b7261c31380c4671f3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Potion_0.png",
-      "bytes": 17074,
-      "sha256": "85d9b886621f5845820853ee3b4e533ea19d265d1022522d4f44f2b150db4152",
+      "bytes": 17556,
+      "sha256": "5e74482fe32793677f3618227e4797ae911c02be619b1b7f72598699bad49491",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Potion_1.png",
-      "bytes": 14943,
-      "sha256": "f01a04aa2abbe20628c156ec36ec812da967153e08faa972d05e0c053249d31c",
+      "bytes": 16981,
+      "sha256": "b470069e423a0a9fda28c0a52712bc930c254d7a993aede03b0ea76f0914da56",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Potion_2.png",
-      "bytes": 15852,
-      "sha256": "0e5bb8633cd1c842b93abbfe4b178999bb424546b0997dd97f3dcb5160673a11",
+      "bytes": 17004,
+      "sha256": "1d3ff66c34b4002ed36979297265b0f1a654fabf5dd975d4eb49bcb69246e2f0",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Predator_0.png",
-      "bytes": 15558,
-      "sha256": "8d9b05691bac53792f74fc825d7d593d3da7fd46ef11979907802f4d8671f57b",
+      "bytes": 16940,
+      "sha256": "64b1aade4c8821b67379ba4e30af7bcd95e566eb192873c29252b7db9eb58851",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Predator_1.png",
-      "bytes": 15217,
-      "sha256": "e0195249498aadf6db64f4fb07ea5719564cf890cb84a1fa2534ecc89fa1b9b8",
+      "bytes": 17087,
+      "sha256": "24f20b4696dbc494ff66affc4aff2ca4bf79318bdc181dca9673c34a6cad95b6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Predator_2.png",
-      "bytes": 15695,
-      "sha256": "2379ed5dcccbc2740d7afea73035cfdf94c68ba69a11650e7ba9a1cffd721c46",
+      "bytes": 17556,
+      "sha256": "1e60d8918e10eea219c208964b5a4056bebc42f047fe030ae4b5228eac9e4d1e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Ray_0.png",
-      "bytes": 15625,
-      "sha256": "1c662efcac089ee4ba7e1aa2dda597f64d0f8021e425179a9515db2f381560e7",
+      "bytes": 18005,
+      "sha256": "00161ce24c52cecbfe7c1c5990ad8e666ff2347ff792546ad1069623bfa4a298",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Ray_1.png",
-      "bytes": 15777,
-      "sha256": "aa122f725b02658980dc916055e0ab15cba3f5d5486103d089df9af04ec9371c",
+      "bytes": 18107,
+      "sha256": "733ee2cabc67ed70d8264a0d409ea611ca0d24f78a8278ecc781e9901cbdeedc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Ray_2.png",
-      "bytes": 18677,
-      "sha256": "b8327bac51e869ce5a9b0ce0508897e2343e14c3efd59d9b3b6ec9ee9a5af137",
+      "bytes": 18701,
+      "sha256": "9210d5a233689694ba3094413a6e9a84a4e414099026abfb9f4910b9cc9b8d30",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Resonance_0.png",
-      "bytes": 18386,
-      "sha256": "506143675f2f19812315d62f8a7edff7cd90c151c5b319b7f20f37274ff00e44",
+      "bytes": 20181,
+      "sha256": "00c0478e1f134e3e05618991b2f546e6fe6ea2d6fdcaa846abea2e7ec7039aff",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Resonance_1.png",
-      "bytes": 16793,
-      "sha256": "80fcde8d6f15432b66da4a0db06380a933a5ac4a2f5f7bb8bdc2d464837d7055",
+      "bytes": 18573,
+      "sha256": "e846dbea5e1c9324bc729c08589f6aa2742896a76eeb553b4ea3135283bcca58",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Resonance_2.png",
-      "bytes": 18530,
-      "sha256": "c90d6a212e233babe94f4be9694b0dd46b192897a3aee8f44fa2678c91d8f4a4",
+      "bytes": 20580,
+      "sha256": "b69ad2106ca12a68cc2bf53a87a2bbc7df03a5d3f6320928ed03f67e2cf6eea1",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Rock_0.png",
-      "bytes": 12242,
-      "sha256": "10d8815dc95bfbfbb73a8de5ab8b05956bf4be9369c2469bb5f360baebd151cb",
+      "bytes": 13236,
+      "sha256": "2455d230ce41ce979eb728e808532bbb739e5d1a5cfccbc57cbee3a9f91eaef8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Rock_1.png",
-      "bytes": 15490,
-      "sha256": "a8fd0815724ea0cb44afe1a67c7ecb3403a1fad2efddc2f5b66644210b3af3e5",
+      "bytes": 17233,
+      "sha256": "f73c4799a0baceda678aeafe80cdf9747a8db8f5757c83726d74044ec0e6c9a2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Rock_2.png",
-      "bytes": 14861,
-      "sha256": "75954d54853fb6a3a13c948d272d45cbc34987c2484e18c0dbc40ec11631e675",
+      "bytes": 16631,
+      "sha256": "7722b327fc15b19066ec60464cc63ffe7cb1335ad0a897cb07c68a01db81299c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Saw_0.png",
-      "bytes": 15364,
-      "sha256": "b581f5fe93b03ddff3fab59853525a768fb986e11896299b8fdacf631ec0af53",
+      "bytes": 16990,
+      "sha256": "4c7081cceca3482205778932e799d1349264d95ae5df8e4d0b8ff37522896b5f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Saw_1.png",
-      "bytes": 15524,
-      "sha256": "e7569fd33c5ff2c46a323e9eaf13fdea3f847561adde9de319f90812b12e6771",
+      "bytes": 17664,
+      "sha256": "ce40cf818d7a2f4cd6f5a545794643f30d804209747f726b4933a403950e73fb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Saw_2.png",
-      "bytes": 16143,
-      "sha256": "d968bb8e3bc3cefd09a10c2da57cb6c67a60f03de3737601f4fd24d1f00a89b7",
+      "bytes": 17280,
+      "sha256": "b6339198ca6a597a9083534adb988c333c97ccf2fdda82494ec171e019933f9f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Sniper_0.png",
-      "bytes": 17060,
-      "sha256": "b46700a4727c6503899b4c3367b9d3535771778b51ca979a669ded233c10ac9f",
+      "bytes": 18184,
+      "sha256": "dacd37f8285b1a0189545a98f18a86f14b1430cfc156904c21b400b1f938dfc3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Sniper_1.png",
-      "bytes": 17681,
-      "sha256": "bee0c54de9f7c9868e03a57ea041500ff68ffd50742276a7a2c9552f389d799e",
+      "bytes": 19740,
+      "sha256": "603560f63336617cb2344e8f93ede7c70dbc540ea7f42ad82c32796bd0c49086",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Sniper_2.png",
-      "bytes": 16964,
-      "sha256": "b3c2322b083bdacbd13acb88f11cbea3e289e7d64efdbb4afdee28c98f9838d8",
+      "bytes": 19085,
+      "sha256": "75f543471480b76910ca1b3f092c6d4845d50301fc9d4e69f01685b2efdb4c62",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Solitude_0.png",
-      "bytes": 15302,
-      "sha256": "802477db357d9ec894e329f1e133d86ae08cd3b5518cda679e5358715b650596",
+      "bytes": 17177,
+      "sha256": "eb4b5207ec0a39281b4e221858186daeabc968b140a1ee9f76a79c3f8ab9e833",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Solitude_1.png",
-      "bytes": 15833,
-      "sha256": "967a2f6ead88d58622dafb252c592e1c0505041c3df6bd2f0c1bccab31635db7",
+      "bytes": 17745,
+      "sha256": "cfcc778051379358ed825497ba8ba21ce96e935325755e1832b76dc76fa798bd",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Solitude_2.png",
-      "bytes": 14252,
-      "sha256": "0ee94a8b8d07341b999d9c4dea55ae40fcecf3cd35aaa8c50bb892eb47bbbffc",
+      "bytes": 16218,
+      "sha256": "9344a513154c033c4187aa7c5d60d1311c6753751f38a7b22e89077ec307fda4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Summon_0.png",
-      "bytes": 15025,
-      "sha256": "e78a08e1d18f2b295b2315891bc166216cc2a3e391dcc2af6848686af21d7379",
+      "bytes": 16317,
+      "sha256": "0909b74d711d42a98457a690c9b650303dd695d60754ffedf86ce2a08ad6844d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Summon_1.png",
-      "bytes": 15823,
-      "sha256": "21de74e21d282f7842dc3ea57a7c65f3d1c8a9f001b85825e385d73e2265a1cc",
+      "bytes": 16880,
+      "sha256": "8f6cd581b1cb565e22cd438a4c2b4acf26f575556acc86c5e124026188ebc341",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Summon_2.png",
-      "bytes": 14201,
-      "sha256": "5a7ad3a65f77af2bec04da9ed0596b86aeaf9ea9d73fe2fa0f3d23b0997fa3d4",
+      "bytes": 16524,
+      "sha256": "ce74d131e640d81b1b2d6519fbf3e6e3f3ad251445f594c67b18461473124f19",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Runenode_Sun_0.png",
+      "bytes": 21815,
+      "sha256": "57ef6edb453452933967eb25bd4a52b9134b1d43a61c9c8eec169e79d48494d8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Switch_0.png",
-      "bytes": 13883,
-      "sha256": "f6acf2f8eefe07b9dc9c74c5e2b408a614b3b971a1f20f2c791d52a6feec6b74",
+      "bytes": 15621,
+      "sha256": "eb3e212a5495112bcf260a59ee0a5552fd9c2c791df08dbfc4742331d48d8f1c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Switch_1.png",
-      "bytes": 15609,
-      "sha256": "c9682a985127a94a4d700e81215a196aa20aa513abe5784560570b908c055564",
+      "bytes": 17164,
+      "sha256": "0546511950cb6818d43c66252aed649d4ac3255f0836f86d0823aa8a3173c0db",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Switch_2.png",
-      "bytes": 15329,
-      "sha256": "c26f5eebeddc75bee30aec6f6cd89839bce81c607d61e2ba8b8b4e66c6ce3cc7",
+      "bytes": 16826,
+      "sha256": "bdf95cbe336b3a0a37af6a0e25d3257d96ab091ff04d55254c930b29ca4c7e6f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Thorn_0.png",
-      "bytes": 17351,
-      "sha256": "8f136117ffae73bd668a5ad9dfdeefb20236dc2aaf3a17e0f9b8ba10e618854b",
+      "bytes": 18874,
+      "sha256": "22f37a349ee568d4e8fdbd8181207aac84746ce07f4e4413a13ff39858f91309",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Thorn_1.png",
-      "bytes": 16948,
-      "sha256": "682677da636c61476e648b198be4850fb71c1195ca9ac2e8386cc352d1629aff",
+      "bytes": 18519,
+      "sha256": "4f6b8fec83870be82a026a9c246c24c165be7eeaf9cbf7637d6cfd17bc5df988",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Thorn_2.png",
-      "bytes": 16553,
-      "sha256": "28ea51ae570b0257450b67f47d042e1d2a30dd609b2cb1c5d3f94500439e9464",
+      "bytes": 18316,
+      "sha256": "2c7375bfecc2dabc64bcb9e658e2816f51b19427185811be9eab747e3ffbb3cd",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Tyrant_0.png",
-      "bytes": 15154,
-      "sha256": "a060948e3ae7c3b3d2a2d1b0ea711b5c3898308f50320496629eea33159e73f5",
+      "bytes": 16632,
+      "sha256": "5eeac4c47c33cd1c8681914d164d69be96aa7f701529cc476f46714f0ef54157",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Tyrant_1.png",
-      "bytes": 13089,
-      "sha256": "25d7b77b009e0a8e3129d9e2d63a680140ef6b7177832fc4560ab4a6419241ef",
+      "bytes": 14625,
+      "sha256": "f0018f14d667736567452408a596ec467c189d122403051289282157007d3748",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Tyrant_2.png",
-      "bytes": 15445,
-      "sha256": "5424218462318f61481e35d26d4f423c37403e56955f9db0fccfa7cb24be6718",
+      "bytes": 16354,
+      "sha256": "5c64f70f7018f43bcdb846b5ef4838ab3b02830d1de030a5f29fe7929384f811",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Wind_0.png",
-      "bytes": 14379,
-      "sha256": "1c1c1d7247593a316dc94def70f98a5ce3f29786b6dc0006a44b033b8b52e595",
+      "bytes": 15571,
+      "sha256": "787ad4f50fca9cafe5ab786cbed6897b0582b14ef2ac2904159fb9e76898e43f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Wind_1.png",
-      "bytes": 15576,
-      "sha256": "9ee302caf0bb8f2b22b22b05adf9cecb1ca9950ca6249f82492e74388a1df65c",
+      "bytes": 17074,
+      "sha256": "6751469a4e69d852f63a6482fac1de7ed49b37c2951e3fa5e8345504bf21fcdd",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/Runenode_Wind_2.png",
-      "bytes": 15790,
-      "sha256": "105ff679b8440f34f9e73265b1763f74e7fa0bcda280643de35a3cd8c8598fb8",
+      "bytes": 17190,
+      "sha256": "f669d42b589819e097b810c8c4c5b982edfd97e26640f2b49e46831c93f226e7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2145,8 +2404,8 @@
     },
     {
       "path": "site/icons/SpawnAltar.png",
-      "bytes": 11669,
-      "sha256": "ddf865d16717d1c384097ad5f75ee384281bb85413a3c97be4414a2dd06b051d",
+      "bytes": 11577,
+      "sha256": "957f17b4e4c237a55233a8bdffdf7b583c84566b278dc637e992882abb5c143b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2159,29 +2418,36 @@
     },
     {
       "path": "site/icons/SpawnCostReductionThisRound.png",
-      "bytes": 21399,
-      "sha256": "9e9de5d4bbaa5400d90c4277ecd1a011d48c748f238b91b388d5221bba12d832",
+      "bytes": 21298,
+      "sha256": "6901d7595e557891600759c47833cf724a173c96b02c894fe7292772628c9b71",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/SpawnCostZeroGainSP.png",
-      "bytes": 21478,
-      "sha256": "c315a01a9169f9ef2d9829ef8bdfb448392bcccbc7fe037df498b96b4cf51fdc",
+      "bytes": 21337,
+      "sha256": "369b9c57d0b025aaad82d65740ea5f0e47403edbe06762ba1abfb93489073953",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/SpawnJoker.png",
-      "bytes": 17238,
-      "sha256": "a77d1b7846cc87f6650edf0276e3b42ce1056963389e79c47046728d4f348d0b",
+      "bytes": 17174,
+      "sha256": "f86a4ac7d1413cf7ed7676c5403a1996b9a56e3a12458d32b567a5a25c790913",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/SpawnNMiningTiles.png",
+      "bytes": 13221,
+      "sha256": "4e4e902f8cf673cbce48832a51766e077144292e27d77168ed61e088bca33db4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/SpawnSPGemstones.png",
-      "bytes": 17882,
-      "sha256": "a72b854633c26f41813e77eba2f4bdfbbd90fa6ccb811c3f50ac2f2c055e1593",
+      "bytes": 17787,
+      "sha256": "132ffa1327a4bfa8408b8cc0700eaecc60859f254cb7e0b8ff44d6b0b28e6271",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2193,16 +2459,44 @@
       "status": "runtime-allowlisted"
     },
     {
+      "path": "site/icons/SummonMiracleStone.png",
+      "bytes": 14055,
+      "sha256": "a4b5f5f4b7aad803896448d61445e7e46476d740fa7de46d7b126c8cf606fc42",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/SummonNMinesLow.png",
+      "bytes": 14339,
+      "sha256": "1e66c62e9f2f284ffe0dd35e4ace1002c7d559d1a16f737df5bbf18f40f0a9b6",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/SwapMaxMinDicePip.png",
+      "bytes": 17525,
+      "sha256": "60090dae28c5cb69b2c0f1c204265dbfce55c62d3b5be6e61a99b94ac6649153",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
       "path": "site/icons/TimingGaugeSummonTwoEyeDice.png",
-      "bytes": 18772,
-      "sha256": "c10f0ece333ced01e958bf25f1f66b2bb013e9d63cbc3052b7c537a8dddbe99a",
+      "bytes": 18692,
+      "sha256": "2cba45e8e247e9ba75ec581730e711dbfd892deca15b0c4066cb1c4017bf44ba",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TopRowDiceChange.png",
-      "bytes": 17784,
-      "sha256": "1b13c03f0623a9bc63af299be08816e6d54e78655b516c606407666baa133f7a",
+      "bytes": 17756,
+      "sha256": "02b070d108820428a8f524907661f92ffce4a452fb43e8931b7bc166bd861640",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/TransformNDiceToJokerLow.png",
+      "bytes": 14198,
+      "sha256": "f4f88336480173a45687f3615948aaea33e921b986c89f30d15e428872159264",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2229,71 +2523,71 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-1.png",
-      "bytes": 28963,
-      "sha256": "f564048e06ad4b931af177ec8dd0ba196773540fc6db031d4994ea2ab537c1aa",
+      "bytes": 28237,
+      "sha256": "6a2cf45c0ef5e0a1d736022bd7fb459c7779675e2a43de9a66cfe58580615ae9",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-10.png",
-      "bytes": 16144,
-      "sha256": "e1fd813b27a579af991962e2fad3ffc2467eb2f85500728042c35aeea1ad7b24",
+      "bytes": 16694,
+      "sha256": "71af4427db7e351e9d9de663385626d17beaa336e1b0ed258658f5180b3b03cd",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-100.png",
-      "bytes": 17611,
-      "sha256": "b55c30ca5d9c54c21f172bcb977f94a389b5cf0385eb625b96972d1bde48b957",
+      "bytes": 19722,
+      "sha256": "11bb0a6cc4a70c11ddb1af0095f5bbe1584533d8f286a792f228fb0b3047ee87",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-101.png",
-      "bytes": 18838,
-      "sha256": "d08d2d94755b88c7ebf4ef5c72d7eba4744b763cd7443083f375f4372fe924ec",
+      "bytes": 20584,
+      "sha256": "893b1ca7371dd7794f3c269a8df95e81d100acd6589a2dd86fe590c211990fa8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-102.png",
-      "bytes": 19474,
-      "sha256": "6d32fc03caeab14eeff30398f53ebac30ece3191bceb2ff1d20445460fe95207",
+      "bytes": 19577,
+      "sha256": "7c72d77655a1eeeeac5a0a75d536d4d66f4c9eca2adc86dd4dd2d09c56dcb2c3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-103.png",
-      "bytes": 18359,
-      "sha256": "f3046d9d0de6303143141312ddeb2b61f4ab815d7b5d0dd9f7cedc29460594b8",
+      "bytes": 18919,
+      "sha256": "1eeb5e32a3fd167a7ab22203e063afb0dc99b22a3002d2e9c05767a494912216",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-104.png",
-      "bytes": 17004,
-      "sha256": "ea9a081163dbada0f34d2e30ea3e42aa49832a8fe9136fdee0c625dfa0252a13",
+      "bytes": 18383,
+      "sha256": "a3a721c4d78eb9838ec273d8066bdbc98056459c742ff521885add58a5954005",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-105.png",
-      "bytes": 19004,
-      "sha256": "2bc6f905af3412fc8f27813e58868c8b14260683b29a7211b8e46ec76f35140e",
+      "bytes": 19187,
+      "sha256": "35500d5919e776e201f8594167ae3c1365705d067995cc23d7a8f68d65e1dc44",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-106.png",
-      "bytes": 16316,
-      "sha256": "28208725a3dbf9a4c04e2a690886b8542207804c063a03089f1a3aa4b3c25392",
+      "bytes": 17911,
+      "sha256": "58f25c448ad1855c042760a152cd32a9cd7b41e553ba9a44f29df08ceb3ab15e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-107.png",
-      "bytes": 17730,
-      "sha256": "bb7476c039328df1e3b2439276816255b803b6766f72ac0e3e254e732e780e66",
+      "bytes": 18463,
+      "sha256": "06a7e99e9c2edb8598a928dd68eb0176bffc063cf3a6c62d3e5e7acd352681c8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2306,253 +2600,253 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-11.png",
-      "bytes": 16577,
-      "sha256": "85cbc6742c1dc8a8f158896617b7edc91e6d43a49b87d0be1e59731862ba4b31",
+      "bytes": 18038,
+      "sha256": "eea8a48b91b516eada62449f5ea258ca29a7c6fab23280fc294c49a74ab75c55",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-111.png",
-      "bytes": 43795,
-      "sha256": "35d98909d2dec41f922db30f0a281664b306e1c1befff2dd21a1f6383a9f44e3",
+      "bytes": 41571,
+      "sha256": "ae71abb649635d374324ab0346059ed5f16201553b8e6f2a9f7e673efc4bb4fb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-112.png",
-      "bytes": 34812,
-      "sha256": "c17789c59ed51ff1b16145722c1f16f3363da7bf22cd92743fc829e9033e67c5",
+      "bytes": 33748,
+      "sha256": "6f1948e5c1c8a2cb11cee0fd5c2f635fe83a0f302bc0ce9db5c25c0982dfe6e0",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-113.png",
-      "bytes": 38112,
-      "sha256": "6b0e8946a8f5f5ac2d1e8d8c5e938f927324be0cbc5482ce3d2e30bc45a6508f",
+      "bytes": 39524,
+      "sha256": "19930376d9e2c7d446b457932b5beb5b7164ce62d8bec1bb8f48de0522d651bf",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-114.png",
-      "bytes": 33933,
-      "sha256": "d99cd4881d15696b85d0a7c0a2d0bf535b039c242f20f49bda909bf608928e00",
+      "bytes": 33404,
+      "sha256": "d1ef254c092641e90af3c97521fc92e9b240ff2962c91a25a2d96a9275be80f9",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-115.png",
-      "bytes": 44458,
-      "sha256": "072c634296cb697d8694469eb728289cf31f149a4ad1fe7aa3a36d4a7819141a",
+      "bytes": 46895,
+      "sha256": "7eff10c3f343d853d3617d2c1dce08f403c722e7239dcb53c83392a84d70a2af",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-116.png",
-      "bytes": 37539,
-      "sha256": "a304d4425185a1d59b41b106142bd24cbc528d8dfb910783b107353b2f8a3ab5",
+      "bytes": 36698,
+      "sha256": "292636045d77a144324604894e14aa6f59fbbb550b3f86a82bc35bb88a4010bc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-117.png",
-      "bytes": 39079,
-      "sha256": "5e8af7b94945cd21b9524d3e2f9710d0b6403465081409ed564a9eaa894acafc",
+      "bytes": 41315,
+      "sha256": "50cf59f09f87635188558f3a9abfcf7d9a8f8309715e2626b93520f87c634d10",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-118.png",
-      "bytes": 33693,
-      "sha256": "ed0c26da018be680bd83d1dfd44b997694636f0664613278fb286116b6ce799f",
+      "bytes": 34332,
+      "sha256": "04a023651faf4fed2d31f51fd28bf817e2afb7e1cea7f22c257ef02f0de2f570",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-119.png",
-      "bytes": 18170,
-      "sha256": "0f24b3e11d2ece63c7a837672e9716c16cf45762531369d04b5c0103342a65f8",
+      "bytes": 18848,
+      "sha256": "4450896218634e3eb674192f0c0b05f5996a35c5ecb667dae96639e6d9046f87",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-12.png",
-      "bytes": 19358,
-      "sha256": "1b484a7f0267275b364bc6e0d0e86cfbdb90c32f075f22c07083b0e4435ec101",
+      "bytes": 20413,
+      "sha256": "c2d734156104da4e57c84a721f7b873c4e3e005b8e82965c3caa03275291a66d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-120.png",
-      "bytes": 16420,
-      "sha256": "06618a413d79bdd7ef73ec19cc1854b45b69ce2b591564bd9fb1ef1885984b0c",
+      "bytes": 16599,
+      "sha256": "1c485362e9d6cae0d84c2d5f78c15bf7a9e17c5c9ec48e6244d196e973123596",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-121.png",
-      "bytes": 17315,
-      "sha256": "2b3c8b6e1fa393dd2b2fecf62fc092873e37ce604c1163e7b62342cabba9e296",
+      "bytes": 19233,
+      "sha256": "51d29956e3bf7ab0b29bd61b63bb0f766845e1dbacd613bbe1bd08cf3e14314f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-122.png",
-      "bytes": 17305,
-      "sha256": "737e0b1ce2a5c4800952962c8ea6a268717467901df73129acd5f45de5a480fb",
+      "bytes": 18631,
+      "sha256": "adc6393563aa786ad558d7a85e2facce5b06d216c2914f42c74cb399dc67c663",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-123.png",
-      "bytes": 17468,
-      "sha256": "fcc484b615f4aeaceb63241499bbf2bd1857ab269f675e72e5b8885cf010f37d",
+      "bytes": 17928,
+      "sha256": "2c550f2344c077451dc7e84ac212d703694d9d168cbdbc7c23055b63ffb099b7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-124.png",
-      "bytes": 15871,
-      "sha256": "4b370703c392110801dd90195fa4c56f2600993e5ca38cafa0cfdb6ee3fceac1",
+      "bytes": 17399,
+      "sha256": "26866418bb4760cdc45bec6a234159d0f7f6818b163ea6b76679fc3238ba4f57",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-125.png",
-      "bytes": 18168,
-      "sha256": "fcd04f75bf29442c0d1c1164b217d1f1549a9e8dc864e150c486b82588f9d3d7",
+      "bytes": 18997,
+      "sha256": "8648c37e0b0c41d90e4635844208134202fcc81175a34b10923e064111bf89c7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-126.png",
-      "bytes": 19924,
-      "sha256": "392a4c488d9404ec1516bd5c240135757afdc05cf2919e7712f17992b02862a1",
+      "bytes": 20024,
+      "sha256": "efac2cce55fe68f85fcb2f829b6ba23cd70b1a5c1771dd2ae30996e2528450ae",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-127.png",
-      "bytes": 17488,
-      "sha256": "e96b173a45598949c61f0c2ea720da49c0ffd56dc3a18e5b1b36e0defca8fe1b",
+      "bytes": 19166,
+      "sha256": "fb85725bb96e14870095b89e256a361d860ebda5cde7d22d1715ad51fac3f1c8",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-128.png",
-      "bytes": 15745,
-      "sha256": "f1a74e31d901503de861b5ba45eeb35bbb991505dcbd5e604c3d14afe177f5be",
+      "bytes": 17070,
+      "sha256": "212244006c08a6d81541301c09f98dc076455c286e61ffcb1f3d6396148dd439",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-129.png",
-      "bytes": 17381,
-      "sha256": "197eb265006429879753f84c80ac1c98dfe7557d25d0616554309d490f89153d",
+      "bytes": 18695,
+      "sha256": "5d8756dfa00a21f1431672b78e8548b94f7848b1709de9be1f9e9a641e44c923",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-13.png",
-      "bytes": 19012,
-      "sha256": "a97686eb302f45810192dd2574a94b63d48da55c0a1d31530953e2aae9d191df",
+      "bytes": 20524,
+      "sha256": "c602536e90c4b3fb646657ba4ecff6d007e9374e3567cd32b12065ece671bf5b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-130.png",
-      "bytes": 16603,
-      "sha256": "baba469d818c73f45d7d78b547e8cb9b6ce3baefe60537ad1f588d214102ee0b",
+      "bytes": 18038,
+      "sha256": "5ded042c33b7e2750fd5abae518e9c2bee9761ed85366bd5cf3d91c5f33b6f23",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-131.png",
-      "bytes": 15962,
-      "sha256": "e684668f5cdaf36b703d0da3d28c14361f6d33a1e1915a21c30cbf0ea7bb01f8",
+      "bytes": 17498,
+      "sha256": "4716e65163df7e9c24e0cdddceb944c7e8d4e0b5baab247f33a42f1258f814b0",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-132.png",
-      "bytes": 16160,
-      "sha256": "0a11a3b0ca054118781f58d50ce72bfcfcc07b093790bbb7b4732210cd284438",
+      "bytes": 16979,
+      "sha256": "c7a0367eff0e5a75e198c619a5592804727b5b3173a8473aa3d6c469e0e695db",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-133.png",
-      "bytes": 18196,
-      "sha256": "8977621bcb380eff71eb5bc4d5d29db54ad697f27d2332a5bed6b9cccc7ab3ac",
+      "bytes": 19426,
+      "sha256": "55f98a5315dcd586d9964a9e85b129f1169bf54a528df79a5f4a1a7d88a36884",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-134.png",
-      "bytes": 17679,
-      "sha256": "276c5d338649013ec29fe4bc96a6e59227f920f56f7c41b972f2b49d4f38f603",
+      "bytes": 19882,
+      "sha256": "13fb21346ac78a4a09eca90c54997524c07a91cc6dc3f620c8ccf65bc9123201",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-135.png",
-      "bytes": 17018,
-      "sha256": "ea79e6df3853a7bb8b7e450f7bc6c5bc7f84b72ef8b1da8af76ef7514de77adb",
+      "bytes": 17766,
+      "sha256": "c74f5a2bc26f3de61e5e069cc8f832f1f7ec20bc32ef36bc6c71ad85053e905d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-136.png",
-      "bytes": 18439,
-      "sha256": "c777be18c1991d3cce39a75a2ef3cfb5efa8f89ee19eac53489b06f542a4349d",
+      "bytes": 19139,
+      "sha256": "f5622eaa8fd915e98f9faa86112843a22068bbc3f9a0e22524f37ebccdc863cb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-137.png",
-      "bytes": 16564,
-      "sha256": "ba2867230d2848f1dc29e9570daf7fc8b940a2ff84973d40b9603007ca481993",
+      "bytes": 17334,
+      "sha256": "66adaa61b97cd152ed9ac9cee6cc22e7548c5f70f365815741b878be7deebe3d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-138.png",
-      "bytes": 18542,
-      "sha256": "7132d62f08a45a90783ee939d439bc80eaf64c8cdb9f82b9614e7657d6368cc9",
+      "bytes": 18127,
+      "sha256": "39c503232e0a5a866b8967505b26134ca49a24334245e292454c1bc0fb4e36b6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-139.png",
-      "bytes": 16181,
-      "sha256": "3e0f57e55a79b8ca8a3ea3b76b6d0570d083001c10427edd4c832bc2c1a4e082",
+      "bytes": 16771,
+      "sha256": "71949c8bf33aba9e61cebbce912d6ac268f8b5783b1226df8c55c45fd9a470a6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-14.png",
-      "bytes": 18859,
-      "sha256": "7cb0540795a9350c70290b28063ba3b9664bee233bd194a805a080e6a533c9c3",
+      "bytes": 20049,
+      "sha256": "bac14254c9576238c0700dd9189eb122b445698044e19d08894009add744504e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-140.png",
-      "bytes": 15008,
-      "sha256": "74e7a0c9aedd97d985170179984580a05708f0a4888ed0eb2e2db7a0424bfe82",
+      "bytes": 16869,
+      "sha256": "16b686e9e089c0f4bb67ae90773a2ca9327947c7c1f88afb01c5c2e0664d3fbc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-141.png",
-      "bytes": 16641,
-      "sha256": "78d313aae00ed22301487c7918264dab025374dcc985eb38265eeaf3b49584d5",
+      "bytes": 17019,
+      "sha256": "d9cfa3ca67632ef904f2be04beda96f32d8bbcaee58a02e59476c50d381b9238",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-142.png",
-      "bytes": 19538,
-      "sha256": "206dab7837dc40a2cb73e6b97e9197d1a4c8f53e618bb9e2201e35c268f99db3",
+      "bytes": 19922,
+      "sha256": "2a9d398e9afa411314a833ef9c979bacdcf23c69b87774e3a8e07222edfa5c99",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2565,71 +2859,71 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-146.png",
-      "bytes": 47949,
-      "sha256": "8d6d35ea2829ed6fbf41377eb326e93dc3368bbc9c8e6648e623429e837ba1ce",
+      "bytes": 49084,
+      "sha256": "c2eac63b5902ffc9d0a6c812cb315b7a5ed98629decc9516b0bb49cdb31aaef2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-147.png",
-      "bytes": 42310,
-      "sha256": "30eb3a724539c158c1650c58ad1d7fea137390c19aea9b1288bf4c333ede33d8",
+      "bytes": 42022,
+      "sha256": "589c5180784063ed2136d782c92df6f86ec7282a4459d6a9997dfd7f7210cf13",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-148.png",
-      "bytes": 46927,
-      "sha256": "7bd0920fa20b4880f760a57566002541c2217b5aca3ac05db4d7d619dc04d002",
+      "bytes": 48026,
+      "sha256": "a5e13c4137afac436161c28422d23d982cdff2c971b164901c1f5f635621f09d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-149.png",
-      "bytes": 42394,
-      "sha256": "b1f91318c819e0396257425abe5507501d15ff03e30149eb71d32f08bedb09e4",
+      "bytes": 42799,
+      "sha256": "46a0bf5dc8174617a5ba2b521a403c002be527e6f78a2e02a11231726ea573f7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-15.png",
-      "bytes": 17003,
-      "sha256": "e3cc3153b8ef938c9c8c032887fe8ea424759c0c8fb9474db4754c1fd80f20d5",
+      "bytes": 18309,
+      "sha256": "2dc95cc60709f43141b60b5b44873e3c8b6749f6ca06eb4b0830fc3336219e38",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-150.png",
-      "bytes": 36687,
-      "sha256": "41fb0aa97c38e804807076d9f7637020584e0c147ddd1ed9c7d657da70a536c8",
+      "bytes": 34942,
+      "sha256": "527a1703ef9908d48d98582cdd8f919dc74402e40d0329ff9f95bf6d186e57b4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-151.png",
-      "bytes": 39011,
-      "sha256": "834c322a2e49c4eaeb6b11a394484ff892a317b329a4128951462b2afa03f721",
+      "bytes": 41168,
+      "sha256": "4a041acbcd037c296304922caeca06c954d51181f78b37a3686f36bd8697160a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-152.png",
-      "bytes": 41800,
-      "sha256": "4a10c8d2ff1b456265ef5d7051c1272d576ee542556bd6773f1b22c844e0d766",
+      "bytes": 41092,
+      "sha256": "1f3bd5421af2e3ed5cc5b379030ed661ba71eeadd45ae933c77d513a219195ea",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-153.png",
-      "bytes": 38630,
-      "sha256": "a5bffbdb491d854071fb8fc94ba44e2143ff7060d682d0f319e9d778c5002896",
+      "bytes": 40488,
+      "sha256": "7d1bd9a242b20e127e31209a6b937cb8cfa5b2da1208aacd8dff34c38defbd4b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-154.png",
-      "bytes": 36835,
-      "sha256": "d34de78443442fa5e66ee3f766d457b1a15b891def070ce1e013afc19b8aab7e",
+      "bytes": 37402,
+      "sha256": "11b61ef1ace68700c784603b378980af4b17dfaf85fcd0b0dfc948644234e771",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2642,211 +2936,211 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-158.png",
-      "bytes": 17603,
-      "sha256": "3912e1625cdc75f6595c1b5c1db3cd6693b665e8b7fff08a59527af7eaae6520",
+      "bytes": 19192,
+      "sha256": "6c62d7b146f4d030eb953b11b05f596038d820016591560821032d5b27b155c7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-159.png",
-      "bytes": 18485,
-      "sha256": "1c0fa4eb24172b4c4d32e4cfe5f05c1cb44a9963d720e389852296c7bedba32f",
+      "bytes": 19602,
+      "sha256": "964182399b6e1af8fd0db83e17d919f07dc527577419c42d3b9a94097d3feffd",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-16.png",
-      "bytes": 17872,
-      "sha256": "d9a5e4d7722656fda7df5f8f085d0f1ca00dfb356629b277706fabf87db2b745",
+      "bytes": 17824,
+      "sha256": "f990b5a1f3c3d2ac24b569507ec8a78f95eb8dd33431b8773a800e09a3c5b345",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-160.png",
-      "bytes": 16510,
-      "sha256": "7c5857e392c4deac81b2252e667b138f2c63be9b3c73391e8df52d99c8c75e13",
+      "bytes": 18257,
+      "sha256": "c201f65c5bbda70740ed71c6e9da02bf9d166ad49366f7897c0882501ef23969",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-161.png",
-      "bytes": 17040,
-      "sha256": "3d5475706b9420c692c7f198887f58c689ff7795be69e415379b4e2f669b86f4",
+      "bytes": 18900,
+      "sha256": "f7eabdfb2ce71d52992d29feed850a1395e409ca4dd72a5ef5e2623de5b3c2df",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-162.png",
-      "bytes": 15331,
-      "sha256": "e20aabbd56fee469637cffb4a6287c120361ecab2a050693697d0dec886ba914",
+      "bytes": 16782,
+      "sha256": "190c2cf590f6b049c1109259384091450feb9e9b9015ceea76661353e73efc3b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-163.png",
-      "bytes": 19004,
-      "sha256": "be6fb17c9b35a77afda9e26546e1ef61c77a170b57fddbba63cb69b79d978c43",
+      "bytes": 19935,
+      "sha256": "fc7eaea019ccd6c8bcf0a4c897cc77ff201faddb6b10d57e4fa7ac1d65980318",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-164.png",
-      "bytes": 18058,
-      "sha256": "50f5ccb7c11113307a1db5190103232a9bb4890d0442434c20e0f0051937d5cb",
+      "bytes": 18693,
+      "sha256": "30a681773beacae38f5cac53a91c38aebcce3f570d3058f1f9410c198d69b7a1",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-165.png",
-      "bytes": 15408,
-      "sha256": "8ea890d9fdc66f7f0517f729b1a1e01b03b99ad72f1a2708f1a44e2f59b9264f",
+      "bytes": 16777,
+      "sha256": "e9324af6bb7b8cc6b9a22988fe9abe84ba91e17c7e20e495a61f983a020c2436",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-166.png",
-      "bytes": 18086,
-      "sha256": "605fd5407aefc79edeaf1a3288e12cb48bcf141b08887984312e25a8fa403b7b",
+      "bytes": 18285,
+      "sha256": "f8adb4032ad60e3e4dc83393ceb5f2746746f09d26107c62b7e4b2bc61595a86",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-167.png",
-      "bytes": 15317,
-      "sha256": "69052faf001bd0821c7ab5df9195c5f53e70b12178b271e9d7de41e28484130c",
+      "bytes": 16893,
+      "sha256": "ec56fc956448883497b5738fdff94a2f68646c50dd1931e9800029c1bfad0a8c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-168.png",
-      "bytes": 18376,
-      "sha256": "c4f2560a3cf65b05bdab634238fdaafd39c66070b2396f97691148d190c4c1c7",
+      "bytes": 19122,
+      "sha256": "438991eabd2a9bbbaa6208b34a9713ba25645909a6e2fa86b27fcdd2ad1e16ca",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-169.png",
-      "bytes": 18031,
-      "sha256": "de1ed1c2e6f41a86f83a905217baabf182f3ba42718eabc0e79b38b14554fffa",
+      "bytes": 18893,
+      "sha256": "002a6d43e80732244952fea27be288c193eb84bc3a7ee478f2487b6000fc0f68",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-17.png",
-      "bytes": 16694,
-      "sha256": "53702a1ec3874c3bae1eb5904f61de390143f92d16040bf6c452b45eeaee0eac",
+      "bytes": 17770,
+      "sha256": "00e7c04a04be903f51b772bbd7c37586bf4ebfc473dd07f60be8b5d17127fd29",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-170.png",
-      "bytes": 20030,
-      "sha256": "4c6e181fb3a04be8c9908a291e53eeda29e9e78674b01a3132ed4db76e64eb7a",
+      "bytes": 20394,
+      "sha256": "0382eecfcbbe4c357af6b12cbf802b50ca8446ac4073b011abb460058d34e66e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-171.png",
-      "bytes": 17992,
-      "sha256": "bfd09988aa53d957633f090e7e1376c630453c0205a719840532073dd41c12a0",
+      "bytes": 19348,
+      "sha256": "8534f7ae8d2a7800c8257a07f1853abb6ce9655f61aab509cf5f6b0f68b99c7d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-172.png",
-      "bytes": 16907,
-      "sha256": "51bbb0267c255b57d87dd61ac1d071f263acebd743f44c3a50ddb3732025f2c5",
+      "bytes": 18282,
+      "sha256": "03f42bd78cc3d23a5befaa3cbaef63489501058af456169cd3a7e71e44342257",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-173.png",
-      "bytes": 18674,
-      "sha256": "b0d0fb3ac3d7e6b75e32ab1ae5bf31e5e2f3bb6fc66103acee83364d837ad63a",
+      "bytes": 19824,
+      "sha256": "8c1b5d7f8c200f3af27b30b4d080ea3960762992738dceb2ce8fc56f76da70b5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-174.png",
-      "bytes": 15997,
-      "sha256": "4db514e55293e844aecff6c8e02778f28a620425cfe1cc787c9479e8ce0caa90",
+      "bytes": 16865,
+      "sha256": "c32fb8c758f5d24456b13353204acce12c07ea6017de40b203a51292f6772dac",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-175.png",
-      "bytes": 20054,
-      "sha256": "712f06900069ad8bf9e58e9b3f368d6ada1d62005ed667c06e3dfd19471ce88b",
+      "bytes": 20520,
+      "sha256": "b7c66bf62778d531ff68471c894b1dab52fde1202c5c557fcb8b3a825ba07182",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-176.png",
-      "bytes": 17600,
-      "sha256": "0e6eaac3d6170d9cf2103558aad9939146e1708380c7ab559a4ef0bdb33f6ad8",
+      "bytes": 18160,
+      "sha256": "f191e461556fd20d6ff0d0035a25a63648204b1fa9cd34fab42e031338dd2d38",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-177.png",
-      "bytes": 17284,
-      "sha256": "a0b096ce159de9ea8b6a84b648590a7713b8fd505ceacdf9af44f33707734867",
+      "bytes": 18704,
+      "sha256": "beacde0e63e96b25fb97f8c613913047505d2e3116a206ffb38881e2862588ee",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-178.png",
-      "bytes": 17533,
-      "sha256": "903dfee26f4b0eb9935a3dbc3781a03cd03a60db022b6f35b31f03ad2032079e",
+      "bytes": 18542,
+      "sha256": "754f3089e6b67275aff6b332daa13278ba19fd81564408f4d9ca7e6acbe13544",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-179.png",
-      "bytes": 17709,
-      "sha256": "7a658b8acc9d3518f3ebbda30686be3e65837b7e40ae2e456016ff9e6fd994e7",
+      "bytes": 19671,
+      "sha256": "3cbb3060050731dfd6e6f9eba13ac69946bf4e48cd3cdb3b84eba144ed99c97c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-18.png",
-      "bytes": 15008,
-      "sha256": "564e62e29da2c65e185647ed3308b95dd3a238c0be200d2a0921ad09dd28dc18",
+      "bytes": 15296,
+      "sha256": "fb0b9862e10e7bf43d7fd9270af68e669e21abb999589e79188f195e6fdeef37",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-180.png",
-      "bytes": 19321,
-      "sha256": "b120221a50d5d27c74706476d2eb4195a3dd20c7c0fe6633b54f571c942afca9",
+      "bytes": 20458,
+      "sha256": "7ff9b539aad359333eadb6e97a9c3cb875dfe9d6379d7da7786005ebcaad3a51",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-181.png",
-      "bytes": 18753,
-      "sha256": "8149597ace5a03d08532cf979595be413359b466e072d9bb4041eb0b97e3b1e7",
+      "bytes": 19421,
+      "sha256": "a67cb183c2f83b864010ccac536fad04b98ecf48945f8def931064a5248ec819",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-182.png",
-      "bytes": 16766,
-      "sha256": "01d9f7e4609580c70f4ef4d87e9d0dca30510c7322a6656447a5815978fbae40",
+      "bytes": 18330,
+      "sha256": "4e287aaf7899d435649226bf34bd0058700bd04bb87814e3ec25f5d09e3e7762",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-183.png",
-      "bytes": 18257,
-      "sha256": "12a907471be8cb00f3ff98ac1fc22e8ffe692e4d03eafb49623853225d7d12f8",
+      "bytes": 18732,
+      "sha256": "edc8c84deb255074e4d87745329f5e347bc05fd55fc679e1b24fb0a660e7d8b6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-184.png",
-      "bytes": 16670,
-      "sha256": "0db4b323ae471b26838d32a5c1abf9a43273cd7b21161dcd07ed202db6ec1127",
+      "bytes": 18293,
+      "sha256": "aa717ffe7e11837caa071b2e44cefcc924102c45793921b503bd80cb96bd3fbb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2880,85 +3174,85 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-19.png",
-      "bytes": 17309,
-      "sha256": "6ce7fbd6655c36f693e8372dd3027dc008b783f755a2e6592bccebd29700e999",
+      "bytes": 18857,
+      "sha256": "9877b01b111268610571f66485f8815ecd8003581b94d6c8d1e5de70a6804993",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-2.png",
-      "bytes": 41720,
-      "sha256": "0e7c3e0782ef27428e71292781a273c951e64628b8f5cc5a43156cf832cffedc",
+      "bytes": 42142,
+      "sha256": "9c4ed9e07fe8ad8d08e86c7252606b460371efc42bbc88f7629bc11caa39d582",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-20.png",
-      "bytes": 16530,
-      "sha256": "e066008aacd5e9a14c7c2f6e4a251184805d59b9306d41f29a982d0c60b1648c",
+      "bytes": 18166,
+      "sha256": "635f0c1c55462d46914b5c98e76a33d1c6b0bf471c5a589bff262475b07b7d89",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-21.png",
-      "bytes": 16895,
-      "sha256": "8bd1ec15eaa374e96544643d6d5f974b0c1a150fe2fc9bfa689114bb8f2cdfa6",
+      "bytes": 17321,
+      "sha256": "3671210150248b094f9eb4825ed5fd48934f03c6c4596aaac0528843cb9d7945",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-22.png",
-      "bytes": 17581,
-      "sha256": "f8679897410c8788b96d26b50fce5624852604b095cdb7209522e0d4f1149eb3",
+      "bytes": 18436,
+      "sha256": "6a0f64e8829cd36c4099dd8533ac92fa0ecda21a6b5e7883ba3011274847c65f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-23.png",
-      "bytes": 17930,
-      "sha256": "125bf5745808fe7a5ae7cad9ab0dff136a4cf557c1e56d5a301c1fe104ea32c5",
+      "bytes": 18668,
+      "sha256": "38819b7184206f7129cf46efe514dc6d028ef858a2ce27978b6cf989e96990d4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-24.png",
-      "bytes": 16007,
-      "sha256": "5656bfbfeec272c263cb7215770f419b345fec0796ab3918f13f403fae20e8b0",
+      "bytes": 17606,
+      "sha256": "e2a0152998a74bc20856cc67dfed3dd649017fe6bd93df3f55bb5af886bed7b7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-25.png",
-      "bytes": 16024,
-      "sha256": "663e5c065ee3f0d24ff4cac66d8991acf5573c32a997699794d94b3dee60fb5b",
+      "bytes": 16727,
+      "sha256": "48316b617f64b8c1f4c028424eb0e07d0229340f6faeb73e69e48750513cf65d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-26.png",
-      "bytes": 18433,
-      "sha256": "89052fc831a74e2730cc824d083c1766a9845d15312f1ececcc924e4321f175b",
+      "bytes": 18734,
+      "sha256": "9c8b05c9b77d4fc4d6034653be32ed6e9b2dbad4b85a91c822feb8021937ebb4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-27.png",
-      "bytes": 18129,
-      "sha256": "13e6161f739d10b143853a2b241b324ce5e05d080f16b5bb910ab42a17f94b4c",
+      "bytes": 18928,
+      "sha256": "379d9c8fa148c79c3d10544363a20546865095773da8090f5f4ab6093546ed97",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-28.png",
-      "bytes": 18861,
-      "sha256": "444d0fc083773e9e8b8001da93b1285646a4095ef565f6484c1291e3295ffa50",
+      "bytes": 20330,
+      "sha256": "531b6dfb0eb4ac88da6d792a972f5be66693d6716f90ae914536b607c288e7c1",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-29.png",
-      "bytes": 19080,
-      "sha256": "2bcf376d7d63a69c4b48ffaa07c3bd1bf73f310e5fd89e78e19263738514d234",
+      "bytes": 20059,
+      "sha256": "47e0c8da3f5f89da6a77ff302e62221022bf0f3e81a6fa02e7dbf755d3e89017",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2971,22 +3265,22 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-30.png",
-      "bytes": 18222,
-      "sha256": "d1c7217d17f710428685c527f14eae46f8395b5043d972f6933f4afdf908a384",
+      "bytes": 18936,
+      "sha256": "5b11491e5fc643813efe2cefc92228faaff68ced6e3554d53c0a167987780869",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-31.png",
-      "bytes": 17078,
-      "sha256": "0a26a87f14ddac1eb356470816d020c8db1b52afb0d065f18db160fde5d5b75c",
+      "bytes": 18618,
+      "sha256": "e96dda4ecaa47793cedc001322e146e62c4543aa4794a8eddc6199e253269211",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-32.png",
-      "bytes": 18094,
-      "sha256": "9d10bfef3d15754fcff8c71a30f98fcf11d1457463ca4431a77bc4f8c79700fe",
+      "bytes": 18993,
+      "sha256": "fcdb348f5e426db7ef97a22cba9c316db983fd428f804a140862ca40007f421a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -2999,43 +3293,43 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-4.png",
-      "bytes": 40658,
-      "sha256": "e4bbe0a0224dad14af416e2437d7619bdb20e9e4c968d70ad08614d902f954e5",
+      "bytes": 42303,
+      "sha256": "8c197c0ff68da53c593598b83ece6156e0b798a16fdcb12113046a7a8fe35740",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-41.png",
-      "bytes": 31902,
-      "sha256": "38c76f126508567309e3d91770e649043ef70961afcd03e9946ba1d271c61704",
+      "bytes": 31573,
+      "sha256": "5515b6612ec9a08cf80ca62932ac03f1d46e0fe01f3d2d9a0b169b1f94bba94d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-42.png",
-      "bytes": 36206,
-      "sha256": "42d6abb9a01bce835437f398f93b3bbd8c77b5481fe75364e052991c9ccfaf91",
+      "bytes": 35220,
+      "sha256": "09529316eff11f67f4daee3244d63613dce9fd374fb5bfece49ecab41a63fd2d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-43.png",
-      "bytes": 35573,
-      "sha256": "dfa3282189293bf0c9c8ad3a402f13dbfac5193cee2ed8b6295ab1ace489026c",
+      "bytes": 34750,
+      "sha256": "ba432737d63b18beb3ca9b0fcd8a9214067b466294cd1ced7dd3f853c4fc95e9",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-44.png",
-      "bytes": 32684,
-      "sha256": "cab9a0358cb071c76f65d5bb176c49e34062d0935a1d46d7cc5f01dea13ae774",
+      "bytes": 34704,
+      "sha256": "9e6da951a430c251f661912d1d6e36261ef43ee77b0d8763801c5e15d429a46f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-45.png",
-      "bytes": 38957,
-      "sha256": "44b9dac9f65d302480c7e27e47e1d49edf6175cbf42132853474b61c50d57b26",
+      "bytes": 38837,
+      "sha256": "01dae314be34034a737ed8b05a18a65b8cf2d584d8fbaddb034a5191a439ec2e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -3048,232 +3342,232 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-47.png",
-      "bytes": 29442,
-      "sha256": "bcca7d455895ceafab561fe968eca159868aad73c1f64ae2e4291705a772852e",
+      "bytes": 28797,
+      "sha256": "42738a7fd2ac13f6976252eac27512add36f9391ea46d7edfc0619f17dcd9fdc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-48.png",
-      "bytes": 38046,
-      "sha256": "5b139010dde9bd158ae9f650feb88844a7782c44122881a2503e668a4fef14c8",
+      "bytes": 38780,
+      "sha256": "98e19237a4e0c4c93568cabeee30797fe460c2bb65a3cb96ab12fc2460bf0f03",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-49.png",
-      "bytes": 35172,
-      "sha256": "67ed299fa8645509e71e79b68a55fded59b0a6df025f5b49a1317c502295a930",
+      "bytes": 34369,
+      "sha256": "7310066f6ed665b4450460b94dfee01994bfebf6f885d9590b513bae4c20aeda",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-5.png",
-      "bytes": 35307,
-      "sha256": "fd0934294ead02658e08c66bbf2cbb001ab815e1073529ed09678dd765793b12",
+      "bytes": 34888,
+      "sha256": "83dd41bef382f43fc8cd063951cbc5706ab1422a45a23fe340bf18689114ffaf",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-50.png",
-      "bytes": 17460,
-      "sha256": "9cc4a896a414e12181c43b82e4071bb7530a9d0fad880d3eb3fa96983ccc96bc",
+      "bytes": 17719,
+      "sha256": "ac184dceb3c4de9d458b4493abceb176e03cd7cccd1595b85fd60542d3d0cb3f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-51.png",
-      "bytes": 17477,
-      "sha256": "a6899bf95b13100b3022dfed7c618237d8464ab24fb5e493e054845c609f984d",
+      "bytes": 17812,
+      "sha256": "6ea9cf6db461324510318d8d179b51e2884880cef0e2bff6750d58b96a962435",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-52.png",
-      "bytes": 16961,
-      "sha256": "12e84b8b97092236a70e33d6e3cf200f473ab1e1f6ef7bba91b8947bb42158d1",
+      "bytes": 17214,
+      "sha256": "30655ea500adfbc12cd11f7b656fe95db02b104bb22c828558f4839892c07192",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-53.png",
-      "bytes": 16367,
-      "sha256": "0aedb1c7ca3076cb3cd88bc46412ba771ea161a6448234cedd7106d86f65d4e3",
+      "bytes": 18030,
+      "sha256": "09a24fe8f10a87bce6102c2cb69f5123ad8ad3b8d99125a7d25e0d6743697d64",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-54.png",
-      "bytes": 18122,
-      "sha256": "8049cc904d9a4fc428b174263ed85fa7effae107ed2e783142edcb0ffbcb38be",
+      "bytes": 19275,
+      "sha256": "90919bb032a9426ee1b42e46c63e2cf10252349908f86a9a17e3a9d541bb6eae",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-55.png",
-      "bytes": 17866,
-      "sha256": "f94bfc4cd0e0e9b0a8be1f0195c1dab73933f0a014190f70c545eba717b38705",
+      "bytes": 18947,
+      "sha256": "be352b1c4f1b859a5c876c8378a644e30331aa026f324457343ffa4b25fd995a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-56.png",
-      "bytes": 16270,
-      "sha256": "f7f4c53e24bdadb492099e7fc2fa1d0d80b7268915d2379b33f357850f117ed1",
+      "bytes": 18410,
+      "sha256": "e2467c9869c8b78eecef8d7ed8be933092dacfbcbcc6ca96d1ffe3c3fb6aa430",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-57.png",
-      "bytes": 18552,
-      "sha256": "47e5657ee220ad4637f62cd9c587018b2a0443b9c37baa9c9a634a53e07059c3",
+      "bytes": 18774,
+      "sha256": "cf1aa2a6a16acbe3d7ad4362b1b03fd2e3666fa78da8432c3ff43fe31f0790fc",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-58.png",
-      "bytes": 20394,
-      "sha256": "43e4a1dae20b4b3d23569d990b1c028b007378dcd21757cd6f09385a2438d566",
+      "bytes": 21505,
+      "sha256": "e957d4955eb8fa59b0e2e1107285e653bf5a130a6f57a746d1a059ae8eb05045",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-59.png",
-      "bytes": 16912,
-      "sha256": "93c4b2a5261aa09b2c0730083dcc0162c4ebab298fefb9c046317c3e7dad0b19",
+      "bytes": 19098,
+      "sha256": "9c5bcd066a30d585a2997caf6a597fed4df008d4415fd943f38b895382f7c6ae",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-6.png",
-      "bytes": 32399,
-      "sha256": "ad2690b2ace167748d18d92554caba390b6e81164f1cb7ca8b8501ded0b80330",
+      "bytes": 31861,
+      "sha256": "bf6a5fe6099ce396ea84fe4f35c1aed93d842fdafadfc10982a6e06f0e2f4c79",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-60.png",
-      "bytes": 17997,
-      "sha256": "bd2da598c9380833516f3fe7329157a40af5d33f1da2f3da5419c21ca47c9886",
+      "bytes": 18510,
+      "sha256": "71536f1fd6ea2317b8013fe592a9ca044a336088b9836fceb782020e119df5d4",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-61.png",
-      "bytes": 18660,
-      "sha256": "4acac029ce256cb4ef25388ca75f94149c67653ac150978f4100424a101435d6",
+      "bytes": 19849,
+      "sha256": "f1a9c17b254a7ef238932bc496f24d459eb4fc8b15fc29568466ee41b380728e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-62.png",
-      "bytes": 18069,
-      "sha256": "c3bb6ed71abe70500399a6d3562140989d0ca1df2a9810e73554fa20157c725f",
+      "bytes": 19235,
+      "sha256": "2efc28b1b359211ca26e1adce4e8f628db8d6191bf1b78764c339a9f42147ea5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-63.png",
-      "bytes": 15722,
-      "sha256": "b8e97d159a039a9076f2867bed500626ca92eccfd3aff5ccf41a72097ce4fc69",
+      "bytes": 16994,
+      "sha256": "4d0c327f01620ee6b79e18d66d373a0732b52aaf975f58164ddb1afed70c8c15",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-64.png",
-      "bytes": 16042,
-      "sha256": "7522465752429fe5e3e591655d391554f73be76f31becd3c1d9a635a8d34baa6",
+      "bytes": 17511,
+      "sha256": "729f8791b0a37b358d6aa1b88074b49e66788b2c82374abcc04c05f84b8b9d6d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-65.png",
-      "bytes": 17760,
-      "sha256": "03f31d05e338cd349c436af427ade39f5e47b891cad51785dcdedcaefcede679",
+      "bytes": 18531,
+      "sha256": "0337b4d1ec63cae547ce959e09d41c70ea07b8f88a8b6bbcafcd49dc6c9e8725",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-66.png",
-      "bytes": 17006,
-      "sha256": "65ce6cd775a49397b12cc158340282919be260993bf881fec01e382ff4e8e51c",
+      "bytes": 19083,
+      "sha256": "7712b50ed67c5f4093ac081a820111d55ea18f8313337cdce876597f0b1e6e03",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-67.png",
-      "bytes": 18297,
-      "sha256": "810b3c23145cffdbba9e5f7581988f39b4611ac03ba6c1a30d6d57a03c4a6579",
+      "bytes": 18685,
+      "sha256": "b0fa8e6b4b4471aabed0ecb09204cc5074fb4170eea3810c6ac29064dffeb324",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-68.png",
-      "bytes": 15711,
-      "sha256": "8b7ad32c9c8b90d4ff02dba842a2bb9efc90ea3a1b3dad0466bf29115d4ffc1c",
+      "bytes": 17339,
+      "sha256": "b7c8a6efc93bbdf1c056ba6b1f9f7cf43a76ea9d28baf0179eaa7223fa657a94",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-69.png",
-      "bytes": 16241,
-      "sha256": "e425c19b0191b2a7ec84e2c3060509afe12f17aa8b1dc9a9b7ada63ec6b84582",
+      "bytes": 17072,
+      "sha256": "0dc9b49056f5853d1f012017641ffffda7d1baa71f3c6189fcbf6da8a0a0e8d7",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-7.png",
-      "bytes": 30269,
-      "sha256": "0bcf28603ad959d3e4a671193c30305c6fc44570adce791b12187752b300043d",
+      "bytes": 30696,
+      "sha256": "9e9d50795092c75cfa6155ad9a7568b9a71eab3caa31cc87014f9ce3feb32be5",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-70.png",
-      "bytes": 17619,
-      "sha256": "54147ad2c1f0f3876efea78a66043f0b1a1eda4f9c134170e6cb02ddfe172a90",
+      "bytes": 17943,
+      "sha256": "a05debc6556ef1f5742ce17113cabd8236726de4b4b4979165ddc08dd0658d29",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-71.png",
-      "bytes": 19203,
-      "sha256": "0a2d71c3687a8c444ca62ed596e5cfc1dfc6c100368ab47a7ed981dd0b63f5ea",
+      "bytes": 19661,
+      "sha256": "d3e3404bc8da368a4bf841a8bbae149e80b9ffab371ee9eed50f631e4ca9feeb",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-72.png",
-      "bytes": 19490,
-      "sha256": "99fdc830940687f49cea81020ae9be4a4640fb722d13bf0d65726cfc1aab3984",
+      "bytes": 21270,
+      "sha256": "11577edd4a483ae6f096018dc881fc76eda5cc5ac84dd2a91e601ecf2475fbac",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-73.png",
-      "bytes": 19093,
-      "sha256": "e0d780cc33df555fd7f943fef5b2d62f89f48a00942ef5acf02692411104240e",
+      "bytes": 20896,
+      "sha256": "aa04bf5c11665dfdddcad83a3959e7d83586a815f6b065ae3f9707faae1d1a05",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-74.png",
-      "bytes": 17715,
-      "sha256": "fe1ebf0dc32c9594eb3bf55ea74109a2161926fdcd0d4527e44df6d312cd809a",
+      "bytes": 19636,
+      "sha256": "8d1b03c103870360c5874b3b7cc47d2f4530aa54d6fe761cf4da6ee081030871",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-75.png",
-      "bytes": 18063,
-      "sha256": "d9edc6b7ef171e8a50cbe170e040da96ffc5d6871cd77d9f00f2d1eb75683826",
+      "bytes": 19788,
+      "sha256": "1c3e040775d121c18e1aca195c94bcdebd5b350c996ee63dc1468d77c9ec3e3b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-76.png",
-      "bytes": 20981,
-      "sha256": "15c9b5cbdae34cc90b69c9024934e125d080c50eba790783f7da09f060cb970b",
+      "bytes": 20373,
+      "sha256": "0572a954e75060e782ab6e664a092ffbd845e59fe450c498fa4ab7f4cf5d98ee",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -3286,29 +3580,29 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-8.png",
-      "bytes": 38477,
-      "sha256": "73cb1f8d3106e0a3c0fe23918a46c1835f739304265e388489375a758cb989a6",
+      "bytes": 38569,
+      "sha256": "ccbeb04d271e25c5dcd7182bf0e442444676adb4639dcc89ff18158cb11b40d6",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-80.png",
-      "bytes": 36031,
-      "sha256": "31901d849271bf4397f622f59afa76ec68f2d29cccda42f7a67c4c4f7dd37531",
+      "bytes": 35128,
+      "sha256": "e1b09064ca1b0bd577ef5845b72e557eed6ddcd267afb0763c264b9164a59f24",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-81.png",
-      "bytes": 34803,
-      "sha256": "2552f399ae2a169544e6eabde3f36c74fd995b09b2a8c1bf3e3c2c30689a5c01",
+      "bytes": 33782,
+      "sha256": "6f039412e6ca00a9bdf93630a629ad89a165d8031990e621e6aef000eb48c87b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-82.png",
-      "bytes": 30524,
-      "sha256": "5ef41e872652815a94bf47403ddee077b866a95cd96cca16e910cd1c5e1b5450",
+      "bytes": 30480,
+      "sha256": "74fc4253bb762f0ca0cd5d6f55fbc922ca29e8e4b41308af6a267b8c55876a56",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -3321,127 +3615,204 @@
     },
     {
       "path": "site/icons/TreeShadow_sprite-84.png",
-      "bytes": 39881,
-      "sha256": "22e0e9d93ff7b438c7242a38fd81d5a405bb76913b039c8179f8cd2f780e3267",
+      "bytes": 41798,
+      "sha256": "1fb37d78092c179ea990720deb92515e220cff42d2965bac459d4ca32bf2a0db",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-85.png",
-      "bytes": 42606,
-      "sha256": "08cde049dbefb99ca2fd4a6943151a2ef86d721a75866f86200cecce09e0e16f",
+      "bytes": 40661,
+      "sha256": "287cfd08cea14f771f733fbb5abab0f14f3e902206fc05f47fc838aa8062695f",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-86.png",
-      "bytes": 35948,
-      "sha256": "deb0afab60e3f5e34668d7303f126dcbbea9fe2a1eaf92a251d5a35a146344c1",
+      "bytes": 37816,
+      "sha256": "0f00c60549bad8ce8e62bf1ff8ac00e0458b268c42b9620f2463dc3654cc338d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-87.png",
-      "bytes": 17757,
-      "sha256": "d34cfde19291de2c32f9ec8e13e674fb047d2da50f05e3ffe581612cdf7a757a",
+      "bytes": 18319,
+      "sha256": "b8be1cdb2659dc6b609c95966aaad76d307c931e9e1a7c24304317ed855194b1",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-88.png",
-      "bytes": 18457,
-      "sha256": "256b931784dbfec979ebbd7d0c1315431d40dd5c6bc6eedbe803122a58bb60c8",
+      "bytes": 18816,
+      "sha256": "67ac38954acface960c8c61735a9d204d14df0483cc9986705c3c52d5c82a76c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-89.png",
-      "bytes": 19433,
-      "sha256": "ffb45d75c87148991c13eb4e2c326680efb16cef0ff78ba8cebbd4b784f550d3",
+      "bytes": 19712,
+      "sha256": "7c8943e5f8ee9bab7d440d87d34b88e816c694269bb04455ac5be9b23991f114",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-9.png",
-      "bytes": 17351,
-      "sha256": "01e76f42d18ae6bda5454f94ca01b1719fb51238e534978eac06efcbff04d9e3",
+      "bytes": 17054,
+      "sha256": "da0f88716c316d864391567bdebebfffc2d9366b275efb8c265b9478de0831ed",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-90.png",
-      "bytes": 20286,
-      "sha256": "7a950ee5ddb051c1d1581ca11c59f903a07553b8b94d733f5d23d63fb0473b45",
+      "bytes": 21198,
+      "sha256": "7682e9752084ef1ab79608246202f709999e03775447a216887bc4857de74a27",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-91.png",
-      "bytes": 19089,
-      "sha256": "c9666fe7ef3e4abe4c7ee40518abb7a961eb4cf751db8f3951d6c3373b26ef82",
+      "bytes": 19897,
+      "sha256": "9206e49ab9d06ad2055368b178dfe770088232246657df69026bd1d686b9ff9d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-92.png",
-      "bytes": 19643,
-      "sha256": "1777fa6fe56ed1cde97dc428d28ec4c2e6154da5e9edde23f0a67abccaf27a1b",
+      "bytes": 21394,
+      "sha256": "c06a1b3122fa81003eee128057377f929f64a423daf8d78b744544664b9ecb0c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-93.png",
-      "bytes": 18409,
-      "sha256": "60afcc5943bc760a1f0e381b17ab787488db584187b5acdeca4c6296ae33bee5",
+      "bytes": 19848,
+      "sha256": "b389f5ad6e8c778236452ec33a5dd13f4b9a25f208a638903ab07de8d5bd1324",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-94.png",
-      "bytes": 18109,
-      "sha256": "da62231d2d158279b915909fe1fc8ccd18362b82ec2d6cde5a4ea629100018ff",
+      "bytes": 18740,
+      "sha256": "b7014b390ed33b91ebce4c30132d8ad2ddb4c6507bed54ab1a58f3e8de52fe07",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-95.png",
-      "bytes": 17935,
-      "sha256": "368434d5d580ae64163045cf1989b287aeb40556cea69dd5a7f0008d0edcd161",
+      "bytes": 18557,
+      "sha256": "e229893360a5eff1f876ca2ea27370a1c8ae44387f105b054ea75629983272f3",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-96.png",
-      "bytes": 17968,
-      "sha256": "ce8ab8c0d77db998ec0f4e4817be1a9cc6ef65b1098831251fd5d060338c1e80",
+      "bytes": 17967,
+      "sha256": "8f5969d6031809de83c5f135b72f679e083b559404c19667b2fb87e4a91d2414",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-97.png",
-      "bytes": 18603,
-      "sha256": "d69a5edf4df475bc2d2588db2d4796ad8a0f75f1214d8ad225577ce18f329861",
+      "bytes": 18614,
+      "sha256": "ab25f77f4d1c9219728affde4b9c2fe79e4644ef821f9688ddb8895d5c29c660",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-98.png",
-      "bytes": 16416,
-      "sha256": "7ad43f0831fdb3dd4e8f4ee4a70779c0fbbf0eac661160f5e4202833a4ab9f89",
+      "bytes": 18338,
+      "sha256": "b58b2acc3888c69811f15eeed6c5b9ec9334dc21d0473112246051c5dc834a00",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TreeShadow_sprite-99.png",
-      "bytes": 18336,
-      "sha256": "8d872b03a2ab6cfbe40840ba57ddbc75f53930e8598664ea20c55449a520ea84",
+      "bytes": 19015,
+      "sha256": "e610c5da6f0934de60f1f4dc4d3f7eb692527b8b2a9fad33640f315090c1fee3",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/TreeShadow_version110-dice-solar2.png",
+      "bytes": 52335,
+      "sha256": "74abd2770550dba0e73c25df1f440f15f00b998c7acafb01554ed8087f7ac930",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/TreeShadow_version110-runenode-sun.png",
+      "bytes": 23395,
+      "sha256": "19171447f8881cc2182ca0db41a1a0a49049220b933504e785afafc527323601",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/TreeShadow_version110-solar-stone.png",
+      "bytes": 46596,
+      "sha256": "83a06818f39ac2e3d8147878e3dcee54959fa68199c57e494e8344939205ebb2",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/TwoEyeDiceCollectUpgrade.png",
-      "bytes": 21293,
-      "sha256": "7279970348dabb2008c6fccf635d8de6fbb9a3e159f662a5eb8399eec1c926fd",
+      "bytes": 21205,
+      "sha256": "87abad4518ded9d05c866c8541111cfd0c45748d4efceed67ce17655fc2d49a6",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UnifyDiceTypesToN1.png",
+      "bytes": 8012,
+      "sha256": "8bf52ce051e578f801230b656fb1651a119dc91cea6b0faf35bef5ccd28fc645",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UnifyDiceTypesToN2.png",
+      "bytes": 7235,
+      "sha256": "69f5e847504b3d73233c8fd929c2709bc9f6b7f3bdf74df4a4523d0391d42282",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UnifyToLeastFrequentType.png",
+      "bytes": 10833,
+      "sha256": "757fcb6d09b0516c175c694f79adcfa29f9600ff1a9ec57170386fb068c11740",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UnifyToMostFrequentType.png",
+      "bytes": 8063,
+      "sha256": "7550e4189a09e9f6b2ef7e1c51b03107a951298ef2655272fd164b31f31820ec",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UpgradeNLowestDicePipByM1.png",
+      "bytes": 14401,
+      "sha256": "23fc7d2eef3c6f4c989744f3bc82c06dec6bd5022cd93f7714ba4d4b8d5da134",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UpgradeNLowestDicePipByM2.png",
+      "bytes": 6102,
+      "sha256": "1f76ae2db03d5defa978beb8485965d7321712bda581995d594c8be69e455ece",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UpgradeNLowestDicePipByM3.png",
+      "bytes": 8234,
+      "sha256": "e7e1a3803ef91231861777203f375fb4a6346d20d9961356ca896eb43552ea55",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/UpgradeNSixPipsByOne.png",
+      "bytes": 13720,
+      "sha256": "b59d60637d487bbea4747a1c23bd237bba32a6319dac673e6e8a91af41af2f45",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -3454,85 +3825,85 @@
     },
     {
       "path": "site/icons/WaveDiceDestroySpread.png",
-      "bytes": 16070,
-      "sha256": "3b70fa6b135c1fe129fd3c683591b799c10bcb3c4c18850e790ff1e61100d48c",
+      "bytes": 16021,
+      "sha256": "9cc9864a5c68fc74fbb1840c7048320f1a1bad67b322a125a972462fb582301a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveEndDestroyLowestHighest.png",
-      "bytes": 22250,
-      "sha256": "a797cf5a548e519ce8b522f743d3d91819c540ee2c5910091931eee002858af7",
+      "bytes": 22124,
+      "sha256": "fad939dcc88075b6069fc4f4530569fa12e3b01b089800d84fd529d6a029cf7e",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveEndFillEmptySlots.png",
-      "bytes": 13031,
-      "sha256": "6e07e21cef9b9472506f7b3f925f33987161bdccaf050987e5acd35d988f5a20",
+      "bytes": 12926,
+      "sha256": "d21e10c8ba92b2092d0a0eef58ec4c049d759dd8157d0cab85ed803f2242c02a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveEndHighestEyeUp.png",
-      "bytes": 21170,
-      "sha256": "69ecf64c5558c5a07b9b8302cbcdde5b628adfbe2f5c14f4c153b5536626073c",
+      "bytes": 21040,
+      "sha256": "afadd26effaaff773e2953991a7c4f33d8139ed33a1f27298ca0d252907755d0",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveEndNoOneEyeRandomEyeUp2.png",
-      "bytes": 24063,
-      "sha256": "8a5e5fdfbc20567a75b60c3de1adff4cbc18d0ba5b516ad8e969285e64ffa192",
+      "bytes": 23980,
+      "sha256": "6aea44a09dc23a84485848835b44c694cbae095962b10173defaccba4eaebf2a",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveEndReturnConsumedSpawnSP.png",
-      "bytes": 17569,
-      "sha256": "933a2cdd0123d6a8fc41b16eff52662a584e7058a6907e4c8bf1cddf20dffdaf",
+      "bytes": 17473,
+      "sha256": "22a22652127ec8809e71870d65e4c6745a62259b533d345c55fb6808acc6f0bd",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveEndSPGain.png",
-      "bytes": 14501,
-      "sha256": "8aefd7f3530680eacbfccd2bc19b89a0c27930421aa72da9fc3041dbcafdcf79",
+      "bytes": 14387,
+      "sha256": "cf0ad8be18592732421227f1e57a6f0c4105dba3fb3cf7d1f0e91bbbce702733",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveEndSameLineEyeUp.png",
-      "bytes": 13398,
-      "sha256": "262e581d08fc8c504fe263bfb717153296a6950df60e7389a83df778a615fd91",
+      "bytes": 13312,
+      "sha256": "24425ad7014297243e11ee05fa4164ddf1e6510ed26474de06386f6e9436d13d",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveGamble.png",
-      "bytes": 12678,
-      "sha256": "3eda483c6444694b7352a7849076cc70f161e2c7b14f7c9939cf08b69c8a8ddf",
+      "bytes": 12581,
+      "sha256": "bc2d1fc15348d5b91a4dd3da36cfb6a80176f954908c668f7d8f35afdda7ff98",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveMinionSpeedDouble.png",
-      "bytes": 14610,
-      "sha256": "9d71c3aad295bc6168ca62b9e3c97c0405ee4c38ebbeaa2dbd717c64d56d429d",
+      "bytes": 14533,
+      "sha256": "43648e30076c8c130bbe12cab7a3670c1e1e0a78ef6cbbc5242c8eb2070f366b",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveStartLowestEyeUp2.png",
-      "bytes": 16513,
-      "sha256": "5f29f409663bbca8214636d715af5cac7c7d22a5bdbd4858f6971989b75a2a2b",
+      "bytes": 16342,
+      "sha256": "553f928e769860340cfd00a1e98236d4b76fb343ed6d4300ac44ffe4274ce232",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
     {
       "path": "site/icons/WaveSummonMineInstall.png",
-      "bytes": 25306,
-      "sha256": "e5d66fddf162d1f024a9415ad0de3c15f6b2e3a9c05855558c54be656a634d3d",
+      "bytes": 25177,
+      "sha256": "0bf30bde575c9f722a304518efc3530c7a68de190a0245977d034d7bfae0cb28",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -3615,8 +3986,8 @@
     },
     {
       "path": "site/icons/dice_bomb3.png",
-      "bytes": 9976,
-      "sha256": "b81b28882b907b236ec9dba565dbab864f3d1684dfc9cca72a5c88acb0729a84",
+      "bytes": 11264,
+      "sha256": "2d1634675f20fd514c530bf8bb84b29c23be1479700bc0cbc2d9486bda2c0506",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -3698,6 +4069,13 @@
       "status": "runtime-allowlisted"
     },
     {
+      "path": "site/icons/item_stone_solar.png",
+      "bytes": 35351,
+      "sha256": "5bfecefc6d2cf2ae3555816e40a53333e47366419a39447222296d3b8c4ecbf3",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
       "path": "site/icons/lightboardeffect_icon.png",
       "bytes": 2114,
       "sha256": "40713249fc6b65b7f7b5a3ffbcce0b4d1cb74085fc90f3c6ec1344f7d39f112e",
@@ -3743,6 +4121,83 @@
       "path": "site/icons/monster_static_boss_13.png",
       "bytes": 45058,
       "sha256": "df036aca0b8cb675836b87b61f782d6dd42499b76e2f98d26f92244d6d074638",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_18.png",
+      "bytes": 80281,
+      "sha256": "0285f7007872684eef5d1b41a9f150815e5d79843705652013001cad4fb99657",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_19.png",
+      "bytes": 74682,
+      "sha256": "de538f81e4d5ce1965345657d82c0f415fd107dae59cc64aebc0bd3aad864714",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_20.png",
+      "bytes": 72059,
+      "sha256": "5df9fc126e06e278ce73065f377bd8804fc6afb85132f33232c11d5f5649b485",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_21.png",
+      "bytes": 66909,
+      "sha256": "705444bc08e3e30fdedde7c33efe8ce5aee4893703309682c1c2bd083e8e5599",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_22.png",
+      "bytes": 74650,
+      "sha256": "40a17171f31479388bcff9d011115a571c9faa8c27fd8a8cd3dd6c607c2b7cb1",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_23.png",
+      "bytes": 72150,
+      "sha256": "f91fc8b629415b70c03eb5dc317003b25b679436a73c1705396ae46cd3eea7a3",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_24.png",
+      "bytes": 83367,
+      "sha256": "627f0626b52ed1b67376962eb9b3dbf8a3e764baffecaa5ecd47b25b3d221249",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_25.png",
+      "bytes": 71090,
+      "sha256": "c295445def9fc7f3722b51a001bc80f49f9094917480092802897450120b4d41",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_26.png",
+      "bytes": 62089,
+      "sha256": "c4bbffa9edb3f9a6ab46bcd663d39204df3d9755ba587673d6eef79ea70394dd",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_27.png",
+      "bytes": 67924,
+      "sha256": "01014e9b19a882620592d9b93ff8704d4da74f86c37572b038af501cae4d07d6",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/monster_static_boss_28.png",
+      "bytes": 76702,
+      "sha256": "71c9ad60a01cd9888067df2fcf717a02dde613c95da10f79d15cae9729a19819",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
