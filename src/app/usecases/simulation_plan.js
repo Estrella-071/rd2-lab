@@ -12,6 +12,15 @@ import {
   serializeSimulationState,
   getDataVersion
 } from "../../domain/simulation_share.js";
+import {
+  createProgressionTier,
+  calculateAllocationsCost,
+  calculateTierDelta,
+  generateSmartProgressionTiers,
+  importTiersFromShare,
+  exportTiersForShare
+} from "../../domain/simulation_tiers.js";
+import { recomputeSimulationSpent } from "../../domain/simulation_plan.js";
 
 /**
  * Application orchestration for simulation mode. The use case never touches
@@ -198,4 +207,149 @@ export class SimulationPlanUseCase {
       treeData: state.treeData
     });
   }
+
+  /* ========================================================================
+   * Progression Tiers Methods (Dispatch via AppStore)
+   * ======================================================================== */
+
+  getTiers() {
+    const state = this.state;
+    if (Array.isArray(state.simulation?.tiers) && state.simulation.tiers.length > 0) {
+      return state.simulation.tiers;
+    }
+    const currentRanks = state.simulation?.ranks || {};
+    const cost = calculateAllocationsCost(currentRanks, state.nodesMap);
+    return [
+      createProgressionTier({
+        id: "t0",
+        name: "T0",
+        label: "核心下限 (必備門檻)",
+        isBaseline: true,
+        note: "核心配置門檻",
+        allocations: { ...currentRanks },
+        cost
+      })
+    ];
+  }
+
+  getActiveTier() {
+    const tiers = this.getTiers();
+    const activeId = this.state.simulation?.activeTierId || "t0";
+    return tiers.find((t) => t.id === activeId) || tiers[0];
+  }
+
+  switchTier(tierId) {
+    const tiers = this.getTiers();
+    const target = tiers.find((t) => t.id === tierId);
+    if (!target) return null;
+
+    const state = this.state;
+    const spent = recomputeSimulationSpent(target.allocations, state.nodesMap);
+
+    this.store.dispatch({
+      type: ActionTypes.SET_SIMULATION_STATE,
+      payload: {
+        ...(state.simulation || {}),
+        activeTierId: target.id,
+        ranks: { ...target.allocations },
+        spent,
+        tiers
+      }
+    });
+    return target;
+  }
+
+  setBaselineTier(tierId) {
+    const tiers = this.getTiers().map((t) => {
+      const isBaseline = (t.id === tierId);
+      let label = t.label;
+      if (isBaseline && !label.includes("下限")) {
+        label = `${label} (核心下限)`.trim();
+      }
+      return { ...t, isBaseline, label };
+    });
+
+    this.store.dispatch({
+      type: ActionTypes.SET_SIMULATION_TIERS,
+      payload: { tiers }
+    });
+  }
+
+  autoGenerateTiers() {
+    const state = this.state;
+    const currentRanks = state.simulation?.ranks || {};
+    const smartTiers = generateSmartProgressionTiers(currentRanks, state.nodesMap);
+    const firstTier = smartTiers[0];
+    const spent = recomputeSimulationSpent(firstTier.allocations, state.nodesMap);
+
+    this.store.dispatch({
+      type: ActionTypes.SET_SIMULATION_STATE,
+      payload: {
+        ...(state.simulation || {}),
+        tiers: smartTiers,
+        activeTierId: firstTier.id,
+        ranks: { ...firstTier.allocations },
+        spent
+      }
+    });
+    return smartTiers;
+  }
+
+  addTierFromCurrent({ name = "", label = "", note = "" } = {}) {
+    const state = this.state;
+    const tiers = [...this.getTiers()];
+    const nextIdx = tiers.length;
+    const currentRanks = state.simulation?.ranks || {};
+    const cost = calculateAllocationsCost(currentRanks, state.nodesMap);
+    const newTier = createProgressionTier({
+      id: `t${nextIdx}`,
+      name: name || `T${nextIdx}`,
+      label: label || `進階階段 ${nextIdx}`,
+      isBaseline: false,
+      note: note || "",
+      allocations: { ...currentRanks },
+      cost
+    });
+
+    const newTiers = [...tiers, newTier];
+    this.store.dispatch({
+      type: ActionTypes.SET_SIMULATION_TIERS,
+      payload: {
+        tiers: newTiers,
+        activeTierId: newTier.id
+      }
+    });
+    return newTier;
+  }
+
+  updateTierNote(tierId, note) {
+    const tiers = this.getTiers().map((t) => (t.id === tierId ? { ...t, note: String(note || "") } : t));
+    this.store.dispatch({
+      type: ActionTypes.SET_SIMULATION_TIERS,
+      payload: { tiers }
+    });
+  }
+
+  removeTier(tierId) {
+    const tiers = this.getTiers();
+    if (tiers.length <= 1) return false;
+
+    const newTiers = tiers.filter((t) => t.id !== tierId);
+    const activeTierId = this.state.simulation?.activeTierId === tierId ? newTiers[0].id : this.state.simulation?.activeTierId;
+    const activeTier = newTiers.find((t) => t.id === activeTierId) || newTiers[0];
+    const spent = recomputeSimulationSpent(activeTier.allocations, this.state.nodesMap);
+
+    this.store.dispatch({
+      type: ActionTypes.SET_SIMULATION_STATE,
+      payload: {
+        ...(this.state.simulation || {}),
+        tiers: newTiers,
+        activeTierId: activeTier.id,
+        ranks: { ...activeTier.allocations },
+        spent
+      }
+    });
+    return true;
+  }
 }
+

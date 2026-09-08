@@ -3,8 +3,8 @@
   "generatedBy": "scripts/check_assets.mjs",
   "sourceRoot": "site/",
   "runtimeAllowlist": "site/runtime-allowlist.json",
-  "fileCount": 628,
-  "deployedFileCount": 628,
+  "fileCount": 630,
+  "deployedFileCount": 630,
   "quarantinedFileCount": 0,
   "duplicateBlobCount": 9,
   "files": [
@@ -1139,6 +1139,13 @@
       "path": "site/icons/Icon_Time.png",
       "bytes": 2561,
       "sha256": "31849a5002c36fafef04d53d3d6fdd77ee9c17941a125956c5729d77699dbadc",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/Ingame_Field_Planet04.png",
+      "bytes": 742524,
+      "sha256": "e69d04d3a93fc5ce500620386c308ff89ef65f5f0e96283a654075bf879a7037",
       "deployed": true,
       "status": "runtime-allowlisted"
     },
@@ -4016,6 +4023,13 @@
       "path": "site/icons/executioner_icon.png",
       "bytes": 3605,
       "sha256": "28ba16096b4029119ce0825a3aa3eaeba0d44a744e6458f737bb2a75b458973b",
+      "deployed": true,
+      "status": "runtime-allowlisted"
+    },
+    {
+      "path": "site/icons/field.png",
+      "bytes": 77152,
+      "sha256": "03c8221b093eb691bda2553737fc3984cee1b61fac1cef99d7252adec554190c",
       "deployed": true,
       "status": "runtime-allowlisted"
     },

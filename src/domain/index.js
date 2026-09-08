@@ -19,3 +19,5 @@ export * from "./detailed_stats.js";
 export * from "./tree_render_model.js";
 export * from "./map_resolution.js";
 export * from "./rift_shop_categories.js";
+export * from "./attack_speed.js";
+export * from "./simulation_tiers.js";

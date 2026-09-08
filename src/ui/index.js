@@ -10,3 +10,5 @@ export { SimulationView } from "./simulation_view.js";
 export { DetailedStatsView } from "./detailed_stats_view.js";
 export { LocaleView, applyLocalizationDocument } from "./locale_view.js";
 export { updateSeoMetadata } from "./seo_view.js";
+export { AttackSpeedView } from "./attack_speed_view.js";
+export { SimulationTierView } from "./simulation_tier_view.js";

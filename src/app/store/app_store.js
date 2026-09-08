@@ -43,7 +43,9 @@ export const ActionTypes = {
   SIMULATION_REVOKE_NODE: "SIMULATION_REVOKE_NODE",
   SIMULATION_RESET: "SIMULATION_RESET",
   SIMULATION_SET_TEAM: "SIMULATION_SET_TEAM",
-  SET_SIMULATION_STATE: "SET_SIMULATION_STATE"
+  SET_SIMULATION_STATE: "SET_SIMULATION_STATE",
+  SET_SIMULATION_TIERS: "SET_SIMULATION_TIERS",
+  SET_ATTACK_SPEED_STATE: "SET_ATTACK_SPEED_STATE"
 };
 
 /**
@@ -115,9 +117,23 @@ export function createInitialState() {
       initialIds: [],
       spent: { gold: 0, core: 0 },
       team: { dice: [], commonNodes: [] },
+      tiers: [],
+      activeTierId: "t0",
       dataVersion: "unknown",
       warnings: [],
       lastResult: null
+    },
+
+    // Attack Speed Calculator state
+    attackSpeed: {
+      isOpen: false,
+      board: Array(15).fill(null),
+      selectedSlotIndex: null,
+      targetSlotIndex: 7,
+      customBaseInterval: 0.6,
+      blessingBonusRate: 0.15,
+      eventBonusRate: 0,
+      currentEvaluation: null
     }
   };
 }
@@ -373,6 +389,21 @@ const SIMPLE_REDUCERS = Object.freeze({
   [ActionTypes.SET_SHOW_PREREQ_MODE]: (state, action) => ({
     ...state,
     showPrereqMode: action.payload !== undefined ? Boolean(action.payload) : !state.showPrereqMode
+  }),
+  [ActionTypes.SET_SIMULATION_TIERS]: (state, action) => ({
+    ...state,
+    simulation: {
+      ...(state.simulation || {}),
+      tiers: action.payload?.tiers || [],
+      activeTierId: action.payload?.activeTierId || state.simulation?.activeTierId || "t0"
+    }
+  }),
+  [ActionTypes.SET_ATTACK_SPEED_STATE]: (state, action) => ({
+    ...state,
+    attackSpeed: {
+      ...(state.attackSpeed || {}),
+      ...action.payload
+    }
   })
 });
 

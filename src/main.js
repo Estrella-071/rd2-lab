@@ -152,8 +152,11 @@ import {
   CanvasTreeRenderer,
   LocaleView,
   applyLocalizationDocument,
-  updateSeoMetadata
+  updateSeoMetadata,
+  AttackSpeedView,
+  SimulationTierView
 } from "./ui/index.js";
+import { AttackSpeedUseCase } from "./app/usecases/index.js";
 
 // Shared calculations
 import { shouldPlaceTooltipBelow } from "./domain/tooltip_position.js";
@@ -245,6 +248,8 @@ function clearOwnedGlobalHooks(globalHooks) {
 
 function destroyApplicationViews(views) {
   const orderedViews = [
+    views.attackSpeedView,
+    views.simulationTierView,
     views.changelogView,
     views.localeView,
     views.morphingWidgets,
@@ -361,6 +366,8 @@ export class Application {
       shareRepository: new HttpShareRepository()
     });
 
+    this.attackSpeedUseCase = new AttackSpeedUseCase({ store: this.store });
+
     // Keep view instances together.
     this.views = {
       treeView: null,
@@ -371,6 +378,8 @@ export class Application {
       morphingWidgets: null,
       changelogView: null,
       simulationView: null,
+      simulationTierView: null,
+      attackSpeedView: null,
       detailedStatsView: null,
       localeView: null
     };
@@ -618,6 +627,12 @@ export class Application {
       }
     });
     this.views.simulationView.init();
+
+    this.views.simulationTierView = new SimulationTierView({
+      store: this.store,
+      simulationUseCase: this.simulationPlanUseCase
+    });
+    this.views.simulationTierView.init();
   }
 
   _initializeCompendiumView(elements, tagDefinitions) {
@@ -725,6 +740,8 @@ export class Application {
     this.views.changelogView.setData({ metadata: data.metadata, changelog: data.changelog });
     this.views.detailedStatsView = new DetailedStatsView({ store: this.store, container: document.body, localization: this.localization });
     this.views.detailedStatsView.init();
+    this.views.attackSpeedView = new AttackSpeedView({ store: this.store, useCase: this.attackSpeedUseCase });
+    this.views.attackSpeedView.init();
   }
 
   _resolveUrlEntity(urlState, state = this.store.getState()) {

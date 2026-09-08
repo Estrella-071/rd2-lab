@@ -571,6 +571,75 @@ export async function runSmokeSuite(options = {}) {
     passedAssertions += 5;
     console.log(`✓ Detailed stats modal verified: ${statItemCount} items displayed in normal mode`);
 
+    // ------------------------------------------------------------------------
+    // [E2E] Attack Speed Calculator & Battlefield Grid verification
+    // ------------------------------------------------------------------------
+    const asToggleBtn = await page.$('#attack-speed-toggle-btn');
+    assert(asToggleBtn, 'Attack speed calculator toggle button must exist');
+    await asToggleBtn.click();
+    await page.waitForSelector('#attack-speed-modal', { state: 'visible', timeout: 5000 });
+    
+    const slotCount = await page.$$eval('#as-grid-board .as-grid-slot', els => els.length);
+    assertEqual(slotCount, 15, 'Battlefield grid must contain exactly 15 slots');
+
+    await page.click('[data-preset="solar_light_cross"]');
+    await page.waitForFunction(() => {
+      const banner = document.querySelector('.as-kpi-speedup');
+      return banner && banner.textContent.includes('x');
+    }, { timeout: 3000 });
+
+    const speedMultiplier = await page.$eval('.as-kpi-speedup', el => el.textContent.trim());
+    assert(parseFloat(speedMultiplier) > 1.0, 'Speed multiplier must be greater than 1.0x with light dice buff');
+
+    await page.click('.as-close-btn');
+    await page.waitForSelector('#attack-speed-modal', { state: 'hidden', timeout: 3000 });
+    passedAssertions += 5;
+    console.log(`✓ Attack speed calculator verified: 15 battlefield slots, preset buffs (${speedMultiplier}) & modal toggle`);
+
+    // ------------------------------------------------------------------------
+    // [E2E] Simulation Progression Tiers & Baseline verification
+    // ------------------------------------------------------------------------
+    const simToggleBtn = await page.$('#simulation-toggle-btn');
+    assert(simToggleBtn, 'Simulation toggle button must exist');
+    await simToggleBtn.click();
+
+    // Dismiss quick unlock modal if it is automatically displayed upon entry
+    await page.evaluate(() => {
+      const modal = document.getElementById('simulation-quick-unlock-modal');
+      if (modal) {
+        if (typeof modal.close === 'function') {
+          try { modal.close(); } catch {}
+        }
+        modal.setAttribute('hidden', '');
+        modal.setAttribute('inert', '');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    await page.waitForSelector('#simulation-tier-rail', { state: 'visible', timeout: 5000 });
+
+    const baselinePill = await page.$('.sim-tier-pill.is-baseline');
+    assert(baselinePill, 'Simulation tier rail must display T0 baseline tier badge');
+
+    await page.click('#sim-tier-btn-auto');
+    await page.waitForFunction(() => {
+      const pills = document.querySelectorAll('.sim-tier-pill');
+      return pills.length >= 1;
+    }, { timeout: 3000 });
+
+    const tierCount = await page.$$eval('.sim-tier-pill', els => els.length);
+    assert(tierCount >= 1, 'Progression tiers must exist with baseline milestone');
+
+    await simToggleBtn.click();
+    await page.waitForSelector('#simulation-pause-btn', { state: 'visible', timeout: 3000 });
+    await page.click('#simulation-pause-btn');
+    await page.waitForFunction(() => !document.body.classList.contains('simulation-mode'), { timeout: 3000 });
+    // Restore home page for subsequent root-level smoke checks
+    await page.goto(`${baseUrl}/index.html`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 15000 });
+    passedAssertions += 5;
+    console.log(`✓ Simulation progression tiers verified: ${tierCount} tiers displayed with baseline milestone`);
+
     // A failure after viewport setup must dispose the partial composition
     // root before a caller retries init; otherwise viewport subscriptions
     // accumulate across attempts and every render dispatches duplicate state.
